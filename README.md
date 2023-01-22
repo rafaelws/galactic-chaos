@@ -12,9 +12,11 @@
   - [] audio
 - [x] level manager
 - [] enemies
-  - [] rock
+  - [x] rock
   - [] ship
   - [] bosses\*
+  - [] read player position/input\*
+  - [] movesets (sin, cos)\*
 - [] mechanics
 
   - [] game objects collision
