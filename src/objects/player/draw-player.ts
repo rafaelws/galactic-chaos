@@ -22,12 +22,10 @@ export function drawPlayer({ c, status, img }: DrawPlayerParams): void {
   c.translate(x + cx, y + cy);
   c.rotate(rotation);
 
-  // FIXME draw player
   // c.fillStyle = "white";
   // c.fillRect(-cx, -cy, width, height);
+  // c.closePath();
   c.drawImage(img, -cx, -cy, width, height);
-  c.closePath();
-
   c.restore();
 
   /*

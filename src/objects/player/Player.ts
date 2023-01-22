@@ -43,9 +43,6 @@ export class Player implements Drawable {
       this.rotationAngle = -Math.atan2(from.x - to.x, from.y - to.y);
     } else {
       // -1 <= velocity <= 1
-      // 0.01745 =~ Math.PI / 180
-      // 0.25 = 25% of the intended velocity
-      // this.rotationAngle += 0.01745 * velocity * 0.25;
       this.rotationAngle = this.rotationAngle + toDeg(velocity) * 0.25;
     }
   }
