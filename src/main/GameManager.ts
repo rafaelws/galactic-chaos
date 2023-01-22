@@ -3,7 +3,7 @@ import { KeyboardAndMouse, InputHandler } from "@/common/controls";
 import { GameState, Destroyable } from "@/common/meta";
 import { CanvasManager } from "./CanvasManager";
 import { globalDebug } from "./global-debug";
-import { LevelManager, levels } from "@/level";
+import { firstLevel, LevelManager } from "@/level";
 
 // const debug = import.meta.env.VITE_DEBUG;
 const debug = true;
@@ -22,7 +22,8 @@ export class GameManager implements Destroyable {
 
   constructor() {
     this.cm = new CanvasManager();
-    this.lm = new LevelManager(levels);
+    this.lm = new LevelManager([firstLevel]);
+
     // TODO controls will be either gamepad or keyboard/mouse
     this.input = new KeyboardAndMouse();
 
