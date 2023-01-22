@@ -31,8 +31,9 @@ export interface GameState {
 }
 
 export interface Drawable {
+  isActive(): boolean;
   update(state: GameState, controls: ControlState): void;
-  draw(c: CanvasRenderingContext2D, state: GameState): void;
+  draw(c: CanvasRenderingContext2D): void;
 }
 
 export interface Destroyable {

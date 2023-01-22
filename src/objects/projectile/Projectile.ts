@@ -1,10 +1,5 @@
-import {
-  Boundaries,
-  ControlState,
-  Coordinate,
-  Drawable,
-  GameState,
-} from "@/common";
+import { ControlState } from "@/common/controls";
+import { Boundaries, Coordinate, Drawable, GameState } from "@/common/meta";
 
 export class Projectile implements Drawable {
   private x: number = 0;
@@ -48,7 +43,7 @@ export class Projectile implements Drawable {
     }
   }
 
-  public draw(c: CanvasRenderingContext2D, _: GameState) {
+  public draw(c: CanvasRenderingContext2D) {
     if (!this.active) return;
 
     const cx = this.width * 0.5;
@@ -57,12 +52,12 @@ export class Projectile implements Drawable {
     c.save();
     c.translate(this.x + cx, this.y + cy);
     c.rotate(this.angle);
-    c.fillStyle = "red";
+    c.fillStyle = "blue";
     c.fillRect(-cx, -cy, this.width, this.height);
     c.restore();
   }
 
-  public get isActive() {
+  public isActive() {
     return this.active;
   }
 }

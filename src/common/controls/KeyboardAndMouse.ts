@@ -1,4 +1,4 @@
-import { ListenerMap, set, unset } from "@/common";
+import { ListenerMap, set, unset } from "@/common/events";
 import { ControlAction, ControlState, InputHandler } from ".";
 
 type ActionMap = { [key: string]: ControlAction };

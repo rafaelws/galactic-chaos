@@ -1,17 +1,20 @@
+import { toDeg } from "@/common/math";
+
 import {
-  toDeg,
-  Boundaries,
   Coordinate,
   GameState,
   HitBox,
   PlayerStatus,
+  Drawable,
+} from "@/common/meta";
+
+import {
   ControlState,
   ControlStateData,
   ControlAction,
-  Drawable,
-} from "@/common";
+} from "@/common/controls";
 
-import { draw } from "./drawer";
+import { drawPlayer } from "./draw-player";
 import { ProjectileManager } from "../projectile/ProjectileManager";
 
 export class Player implements Drawable {
@@ -22,7 +25,7 @@ export class Player implements Drawable {
   private rotationAngle: number = 0;
   private projectileManager: ProjectileManager;
 
-  constructor() {
+  constructor(private img: HTMLImageElement) {
     this.projectileManager = new ProjectileManager();
   }
 
@@ -101,14 +104,8 @@ export class Player implements Drawable {
   public getStatus(): PlayerStatus {
     const { x, y, width, height } = this;
     return {
-      boundaries: {
-        width,
-        height,
-      },
-      position: {
-        x,
-        y,
-      },
+      boundaries: { width, height },
+      position: { x, y },
       hitbox: this.getHitBox(),
       rotation: this.rotationAngle,
     };
@@ -119,7 +116,7 @@ export class Player implements Drawable {
 
     // TODO update width/height
     const { width, height } = state.worldBoundaries;
-    this.width = height * 0.2;
+    this.width = width * 0.07;
     this.height = this.width;
 
     // TODO
@@ -135,8 +132,13 @@ export class Player implements Drawable {
     this.projectileManager.update(state, controls);
   }
 
-  public draw(c: CanvasRenderingContext2D, state: GameState): void {
-    draw(this.getStatus(), c, state);
-    this.projectileManager.draw(c, state);
+  public draw(c: CanvasRenderingContext2D): void {
+    drawPlayer({ c, status: this.getStatus(), img: this.img });
+    this.projectileManager.draw(c);
+  }
+
+  // TODO
+  public isActive(): boolean {
+    return true;
   }
 }

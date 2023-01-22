@@ -1,35 +1,28 @@
-import {
-  set,
-  unset,
-  trigger,
-  ListenerMap,
-  KeyboardAndMouse,
-  Destroyable,
-  GameState,
-  InputHandler,
-  Drawable,
-} from "@/common";
-import { Player } from "@/objects";
-
+import { set, unset, trigger, ListenerMap } from "@/common/events";
+import { KeyboardAndMouse, InputHandler } from "@/common/controls";
+import { GameState, Destroyable } from "@/common/meta";
 import { CanvasManager } from "./CanvasManager";
+import { globalDebug } from "./global-debug";
+import { LevelManager, levels } from "@/level";
 
 // const debug = import.meta.env.VITE_DEBUG;
 const debug = true;
 
-export class Manager implements Destroyable {
+export class GameManager implements Destroyable {
   private cm: CanvasManager;
+  private lm: LevelManager;
   private input: InputHandler;
 
   private started = false;
   private paused = false;
   private gameState: GameState;
-  private listeners: ListenerMap = {};
 
-  private drawables: Drawable[] = [];
+  private listeners: ListenerMap = {};
   private destroyables: Destroyable[] = [];
 
   constructor() {
     this.cm = new CanvasManager();
+    this.lm = new LevelManager(levels);
     // TODO controls will be either gamepad or keyboard/mouse
     this.input = new KeyboardAndMouse();
 
@@ -39,12 +32,12 @@ export class Manager implements Destroyable {
       worldBoundaries: { width: 0, height: 0 },
     };
 
-    this.listeners = { pause: this.pause.bind(this) };
+    this.listeners = { pause: this.handlePause.bind(this) };
     set(this.listeners);
     this.destroyables = [this.input, this.cm];
   }
 
-  private pause(ev: Event) {
+  private handlePause(ev: Event) {
     this.paused = (ev as CustomEvent).detail;
   }
 
@@ -73,46 +66,28 @@ export class Manager implements Destroyable {
 
     this.setGameState(delta);
 
-    if (!this.started) {
-      this.started = true;
-      this.drawables = [new Player()];
-    }
-
-    // TODO event stream
-
-    for (let i = 0; i < this.drawables.length; i++) {
-      this.drawables[i].update(this.gameState, controls);
-    }
+    this.lm.update(this.gameState, controls);
   }
 
   private draw() {
     this.cm.clear();
 
-    for (let i = 0; i < this.drawables.length; i++) {
-      this.drawables[i].draw(this.cm.context, this.gameState);
-    }
+    // TODO draw level
+    this.lm.draw(this.cm.context);
 
-    if (this.gameState.debug) this.globalDebug();
+    if (this.gameState.debug)
+      globalDebug(
+        this.gameState.delta,
+        this.cm.getBoundaries(),
+        this.cm.context
+      );
   }
 
   public nextFrame(delta: number) {
+    if (!this.started) this.started = true;
     if (this.paused) return;
 
     this.update(delta);
     this.draw();
-  }
-
-  // TODO
-  private globalDebug() {
-    const { delta } = this.gameState;
-    const { width, height } = this.cm.getBoundaries();
-    const lines = [
-      `${width}x${height}`,
-      `${Math.floor(1000 / delta)}fps`,
-      `${Math.floor(delta)}ms`,
-    ];
-    this.cm.context.strokeStyle = "white";
-    this.cm.context.font = `${16}px sans-serif`;
-    this.cm.context.fillText(lines.join(", "), 5, 16);
   }
 }

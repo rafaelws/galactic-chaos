@@ -1,4 +1,4 @@
-import { Coordinate, Destroyable } from "@/common";
+import { Coordinate, Destroyable } from "@/common/meta";
 
 export type ControlState = {
   [type in ControlAction]?: ControlStateData;

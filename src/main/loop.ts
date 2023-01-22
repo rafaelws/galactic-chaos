@@ -1,12 +1,12 @@
 import { off, on } from "@/common/events";
-import { Manager } from "./Manager";
+import { GameManager } from "./GameManager";
 
 export function start() {
   let lts = 0;
   let delta = 0;
   let raf: number | undefined;
 
-  const manager = new Manager();
+  const manager = new GameManager();
 
   function loop(ts: DOMHighResTimeStamp) {
     delta = ts - lts;
@@ -19,11 +19,11 @@ export function start() {
 
   loop(0);
 
-  function quit() {
-    off("quit", quit);
+  function handleQuit() {
+    off("quit", handleQuit);
     if (raf) cancelAnimationFrame(raf);
     manager.destroy();
   }
 
-  on("quit", quit);
+  on("quit", handleQuit);
 }

@@ -5,13 +5,26 @@
   - [x] enemies
   - [x] items
   - [] fonts (Orbitron)
-  - [] background
-  - [] effects
+  - [] effects\*
+  - [] sound\*
+- [] asset loader
+  - [x] image
+  - [] audio
+- [x] level manager
 - [] enemies
-- [] levels (declarative)
-- [] UI
+  - [] rock
+  - [] ship
+  - [] bosses\*
+- [] mechanics
+
+  - [] game objects collision
+  - [] items
+  - [] overall status (score, health, items)
+
 - [] HUD
 - [] gamepad
+- [] UI
+- [] background (dynamic, with particles, reacting to the bg music)\*
 
 ---
 

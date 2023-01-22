@@ -1,10 +1,5 @@
-import {
-  Boundaries,
-  ControlState,
-  Coordinate,
-  Drawable,
-  GameState,
-} from "@/common";
+import { ControlState } from "@/common/controls";
+import { Boundaries, Coordinate, Drawable, GameState } from "@/common/meta";
 import { Projectile } from "..";
 
 export class ProjectileManager implements Drawable {
@@ -29,9 +24,14 @@ export class ProjectileManager implements Drawable {
     });
   }
 
-  public draw(c: CanvasRenderingContext2D, state: GameState) {
+  draw(c: CanvasRenderingContext2D) {
     this.projectiles.forEach((projectile) => {
-      projectile.draw(c, state);
+      projectile.draw(c);
     });
+  }
+
+  // TODO
+  isActive(): boolean {
+    return true;
   }
 }

@@ -1,4 +1,5 @@
-import { Destroyable, Boundaries, ListenerMap, unset, set } from "@/common";
+import { Destroyable, Boundaries } from "@/common/meta";
+import { ListenerMap, unset, set } from "@/common/events";
 
 export class CanvasManager implements Destroyable {
   public canvas: HTMLCanvasElement;
