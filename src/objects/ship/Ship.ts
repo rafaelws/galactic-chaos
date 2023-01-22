@@ -2,7 +2,7 @@ import { ControlState } from "@/common/controls";
 import { toRad } from "@/common/math";
 import { Coordinate, Drawable, GameState } from "@/common/meta";
 
-export interface RockParams {
+export interface ShipParams {
   img: HTMLImageElement;
 
   /**
@@ -28,25 +28,40 @@ export interface RockParams {
   delay?: number;
 
   /**
-   * velocity multiplier (0 to 1)
+   * velocity multiplier (0 < speed <= 1)
    */
   speed?: number;
 
   /**
-   * to worldBoundaries.width (0 to 1)
+   * 0 (or absent): won't fire
    */
-  // proportion?: number;
+  // fireRate?: number;
 
-  rotation?: {
-    direction: "CLOCKWISE" | "COUNTERCLOCKWISE";
-    /**
-     * rotation velocity multiplier (0 to 1)
-     */
-    speed: number;
-  };
+  /**
+   * SIMPLE: fire at `angle`
+   * ACCURATE: fire directly at player
+   * LOOSE: fire at player but w/ 10~15% deviation
+   * default: SIMPLE (or none, if fireRate = 0)
+   */
+  // aimPrecision?: "SIMPLE" | "LOSE" | "ACCURATE";
+
+  /**
+   * SIN: move as a sine wave
+   * COS: move as a cosine wave
+   * LINAR: move as a rect
+   * ARC: move as a arc
+   * default: LINEAR
+   */
+  // moveSet?: "SIN" | "COS" | "ARC" | "LINEAR"
+
+  /**
+   * if true, doesn't exit the screen before being eliminated
+   * default: false
+   */
+  // persistent: boolean
 }
 
-export class Rock implements Drawable {
+export class Ship implements Drawable {
   private active = true;
   private x = NaN;
   private y = NaN;
@@ -62,9 +77,8 @@ export class Rock implements Drawable {
   private angle = 0;
   private speed = 0;
   private delay = 0;
-  private rotation = 0;
 
-  constructor(private readonly params: RockParams) {
+  constructor(private readonly params: ShipParams) {
     this.angle = toRad(params.angle || 0);
     this.xDirection = Math.sin(-this.angle);
     this.yDirection = Math.cos(-this.angle);
@@ -110,15 +124,6 @@ export class Rock implements Drawable {
     this.x = this.x + this.xDirection * state.delta * this.speed;
     this.y = this.y + this.yDirection * state.delta * this.speed;
 
-    if (!!this.params.rotation) {
-      const { direction, speed } = this.params.rotation;
-      if (direction === "CLOCKWISE") {
-        this.rotation += speed;
-      } else {
-        this.rotation -= speed;
-      }
-    }
-
     // TODO detect collision
     // detect out of bounds
     if (
@@ -134,14 +139,10 @@ export class Rock implements Drawable {
   public draw(c: CanvasRenderingContext2D): void {
     if (this.isWaiting()) return;
     const { width, height, x, y, cx, cy } = this;
-    const { img, rotation } = this.params;
 
     c.save();
     c.translate(x + cx, y + cy);
-    if (!!rotation) {
-      c.rotate(toRad(this.rotation));
-    }
-    c.drawImage(img, -cx, -cy, width, height);
+    c.drawImage(this.params.img, -cx, -cy, width, height);
     c.restore();
   }
 
