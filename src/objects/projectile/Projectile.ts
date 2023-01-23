@@ -1,14 +1,15 @@
-import { ControlState } from "@/common/controls";
 import { Boundaries, Coordinate, Drawable, GameState } from "@/common/meta";
 
 export class Projectile implements Drawable {
-  private x: number = 0;
-  private y: number = 0;
-  private xDirection: number = 0;
-  private yDirection: number = 0;
+  private x = 0;
+  private y = 0;
+  private xDirection = 0;
+  private yDirection = 0;
+  private cx = 0;
+  private cy = 0;
 
-  private width: number = 0;
-  private height: number = 0;
+  private width = 0;
+  private height = 0;
   private active = true;
 
   constructor(
@@ -18,6 +19,7 @@ export class Projectile implements Drawable {
   ) {
     const { width, height } = worldBoundaries;
 
+    // TODO handle screen resize
     this.width = width * 0.0025;
     this.height = height * 0.05;
 
@@ -26,9 +28,12 @@ export class Projectile implements Drawable {
 
     this.xDirection = Math.sin(-this.angle);
     this.yDirection = Math.cos(-this.angle);
+
+    this.cx = this.width * 0.5;
+    this.cy = this.height * 0.5;
   }
 
-  public update(state: GameState, _: ControlState) {
+  public update(state: GameState) {
     this.x = this.x - this.xDirection * state.delta;
     this.y = this.y - this.yDirection * state.delta;
 
@@ -46,9 +51,7 @@ export class Projectile implements Drawable {
   public draw(c: CanvasRenderingContext2D) {
     if (!this.active) return;
 
-    const cx = this.width * 0.5;
-    const cy = this.height * 0.5;
-
+    const { cx, cy } = this;
     c.save();
     c.translate(this.x + cx, this.y + cy);
     c.rotate(this.angle);

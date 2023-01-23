@@ -1,5 +1,3 @@
-import { ControlState } from "./controls";
-
 export interface Boundaries {
   width: number;
   height: number;
@@ -16,23 +14,17 @@ export interface HitBox {
   radius: number;
 }
 
-export interface PlayerStatus {
-  position: Coordinate;
-  boundaries: Boundaries;
-  hitbox: HitBox;
-  rotation: number;
-}
-
 export interface GameState {
-  worldBoundaries: Boundaries;
-  delta: number;
-  debug: boolean;
-  // playerStatus: PlayerStatus;
+  get delta(): number;
+  get worldBoundaries(): Boundaries;
+  get player(): HitBox;
+  set player(hitbox: HitBox);
 }
 
 export interface Drawable {
+  // TODO get active(): boolean;
   isActive(): boolean;
-  update(state: GameState, controls: ControlState): void;
+  update(state: GameState): void;
   draw(c: CanvasRenderingContext2D): void;
 }
 

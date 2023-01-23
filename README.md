@@ -1,32 +1,39 @@
 # TODO
 
+- [] mechanics: game objects collision
+- [] mechanics: projectile collision (both player and enemies)
+- [] fix level manager step function
+- [] status (player health, score, enemies health)
+- [] {pending} game objects movement patterns (verify feasibility) - arc, 8, drone, pursuer...
+
+# ALL
+
 - [] assets
   - [x] player
   - [x] enemies
   - [x] items
   - [] fonts (Orbitron)
-  - [] effects\*
-  - [] sound\*
+  - [] effects and animations (e.g. hit/collision effect)\*
+  - [] sound (ost, ui)\*
 - [] asset loader
   - [x] image
   - [] audio
 - [x] level manager
 - [] enemies
   - [x] rock
-  - [] ship
+  - [x] ship (see TODO)
   - [] bosses\*
-  - [] read player position/input\*
-  - [] movesets (sin, cos)\*
 - [] mechanics
 
   - [] game objects collision
-  - [] items
   - [] overall status (score, health, items)
+  - [] items
 
 - [] HUD
 - [] gamepad
 - [] UI
 - [] background (dynamic, with particles, reacting to the bg music)\*
+- [] handle resize on game objects (Projectile, Ship, Rock, Player...)
 
 ---
 

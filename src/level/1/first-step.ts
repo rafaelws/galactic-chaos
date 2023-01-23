@@ -1,11 +1,11 @@
 import { assets, getImage } from "@/common/asset";
-import { Player, Rock } from "@/objects";
+import { Ship } from "@/objects";
 
 // TODO receive parameters (loaded assets*?) for each step function?
 export function firstStep() {
-  const rock3 = getImage(assets.img.rock.brown[3]);
+  // const rock3 = getImage(assets.img.rock.brown[3]);
   return [
-    new Player(getImage(assets.img.player.self)),
+    /*
     new Rock({
       img: rock3,
       start: { x: 0.5, y: 0.5 },
@@ -26,6 +26,18 @@ export function firstStep() {
       rotation: {
         direction: "CLOCKWISE",
         speed: 2,
+      },
+    }),
+    */
+    new Ship({
+      img: getImage(assets.img.ship.level1[0]),
+      movement: {
+        angle: 60,
+        start: { x: 0.5, y: 0 },
+        speed: 0.2,
+      },
+      fire: {
+        rate: 0,
       },
     }),
   ];

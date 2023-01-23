@@ -50,6 +50,8 @@ export class Rock implements Drawable {
   private active = true;
   private x = NaN;
   private y = NaN;
+  private cx = 0;
+  private cy = 0;
   private width = 0;
   private height = 0;
   private doubleWidth = 0;
@@ -68,14 +70,16 @@ export class Rock implements Drawable {
     this.yDirection = Math.cos(-this.angle);
     this.speed = params.speed || 0.1;
 
-    // TODO width and height (can they change?)
+    // TODO handle screen resize
     this.height = this.params.img.height;
     this.width = this.params.img.width;
     this.doubleHeight = this.height * 2;
     this.doubleWidth = this.width * 2;
+    this.cx = this.width * 0.5;
+    this.cy = this.height * 0.5;
   }
 
-  public update(state: GameState, _: ControlState): void {
+  public update(state: GameState): void {
     const { width: wwidth, height: wheight } = state.worldBoundaries;
 
     if (isNaN(this.x) && isNaN(this.y)) {
@@ -129,10 +133,8 @@ export class Rock implements Drawable {
 
   public draw(c: CanvasRenderingContext2D): void {
     if (this.isWaiting()) return;
-    const { width, height, x, y } = this;
+    const { width, height, x, y, cx, cy } = this;
     const { img, rotation } = this.params;
-    const cx = width * 0.5;
-    const cy = height * 0.5;
 
     c.save();
     c.translate(x + cx, y + cy);
