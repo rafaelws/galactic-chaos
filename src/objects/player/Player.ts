@@ -1,6 +1,6 @@
 import { atan2, toDeg } from "@/common/math";
 
-import { Coordinate, GameState, HitBox } from "@/common/meta";
+import { Boundaries, Coordinate, GameState, HitBox } from "@/common/meta";
 
 import {
   ControlState,
@@ -98,6 +98,8 @@ export class Player {
       this.act(state, action, controls[action]!);
     }
 
+    // IMPORTANT
+    state.player = this.hitbox;
     iterate(this.launcher.drawables, (drawable) => drawable.update(state));
   }
 

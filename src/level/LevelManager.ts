@@ -1,6 +1,6 @@
 import { assets, getImage, loadImages } from "@/common/asset";
 import { ControlState } from "@/common/controls";
-import { Drawable, GameState } from "@/common/meta";
+import { Boundaries, Drawable, GameState } from "@/common/meta";
 import { iterate } from "@/common/util";
 import { Player } from "@/objects";
 import { firstLevel } from "./1";
@@ -59,7 +59,11 @@ export class LevelManager {
     this.loading = false;
   }
 
-  public update(state: GameState, controls: ControlState): void {
+  public update(
+    delta: number,
+    worldBoundaries: Boundaries,
+    controls: ControlState
+  ): void {
     if (this.loading) return;
 
     if (!this.loaded) {
@@ -67,18 +71,23 @@ export class LevelManager {
       return;
     }
 
-    if (!this.player) {
-      this.player = new Player(getImage(assets.img.player.self));
-    }
+    let state: GameState = {
+      delta,
+      worldBoundaries,
+      player: { x: 0, y: 0, radius: 0 },
+    };
 
+    if (!this.player)
+      this.player = new Player(getImage(assets.img.player.self));
+
+    // IMPORTANT: player sets `state.player` on update
     this.player.update(state, controls);
-    state.playerHitbox = this.player.hitbox;
 
     let actives: Drawable[] = [];
     iterate(this.drawables, (drawable) => {
       drawable.update(state);
       if (drawable.isActive()) {
-        // TODO detect collisions
+        // TODO detect collisions?
         actives.push(drawable);
       }
     });

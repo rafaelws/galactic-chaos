@@ -49,8 +49,7 @@ export class GameManager implements Destroyable {
       // this.paused = true;
     }
 
-    const worldBoundaries = this.cm.getBoundaries();
-    this.lm.update({ delta, worldBoundaries }, controls);
+    this.lm.update(delta, this.cm.getBoundaries(), controls);
   }
 
   private draw() {

@@ -31,11 +31,15 @@ export function firstStep() {
     */
     new Ship({
       img: getImage(assets.img.ship.level1[0]),
-      start: { x: 0.5, y: 0 },
-      speed: 0.2,
-      angle: 60,
-      fireRate: 400,
-      aimPrecision: "ACCURATE",
+      movement: {
+        angle: 0,
+        start: { x: 0.5, y: 0 },
+        // speed: 0.2,
+      },
+      fire: {
+        rate: 0,
+        // precision: "LOOSE",
+      },
     }),
   ];
 }

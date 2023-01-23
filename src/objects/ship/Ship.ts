@@ -1,5 +1,11 @@
 import { atan2, R180, randInRange, toRad } from "@/common/math";
-import { Coordinate, Drawable, GameState, HitBox } from "@/common/meta";
+import {
+  Boundaries,
+  Coordinate,
+  Drawable,
+  GameState,
+  HitBox,
+} from "@/common/meta";
 import { iterate } from "@/common/util";
 import { ProjectileLauncher } from "../projectile";
 
@@ -7,59 +13,61 @@ export interface ShipParams {
   img: HTMLImageElement;
 
   /**
-   * starting point in %
-   * (0 <= x <= 1)
-   * (0 <= y <= 1)
-   *
-   * Note: when setting y:
-   *  - 0 is top, 1 is bottom
-   *  - set `angle` accordingly (positive or negative)
-   *  - set `x` to either 1 or 0
-   */
-  start: Coordinate;
-
-  /**
-   * spawn angle in degrees
-   */
-  angle?: number;
-
-  /**
    * time in ms until draw (not precise, uses delta)
    */
   delay?: number;
 
-  /**
-   * velocity multiplier (0 < speed <= 1)
-   */
-  speed?: number;
+  fire: {
+    /**
+     * 0 (or absent): won't fire
+     */
+    rate: number;
 
-  /**
-   * 0 (or absent): won't fire
-   */
-  fireRate?: number;
+    /**
+     * - SIMPLE: fire at `movement.angle`
+     * - ACCURATE: fire directly at player
+     * - LOOSE: fire at player but w/ random deviation
+     * @default "SIMPLE" // (or none, if fireRate = 0)
+     */
+    precision?: "SIMPLE" | "LOOSE" | "ACCURATE";
+  };
 
-  /**
-   * SIMPLE: fire at `angle`
-   * ACCURATE: fire directly at player
-   * LOOSE: fire at player but w/ random deviation
-   * default: SIMPLE (or none, if fireRate = 0)
-   */
-  aimPrecision?: "SIMPLE" | "LOOSE" | "ACCURATE";
+  movement: {
+    /**
+     * remember to:
+     *  - spawn outside the canvas
+     *  - set `movement.angle` accordingly (positive or negative)
+     *  - `x` and `y` are decimals (0 <= `n` <= 1)
+     *  - `x`: 0 is left, 1 is right
+     *  - `y`: 0 is top, 1 is bottom
+     *
+     * When setting `y`:
+     *  - `x` should be either 0 or 1
+     *
+     * When setting `x`:
+     *  - `y` will ALWAYS be 0
+     */
+    start: Coordinate;
 
-  /**
-   * SIN: move as a sine wave
-   * COS: move as a cosine wave
-   * LINAR: move as a rect
-   * ARC: move as a arc
-   * default: LINEAR
-   */
-  // moveSet?: "SIN" | "COS" | "ARC" | "LINEAR"
+    /**
+     * spawn angle in degrees
+     * @default 0
+     */
+    angle: number;
 
-  /**
-   * if true, doesn't exit the screen before being eliminated
-   * default: false
-   */
-  // persistent: boolean
+    /**
+     * - `LINEAR`: move as a rect
+     * - `ARC`: move as a arc
+     * @default LINEAR
+     */
+    pattern?: "LINEAR" | "8"; // ARC
+
+    /**
+     * velocity multiplier (`0 < speed <= 1`)
+     * @default 0.1
+     */
+    speed?: number;
+  };
 }
 
 export class Ship implements Drawable {
@@ -83,11 +91,12 @@ export class Ship implements Drawable {
   private launcher: ProjectileLauncher;
 
   constructor(private readonly params: ShipParams) {
-    this.angle = toRad(params.angle || 0);
-    this.xDirection = Math.sin(-this.angle);
-    this.yDirection = Math.cos(-this.angle);
-    this.speed = params.speed || 0.1;
+    this.setDimensions();
+    this.setStartingMovement();
+    this.launcher = new ProjectileLauncher(params.fire?.rate);
+  }
 
+  private setDimensions() {
     // TODO handle screen resize
     this.height = this.params.img.height;
     this.width = this.params.img.width;
@@ -95,8 +104,67 @@ export class Ship implements Drawable {
     this.doubleWidth = this.width * 2;
     this.cx = this.width * 0.5;
     this.cy = this.height * 0.5;
+  }
 
-    this.launcher = new ProjectileLauncher(params.fireRate);
+  private setStartingMovement() {
+    const { angle = 0, speed = 0.1 } = this.params.movement;
+
+    this.angle = toRad(angle);
+    this.xDirection = Math.sin(-this.angle);
+    this.yDirection = Math.cos(-this.angle);
+    this.speed = speed;
+  }
+
+  private setStartingPoint(worldBoundaries: Boundaries) {
+    let x = this.params.movement.start.x;
+    let y = this.params.movement.start.y;
+
+    this.x = 0;
+    if (!!y) {
+      if (this.angle > 0) {
+        x = 1;
+        this.x = this.width;
+      } else if (this.angle < 0) {
+        x = 0;
+        this.x = -this.width;
+      } else {
+        y = 0;
+      }
+    }
+    this.x += x * worldBoundaries.width;
+    this.y = y * worldBoundaries.height - this.height;
+  }
+
+  private setFireAndRotation(state: GameState) {
+    const { rate = 0, precision = "SIMPLE" } = this.params.fire;
+
+    if (rate === 0) return;
+
+    let angle = R180;
+    let rotation = R180;
+
+    if (precision === "LOOSE") {
+      rotation = this.calculateRotation(state.player);
+      angle = rotation + randInRange(-0.25, 0.25);
+    } else if (precision === "ACCURATE") {
+      angle = rotation = this.calculateRotation(state.player);
+    }
+
+    this.rotation = rotation;
+
+    if (this.fireRateDelay < rate) {
+      this.fireRateDelay += state.delta;
+    } else {
+      this.launcher.launch({
+        from: {
+          x: this.x + this.cx,
+          y: this.y + this.cy,
+        },
+        angle,
+        gameState: state,
+      });
+      this.fireRateDelay = 0;
+    }
   }
 
   public update(state: GameState): void {
@@ -105,58 +173,13 @@ export class Ship implements Drawable {
       return;
     }
 
-    const { width: wwidth, height: wheight } = state.worldBoundaries;
+    const { worldBoundaries } = state;
 
     if (isNaN(this.x) && isNaN(this.y)) {
-      let x = this.params.start.x;
-      let y = this.params.start.y;
-
-      this.x = 0;
-      if (!!y) {
-        if (this.angle > 0) {
-          x = 1;
-          this.x = this.width;
-        } else if (this.angle < 0) {
-          x = 0;
-          this.x = -this.width;
-        } else {
-          y = 0;
-        }
-      }
-      this.x += x * wwidth;
-      this.y = y * wheight - this.height;
+      this.setStartingPoint(worldBoundaries);
     }
 
-    const { fireRate = 0, aimPrecision = "SIMPLE" } = this.params;
-    if (fireRate > 0) {
-      let angle = R180;
-      let rotation = R180;
-
-      if (!!state.playerHitbox) {
-        if (aimPrecision === "LOOSE") {
-          rotation = this.calculateRotation(state.playerHitbox);
-          angle = rotation + randInRange(-0.25, 0.25);
-        } else if (aimPrecision === "ACCURATE") {
-          angle = rotation = this.calculateRotation(state.playerHitbox);
-        }
-      }
-
-      this.rotation = rotation;
-
-      if (this.fireRateDelay < fireRate) {
-        this.fireRateDelay += state.delta;
-      } else {
-        this.launcher.launch({
-          from: {
-            x: this.x + this.cx,
-            y: this.y + this.cy,
-          },
-          angle,
-          gameState: state,
-        });
-        this.fireRateDelay = 0;
-      }
-    }
+    this.setFireAndRotation(state);
 
     this.x = this.x + this.xDirection * state.delta * this.speed;
     this.y = this.y + this.yDirection * state.delta * this.speed;
@@ -166,8 +189,8 @@ export class Ship implements Drawable {
     if (
       this.x + this.doubleWidth < 0 ||
       this.y + this.doubleHeight < 0 ||
-      this.x - this.doubleWidth > wwidth ||
-      this.y - this.doubleHeight > wheight
+      this.x - this.doubleWidth > worldBoundaries.width ||
+      this.y - this.doubleHeight > worldBoundaries.height
     ) {
       this.active = false;
     }

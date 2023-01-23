@@ -15,12 +15,14 @@ export interface HitBox {
 }
 
 export interface GameState {
-  delta: number;
-  worldBoundaries: Boundaries;
-  playerHitbox?: HitBox;
+  get delta(): number;
+  get worldBoundaries(): Boundaries;
+  get player(): HitBox;
+  set player(hitbox: HitBox);
 }
 
 export interface Drawable {
+  // TODO get active(): boolean;
   isActive(): boolean;
   update(state: GameState): void;
   draw(c: CanvasRenderingContext2D): void;
