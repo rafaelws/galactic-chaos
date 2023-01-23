@@ -1,5 +1,13 @@
 # TODO
 
+- [] mechanics: game objects collision
+- [] mechanics: projectile collision (both player and enemies)
+- [] fix level manager step function
+- [] status (player health, score, enemies health)
+- [] {pending} game objects movement patterns (verify feasibility) - arc, 8, drone, pursuer...
+
+# ALL
+
 - [] assets
   - [x] player
   - [x] enemies
@@ -13,10 +21,8 @@
 - [x] level manager
 - [] enemies
   - [x] rock
-  - [] ship
+  - [x] ship (see TODO)
   - [] bosses\*
-  - [] read player position/input\*
-  - [] movesets (sin, cos)\*
 - [] mechanics
 
   - [] game objects collision

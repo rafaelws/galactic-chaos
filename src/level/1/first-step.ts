@@ -32,13 +32,12 @@ export function firstStep() {
     new Ship({
       img: getImage(assets.img.ship.level1[0]),
       movement: {
-        angle: 0,
+        angle: 60,
         start: { x: 0.5, y: 0 },
-        // speed: 0.2,
+        speed: 0.2,
       },
       fire: {
         rate: 0,
-        // precision: "LOOSE",
       },
     }),
   ];

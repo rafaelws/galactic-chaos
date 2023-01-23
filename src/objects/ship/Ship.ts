@@ -56,17 +56,17 @@ export interface ShipParams {
     angle: number;
 
     /**
-     * - `LINEAR`: move as a rect
-     * - `ARC`: move as a arc
-     * @default LINEAR
-     */
-    pattern?: "LINEAR" | "8"; // ARC
-
-    /**
      * velocity multiplier (`0 < speed <= 1`)
      * @default 0.1
      */
     speed?: number;
+
+    /**
+     * - `LINEAR`: move as a rect
+     * - `ARC`: move as a arc
+     * @default "LINEAR"
+     */
+    // pattern?: "LINEAR" | "8" | "ARC";
   };
 }
 
@@ -116,23 +116,29 @@ export class Ship implements Drawable {
   }
 
   private setStartingPoint(worldBoundaries: Boundaries) {
-    let x = this.params.movement.start.x;
-    let y = this.params.movement.start.y;
+    let sx = this.params.movement.start.x;
+    let sy = this.params.movement.start.y;
 
     this.x = 0;
-    if (!!y) {
+    if (!!sy) {
       if (this.angle > 0) {
-        x = 1;
+        sx = 1;
         this.x = this.width;
       } else if (this.angle < 0) {
-        x = 0;
+        sx = 0;
         this.x = -this.width;
       } else {
-        y = 0;
+        sy = 0;
       }
     }
-    this.x += x * worldBoundaries.width;
-    this.y = y * worldBoundaries.height - this.height;
+    this.x += sx * (worldBoundaries.width - this.width);
+    this.y = sy * (worldBoundaries.height - this.height);
+  }
+
+  private move(state: GameState) {
+    // TODO patterns
+    this.x = this.x + this.xDirection * this.speed * state.delta;
+    this.y = this.y + this.yDirection * this.speed * state.delta;
   }
 
   private setFireAndRotation(state: GameState) {
@@ -168,38 +174,24 @@ export class Ship implements Drawable {
   }
 
   public update(state: GameState): void {
-    if (this.isWaiting()) {
+    if (this.isWaiting) {
       this.delay += state.delta;
       return;
     }
 
-    const { worldBoundaries } = state;
-
-    if (isNaN(this.x) && isNaN(this.y)) {
-      this.setStartingPoint(worldBoundaries);
-    }
+    if (isNaN(this.x) && isNaN(this.y))
+      this.setStartingPoint(state.worldBoundaries);
 
     this.setFireAndRotation(state);
-
-    this.x = this.x + this.xDirection * state.delta * this.speed;
-    this.y = this.y + this.yDirection * state.delta * this.speed;
+    this.move(state);
 
     // TODO detect collision
-    // detect out of bounds
-    if (
-      this.x + this.doubleWidth < 0 ||
-      this.y + this.doubleHeight < 0 ||
-      this.x - this.doubleWidth > worldBoundaries.width ||
-      this.y - this.doubleHeight > worldBoundaries.height
-    ) {
-      this.active = false;
-    }
-
+    this.checkBoundaries(state.worldBoundaries);
     iterate(this.launcher.drawables, (drawable) => drawable.update(state));
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    if (this.isWaiting()) return;
+    if (this.isWaiting) return;
 
     iterate(this.launcher.drawables, (drawable) => drawable.draw(c));
 
@@ -218,7 +210,7 @@ export class Ship implements Drawable {
     return this.active || this.launcher.drawables.length > 0;
   }
 
-  private isWaiting() {
+  private get isWaiting() {
     return (this.params.delay || 0) >= this.delay;
   }
 
@@ -226,5 +218,16 @@ export class Ship implements Drawable {
     const x = this.x + this.cx;
     const y = this.y + this.cy;
     return -atan2({ x, y }, hitbox);
+  }
+
+  private checkBoundaries(worldBoundaries: Boundaries) {
+    if (
+      this.x + this.doubleWidth < 0 ||
+      this.y + this.doubleHeight < 0 ||
+      this.x - this.doubleWidth > worldBoundaries.width ||
+      this.y - this.doubleHeight > worldBoundaries.height
+    ) {
+      this.active = false;
+    }
   }
 }
