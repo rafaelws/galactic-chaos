@@ -2,7 +2,7 @@ type ImageCache = {
   [path: string]: HTMLImageElement;
 };
 
-const cache: ImageCache = {};
+let cache: ImageCache = {};
 
 /**
  * BE SURE TO USE `loadImages` first.

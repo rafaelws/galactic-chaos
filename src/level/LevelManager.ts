@@ -1,6 +1,9 @@
-import { loadImages } from "@/common/asset";
+import { assets, getImage, loadImages } from "@/common/asset";
 import { ControlState } from "@/common/controls";
 import { Drawable, GameState } from "@/common/meta";
+import { iterate } from "@/common/util";
+import { Player } from "@/objects";
+import { firstLevel } from "./1";
 import { Level } from "./Level";
 
 export class LevelManager {
@@ -14,8 +17,11 @@ export class LevelManager {
   private finalStep = -1;
 
   private drawables: Drawable[] = [];
+  private readonly levels: Level[] = [firstLevel];
 
-  constructor(private readonly levels: Level[]) {
+  private player?: Player;
+
+  constructor() {
     this.nextLevel();
   }
 
@@ -28,6 +34,7 @@ export class LevelManager {
     this.finalStep = this.level.steps.length;
   }
 
+  // FIXME
   private step(): void {
     if (this.currentLevel >= this.finalLevel) return;
     if (this.currentStep < this.finalStep) {
@@ -53,27 +60,37 @@ export class LevelManager {
   }
 
   public update(state: GameState, controls: ControlState): void {
+    if (this.loading) return;
+
     if (!this.loaded) {
       this.load();
       return;
     }
 
-    if (this.loading) return;
-
-    let actives = [];
-    for (let i = 0; i < this.drawables.length; i++) {
-      let drawable = this.drawables[i];
-      drawable.update(state, controls);
-      if (drawable.isActive()) actives.push(drawable);
+    if (!this.player) {
+      this.player = new Player(getImage(assets.img.player.self));
     }
+
+    this.player.update(state, controls);
+    state.playerHitbox = this.player.hitbox;
+
+    let actives: Drawable[] = [];
+    iterate(this.drawables, (drawable) => {
+      drawable.update(state);
+      if (drawable.isActive()) {
+        // TODO detect collisions
+        actives.push(drawable);
+      }
+    });
     this.drawables = actives;
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (this.loading || !this.loaded) return;
-    for (let i = 0; i < this.drawables.length; i++) {
-      this.drawables[i].draw(c);
-    }
+
+    this.player?.draw(c);
+    iterate(this.drawables, (drawable) => drawable.draw(c));
+
     if (this.drawables.length == 0) {
       this.step();
     }

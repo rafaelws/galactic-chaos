@@ -1,6 +1,6 @@
 import { toDeg } from "@/common/math";
 
-import { Coordinate, GameState, HitBox, Drawable } from "@/common/meta";
+import { Coordinate, GameState, HitBox } from "@/common/meta";
 
 import {
   ControlState,
@@ -11,7 +11,7 @@ import {
 import { Launcher, ProjectileLauncher } from "../projectile";
 import { iterate } from "@/common/util";
 
-export class Player implements Drawable {
+export class Player {
   private x = NaN;
   private y = NaN;
   private cx = 0;
@@ -105,17 +105,13 @@ export class Player implements Drawable {
       this.act(state, action, controls[action]!);
     }
 
-    iterate(this.launcher.drawables, (drawable) => {
-      drawable.update(state, controls);
-    });
+    iterate(this.launcher.drawables, (drawable) => drawable.update(state));
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    iterate(this.launcher.drawables, (drawable) => {
-      drawable.draw(c);
-    });
+    iterate(this.launcher.drawables, (drawable) => drawable.draw(c));
 
-    const { img, x, y, width, height, rotationAngle, hitbox, cx, cy } = this;
+    const { img, x, y, width, height, rotationAngle, cx, cy } = this;
 
     c.save();
     c.translate(x + cx, y + cy);
@@ -127,6 +123,7 @@ export class Player implements Drawable {
     c.drawImage(img, -cx, -cy, width, height);
     c.restore();
 
+    /*
     // debug
     const _y = Math.floor(y);
     const _x = Math.floor(x);
@@ -141,6 +138,7 @@ export class Player implements Drawable {
     c.beginPath();
     c.arc(hitbox.x, hitbox.y, hitbox.radius, 0, Math.PI * 2);
     c.stroke();
+    */
   }
 
   // TODO
@@ -148,7 +146,7 @@ export class Player implements Drawable {
     return true;
   }
 
-  private get hitbox(): HitBox {
+  public get hitbox(): HitBox {
     return {
       radius: this.cy,
       x: this.x + this.cx,

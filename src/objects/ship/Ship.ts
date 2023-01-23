@@ -1,6 +1,5 @@
-import { ControlState } from "@/common/controls";
-import { toDeg, toRad } from "@/common/math";
-import { Coordinate, Drawable, GameState } from "@/common/meta";
+import { R180, randInRange, toRad } from "@/common/math";
+import { Coordinate, Drawable, GameState, HitBox } from "@/common/meta";
 import { iterate } from "@/common/util";
 import { ProjectileLauncher } from "../projectile";
 
@@ -42,10 +41,10 @@ export interface ShipParams {
   /**
    * SIMPLE: fire at `angle`
    * ACCURATE: fire directly at player
-   * LOOSE: fire at player but w/ 10~15% deviation
+   * LOOSE: fire at player but w/ random deviation
    * default: SIMPLE (or none, if fireRate = 0)
    */
-  aimPrecision?: "SIMPLE" | "LOSE" | "ACCURATE";
+  aimPrecision?: "SIMPLE" | "LOOSE" | "ACCURATE";
 
   /**
    * SIN: move as a sine wave
@@ -77,6 +76,7 @@ export class Ship implements Drawable {
   private xDirection = 0;
   private yDirection = 0;
   private angle = 0;
+  private rotation = 0;
   private speed = 0;
   private delay = 0;
   private fireRateDelay = 0;
@@ -99,7 +99,7 @@ export class Ship implements Drawable {
     this.launcher = new ProjectileLauncher(params.fireRate);
   }
 
-  public update(state: GameState, _: ControlState): void {
+  public update(state: GameState): void {
     const { width: wwidth, height: wheight } = state.worldBoundaries;
 
     if (isNaN(this.x) && isNaN(this.y)) {
@@ -129,15 +129,23 @@ export class Ship implements Drawable {
 
     const { fireRate = 0, aimPrecision = "SIMPLE" } = this.params;
     if (fireRate > 0) {
+      let angle = R180;
+      let rotation = R180;
+
+      if (!!state.playerHitbox) {
+        if (aimPrecision === "LOOSE") {
+          rotation = this.calculateRotation(state.playerHitbox);
+          angle = rotation + randInRange(-0.25, 0.25);
+        } else if (aimPrecision === "ACCURATE") {
+          angle = rotation = this.calculateRotation(state.playerHitbox);
+        }
+      }
+
+      this.rotation = rotation;
+
       if (this.fireRateDelay < fireRate) {
         this.fireRateDelay += state.delta;
       } else {
-        //
-        let angle = toRad(180);
-        if (aimPrecision === "ACCURATE") {
-        } else if (aimPrecision === "LOSE") {
-        }
-
         this.launcher.launch({
           from: {
             x: this.x + this.cx,
@@ -164,22 +172,21 @@ export class Ship implements Drawable {
       this.active = false;
     }
 
-    iterate(this.launcher.drawables, (drawable) => {
-      drawable.update(state, _);
-    });
+    iterate(this.launcher.drawables, (drawable) => drawable.update(state));
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (this.isWaiting()) return;
 
-    iterate(this.launcher.drawables, (drawable) => {
-      drawable.draw(c);
-    });
+    iterate(this.launcher.drawables, (drawable) => drawable.draw(c));
 
     const { width, height, x, y, cx, cy } = this;
 
     c.save();
     c.translate(x + cx, y + cy);
+    if (!!this.rotation) {
+      c.rotate(this.rotation - R180);
+    }
     c.drawImage(this.params.img, -cx, -cy, width, height);
     c.restore();
   }
@@ -190,5 +197,16 @@ export class Ship implements Drawable {
 
   public isActive(): boolean {
     return this.active || this.launcher.drawables.length > 0;
+  }
+
+  private get middle(): Coordinate {
+    return {
+      x: this.x + this.cx,
+      y: this.y + this.cy,
+    };
+  }
+
+  private calculateRotation(hitbox: HitBox): number {
+    return -Math.atan2(this.middle.x - hitbox.x, this.middle.y - hitbox.y);
   }
 }

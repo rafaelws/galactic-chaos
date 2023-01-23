@@ -79,7 +79,7 @@ export class Rock implements Drawable {
     this.cy = this.height * 0.5;
   }
 
-  public update(state: GameState, _: ControlState): void {
+  public update(state: GameState): void {
     const { width: wwidth, height: wheight } = state.worldBoundaries;
 
     if (isNaN(this.x) && isNaN(this.y)) {

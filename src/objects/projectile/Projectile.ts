@@ -1,4 +1,3 @@
-import { ControlState } from "@/common/controls";
 import { Boundaries, Coordinate, Drawable, GameState } from "@/common/meta";
 
 export class Projectile implements Drawable {
@@ -34,7 +33,7 @@ export class Projectile implements Drawable {
     this.cy = this.height * 0.5;
   }
 
-  public update(state: GameState, _: ControlState) {
+  public update(state: GameState) {
     this.x = this.x - this.xDirection * state.delta;
     this.y = this.y - this.yDirection * state.delta;
 

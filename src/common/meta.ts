@@ -1,5 +1,3 @@
-import { ControlState } from "./controls";
-
 export interface Boundaries {
   width: number;
   height: number;
@@ -17,15 +15,14 @@ export interface HitBox {
 }
 
 export interface GameState {
-  worldBoundaries: Boundaries;
   delta: number;
-  debug: boolean;
-  // playerStatus: PlayerStatus;
+  worldBoundaries: Boundaries;
+  playerHitbox?: HitBox;
 }
 
 export interface Drawable {
   isActive(): boolean;
-  update(state: GameState, controls: ControlState): void;
+  update(state: GameState): void;
   draw(c: CanvasRenderingContext2D): void;
 }
 
