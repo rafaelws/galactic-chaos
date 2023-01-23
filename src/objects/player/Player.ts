@@ -1,12 +1,6 @@
 import { toDeg } from "@/common/math";
 
-import {
-  Coordinate,
-  GameState,
-  HitBox,
-  PlayerStatus,
-  Drawable,
-} from "@/common/meta";
+import { Coordinate, GameState, HitBox, Drawable } from "@/common/meta";
 
 import {
   ControlState,
@@ -14,25 +8,32 @@ import {
   ControlAction,
 } from "@/common/controls";
 
-import { drawPlayer } from "./draw-player";
-import { ProjectileManager } from "../projectile/ProjectileManager";
+import { Launcher, ProjectileLauncher } from "../projectile";
+import { iterate } from "@/common/util";
 
 export class Player implements Drawable {
-  private x: number = NaN;
-  private y: number = NaN;
-  private width: number = 0;
-  private height: number = 0;
-  private rotationAngle: number = 0;
-  private projectileManager: ProjectileManager;
+  private x = NaN;
+  private y = NaN;
+  private cx = 0;
+  private cy = 0;
+  private width = 0;
+  private height = 0;
+  private rotationAngle = 0;
+  private launcher: Launcher;
 
   constructor(private img: HTMLImageElement) {
-    this.projectileManager = new ProjectileManager();
+    this.launcher = new ProjectileLauncher();
+    // TODO handle screen resize
+    this.height = img.height;
+    this.width = img.width;
+    this.cx = this.width * 0.5;
+    this.cy = this.height * 0.5;
   }
 
   private getMiddle(): Coordinate {
     return {
-      x: this.x + this.width * 0.5,
-      y: this.y + this.height * 0.5,
+      x: this.x + this.cx,
+      y: this.y + this.cy,
     };
   }
 
@@ -71,11 +72,11 @@ export class Player implements Drawable {
       case "L_RIGHT": this.x += velocity; break;
       case "ROTATE": this.setRotation(velocity, coordinate); break;
       case "RB": 
-        this.projectileManager.launch(
-          this.getMiddle(),
-          this.rotationAngle,
-          gameState.worldBoundaries
-        );
+        this.launcher.launch({
+          from: this.getMiddle(),
+          angle: this.rotationAngle,
+          gameState
+        });
         break;
     }
 
@@ -89,35 +90,12 @@ export class Player implements Drawable {
     if (this.x + this.width > width) this.x = width - this.width;
   }
 
-  private getHitBox(): HitBox {
-    return {
-      // since height == width
-      radius: this.height * 0.2,
-      x: this.x + this.width * 0.5,
-      y: this.y + this.height * 0.5,
-    };
-  }
-
-  public getStatus(): PlayerStatus {
-    const { x, y, width, height } = this;
-    return {
-      boundaries: { width, height },
-      position: { x, y },
-      hitbox: this.getHitBox(),
-      rotation: this.rotationAngle,
-    };
-  }
-
   public update(state: GameState, controls: ControlState): void {
     if (!state.worldBoundaries) return;
 
-    // TODO update width/height
-    const { width, height } = state.worldBoundaries;
-    this.width = width * 0.07;
-    this.height = this.width;
-
     // TODO
     if (isNaN(this.x) && isNaN(this.y)) {
+      const { width, height } = state.worldBoundaries;
       this.x = width * 0.5 - this.width * 0.5; // centered
       this.y = height * 0.95 - this.height; // 5% above ground
     }
@@ -126,16 +104,55 @@ export class Player implements Drawable {
     for (action in controls) {
       this.act(state, action, controls[action]!);
     }
-    this.projectileManager.update(state, controls);
+
+    iterate(this.launcher.drawables, (drawable) => {
+      drawable.update(state, controls);
+    });
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    drawPlayer({ c, status: this.getStatus(), img: this.img });
-    this.projectileManager.draw(c);
+    iterate(this.launcher.drawables, (drawable) => {
+      drawable.draw(c);
+    });
+
+    const { img, x, y, width, height, rotationAngle, hitbox, cx, cy } = this;
+
+    c.save();
+    c.translate(x + cx, y + cy);
+    c.rotate(rotationAngle);
+
+    // c.fillStyle = "white";
+    // c.fillRect(-cx, -cy, width, height);
+    // c.closePath();
+    c.drawImage(img, -cx, -cy, width, height);
+    c.restore();
+
+    // debug
+    const _y = Math.floor(y);
+    const _x = Math.floor(x);
+    const rad = Math.floor(toDeg(rotationAngle));
+    c.strokeStyle = "red";
+    c.fillStyle = "white";
+    c.font = `${16}px sans-serif`;
+
+    // c.textAlign = "center";
+    c.fillText(`[${_x}, ${_y}] ${rad}°`, _x + width, _y);
+
+    c.beginPath();
+    c.arc(hitbox.x, hitbox.y, hitbox.radius, 0, Math.PI * 2);
+    c.stroke();
   }
 
   // TODO
   public isActive(): boolean {
     return true;
+  }
+
+  private get hitbox(): HitBox {
+    return {
+      radius: this.cy,
+      x: this.x + this.cx,
+      y: this.y + this.cy,
+    };
   }
 }

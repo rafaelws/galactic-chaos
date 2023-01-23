@@ -1,6 +1,8 @@
 import { ControlState } from "@/common/controls";
-import { toRad } from "@/common/math";
+import { toDeg, toRad } from "@/common/math";
 import { Coordinate, Drawable, GameState } from "@/common/meta";
+import { iterate } from "@/common/util";
+import { ProjectileLauncher } from "../projectile";
 
 export interface ShipParams {
   img: HTMLImageElement;
@@ -35,7 +37,7 @@ export interface ShipParams {
   /**
    * 0 (or absent): won't fire
    */
-  // fireRate?: number;
+  fireRate?: number;
 
   /**
    * SIMPLE: fire at `angle`
@@ -43,7 +45,7 @@ export interface ShipParams {
    * LOOSE: fire at player but w/ 10~15% deviation
    * default: SIMPLE (or none, if fireRate = 0)
    */
-  // aimPrecision?: "SIMPLE" | "LOSE" | "ACCURATE";
+  aimPrecision?: "SIMPLE" | "LOSE" | "ACCURATE";
 
   /**
    * SIN: move as a sine wave
@@ -77,6 +79,8 @@ export class Ship implements Drawable {
   private angle = 0;
   private speed = 0;
   private delay = 0;
+  private fireRateDelay = 0;
+  private launcher: ProjectileLauncher;
 
   constructor(private readonly params: ShipParams) {
     this.angle = toRad(params.angle || 0);
@@ -84,13 +88,15 @@ export class Ship implements Drawable {
     this.yDirection = Math.cos(-this.angle);
     this.speed = params.speed || 0.1;
 
-    // TODO width and height (can they change?)
+    // TODO handle screen resize
     this.height = this.params.img.height;
     this.width = this.params.img.width;
     this.doubleHeight = this.height * 2;
     this.doubleWidth = this.width * 2;
     this.cx = this.width * 0.5;
     this.cy = this.height * 0.5;
+
+    this.launcher = new ProjectileLauncher(params.fireRate);
   }
 
   public update(state: GameState, _: ControlState): void {
@@ -121,6 +127,29 @@ export class Ship implements Drawable {
       return;
     }
 
+    const { fireRate = 0, aimPrecision = "SIMPLE" } = this.params;
+    if (fireRate > 0) {
+      if (this.fireRateDelay < fireRate) {
+        this.fireRateDelay += state.delta;
+      } else {
+        //
+        let angle = toRad(180);
+        if (aimPrecision === "ACCURATE") {
+        } else if (aimPrecision === "LOSE") {
+        }
+
+        this.launcher.launch({
+          from: {
+            x: this.x + this.cx,
+            y: this.y + this.cy,
+          },
+          angle,
+          gameState: state,
+        });
+        this.fireRateDelay = 0;
+      }
+    }
+
     this.x = this.x + this.xDirection * state.delta * this.speed;
     this.y = this.y + this.yDirection * state.delta * this.speed;
 
@@ -134,10 +163,19 @@ export class Ship implements Drawable {
     ) {
       this.active = false;
     }
+
+    iterate(this.launcher.drawables, (drawable) => {
+      drawable.update(state, _);
+    });
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (this.isWaiting()) return;
+
+    iterate(this.launcher.drawables, (drawable) => {
+      drawable.draw(c);
+    });
+
     const { width, height, x, y, cx, cy } = this;
 
     c.save();
@@ -151,6 +189,6 @@ export class Ship implements Drawable {
   }
 
   public isActive(): boolean {
-    return this.active;
+    return this.active || this.launcher.drawables.length > 0;
   }
 }

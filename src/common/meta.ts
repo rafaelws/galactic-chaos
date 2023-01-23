@@ -16,13 +16,6 @@ export interface HitBox {
   radius: number;
 }
 
-export interface PlayerStatus {
-  position: Coordinate;
-  boundaries: Boundaries;
-  hitbox: HitBox;
-  rotation: number;
-}
-
 export interface GameState {
   worldBoundaries: Boundaries;
   delta: number;

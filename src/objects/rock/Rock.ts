@@ -70,7 +70,7 @@ export class Rock implements Drawable {
     this.yDirection = Math.cos(-this.angle);
     this.speed = params.speed || 0.1;
 
-    // TODO width and height (can they change?)
+    // TODO handle screen resize
     this.height = this.params.img.height;
     this.width = this.params.img.width;
     this.doubleHeight = this.height * 2;

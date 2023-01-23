@@ -66,7 +66,6 @@ export class GameManager implements Destroyable {
     }
 
     this.setGameState(delta);
-
     this.lm.update(this.gameState, controls);
   }
 

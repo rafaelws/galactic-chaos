@@ -5,8 +5,8 @@
   - [x] enemies
   - [x] items
   - [] fonts (Orbitron)
-  - [] effects\*
-  - [] sound\*
+  - [] effects and animations (e.g. hit/collision effect)\*
+  - [] sound (ost, ui)\*
 - [] asset loader
   - [x] image
   - [] audio
@@ -20,13 +20,14 @@
 - [] mechanics
 
   - [] game objects collision
-  - [] items
   - [] overall status (score, health, items)
+  - [] items
 
 - [] HUD
 - [] gamepad
 - [] UI
 - [] background (dynamic, with particles, reacting to the bg music)\*
+- [] handle resize on game objects (Projectile, Ship, Rock, Player...)
 
 ---
 
