@@ -1,4 +1,4 @@
-import { R180, randInRange, toRad } from "@/common/math";
+import { atan2, R180, randInRange, toRad } from "@/common/math";
 import { Coordinate, Drawable, GameState, HitBox } from "@/common/meta";
 import { iterate } from "@/common/util";
 import { ProjectileLauncher } from "../projectile";
@@ -100,6 +100,11 @@ export class Ship implements Drawable {
   }
 
   public update(state: GameState): void {
+    if (this.isWaiting()) {
+      this.delay += state.delta;
+      return;
+    }
+
     const { width: wwidth, height: wheight } = state.worldBoundaries;
 
     if (isNaN(this.x) && isNaN(this.y)) {
@@ -120,11 +125,6 @@ export class Ship implements Drawable {
       }
       this.x += x * wwidth;
       this.y = y * wheight - this.height;
-    }
-
-    if (this.isWaiting()) {
-      this.delay += state.delta;
-      return;
     }
 
     const { fireRate = 0, aimPrecision = "SIMPLE" } = this.params;
@@ -191,22 +191,17 @@ export class Ship implements Drawable {
     c.restore();
   }
 
-  private isWaiting() {
-    return (this.params.delay || 0) >= this.delay;
-  }
-
   public isActive(): boolean {
     return this.active || this.launcher.drawables.length > 0;
   }
 
-  private get middle(): Coordinate {
-    return {
-      x: this.x + this.cx,
-      y: this.y + this.cy,
-    };
+  private isWaiting() {
+    return (this.params.delay || 0) >= this.delay;
   }
 
   private calculateRotation(hitbox: HitBox): number {
-    return -Math.atan2(this.middle.x - hitbox.x, this.middle.y - hitbox.y);
+    const x = this.x + this.cx;
+    const y = this.y + this.cy;
+    return -atan2({ x, y }, hitbox);
   }
 }

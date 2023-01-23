@@ -1,4 +1,4 @@
-import { toDeg } from "@/common/math";
+import { atan2, toDeg } from "@/common/math";
 
 import { Coordinate, GameState, HitBox } from "@/common/meta";
 
@@ -30,21 +30,14 @@ export class Player {
     this.cy = this.height * 0.5;
   }
 
-  private getMiddle(): Coordinate {
-    return {
-      x: this.x + this.cx,
-      y: this.y + this.cy,
-    };
-  }
-
   private setRotation(velocity: number, to?: Coordinate) {
     if (to) {
       // mouse: rotates from the center of the player
-      const from = this.getMiddle();
-      this.rotationAngle = -Math.atan2(from.x - to.x, from.y - to.y);
+      this.rotationAngle = -atan2(this.middle, to);
     } else {
       // -1 <= velocity <= 1
-      this.rotationAngle = this.rotationAngle + toDeg(velocity) * 0.25;
+      // TODO rotationSpeed for the gamepad
+      this.rotationAngle = this.rotationAngle + toDeg(velocity);
     }
   }
 
@@ -73,7 +66,7 @@ export class Player {
       case "ROTATE": this.setRotation(velocity, coordinate); break;
       case "RB": 
         this.launcher.launch({
-          from: this.getMiddle(),
+          from: this.middle,
           angle: this.rotationAngle,
           gameState
         });
@@ -116,7 +109,6 @@ export class Player {
     c.save();
     c.translate(x + cx, y + cy);
     c.rotate(rotationAngle);
-
     // c.fillStyle = "white";
     // c.fillRect(-cx, -cy, width, height);
     // c.closePath();
@@ -149,6 +141,13 @@ export class Player {
   public get hitbox(): HitBox {
     return {
       radius: this.cy,
+      x: this.x + this.cx,
+      y: this.y + this.cy,
+    };
+  }
+
+  private get middle(): Coordinate {
+    return {
       x: this.x + this.cx,
       y: this.y + this.cy,
     };
