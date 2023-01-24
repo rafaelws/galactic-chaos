@@ -12,6 +12,30 @@ export interface RockParams {
   img: HTMLImageElement;
 
   /**
+   * How many shots it takes to be destroyed (integer > 0)
+   * @default 1
+   */
+  hp?: number;
+
+  /**
+   * Impact (collision) power (integer > 0)
+   * @default 1
+   */
+  power?: number;
+
+  /**
+   * While `hp > 0` will hit again
+   *
+   * Uses `gameState.delta`
+   *
+   * It is a time window, so the player
+   * can react to consecutive impacts
+   *
+   * @default 100 //ms (if hp > 1)
+   */
+  collisionTimeout?: number;
+
+  /**
    * starting point in %
    * (0 <= x <= 1)
    * (0 <= y <= 1)
@@ -25,16 +49,19 @@ export interface RockParams {
 
   /**
    * spawn angle in degrees
+   * @default 0 //deg
    */
   angle?: number;
 
   /**
-   * time in ms until draw (not precise, uses delta)
+   * time in ms until spawn/draw (not precise, uses delta)
+   * @default 0 //ms (immediately)
    */
   delay?: number;
 
   /**
    * velocity multiplier (0 to 1)
+   * @default 0.1
    */
   speed?: number;
 
@@ -43,6 +70,9 @@ export interface RockParams {
    */
   // proportion?: number;
 
+  /**
+   * infinite rotation over its own center
+   */
   rotation?: {
     direction: "CLOCKWISE" | "COUNTERCLOCKWISE";
     /**
@@ -70,11 +100,22 @@ export class Rock implements GameObject {
   private delay = 0;
   private rotation = 0;
 
+  private hp: number;
+  private collisionTimeout: number;
+  private lastHit: number = -1;
+
   constructor(private readonly params: RockParams) {
-    this.angle = toRad(params.angle || 0);
+    this.hp = this.params.hp || 1;
+    this.collisionTimeout = this.params.collisionTimeout
+      ? this.params.collisionTimeout
+      : this.hp > 1
+      ? 100 // 100ms/hit
+      : 0;
+
+    this.angle = toRad(this.params.angle || 0);
     this.xDirection = Math.sin(-this.angle);
     this.yDirection = Math.cos(-this.angle);
-    this.speed = params.speed || 0.1;
+    this.speed = this.params.speed || 0.1;
 
     // TODO handle screen resize
     this.height = this.params.img.height;
@@ -134,6 +175,7 @@ export class Rock implements GameObject {
     this.setRotation();
 
     this.checkBoundaries(state.worldBoundaries);
+    this.hitClock(state.delta);
     this.checkCollision(state.player);
   }
 
@@ -168,18 +210,35 @@ export class Rock implements GameObject {
     }
   }
 
+  private hitClock(delta: number) {
+    if (this.canHit) return;
+
+    if (this.lastHit >= this.collisionTimeout) {
+      this.lastHit = -1;
+    } else if (this.lastHit > -1) {
+      this.lastHit += delta;
+    }
+  }
+
   private checkCollision(player: HitBox) {
-    if (this.active && hasCollided(this.hitbox, player)) {
-      // TODO params.impact.power
-      trigger("impact", 1);
-      // TODO change HP?
-      this.active = false;
+    if (this.active && this.canHit && hasCollided(this.hitbox, player)) {
+      trigger("impact", this.power);
+      this.handleHit(1);
+      this.lastHit = 1; // activates hitClock()
     }
   }
 
   public handleHit(power: number): void {
-    // TODO hp
-    this.active = false;
+    this.hp -= power;
+    if (this.hp <= 0) this.active = false;
+  }
+
+  private get canHit() {
+    return this.lastHit === -1;
+  }
+
+  private get power() {
+    return this.params.power || 1;
   }
 
   public get isActive() {

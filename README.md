@@ -1,6 +1,10 @@
 # TODO
 
-- [] game object status
+- [] game object params (hp, impact/project power)
+  - [x] rock
+  - [] ship
+  - [] projectile
+  - [] player
 - [] items
 - [] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
 - [] {pending} game objects movement patterns (verify feasibility) - arc, 8, drone, pursuer...
