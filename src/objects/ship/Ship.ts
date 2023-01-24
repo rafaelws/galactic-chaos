@@ -172,7 +172,6 @@ export class Ship implements GameObject {
   }
 
   public update(state: GameState): void {
-    if (!this.active) return;
     if (this.isWaiting) {
       this.delay += state.delta;
       return;
@@ -192,7 +191,7 @@ export class Ship implements GameObject {
 
   public draw(c: CanvasRenderingContext2D): void {
     if (isNaN(this.x) || isNaN(this.y)) return;
-    if (!this.active || this.isWaiting) return;
+    if (this.isWaiting) return;
 
     iterate(this.launcher.drawables, (drawable) => drawable.draw(c));
 
@@ -243,7 +242,8 @@ export class Ship implements GameObject {
   }
 
   public get isActive() {
-    return this.active || this.launcher.drawables.length > 0;
+    // || this.launcher.drawables.length > 0
+    return this.active;
   }
 
   public get hitbox() {
