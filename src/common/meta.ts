@@ -22,8 +22,8 @@ export interface GameState {
 }
 
 export interface Drawable {
-  // TODO get active(): boolean;
-  isActive(): boolean;
+  get isActive(): boolean;
+  get hitbox(): HitBox;
   update(state: GameState): void;
   draw(c: CanvasRenderingContext2D): void;
 }

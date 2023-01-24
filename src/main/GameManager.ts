@@ -26,7 +26,7 @@ export class GameManager implements Destroyable {
 
     this.listeners = { pause: this.handlePause.bind(this) };
     set(this.listeners);
-    this.destroyables = [this.input, this.cm];
+    this.destroyables = [this.input, this.cm, this.lm];
   }
 
   private handlePause(ev: Event) {

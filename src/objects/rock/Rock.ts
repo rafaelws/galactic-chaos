@@ -1,6 +1,12 @@
-import { ControlState } from "@/common/controls";
-import { toRad } from "@/common/math";
-import { Coordinate, Drawable, GameState } from "@/common/meta";
+import { trigger } from "@/common/events";
+import { hasCollided, toRad } from "@/common/math";
+import {
+  Boundaries,
+  Coordinate,
+  Drawable,
+  GameState,
+  HitBox,
+} from "@/common/meta";
 
 export interface RockParams {
   img: HTMLImageElement;
@@ -79,37 +85,32 @@ export class Rock implements Drawable {
     this.cy = this.height * 0.5;
   }
 
-  public update(state: GameState): void {
-    const { width: wwidth, height: wheight } = state.worldBoundaries;
+  private setStartingPoint(worldBoundaries: Boundaries) {
+    let x = this.params.start.x;
+    let y = this.params.start.y;
 
-    if (isNaN(this.x) && isNaN(this.y)) {
-      let x = this.params.start.x;
-      let y = this.params.start.y;
-
-      this.x = 0;
-      if (!!y) {
-        if (this.angle > 0) {
-          x = 1;
-          this.x = this.width;
-        } else if (this.angle < 0) {
-          x = 0;
-          this.x = -this.width;
-        } else {
-          y = 0;
-        }
+    this.x = 0;
+    if (!!y) {
+      if (this.angle > 0) {
+        x = 1;
+        this.x = this.width;
+      } else if (this.angle < 0) {
+        x = 0;
+        this.x = -this.width;
+      } else {
+        y = 0;
       }
-      this.x += x * wwidth;
-      this.y = y * wheight - this.height;
     }
+    this.x += x * worldBoundaries.width;
+    this.y = y * worldBoundaries.height - this.height;
+  }
 
-    if (this.isWaiting()) {
-      this.delay += state.delta;
-      return;
-    }
-
+  private move(state: GameState) {
     this.x = this.x + this.xDirection * state.delta * this.speed;
     this.y = this.y + this.yDirection * state.delta * this.speed;
+  }
 
+  private setRotation() {
     if (!!this.params.rotation) {
       const { direction, speed } = this.params.rotation;
       if (direction === "CLOCKWISE") {
@@ -118,17 +119,22 @@ export class Rock implements Drawable {
         this.rotation -= speed;
       }
     }
+  }
 
-    // TODO detect collision
-    // detect out of bounds
-    if (
-      this.x + this.doubleWidth < 0 ||
-      this.y + this.doubleHeight < 0 ||
-      this.x - this.doubleWidth > wwidth ||
-      this.y - this.doubleHeight > wheight
-    ) {
-      this.active = false;
+  public update(state: GameState): void {
+    if (this.isWaiting()) {
+      this.delay += state.delta;
+      return;
     }
+
+    if (isNaN(this.x) && isNaN(this.y))
+      this.setStartingPoint(state.worldBoundaries);
+
+    this.move(state);
+    this.setRotation();
+
+    this.checkBoundaries(state.worldBoundaries);
+    this.checkCollision(state.player);
   }
 
   public draw(c: CanvasRenderingContext2D): void {
@@ -149,7 +155,29 @@ export class Rock implements Drawable {
     return (this.params.delay || 0) >= this.delay;
   }
 
-  public isActive(): boolean {
+  private checkBoundaries(worldBoundaries: Boundaries) {
+    if (
+      this.x + this.doubleWidth < 0 ||
+      this.y + this.doubleHeight < 0 ||
+      this.x - this.doubleWidth > worldBoundaries.width ||
+      this.y - this.doubleHeight > worldBoundaries.height
+    ) {
+      this.active = false;
+    }
+  }
+
+  private checkCollision(player: HitBox) {
+    if (this.active && hasCollided(this.hitbox, player)) {
+      // TODO
+      trigger("impact", 1);
+    }
+  }
+
+  public get isActive() {
     return this.active;
+  }
+
+  public get hitbox() {
+    return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
   }
 }

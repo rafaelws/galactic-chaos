@@ -1,12 +1,14 @@
 import { assets, getImage, loadImages } from "@/common/asset";
 import { ControlState } from "@/common/controls";
-import { Boundaries, Drawable, GameState } from "@/common/meta";
+import { ListenerMap, set, unset } from "@/common/events";
+import { hasCollided } from "@/common/math";
+import { Boundaries, Destroyable, Drawable, GameState } from "@/common/meta";
 import { iterate } from "@/common/util";
 import { Player } from "@/objects";
 import { firstLevel } from "./1";
 import { Level } from "./Level";
 
-export class LevelManager {
+export class LevelManager implements Destroyable {
   private loaded = false;
   private loading = false;
 
@@ -16,13 +18,26 @@ export class LevelManager {
   private currentStep = -1;
   private finalStep = -1;
 
+  private listeners: ListenerMap = {};
   private drawables: Drawable[] = [];
   private readonly levels: Level[] = [firstLevel];
 
   private player?: Player;
 
   constructor() {
+    this.listeners = { impact: this.handleImpact.bind(this) };
+    set(this.listeners);
     this.nextLevel();
+  }
+
+  private handleImpact(ev: Event) {
+    const magnitude = (ev as CustomEvent).detail;
+    // TODO update player status
+    console.log("player hit", magnitude);
+  }
+
+  public destroy() {
+    unset(this.listeners);
   }
 
   private nextLevel() {
@@ -34,7 +49,7 @@ export class LevelManager {
     this.finalStep = this.level.steps.length;
   }
 
-  // FIXME
+  // *** FIXME ***
   private step(): void {
     if (this.currentLevel >= this.finalLevel) return;
     if (this.currentStep < this.finalStep) {
@@ -77,21 +92,24 @@ export class LevelManager {
       player: { x: 0, y: 0, radius: 0 },
     };
 
-    if (!this.player)
+    if (!this.player) {
       this.player = new Player(getImage(assets.img.player.self));
+    } else {
+      // IMPORTANT: player sets `state.player` on update
+      this.player.update(state, controls);
 
-    // IMPORTANT: player sets `state.player` on update
-    this.player.update(state, controls);
+      const { projectiles } = this.player;
 
-    let actives: Drawable[] = [];
-    iterate(this.drawables, (drawable) => {
-      drawable.update(state);
-      if (drawable.isActive()) {
-        // TODO detect collisions?
-        actives.push(drawable);
-      }
-    });
-    this.drawables = actives;
+      let actives: Drawable[] = [];
+      iterate(this.drawables, (drawable) => {
+        drawable.update(state);
+        if (drawable.isActive) {
+          this.verifyProjectileCollision(projectiles, drawable);
+          actives.push(drawable);
+        }
+      });
+      this.drawables = actives;
+    }
   }
 
   public draw(c: CanvasRenderingContext2D): void {
@@ -100,12 +118,25 @@ export class LevelManager {
     this.player?.draw(c);
     iterate(this.drawables, (drawable) => drawable.draw(c));
 
-    if (this.drawables.length == 0) {
-      this.step();
-    }
+    if (this.drawables.length == 0) this.step();
   }
 
   private get level() {
     return this.levels[this.currentLevel];
+  }
+
+  // n²?
+  private verifyProjectileCollision(
+    projectiles: Drawable[],
+    drawable: Drawable
+  ) {
+    iterate(projectiles, (projectile) => {
+      if (hasCollided(projectile.hitbox, drawable.hitbox)) {
+        // TODO
+        console.log("projectile hit", projectile, drawable);
+        // projectile.notify()
+        // drawable.notify()
+      }
+    });
   }
 }

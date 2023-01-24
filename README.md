@@ -1,7 +1,9 @@
 # TODO
 
-- [] mechanics: game objects collision
-- [] mechanics: projectile collision (both player and enemies)
+- [x] mechanics: game objects collision
+  - [x] enemies[] collision > player (event)
+  - [x] enemy projectiles[] collision > player (event)
+  - [x] player projectiles[] collision > enemies[] (notify)
 - [] fix level manager step function
 - [] status (player health, score, enemies health)
 - [] {pending} game objects movement patterns (verify feasibility) - arc, 8, drone, pursuer...
@@ -25,7 +27,7 @@
   - [] bosses\*
 - [] mechanics
 
-  - [] game objects collision
+  - [x] game objects collision
   - [] overall status (score, health, items)
   - [] items
 

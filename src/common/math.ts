@@ -1,4 +1,4 @@
-import { Coordinate } from "./meta";
+import { Coordinate, HitBox } from "./meta";
 
 const RAD = Math.PI / 180;
 const DEG = 180 / Math.PI;
@@ -28,4 +28,9 @@ export function randInRange(min: number, max: number) {
  */
 export function atan2(from: Coordinate, to: Coordinate) {
   return Math.atan2(from.x - to.x, from.y - to.y);
+}
+
+export function hasCollided(a: HitBox, b: HitBox) {
+  const hypot = Math.hypot(a.x - b.x, a.y - b.y);
+  return hypot < a.radius + b.radius;
 }

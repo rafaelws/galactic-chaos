@@ -1,15 +1,12 @@
 import { atan2, toDeg } from "@/common/math";
-
-import { Boundaries, Coordinate, GameState, HitBox } from "@/common/meta";
-
+import { iterate } from "@/common/util";
+import { Coordinate, GameState, HitBox } from "@/common/meta";
 import {
   ControlState,
   ControlStateData,
   ControlAction,
 } from "@/common/controls";
-
-import { Launcher, ProjectileLauncher } from "../projectile";
-import { iterate } from "@/common/util";
+import { ProjectileLauncher } from "../projectile";
 
 export class Player {
   private x = NaN;
@@ -19,7 +16,7 @@ export class Player {
   private width = 0;
   private height = 0;
   private rotationAngle = 0;
-  private launcher: Launcher;
+  private launcher: ProjectileLauncher;
 
   constructor(private img: HTMLImageElement) {
     this.launcher = new ProjectileLauncher();
@@ -33,11 +30,11 @@ export class Player {
   private setRotation(velocity: number, to?: Coordinate) {
     if (to) {
       // mouse: rotates from the center of the player
-      this.rotationAngle = -atan2(this.middle, to);
+      this.rotationAngle = -atan2(this.hitbox, to);
     } else {
       // -1 <= velocity <= 1
       // TODO rotationSpeed for the gamepad
-      this.rotationAngle = this.rotationAngle + toDeg(velocity);
+      this.rotationAngle += toDeg(velocity);
     }
   }
 
@@ -66,9 +63,9 @@ export class Player {
       case "ROTATE": this.setRotation(velocity, coordinate); break;
       case "RB": 
         this.launcher.launch({
-          from: this.middle,
+          from: this.hitbox,
           angle: this.rotationAngle,
-          gameState
+          enemy: false,
         });
         break;
     }
@@ -135,23 +132,11 @@ export class Player {
     */
   }
 
-  // TODO
-  public isActive(): boolean {
-    return true;
-  }
-
   public get hitbox(): HitBox {
-    return {
-      radius: this.cy,
-      x: this.x + this.cx,
-      y: this.y + this.cy,
-    };
+    return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
   }
 
-  private get middle(): Coordinate {
-    return {
-      x: this.x + this.cx,
-      y: this.y + this.cy,
-    };
+  public get projectiles() {
+    return this.launcher.drawables;
   }
 }

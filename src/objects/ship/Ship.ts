@@ -1,4 +1,5 @@
-import { atan2, R180, randInRange, toRad } from "@/common/math";
+import { trigger } from "@/common/events";
+import { atan2, hasCollided, R180, randInRange, toRad } from "@/common/math";
 import {
   Boundaries,
   Coordinate,
@@ -162,12 +163,9 @@ export class Ship implements Drawable {
       this.fireRateDelay += state.delta;
     } else {
       this.launcher.launch({
-        from: {
-          x: this.x + this.cx,
-          y: this.y + this.cy,
-        },
+        from: this.hitbox,
         angle,
-        gameState: state,
+        enemy: true,
       });
       this.fireRateDelay = 0;
     }
@@ -185,8 +183,9 @@ export class Ship implements Drawable {
     this.setFireAndRotation(state);
     this.move(state);
 
-    // TODO detect collision
     this.checkBoundaries(state.worldBoundaries);
+    this.checkCollision(state.player);
+
     iterate(this.launcher.drawables, (drawable) => drawable.update(state));
   }
 
@@ -206,18 +205,8 @@ export class Ship implements Drawable {
     c.restore();
   }
 
-  public isActive(): boolean {
-    return this.active || this.launcher.drawables.length > 0;
-  }
-
   private get isWaiting() {
     return (this.params.delay || 0) >= this.delay;
-  }
-
-  private calculateRotation(hitbox: HitBox): number {
-    const x = this.x + this.cx;
-    const y = this.y + this.cy;
-    return -atan2({ x, y }, hitbox);
   }
 
   private checkBoundaries(worldBoundaries: Boundaries) {
@@ -229,5 +218,26 @@ export class Ship implements Drawable {
     ) {
       this.active = false;
     }
+  }
+
+  private checkCollision(player: HitBox) {
+    if (this.active && hasCollided(this.hitbox, player)) {
+      // TODO
+      trigger("impact", 1);
+    }
+  }
+
+  private calculateRotation(hitbox: HitBox): number {
+    const x = this.x + this.cx;
+    const y = this.y + this.cy;
+    return -atan2({ x, y }, hitbox);
+  }
+
+  public get isActive() {
+    return this.active || this.launcher.drawables.length > 0;
+  }
+
+  public get hitbox() {
+    return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
   }
 }
