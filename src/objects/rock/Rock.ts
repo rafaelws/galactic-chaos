@@ -1,7 +1,13 @@
 import { trigger } from "@/common/events";
 import { hasCollided, toRad } from "@/common/math";
-import { Boundaries, GameObject, GameState, HitBox } from "@/common/meta";
-import { RockParams } from "./RockParams";
+import {
+  Boundaries,
+  Concrete,
+  GameObject,
+  GameState,
+  HitBox,
+} from "@/common/meta";
+import { RockImpact, RockParams } from "./RockParams";
 
 export class Rock implements GameObject {
   private active = true;
@@ -22,21 +28,22 @@ export class Rock implements GameObject {
   private rotation = 0;
 
   private hp: number;
-  private collisionTimeout: number;
+  private impact: Concrete<RockImpact>;
   private lastHit: number = -1;
 
   constructor(private readonly params: RockParams) {
-    this.hp = this.params.hp || 1;
-    this.collisionTimeout = this.params.collisionTimeout
-      ? this.params.collisionTimeout
-      : this.hp > 1
-      ? 100 // 100ms/hit
-      : 0;
+    this.hp = params.hp || 1;
+    this.impact = {
+      power: 1,
+      collisionTimeout: 100,
+      resistance: 0,
+      ...params.impact,
+    };
 
-    this.angle = toRad(this.params.angle || 0);
+    this.angle = toRad(params.angle || 0);
+    this.speed = params.speed || 0.1;
     this.xDirection = Math.sin(-this.angle);
     this.yDirection = Math.cos(-this.angle);
-    this.speed = this.params.speed || 0.1;
 
     // TODO handle screen resize
     this.height = this.params.img.height;
@@ -134,7 +141,7 @@ export class Rock implements GameObject {
   private hitClock(delta: number) {
     if (this.canHit) return;
 
-    if (this.lastHit >= this.collisionTimeout) {
+    if (this.lastHit >= this.impact.collisionTimeout) {
       this.lastHit = -1;
     } else if (this.lastHit > -1) {
       this.lastHit += delta;
@@ -143,8 +150,9 @@ export class Rock implements GameObject {
 
   private checkCollision(player: HitBox) {
     if (this.active && this.canHit && hasCollided(this.hitbox, player)) {
-      trigger("impact", this.power);
-      this.handleHit(1);
+      const { power, resistance } = this.impact;
+      trigger("impact", power);
+      this.handleHit(power - resistance);
       this.lastHit = 1; // activates hitClock()
     }
   }
@@ -156,10 +164,6 @@ export class Rock implements GameObject {
 
   private get canHit() {
     return this.lastHit === -1;
-  }
-
-  private get power() {
-    return this.params.power || 1;
   }
 
   public get isActive() {

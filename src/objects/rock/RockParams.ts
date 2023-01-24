@@ -1,14 +1,6 @@
 import { Coordinate } from "@/common/meta";
 
-export interface RockParams {
-  img: HTMLImageElement;
-
-  /**
-   * How many shots it takes to be destroyed (integer > 0)
-   * @default 1
-   */
-  hp?: number;
-
+export interface RockImpact {
   /**
    * Impact (collision) power (integer > 0)
    * @default 1
@@ -26,6 +18,31 @@ export interface RockParams {
    * @default 100 //ms (if hp > 1)
    */
   collisionTimeout?: number;
+
+  /**
+   * Defines the amount of damage taken when
+   * the impact occurs.
+   *
+   * Considerations:
+   *  - If power == resistance, no damage is taken
+   *  - If power > resistance, take damage (`damage = power - resistance`)
+   *  - If power < resistance, heal (`heal = resistance - power`)
+   *
+   * @default 0
+   */
+  resistance?: number;
+}
+
+export interface RockParams {
+  img: HTMLImageElement;
+
+  /**
+   * How many shots it takes to be destroyed (integer > 0)
+   * @default 1
+   */
+  hp?: number;
+
+  impact?: RockImpact;
 
   /**
    * starting point in %

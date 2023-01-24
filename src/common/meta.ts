@@ -32,3 +32,7 @@ export interface GameObject {
 export interface Destroyable {
   destroy(): void;
 }
+
+export type Concrete<T> = {
+  [Property in keyof T]-?: T[Property];
+};
