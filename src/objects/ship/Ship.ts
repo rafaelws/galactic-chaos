@@ -3,7 +3,7 @@ import { atan2, hasCollided, R180, randInRange, toRad } from "@/common/math";
 import {
   Boundaries,
   Coordinate,
-  Drawable,
+  GameObject,
   GameState,
   HitBox,
 } from "@/common/meta";
@@ -71,7 +71,7 @@ export interface ShipParams {
   };
 }
 
-export class Ship implements Drawable {
+export class Ship implements GameObject {
   private active = true;
   private x = NaN;
   private y = NaN;
@@ -172,6 +172,7 @@ export class Ship implements Drawable {
   }
 
   public update(state: GameState): void {
+    if (!this.active) return;
     if (this.isWaiting) {
       this.delay += state.delta;
       return;
@@ -190,7 +191,8 @@ export class Ship implements Drawable {
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    if (this.isWaiting) return;
+    if (isNaN(this.x) || isNaN(this.y)) return;
+    if (!this.active || this.isWaiting) return;
 
     iterate(this.launcher.drawables, (drawable) => drawable.draw(c));
 
@@ -220,17 +222,24 @@ export class Ship implements Drawable {
     }
   }
 
-  private checkCollision(player: HitBox) {
-    if (this.active && hasCollided(this.hitbox, player)) {
-      // TODO
-      trigger("impact", 1);
-    }
-  }
-
   private calculateRotation(hitbox: HitBox): number {
     const x = this.x + this.cx;
     const y = this.y + this.cy;
     return -atan2({ x, y }, hitbox);
+  }
+
+  private checkCollision(player: HitBox) {
+    if (this.active && hasCollided(this.hitbox, player)) {
+      // TODO params.impact.power
+      trigger("impact", 1);
+      // TODO change HP?
+      this.active = false;
+    }
+  }
+
+  public handleHit(power: number): void {
+    // TODO hp
+    this.active = false;
   }
 
   public get isActive() {

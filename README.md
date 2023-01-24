@@ -1,12 +1,9 @@
 # TODO
 
-- [x] mechanics: game objects collision
-  - [x] enemies[] collision > player (event)
-  - [x] enemy projectiles[] collision > player (event)
-  - [x] player projectiles[] collision > enemies[] (notify)
-- [] fix level manager step function
-- [] status (player health, score, enemies health)
+- [] game object status
+- [] items
 - [] {pending} game objects movement patterns (verify feasibility) - arc, 8, drone, pursuer...
+- [] {pending} fix level manager step function
 
 # ALL
 
@@ -14,6 +11,7 @@
   - [x] player
   - [x] enemies
   - [x] items
+  - [] projectiles
   - [] fonts (Orbitron)
   - [] effects and animations (e.g. hit/collision effect)\*
   - [] sound (ost, ui)\*
@@ -28,14 +26,21 @@
 - [] mechanics
 
   - [x] game objects collision
-  - [] overall status (score, health, items)
-  - [] items
+    - [x] enemies[] collision > player (event)
+    - [x] enemy projectiles[] collision > player (event)
+    - [x] player projectiles[] collision > enemies[] (notify)
+    - [x] notify game objects on collision
+  - [] game object params (hp, impact/project power)
+  - [] player items
+    - [] spawn (drop when an enemy is killed)
+    - [] effects (collision event)
 
 - [] HUD
 - [] gamepad
 - [] UI
 - [] background (dynamic, with particles, reacting to the bg music)\*
 - [] handle resize on game objects (Projectile, Ship, Rock, Player...)
+- [] overall status: time? score? enemies killed? shots fired?`\*
 
 ---
 

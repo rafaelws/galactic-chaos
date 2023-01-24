@@ -101,6 +101,8 @@ export class Player {
   }
 
   public draw(c: CanvasRenderingContext2D): void {
+    if (isNaN(this.x) || isNaN(this.y)) return;
+
     iterate(this.launcher.drawables, (drawable) => drawable.draw(c));
 
     const { img, x, y, width, height, rotationAngle, cx, cy } = this;
@@ -130,6 +132,11 @@ export class Player {
     c.arc(hitbox.x, hitbox.y, hitbox.radius, 0, Math.PI * 2);
     c.stroke();
     */
+  }
+
+  public handleHit(power: number) {
+    // TODO
+    // this.hp -= power;
   }
 
   public get hitbox(): HitBox {

@@ -1,4 +1,4 @@
-import { Drawable } from "@/common/meta";
+import { GameObject } from "@/common/meta";
 import { iterate } from "@/common/util";
 import { Projectile, ProjectileParams } from "./Projectile";
 
@@ -17,7 +17,7 @@ export class ProjectileLauncher {
     }
   }
 
-  public get drawables(): Drawable[] {
+  public get drawables(): GameObject[] {
     let actives: Projectile[] = [];
     iterate(this.projectiles, (projectile) => {
       if (projectile.isActive) actives.push(projectile);

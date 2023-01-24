@@ -3,7 +3,7 @@ import { hasCollided } from "@/common/math";
 import {
   Boundaries,
   Coordinate,
-  Drawable,
+  GameObject,
   GameState,
   HitBox,
 } from "@/common/meta";
@@ -12,9 +12,18 @@ export interface ProjectileParams {
   from: Coordinate;
   angle: number;
   enemy: boolean;
+  power?: number;
+
+  // "piercing projectile"
+  // (projectile won't vanish on first hit, and will `hitAdainIn` until hp == 0)
+  // integer > 0
+  // hp?: number;
+
+  // if projectile.hp > 0 will `hitAgainIn` ms
+  // hitAgainIn?: number;
 }
 
-export class Projectile implements Drawable {
+export class Projectile implements GameObject {
   private x = NaN;
   private y = NaN;
   private cx = 0;
@@ -49,6 +58,7 @@ export class Projectile implements Drawable {
   }
 
   public update(state: GameState) {
+    if (!this.active) return;
     if (isNaN(this.x) && isNaN(this.y))
       this.setStartingPoint(state.worldBoundaries);
 
@@ -58,6 +68,7 @@ export class Projectile implements Drawable {
   }
 
   public draw(c: CanvasRenderingContext2D) {
+    if (isNaN(this.x) || isNaN(this.y)) return;
     if (!this.active) return;
 
     const { cx, cy } = this;
@@ -83,8 +94,13 @@ export class Projectile implements Drawable {
   private checkCollision(player: HitBox) {
     if (this.active && this.params.enemy && hasCollided(this.hitbox, player)) {
       // TODO
-      trigger("impact", 1);
+      trigger("impact", this.power);
+      this.active = false;
     }
+  }
+
+  public get power() {
+    return this.params.power || 1;
   }
 
   public get isActive() {
@@ -93,5 +109,10 @@ export class Projectile implements Drawable {
 
   public get hitbox() {
     return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
+  }
+
+  public handleHit(power: number) {
+    // will never happen for Enemy Projectile
+    this.active = false;
   }
 }

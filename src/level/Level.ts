@@ -1,7 +1,7 @@
-import { Drawable } from "@/common/meta";
+import { GameObject } from "@/common/meta";
 
 export type Step = {
-  (): Drawable[];
+  (): GameObject[];
 };
 
 export interface Level {

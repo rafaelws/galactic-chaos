@@ -3,7 +3,7 @@ import { hasCollided, toRad } from "@/common/math";
 import {
   Boundaries,
   Coordinate,
-  Drawable,
+  GameObject,
   GameState,
   HitBox,
 } from "@/common/meta";
@@ -52,7 +52,7 @@ export interface RockParams {
   };
 }
 
-export class Rock implements Drawable {
+export class Rock implements GameObject {
   private active = true;
   private x = NaN;
   private y = NaN;
@@ -122,7 +122,7 @@ export class Rock implements Drawable {
   }
 
   public update(state: GameState): void {
-    if (this.isWaiting()) {
+    if (this.isWaiting) {
       this.delay += state.delta;
       return;
     }
@@ -138,7 +138,9 @@ export class Rock implements Drawable {
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    if (this.isWaiting()) return;
+    if (isNaN(this.x) || isNaN(this.y)) return;
+    if (this.isWaiting) return;
+
     const { width, height, x, y, cx, cy } = this;
     const { img, rotation } = this.params;
 
@@ -151,7 +153,7 @@ export class Rock implements Drawable {
     c.restore();
   }
 
-  private isWaiting() {
+  private get isWaiting() {
     return (this.params.delay || 0) >= this.delay;
   }
 
@@ -168,9 +170,16 @@ export class Rock implements Drawable {
 
   private checkCollision(player: HitBox) {
     if (this.active && hasCollided(this.hitbox, player)) {
-      // TODO
+      // TODO params.impact.power
       trigger("impact", 1);
+      // TODO change HP?
+      this.active = false;
     }
+  }
+
+  public handleHit(power: number): void {
+    // TODO hp
+    this.active = false;
   }
 
   public get isActive() {

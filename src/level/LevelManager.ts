@@ -1,12 +1,12 @@
-import { assets, getImage, loadImages } from "@/common/asset";
-import { ControlState } from "@/common/controls";
-import { ListenerMap, set, unset } from "@/common/events";
-import { hasCollided } from "@/common/math";
-import { Boundaries, Destroyable, Drawable, GameState } from "@/common/meta";
 import { iterate } from "@/common/util";
+import { hasCollided } from "@/common/math";
+import { ListenerMap, set, unset } from "@/common/events";
+import { ControlState } from "@/common/controls";
+import { Boundaries, Destroyable, GameObject, GameState } from "@/common/meta";
+import { assets, getImage, loadImages } from "@/common/asset";
 import { Player } from "@/objects";
-import { firstLevel } from "./1";
 import { Level } from "./Level";
+import { firstLevel } from "./1";
 
 export class LevelManager implements Destroyable {
   private loaded = false;
@@ -19,7 +19,7 @@ export class LevelManager implements Destroyable {
   private finalStep = -1;
 
   private listeners: ListenerMap = {};
-  private drawables: Drawable[] = [];
+  private drawables: GameObject[] = [];
   private readonly levels: Level[] = [firstLevel];
 
   private player?: Player;
@@ -31,9 +31,11 @@ export class LevelManager implements Destroyable {
   }
 
   private handleImpact(ev: Event) {
-    const magnitude = (ev as CustomEvent).detail;
+    // TODO do this inside player?
+    const power = (ev as CustomEvent).detail as number;
     // TODO update player status
-    console.log("player hit", magnitude);
+    console.log("player hit", power);
+    this.player!.handleHit(power);
   }
 
   public destroy() {
@@ -100,7 +102,7 @@ export class LevelManager implements Destroyable {
 
       const { projectiles } = this.player;
 
-      let actives: Drawable[] = [];
+      let actives: GameObject[] = [];
       iterate(this.drawables, (drawable) => {
         drawable.update(state);
         if (drawable.isActive) {
@@ -125,17 +127,17 @@ export class LevelManager implements Destroyable {
     return this.levels[this.currentLevel];
   }
 
-  // n²?
   private verifyProjectileCollision(
-    projectiles: Drawable[],
-    drawable: Drawable
+    projectiles: GameObject[],
+    drawable: GameObject
   ) {
     iterate(projectiles, (projectile) => {
       if (hasCollided(projectile.hitbox, drawable.hitbox)) {
         // TODO
         console.log("projectile hit", projectile, drawable);
-        // projectile.notify()
-        // drawable.notify()
+        projectile.handleHit(0);
+        // TODO
+        drawable.handleHit(1);
       }
     });
   }
