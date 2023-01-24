@@ -47,6 +47,7 @@ export function firstStep() {
         speed: 2,
       },
     }),
+    */
     new Ship({
       img: getImage(assets.img.ship.level1[0]),
       movement: {
@@ -58,6 +59,5 @@ export function firstStep() {
         rate: 350,
       },
     }),
-    */
   ];
 }

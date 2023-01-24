@@ -1,8 +1,8 @@
 # TODO
 
-- [] game object params (hp, impact/project power)
+- [] game object params (hp, impact{power,resistance,collisionTimeout}, projectile power)
   - [x] rock
-  - [] ship
+  - [x] ship
   - [] projectile
   - [] player
 - [] items
@@ -35,7 +35,7 @@
     - [x] enemy projectiles[] collision > player (event)
     - [x] player projectiles[] collision > enemies[] (notify)
     - [x] notify game objects on collision
-  - [] game object params (hp, impact/project power)
+  - [] game object params (hp, impact{power,resistance,collisionTimeout}, projectile power)
   - [] player items
     - [] spawn (drop when an enemy is killed)
     - [] effects (collision event)

@@ -1,9 +1,15 @@
 import { trigger } from "@/common/events";
 import { atan2, hasCollided, R180, randInRange, toRad } from "@/common/math";
-import { Boundaries, GameObject, GameState, HitBox } from "@/common/meta";
+import {
+  Boundaries,
+  Concrete,
+  GameObject,
+  GameState,
+  HitBox,
+} from "@/common/meta";
 import { iterate } from "@/common/util";
 import { ProjectileLauncher } from "../projectile";
-import { ShipParams } from "./ShipParams";
+import { ShipImpact, ShipMovement, ShipParams } from "./ShipParams";
 
 export class Ship implements GameObject {
   private active = true;
@@ -25,9 +31,21 @@ export class Ship implements GameObject {
   private fireRateDelay = 0;
   private launcher: ProjectileLauncher;
 
+  private hp: number;
+  private impact: Concrete<ShipImpact>;
+  private lastHit = -1;
+
   constructor(private readonly params: ShipParams) {
+    this.hp = this.params.hp || 1;
+    this.impact = {
+      power: 1,
+      resistance: 0,
+      collisionTimeout: 100,
+      ...params.impact,
+    };
+
     this.setDimensions();
-    this.setStartingMovement();
+    this.setStartingMovement(params.movement);
     this.launcher = new ProjectileLauncher(params.fire?.rate);
   }
 
@@ -41,8 +59,8 @@ export class Ship implements GameObject {
     this.cy = this.height * 0.5;
   }
 
-  private setStartingMovement() {
-    const { angle = 0, speed = 0.1 } = this.params.movement;
+  private setStartingMovement(movement: ShipMovement) {
+    const { angle = 0, speed = 0.1 } = movement;
 
     this.angle = toRad(angle);
     this.xDirection = Math.sin(-this.angle);
@@ -118,6 +136,7 @@ export class Ship implements GameObject {
     this.move(state);
 
     this.checkBoundaries(state.worldBoundaries);
+    this.hitClock(state.delta);
     this.checkCollision(state.player);
 
     iterate(this.launcher.drawables, (drawable) => drawable.update(state));
@@ -161,18 +180,32 @@ export class Ship implements GameObject {
     return -atan2({ x, y }, hitbox);
   }
 
+  private hitClock(delta: number) {
+    if (this.canHit) return;
+
+    if (this.lastHit >= this.impact.collisionTimeout) {
+      this.lastHit = -1;
+    } else if (this.lastHit > -1) {
+      this.lastHit += delta;
+    }
+  }
+
   private checkCollision(player: HitBox) {
     if (this.active && hasCollided(this.hitbox, player)) {
-      // TODO params.impact.power
-      trigger("impact", 1);
-      // TODO change HP?
-      this.active = false;
+      const { power, resistance } = this.impact;
+      trigger("impact", power);
+      this.handleHit(power - resistance);
+      this.lastHit = 1; // activates hitClock()
     }
   }
 
   public handleHit(power: number): void {
-    // TODO hp
-    this.active = false;
+    this.hp -= power;
+    if (this.hp <= 0) this.active = false;
+  }
+
+  private get canHit() {
+    return this.lastHit === -1;
   }
 
   public get isActive() {
