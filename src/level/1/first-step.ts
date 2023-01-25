@@ -57,6 +57,8 @@ export function firstStep() {
       },
       fire: {
         rate: 350,
+        angle: 160,
+        precision: "SIMPLE",
       },
     }),
   ];

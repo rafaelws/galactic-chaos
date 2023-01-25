@@ -5,47 +5,58 @@
   - [x] ship
   - [] projectile
   - [] player
-- [] items
+- [] review the utility of LevelManager.ts (see implementation of collisionTimeout on ship/rock impact)
+- [] {pending}
+- [] {pending} ship movement patterns - arc, 8, sin, cos, pursuer, etc...
+- [] {pending|idea} player events from LevelManager.ts, set them directly on Player.ts
 - [] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
-- [] {pending} game objects movement patterns (verify feasibility) - arc, 8, drone, pursuer...
 - [] {pending} fix level manager step function
+- [] player items
+- [] boss
 
-# ALL
+# BASIC
 
-- [] assets
-  - [x] player
-  - [x] enemies
-  - [x] items
-  - [] projectiles
-  - [] fonts (Orbitron)
-  - [] effects and animations (e.g. hit/collision effect)\*
-  - [] sound (ost, ui)\*
-- [] asset loader
+- [x] assets
+  - [x] images: player, enemies, items
+- [x] asset loader
   - [x] image
-  - [] audio
 - [x] level manager
-- [] enemies
+- [x] enemies
   - [x] rock
   - [x] ship (see TODO)
-  - [] bosses\*
-- [] mechanics
+  - [] boss
+- [x] mechanics
 
   - [x] game objects collision
     - [x] enemies[] collision > player (event)
     - [x] enemy projectiles[] collision > player (event)
     - [x] player projectiles[] collision > enemies[] (notify)
     - [x] notify game objects on collision
-  - [] game object params (hp, impact{power,resistance,collisionTimeout}, projectile power)
-  - [] player items
-    - [] spawn (drop when an enemy is killed)
-    - [] effects (collision event)
+  - [x] game object params (hp, impact{power,resistance,collisionTimeout}, projectile power)
+  - [] level design
 
+# Nice-to-haves
+
+- [] assets
+
+  - [] effects and animations (e.g. hit/collision effect)
+  - [] audio: ost, ui
+  - [] image: projectiles
+  - [] fonts: ui, hud (Orbitron)
+
+- [] asset loader
+
+  - [] audio
+
+- [] player items
+  - [] spawn (drop when an enemy is killed)
+  - [] effects (collision event)
 - [] HUD
 - [] gamepad
+- [] background (dynamic, with particles, reacting to the bg music)
 - [] UI
-- [] background (dynamic, with particles, reacting to the bg music)\*
+- [] overall status: time? score? enemies killed? shots fired?`
 - [] handle resize on game objects (Projectile, Ship, Rock, Player...)
-- [] overall status: time? score? enemies killed? shots fired?`\*
 
 ---
 

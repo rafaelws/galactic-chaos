@@ -1,6 +1,5 @@
 import { iterate } from "@/common/util";
 import { hasCollided } from "@/common/math";
-import { ListenerMap, set, unset } from "@/common/events";
 import { ControlState } from "@/common/controls";
 import { Boundaries, Destroyable, GameObject, GameState } from "@/common/meta";
 import { assets, getImage, loadImages } from "@/common/asset";
@@ -18,28 +17,13 @@ export class LevelManager implements Destroyable {
   private currentStep = -1;
   private finalStep = -1;
 
-  private listeners: ListenerMap = {};
   private drawables: GameObject[] = [];
   private readonly levels: Level[] = [firstLevel];
 
   private player?: Player;
 
   constructor() {
-    this.listeners = { impact: this.handleImpact.bind(this) };
-    set(this.listeners);
     this.nextLevel();
-  }
-
-  private handleImpact(ev: Event) {
-    // TODO do this inside player?
-    const power = (ev as CustomEvent).detail as number;
-    // TODO update player status
-    console.log("player hit", power);
-    this.player!.handleHit(power);
-  }
-
-  public destroy() {
-    unset(this.listeners);
   }
 
   private nextLevel() {
@@ -89,24 +73,25 @@ export class LevelManager implements Destroyable {
     }
 
     let state: GameState = {
+      debug: true,
       delta,
       worldBoundaries,
       player: { x: 0, y: 0, radius: 0 },
     };
 
     if (!this.player) {
-      this.player = new Player(getImage(assets.img.player.self));
+      this.player = new Player({
+        img: getImage(assets.img.player.self),
+      });
     } else {
       // IMPORTANT: player sets `state.player` on update
       this.player.update(state, controls);
-
-      const { projectiles } = this.player;
 
       let actives: GameObject[] = [];
       iterate(this.drawables, (drawable) => {
         drawable.update(state);
         if (drawable.isActive) {
-          this.verifyProjectileCollision(projectiles, drawable);
+          this.verifyProjectileCollision(drawable);
           actives.push(drawable);
         }
       });
@@ -127,18 +112,20 @@ export class LevelManager implements Destroyable {
     return this.levels[this.currentLevel];
   }
 
-  private verifyProjectileCollision(
-    projectiles: GameObject[],
-    drawable: GameObject
-  ) {
+  private verifyProjectileCollision(drawable: GameObject) {
+    const projectiles = this.player!.getProjectiles();
+
     iterate(projectiles, (projectile) => {
       if (hasCollided(projectile.hitbox, drawable.hitbox)) {
         // TODO
         console.log("projectile hit", projectile, drawable);
         projectile.handleHit(0);
-        // TODO
         drawable.handleHit(1);
       }
     });
+  }
+
+  public destroy(): void {
+    if (this.player) this.player.destroy();
   }
 }

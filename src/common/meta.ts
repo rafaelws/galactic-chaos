@@ -15,6 +15,7 @@ export interface HitBox {
 }
 
 export interface GameState {
+  get debug(): boolean;
   get delta(): number;
   get worldBoundaries(): Boundaries;
   get player(): HitBox;

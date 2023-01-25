@@ -1,14 +1,22 @@
 import { atan2, toDeg } from "@/common/math";
 import { iterate } from "@/common/util";
-import { Coordinate, GameState, HitBox } from "@/common/meta";
+import {
+  Boundaries,
+  Coordinate,
+  Destroyable,
+  GameState,
+  HitBox,
+} from "@/common/meta";
 import {
   ControlState,
   ControlStateData,
   ControlAction,
 } from "@/common/controls";
-import { ProjectileLauncher } from "../projectile";
+import { PlayerParams } from "./PlayerParams";
+import { Projectile } from "../projectile";
+import { ListenerMap, set, unset } from "@/common/events";
 
-export class Player {
+export class Player implements Destroyable {
   private x = NaN;
   private y = NaN;
   private cx = 0;
@@ -16,15 +24,40 @@ export class Player {
   private width = 0;
   private height = 0;
   private rotationAngle = 0;
-  private launcher: ProjectileLauncher;
 
-  constructor(private img: HTMLImageElement) {
-    this.launcher = new ProjectileLauncher();
+  private projectiles: Projectile[] = [];
+  private fireTimeout = 300; //ms
+  private firePower = 1;
+  private lastHit = -1; //ms ago
+
+  private hp = 0;
+
+  private debug = false;
+  private listeners: ListenerMap = {};
+
+  constructor(private readonly params: PlayerParams) {
+    this.hp = params.hp || 10;
+    this.setDimensions();
+    this.setupListeners();
+  }
+
+  private setupListeners() {
+    this.listeners = { impact: this.handleHit.bind(this) };
+    set(this.listeners);
+  }
+
+  private setDimensions() {
     // TODO handle screen resize
-    this.height = img.height;
-    this.width = img.width;
+    this.height = this.params.img.height;
+    this.width = this.params.img.width;
     this.cx = this.width * 0.5;
     this.cy = this.height * 0.5;
+  }
+
+  private setStartingPoint(worldBoundaries: Boundaries) {
+    let [x, y] = [this.params.start?.x || 0.5, this.params.start?.y || 0.95];
+    this.x = worldBoundaries.width * x - this.cx; // centered
+    this.y = worldBoundaries.height * y - this.height; // 5% above ground
   }
 
   private setRotation(velocity: number, to?: Coordinate) {
@@ -61,19 +94,10 @@ export class Player {
       case "L_LEFT": this.x -= velocity; break;
       case "L_RIGHT": this.x += velocity; break;
       case "ROTATE": this.setRotation(velocity, coordinate); break;
-      case "RB": 
-        this.launcher.launch({
-          from: this.hitbox,
-          angle: this.rotationAngle,
-          enemy: false,
-        });
-        break;
+      case "RB": this.fire(); break;
     }
 
-    // TODO treat boundaries as a complete arc/circle
-    // for boundaries: Math.max(height, width) = circunference diameter
-    // for collisions: ?
-    // 2. Out of Bounds
+    // stay inbounds
     if (this.y < 0) this.y = 0;
     if (this.y + this.height > height) this.y = height - this.height;
     if (this.x < 0) this.x = 0;
@@ -81,14 +105,13 @@ export class Player {
   }
 
   public update(state: GameState, controls: ControlState): void {
+    this.debug = state.debug;
     if (!state.worldBoundaries) return;
 
-    // TODO
-    if (isNaN(this.x) && isNaN(this.y)) {
-      const { width, height } = state.worldBoundaries;
-      this.x = width * 0.5 - this.width * 0.5; // centered
-      this.y = height * 0.95 - this.height; // 5% above ground
-    }
+    this.hitClock(state.delta);
+
+    if (isNaN(this.x) && isNaN(this.y))
+      this.setStartingPoint(state.worldBoundaries);
 
     let action: ControlAction;
     for (action in controls) {
@@ -97,53 +120,89 @@ export class Player {
 
     // IMPORTANT
     state.player = this.hitbox;
-    iterate(this.launcher.drawables, (drawable) => drawable.update(state));
+    iterate(this.projectiles, (p) => p.update(state));
+    this.projectiles = this.projectiles.filter((p) => p.isActive);
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (isNaN(this.x) || isNaN(this.y)) return;
+    iterate(this.projectiles, (p) => p.draw(c));
 
-    iterate(this.launcher.drawables, (drawable) => drawable.draw(c));
-
-    const { img, x, y, width, height, rotationAngle, cx, cy } = this;
+    const { img } = this.params;
+    const { x, y, width, height, rotationAngle, cx, cy } = this;
 
     c.save();
     c.translate(x + cx, y + cy);
     c.rotate(rotationAngle);
-    // c.fillStyle = "white";
-    // c.fillRect(-cx, -cy, width, height);
-    // c.closePath();
     c.drawImage(img, -cx, -cy, width, height);
     c.restore();
 
-    /*
-    // debug
-    const _y = Math.floor(y);
-    const _x = Math.floor(x);
-    const rad = Math.floor(toDeg(rotationAngle));
+    if (this.debug) this._debug(c);
+  }
+
+  private _debug(c: CanvasRenderingContext2D) {
+    const _y = Math.floor(this.y);
+    const _x = Math.floor(this.x);
+    const rad = Math.floor(toDeg(this.rotationAngle));
     c.strokeStyle = "red";
     c.fillStyle = "white";
     c.font = `${16}px sans-serif`;
 
     // c.textAlign = "center";
-    c.fillText(`[${_x}, ${_y}] ${rad}°`, _x + width, _y);
+    c.fillText(`[${_x}, ${_y}] ${rad}°`, _x + this.width, _y);
 
     c.beginPath();
-    c.arc(hitbox.x, hitbox.y, hitbox.radius, 0, Math.PI * 2);
+    c.arc(this.hitbox.x, this.hitbox.y, this.hitbox.radius, 0, Math.PI * 2);
     c.stroke();
-    */
   }
 
-  public handleHit(power: number) {
-    // TODO
-    // this.hp -= power;
+  private fire() {
+    if (!this.canHit) return;
+
+    this.projectiles.push(
+      new Projectile({
+        angle: this.rotationAngle,
+        enemy: false,
+        from: this.hitbox,
+        power: this.firePower,
+      })
+    );
+    this.lastHit = 1; // activates hitClock()
+  }
+
+  private get canHit() {
+    return this.lastHit === -1;
+  }
+
+  private hitClock(delta: number) {
+    if (this.canHit) return;
+
+    if (this.lastHit >= this.fireTimeout) {
+      this.lastHit = -1;
+    } else if (this.lastHit > -1) {
+      this.lastHit += delta;
+    }
+  }
+
+  private handleHit(ev: Event) {
+    const power = (ev as CustomEvent).detail as number;
+    console.log("player hit", power);
+    this.hp -= power;
+    if (this.hp <= 0) {
+      console.log("game over");
+      // trigger('gameover')
+    }
   }
 
   public get hitbox(): HitBox {
     return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
   }
 
-  public get projectiles() {
-    return this.launcher.drawables;
+  public destroy() {
+    unset(this.listeners);
+  }
+
+  public getProjectiles() {
+    return this.projectiles;
   }
 }

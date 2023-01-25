@@ -35,9 +35,11 @@ export interface ShipImpact {
 
 export interface ShipFire {
   /**
-   * 0 (or absent): won't fire
+   * Interval between shots in `ms`
+   *
+   * @default 0 // won't fire
    */
-  rate: number;
+  rate?: number;
 
   /**
    * Projectile impact (collision) power (integer > 0)
@@ -46,10 +48,17 @@ export interface ShipFire {
   power?: number;
 
   /**
-   * - SIMPLE: fire at `movement.angle`
+   * Works **ONLY** if `precision` is set to `"SIMPLE"`
+   *
+   * @default 180 //deg (pointing down)
+   */
+  angle?: number;
+
+  /**
+   * - SIMPLE: fire at `angle`
    * - ACCURATE: fire directly at player
-   * - LOOSE: fire at player but w/ random deviation
-   * @default "SIMPLE" // (or none, if fireRate = 0)
+   * - LOOSE: fire at player w/ random deviation
+   * @default "SIMPLE" // (or none, if rate == 0)
    */
   precision?: "SIMPLE" | "LOOSE" | "ACCURATE";
 }

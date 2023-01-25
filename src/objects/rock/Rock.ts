@@ -31,6 +31,8 @@ export class Rock implements GameObject {
   private impact: Concrete<RockImpact>;
   private lastHit: number = -1;
 
+  private debug = false;
+
   constructor(private readonly params: RockParams) {
     this.hp = params.hp || 1;
     this.impact = {
@@ -91,6 +93,7 @@ export class Rock implements GameObject {
   }
 
   public update(state: GameState): void {
+    this.debug = state.debug;
     if (this.isWaiting) {
       this.delay += state.delta;
       return;
@@ -121,6 +124,24 @@ export class Rock implements GameObject {
     }
     c.drawImage(img, -cx, -cy, width, height);
     c.restore();
+
+    if (this.debug) this._debug(c);
+  }
+
+  private _debug(c: CanvasRenderingContext2D) {
+    const _y = Math.floor(this.y);
+    const _x = Math.floor(this.x);
+    const rad = Math.floor(this.rotation);
+    c.strokeStyle = "red";
+    c.fillStyle = "white";
+    c.font = `${16}px sans-serif`;
+
+    // c.textAlign = "center";
+    c.fillText(`[${_x}, ${_y}] ${rad}°`, _x + this.width, _y);
+
+    c.beginPath();
+    c.arc(this.hitbox.x, this.hitbox.y, this.hitbox.radius, 0, Math.PI * 2);
+    c.stroke();
   }
 
   private get isWaiting() {
@@ -140,7 +161,6 @@ export class Rock implements GameObject {
 
   private hitClock(delta: number) {
     if (this.canHit) return;
-
     if (this.lastHit >= this.impact.collisionTimeout) {
       this.lastHit = -1;
     } else if (this.lastHit > -1) {

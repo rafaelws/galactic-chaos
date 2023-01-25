@@ -8,8 +8,8 @@ import {
   HitBox,
 } from "@/common/meta";
 import { iterate } from "@/common/util";
-import { ProjectileLauncher } from "../projectile";
-import { ShipImpact, ShipMovement, ShipParams } from "./ShipParams";
+import { Projectile } from "../projectile";
+import { ShipFire, ShipImpact, ShipMovement, ShipParams } from "./ShipParams";
 
 export class Ship implements GameObject {
   private active = true;
@@ -28,15 +28,21 @@ export class Ship implements GameObject {
   private rotation = 0;
   private speed = 0;
   private delay = 0;
-  private fireRateDelay = 0;
-  private launcher: ProjectileLauncher;
 
   private hp: number;
+
   private impact: Concrete<ShipImpact>;
-  private lastHit = -1;
+  private lastImpact = -1;
+
+  private fire: Concrete<ShipFire>;
+  private lastFire = -1;
+  private projectiles: Projectile[] = [];
+
+  private debug = false;
 
   constructor(private readonly params: ShipParams) {
     this.hp = this.params.hp || 1;
+
     this.impact = {
       power: 1,
       resistance: 0,
@@ -44,9 +50,16 @@ export class Ship implements GameObject {
       ...params.impact,
     };
 
+    this.fire = {
+      rate: 0,
+      power: 1,
+      precision: "SIMPLE",
+      ...params.fire,
+      angle: params.fire.angle ? toRad(params.fire.angle) : R180,
+    };
+
     this.setDimensions();
     this.setStartingMovement(params.movement);
-    this.launcher = new ProjectileLauncher(params.fire?.rate);
   }
 
   private setDimensions() {
@@ -94,36 +107,57 @@ export class Ship implements GameObject {
     this.y = this.y + this.yDirection * this.speed * state.delta;
   }
 
-  private setFireAndRotation(state: GameState) {
-    const { rate = 0, precision = "SIMPLE" } = this.params.fire;
+  private setRotation(hitbox: HitBox) {
+    if (this.fire.rate === 0) return;
 
-    if (rate === 0) return;
-
-    let angle = R180;
-    let rotation = R180;
-
-    if (precision === "LOOSE") {
-      rotation = this.calculateRotation(state.player);
-      angle = rotation + randInRange(-0.25, 0.25);
-    } else if (precision === "ACCURATE") {
-      angle = rotation = this.calculateRotation(state.player);
-    }
-
-    this.rotation = rotation;
-
-    if (this.fireRateDelay < rate) {
-      this.fireRateDelay += state.delta;
-    } else {
-      this.launcher.launch({
-        from: this.hitbox,
-        angle,
-        enemy: true,
-      });
-      this.fireRateDelay = 0;
+    switch (this.fire.precision) {
+      case "SIMPLE":
+        this.rotation = this.fire.angle;
+        break;
+      case "LOOSE":
+      case "ACCURATE":
+        this.rotation = this.calculateRotation(hitbox);
+        break;
     }
   }
 
+  private setFire(delta: number) {
+    const { rate } = this.fire;
+    if (rate === 0) return;
+
+    if (this.lastFire < rate) {
+      this.lastFire += delta;
+    } else {
+      this.shoot();
+      this.lastFire = 0;
+    }
+  }
+
+  private shoot() {
+    let angle = 0;
+    const { precision } = this.fire;
+
+    if (precision === "ACCURATE") {
+      angle = this.rotation;
+    } else if (precision === "LOOSE") {
+      angle = this.rotation + randInRange(-0.25, 0.25);
+    } else {
+      // SIMPLE
+      angle = this.fire.angle;
+    }
+
+    this.projectiles.push(
+      new Projectile({
+        angle,
+        enemy: true,
+        from: this.hitbox,
+        power: this.fire.power,
+      })
+    );
+  }
+
   public update(state: GameState): void {
+    this.debug = state.debug;
     if (this.isWaiting) {
       this.delay += state.delta;
       return;
@@ -132,21 +166,22 @@ export class Ship implements GameObject {
     if (isNaN(this.x) && isNaN(this.y))
       this.setStartingPoint(state.worldBoundaries);
 
-    this.setFireAndRotation(state);
+    this.setRotation(state.player);
+    this.setFire(state.delta);
     this.move(state);
 
     this.checkBoundaries(state.worldBoundaries);
     this.hitClock(state.delta);
     this.checkCollision(state.player);
 
-    iterate(this.launcher.drawables, (drawable) => drawable.update(state));
+    iterate(this.projectiles, (p) => p.update(state));
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (isNaN(this.x) || isNaN(this.y)) return;
     if (this.isWaiting) return;
 
-    iterate(this.launcher.drawables, (drawable) => drawable.draw(c));
+    iterate(this.projectiles, (p) => p.draw(c));
 
     const { width, height, x, y, cx, cy } = this;
 
@@ -157,6 +192,23 @@ export class Ship implements GameObject {
     }
     c.drawImage(this.params.img, -cx, -cy, width, height);
     c.restore();
+    if (this.debug) this._debug(c);
+  }
+
+  private _debug(c: CanvasRenderingContext2D) {
+    const _y = Math.floor(this.y);
+    const _x = Math.floor(this.x);
+    const rad = Math.floor(this.rotation);
+    c.strokeStyle = "red";
+    c.fillStyle = "white";
+    c.font = `${16}px sans-serif`;
+
+    // c.textAlign = "center";
+    c.fillText(`[${_x}, ${_y}] ${rad}°`, _x + this.width, _y);
+
+    c.beginPath();
+    c.arc(this.hitbox.x, this.hitbox.y, this.hitbox.radius, 0, Math.PI * 2);
+    c.stroke();
   }
 
   private get isWaiting() {
@@ -183,10 +235,10 @@ export class Ship implements GameObject {
   private hitClock(delta: number) {
     if (this.canHit) return;
 
-    if (this.lastHit >= this.impact.collisionTimeout) {
-      this.lastHit = -1;
-    } else if (this.lastHit > -1) {
-      this.lastHit += delta;
+    if (this.lastImpact >= this.impact.collisionTimeout) {
+      this.lastImpact = -1;
+    } else if (this.lastImpact > -1) {
+      this.lastImpact += delta;
     }
   }
 
@@ -195,7 +247,7 @@ export class Ship implements GameObject {
       const { power, resistance } = this.impact;
       trigger("impact", power);
       this.handleHit(power - resistance);
-      this.lastHit = 1; // activates hitClock()
+      this.lastImpact = 1; // activates hitClock()
     }
   }
 
@@ -205,7 +257,7 @@ export class Ship implements GameObject {
   }
 
   private get canHit() {
-    return this.lastHit === -1;
+    return this.lastImpact === -1;
   }
 
   public get isActive() {

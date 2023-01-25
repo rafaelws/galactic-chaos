@@ -84,6 +84,7 @@ export interface RockParams {
    */
   rotation?: {
     direction: "CLOCKWISE" | "COUNTERCLOCKWISE";
+
     /**
      * rotation velocity multiplier (0 to 1)
      */
