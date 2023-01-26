@@ -15,13 +15,15 @@ export interface HitBox {
 }
 
 export interface GameState {
+  get debug(): boolean;
   get delta(): number;
   get worldBoundaries(): Boundaries;
   get player(): HitBox;
   set player(hitbox: HitBox);
 }
 
-export interface Drawable {
+export interface GameObject {
+  handleHit(power: number): void;
   get isActive(): boolean;
   get hitbox(): HitBox;
   update(state: GameState): void;
@@ -31,3 +33,7 @@ export interface Drawable {
 export interface Destroyable {
   destroy(): void;
 }
+
+export type Concrete<T> = {
+  [Property in keyof T]-?: T[Property];
+};

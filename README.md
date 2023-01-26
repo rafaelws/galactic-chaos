@@ -1,40 +1,69 @@
 # TODO
 
-- [x] mechanics: game objects collision
-  - [x] enemies[] collision > player (event)
-  - [x] enemy projectiles[] collision > player (event)
-  - [x] player projectiles[] collision > enemies[] (notify)
-- [] fix level manager step function
-- [] status (player health, score, enemies health)
-- [] {pending} game objects movement patterns (verify feasibility) - arc, 8, drone, pursuer...
+- [] upload to a remote to prevent data loss
+- [] maintainability iteration
 
-# ALL
+  - [] simplify and use Concrete when necessary
+  - [] Can a class called GameObject be created to simplify some stuff?
+  - [] Can some types/interfaces be shared (impact, fire, etc)?
+  - [] Rock
+  - [] Ship (+see {bug})
+  - [] Projectile
+  - [] Player
+  - [] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
+  - [] configure eslint
+  - [] {bug} fix level manager step function
 
-- [] assets
-  - [x] player
-  - [x] enemies
-  - [x] items
-  - [] fonts (Orbitron)
-  - [] effects and animations (e.g. hit/collision effect)\*
-  - [] sound (ost, ui)\*
-- [] asset loader
+- [] {feature} player items
+- [] {feature} ship movement patterns - arc, 8, sin, cos, pursuer, etc...
+- [] {feature} boss
+
+# BASIC
+
+- [x] assets
+  - [x] images: player, enemies, items
+- [x] asset loader
   - [x] image
-  - [] audio
 - [x] level manager
-- [] enemies
+- [x] enemies
   - [x] rock
   - [x] ship (see TODO)
-  - [] bosses\*
-- [] mechanics
+  - [] boss
+- [x] mechanics
 
   - [x] game objects collision
-  - [] overall status (score, health, items)
-  - [] items
+    - [x] enemies[] collision > player (event)
+    - [x] enemy projectiles[] collision > player (event)
+    - [x] player projectiles[] collision > enemies[] (notify)
+    - [x] notify game objects on collision
+  - [x] game object params (hp, impact{power,resistance,collisionTimeout}, projectile power)
+    - [x] rock
+    - [x] ship
+    - [x] projectile
+    - [x] player
 
+# Nice-to-haves
+
+- [] assets
+
+  - [] effects and animations (e.g. hit/collision effect)
+  - [] audio: ost, ui
+  - [] image: projectiles
+  - [] fonts: ui, hud (Orbitron)
+
+- [] asset loader
+
+  - [] audio
+
+- [] player items
+  - [] spawn (drop when an enemy is killed)
+  - [] effects (collision event)
+- [] level design
 - [] HUD
-- [] gamepad
 - [] UI
-- [] background (dynamic, with particles, reacting to the bg music)\*
+- [] background (dynamic, with particles, reacting to the bg music)
+- [] gamepad
+- [] overall status: time? score? enemies killed? shots fired?`
 - [] handle resize on game objects (Projectile, Ship, Rock, Player...)
 
 ---

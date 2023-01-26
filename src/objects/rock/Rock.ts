@@ -2,57 +2,14 @@ import { trigger } from "@/common/events";
 import { hasCollided, toRad } from "@/common/math";
 import {
   Boundaries,
-  Coordinate,
-  Drawable,
+  Concrete,
+  GameObject,
   GameState,
   HitBox,
 } from "@/common/meta";
+import { RockImpact, RockParams } from "./RockParams";
 
-export interface RockParams {
-  img: HTMLImageElement;
-
-  /**
-   * starting point in %
-   * (0 <= x <= 1)
-   * (0 <= y <= 1)
-   *
-   * Note: when setting y:
-   *  - 0 is top, 1 is bottom
-   *  - set `angle` accordingly (positive or negative)
-   *  - set `x` to either 1 or 0
-   */
-  start: Coordinate;
-
-  /**
-   * spawn angle in degrees
-   */
-  angle?: number;
-
-  /**
-   * time in ms until draw (not precise, uses delta)
-   */
-  delay?: number;
-
-  /**
-   * velocity multiplier (0 to 1)
-   */
-  speed?: number;
-
-  /**
-   * to worldBoundaries.width (0 to 1)
-   */
-  // proportion?: number;
-
-  rotation?: {
-    direction: "CLOCKWISE" | "COUNTERCLOCKWISE";
-    /**
-     * rotation velocity multiplier (0 to 1)
-     */
-    speed: number;
-  };
-}
-
-export class Rock implements Drawable {
+export class Rock implements GameObject {
   private active = true;
   private x = NaN;
   private y = NaN;
@@ -70,11 +27,25 @@ export class Rock implements Drawable {
   private delay = 0;
   private rotation = 0;
 
+  private hp: number;
+  private impact: Concrete<RockImpact>;
+  private lastHit: number = -1;
+
+  private debug = false;
+
   constructor(private readonly params: RockParams) {
+    this.hp = params.hp || 1;
+    this.impact = {
+      power: 1,
+      collisionTimeout: 100,
+      resistance: 0,
+      ...params.impact,
+    };
+
     this.angle = toRad(params.angle || 0);
+    this.speed = params.speed || 0.1;
     this.xDirection = Math.sin(-this.angle);
     this.yDirection = Math.cos(-this.angle);
-    this.speed = params.speed || 0.1;
 
     // TODO handle screen resize
     this.height = this.params.img.height;
@@ -122,7 +93,8 @@ export class Rock implements Drawable {
   }
 
   public update(state: GameState): void {
-    if (this.isWaiting()) {
+    this.debug = state.debug;
+    if (this.isWaiting) {
       this.delay += state.delta;
       return;
     }
@@ -134,11 +106,14 @@ export class Rock implements Drawable {
     this.setRotation();
 
     this.checkBoundaries(state.worldBoundaries);
+    this.hitClock(state.delta);
     this.checkCollision(state.player);
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    if (this.isWaiting()) return;
+    if (isNaN(this.x) || isNaN(this.y)) return;
+    if (this.isWaiting) return;
+
     const { width, height, x, y, cx, cy } = this;
     const { img, rotation } = this.params;
 
@@ -149,9 +124,27 @@ export class Rock implements Drawable {
     }
     c.drawImage(img, -cx, -cy, width, height);
     c.restore();
+
+    if (this.debug) this._debug(c);
   }
 
-  private isWaiting() {
+  private _debug(c: CanvasRenderingContext2D) {
+    const _y = Math.floor(this.y);
+    const _x = Math.floor(this.x);
+    const rad = Math.floor(this.rotation);
+    c.strokeStyle = "red";
+    c.fillStyle = "white";
+    c.font = `${16}px sans-serif`;
+
+    // c.textAlign = "center";
+    c.fillText(`[${_x}, ${_y}] ${rad}°`, _x + this.width, _y);
+
+    c.beginPath();
+    c.arc(this.hitbox.x, this.hitbox.y, this.hitbox.radius, 0, Math.PI * 2);
+    c.stroke();
+  }
+
+  private get isWaiting() {
     return (this.params.delay || 0) >= this.delay;
   }
 
@@ -166,11 +159,31 @@ export class Rock implements Drawable {
     }
   }
 
-  private checkCollision(player: HitBox) {
-    if (this.active && hasCollided(this.hitbox, player)) {
-      // TODO
-      trigger("impact", 1);
+  private hitClock(delta: number) {
+    if (this.canHit) return;
+    if (this.lastHit >= this.impact.collisionTimeout) {
+      this.lastHit = -1;
+    } else if (this.lastHit > -1) {
+      this.lastHit += delta;
     }
+  }
+
+  private checkCollision(player: HitBox) {
+    if (this.active && this.canHit && hasCollided(this.hitbox, player)) {
+      const { power, resistance } = this.impact;
+      trigger("impact", power);
+      this.handleHit(power - resistance);
+      this.lastHit = 1; // activates hitClock()
+    }
+  }
+
+  public handleHit(power: number): void {
+    this.hp -= power;
+    if (this.hp <= 0) this.active = false;
+  }
+
+  private get canHit() {
+    return this.lastHit === -1;
   }
 
   public get isActive() {

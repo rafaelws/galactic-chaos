@@ -30,6 +30,7 @@ export function atan2(from: Coordinate, to: Coordinate) {
   return Math.atan2(from.x - to.x, from.y - to.y);
 }
 
+// TODO verify if Math.hypot is not expensive
 export function hasCollided(a: HitBox, b: HitBox) {
   const hypot = Math.hypot(a.x - b.x, a.y - b.y);
   return hypot < a.radius + b.radius;
