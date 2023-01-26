@@ -35,6 +35,7 @@ export abstract class GameObject implements GameObject {
   }
 
   protected setDimensions({ width, height }: Boundaries) {
+    // TODO handle screen resize
     this.width = width;
     this.height = height;
     this.cx = width * 0.5;

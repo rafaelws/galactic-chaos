@@ -65,7 +65,7 @@ export interface ShipFire {
 
 export interface ShipMovement {
   /**
-   * remember to:
+   * Remember to:
    *  - spawn outside the canvas
    *  - set `movement.angle` accordingly (positive or negative)
    *  - `x` and `y` are decimals (0 <= `n` <= 1)
@@ -76,18 +76,24 @@ export interface ShipMovement {
    *  - `x` should be either 0 or 1
    *
    * When setting `x`:
-   *  - `y` will ALWAYS be 0
+   *  - `y` should be ALWAYS 0
+   *
+   * @default { x: 0.5, y: 0 }
    */
-  start: Coordinate;
+  start?: Coordinate;
 
   /**
-   * spawn angle in degrees
+   * Spawn angle in degrees.
+   *
+   * Advised to be set between -90 and 90
+   * (negative=left, positive=right)
+   *
    * @default 0
    */
-  angle: number;
+  angle?: number;
 
   /**
-   * velocity multiplier (`0 < speed <= 1`)
+   * Velocity multiplier (`0 < speed <= 1`)
    * @default 0.1
    */
   speed?: number;
@@ -110,7 +116,7 @@ export interface ShipParams {
   hp?: number;
 
   /**
-   * time in ms until draw (not precise, uses delta)
+   * Time in ms until draw (not precise, uses delta)
    */
   delay?: number;
 

@@ -3,6 +3,7 @@ import { atan2, hasCollided, R180, randInRange, toRad } from "@/common/math";
 import {
   Boundaries,
   Concrete,
+  Coordinate,
   GameObject,
   GameState,
   HitBox,
@@ -12,7 +13,6 @@ import { Projectile } from "../projectile";
 import { ShipFire, ShipImpact, ShipMovement, ShipParams } from "./ShipParams";
 
 export class Ship implements GameObject {
-  private active = true;
   private x = NaN;
   private y = NaN;
   private cx = 0;
@@ -21,18 +21,15 @@ export class Ship implements GameObject {
   private height = 0;
   private doubleWidth = 0;
   private doubleHeight = 0;
+  private active = true;
 
-  private xDirection = 0;
-  private yDirection = 0;
-  private angle = 0;
   private rotation = 0;
-  private speed = 0;
   private delay = 0;
 
-  // TODO (refac)
-  // private movement: Concrete<ShipMovement>;
-
   private hp: number;
+
+  private movement: Concrete<ShipMovement>;
+  private direction: Coordinate = { x: 0, y: 0 };
 
   private impact: Concrete<ShipImpact>;
   private lastImpact = -1;
@@ -45,6 +42,17 @@ export class Ship implements GameObject {
 
   constructor(private readonly params: ShipParams) {
     this.hp = this.params.hp || 1;
+
+    this.movement = {
+      start: { x: 0.5, y: 0 },
+      angle: 0,
+      speed: 0.1,
+      ...this.params.movement,
+    };
+
+    const movementAngle = toRad(this.movement.angle);
+    this.direction.x = Math.sin(movementAngle);
+    this.direction.y = Math.cos(movementAngle);
 
     this.impact = {
       power: 1,
@@ -62,7 +70,6 @@ export class Ship implements GameObject {
     };
 
     this.setDimensions();
-    this.setStartingMovement(params.movement);
   }
 
   private setDimensions() {
@@ -75,39 +82,28 @@ export class Ship implements GameObject {
     this.cy = this.height * 0.5;
   }
 
-  private setStartingMovement(movement: ShipMovement) {
-    const { angle = 0, speed = 0.1 } = movement;
-
-    this.angle = toRad(angle);
-    this.xDirection = Math.sin(-this.angle);
-    this.yDirection = Math.cos(-this.angle);
-    this.speed = speed;
-  }
-
   private setStartingPoint(worldBoundaries: Boundaries) {
-    let sx = this.params.movement.start.x;
-    let sy = this.params.movement.start.y;
+    const { angle, start } = this.movement;
 
-    this.x = 0;
-    if (!!sy) {
-      if (this.angle > 0) {
-        sx = 1;
-        this.x = this.width;
-      } else if (this.angle < 0) {
-        sx = 0;
-        this.x = -this.width;
-      } else {
-        sy = 0;
-      }
+    let x = 0;
+    let y = 0;
+
+    if (start.y > 0) {
+      y = start.y * worldBoundaries.height;
+      x = angle > 0 ? -this.width : worldBoundaries.width;
+    } else {
+      y = -this.height;
+      x = start.x * worldBoundaries.width;
     }
-    this.x += sx * (worldBoundaries.width - this.width);
-    this.y = sy * (worldBoundaries.height - this.height);
+
+    this.x = x;
+    this.y = y;
   }
 
   private move(state: GameState) {
     // TODO patterns
-    this.x = this.x + this.xDirection * this.speed * state.delta;
-    this.y = this.y + this.yDirection * this.speed * state.delta;
+    this.x += this.direction.x * this.movement.speed * state.delta;
+    this.y += this.direction.y * this.movement.speed * state.delta;
   }
 
   private setRotation(hitbox: HitBox) {
