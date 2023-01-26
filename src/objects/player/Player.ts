@@ -128,13 +128,12 @@ export class Player implements Destroyable {
     if (isNaN(this.x) || isNaN(this.y)) return;
     iterate(this.projectiles, (p) => p.draw(c));
 
-    const { img } = this.params;
     const { x, y, width, height, rotationAngle, cx, cy } = this;
 
     c.save();
     c.translate(x + cx, y + cy);
     c.rotate(rotationAngle);
-    c.drawImage(img, -cx, -cy, width, height);
+    c.drawImage(this.params.img, -cx, -cy, width, height);
     c.restore();
 
     if (this.debug) this._debug(c);

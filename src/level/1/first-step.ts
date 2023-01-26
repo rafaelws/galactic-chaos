@@ -54,7 +54,7 @@ export function firstStep() {
         speed: 0.2,
       },
       fire: {
-        rate: 350,
+        rate: 0,
         angle: 160,
         // precision: "SIMPLE",
       },

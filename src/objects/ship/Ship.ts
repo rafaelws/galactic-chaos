@@ -111,7 +111,10 @@ export class Ship implements GameObject {
   }
 
   private setRotation(hitbox: HitBox) {
-    if (this.fire.rate === 0) return;
+    if (this.fire.rate === 0) {
+      this.rotation = R180;
+      return;
+    }
 
     switch (this.fire.precision) {
       case "SIMPLE":
@@ -190,9 +193,7 @@ export class Ship implements GameObject {
 
     c.save();
     c.translate(x + cx, y + cy);
-    if (!!this.rotation) {
-      c.rotate(this.rotation - R180);
-    }
+    c.rotate(this.rotation - R180);
     c.drawImage(this.params.img, -cx, -cy, width, height);
     c.restore();
     if (this.debug) this._debug(c);

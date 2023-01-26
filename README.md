@@ -1,22 +1,26 @@
 # TODO
 
-- [] upload to a remote to prevent data loss
-- [] maintainability iteration
+- [x] upload to a remote to prevent data loss
 
-  - [] simplify and use Concrete when necessary
-  - [] Can a class called GameObject be created to simplify some stuff?
-  - [] Can some types/interfaces be shared (impact, fire, etc)?
-  - [] Rock
-  - [] Ship (+see {bug})
-  - [] Projectile
-  - [] Player
+  - [] maintainability iteration
+
+  - [] Ship movement
+  - [] counter utility
+  - [x] Can a class called GameObject be created to simplify some stuff?
+  - [x] Can some types/interfaces be shared
+  - [] Rock (with GameObject and Counter)
+  - [] Ship (with GameObject and Counter)
+  - [] Projectile (too specific)
+  - [] Player (too specific)
   - [] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
   - [] configure eslint
   - [] {bug} fix level manager step function
+  - [] simplify and use Concrete when necessary
 
 - [] {feature} player items
 - [] {feature} ship movement patterns - arc, 8, sin, cos, pursuer, etc...
 - [] {feature} boss
+- [] {?} syntax sugar: enemy profiles
 
 # BASIC
 
