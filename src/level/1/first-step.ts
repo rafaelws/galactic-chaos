@@ -19,7 +19,6 @@ export function firstStep() {
         speed: 0.5,
       },
     }),
-    /*
     new Rock({
       img: rock3,
       hp: 5,
@@ -47,7 +46,6 @@ export function firstStep() {
         speed: 2,
       },
     }),
-    */
     new Ship({
       img: getImage(assets.img.ship.level1[0]),
       movement: {
@@ -58,7 +56,7 @@ export function firstStep() {
       fire: {
         rate: 350,
         angle: 160,
-        precision: "SIMPLE",
+        // precision: "SIMPLE",
       },
     }),
   ];

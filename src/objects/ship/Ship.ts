@@ -29,6 +29,9 @@ export class Ship implements GameObject {
   private speed = 0;
   private delay = 0;
 
+  // TODO (refac)
+  // private movement: Concrete<ShipMovement>;
+
   private hp: number;
 
   private impact: Concrete<ShipImpact>;
@@ -261,7 +264,7 @@ export class Ship implements GameObject {
   }
 
   public get isActive() {
-    // || this.launcher.drawables.length > 0
+    // FIXME this.launcher.drawables.length > 0
     return this.active;
   }
 

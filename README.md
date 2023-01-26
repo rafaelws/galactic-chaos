@@ -1,18 +1,22 @@
 # TODO
 
-- [] game object params (hp, impact{power,resistance,collisionTimeout}, projectile power)
-  - [x] rock
-  - [x] ship
-  - [] projectile
-  - [] player
-- [] review the utility of LevelManager.ts (see implementation of collisionTimeout on ship/rock impact)
-- [] {pending}
-- [] {pending} ship movement patterns - arc, 8, sin, cos, pursuer, etc...
-- [] {pending|idea} player events from LevelManager.ts, set them directly on Player.ts
-- [] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
-- [] {pending} fix level manager step function
-- [] player items
-- [] boss
+- [] upload to a remote to prevent data loss
+- [] maintainability iteration
+
+  - [] simplify and use Concrete when necessary
+  - [] Can a class called GameObject be created to simplify some stuff?
+  - [] Can some types/interfaces be shared (impact, fire, etc)?
+  - [] Rock
+  - [] Ship (+see {bug})
+  - [] Projectile
+  - [] Player
+  - [] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
+  - [] configure eslint
+  - [] {bug} fix level manager step function
+
+- [] {feature} player items
+- [] {feature} ship movement patterns - arc, 8, sin, cos, pursuer, etc...
+- [] {feature} boss
 
 # BASIC
 
@@ -33,7 +37,10 @@
     - [x] player projectiles[] collision > enemies[] (notify)
     - [x] notify game objects on collision
   - [x] game object params (hp, impact{power,resistance,collisionTimeout}, projectile power)
-  - [] level design
+    - [x] rock
+    - [x] ship
+    - [x] projectile
+    - [x] player
 
 # Nice-to-haves
 
@@ -51,10 +58,11 @@
 - [] player items
   - [] spawn (drop when an enemy is killed)
   - [] effects (collision event)
+- [] level design
 - [] HUD
-- [] gamepad
-- [] background (dynamic, with particles, reacting to the bg music)
 - [] UI
+- [] background (dynamic, with particles, reacting to the bg music)
+- [] gamepad
 - [] overall status: time? score? enemies killed? shots fired?`
 - [] handle resize on game objects (Projectile, Ship, Rock, Player...)
 
