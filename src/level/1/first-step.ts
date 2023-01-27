@@ -7,6 +7,7 @@ export function firstStep() {
     new Rock({
       img: rock3,
       hp: 10,
+      selfRotation: -5,
       movement: {
         start: { x: 0.15, y: 0 },
         speed: 0.3,
@@ -21,6 +22,7 @@ export function firstStep() {
     new Rock({
       img: rock3,
       hp: 5,
+      selfRotation: 10,
       spawnDelay: 1000,
       movement: {
         start: { x: 0, y: 0.5 },
@@ -50,14 +52,14 @@ export function firstStep() {
         speed: 0.2,
       },
       fire: {
-        // rate: 0,
-        // angle: 160,
+        rate: 100,
+        // angle: 55,
         // precision: "SIMPLE",
       },
     }),
     new Ship({
       img: getImage(assets.img.ship.level1[1]),
-      spawnDelay: 1500, //ok
+      spawnDelay: 0,
       hp: 30,
       movement: {
         angle: 15,
@@ -67,7 +69,7 @@ export function firstStep() {
       fire: {
         rate: 300, //ok
         // angle: 50,
-        // precision: "SIMPLE",
+        precision: "ACCURATE",
       },
       impact: {
         collisionTimeout: 1000, // TODO

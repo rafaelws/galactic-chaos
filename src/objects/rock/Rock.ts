@@ -13,6 +13,7 @@ export class Rock extends GameObject {
 
     const { width, height } = this.params.img;
     this.setDimensions({ width, height });
+    this.setDirection();
   }
 
   protected setStartingPoint(worldBoundaries: Boundaries) {
@@ -20,8 +21,8 @@ export class Rock extends GameObject {
   }
 
   protected move(state: GameState) {
-    this.x = this.x + this.direction.x * state.delta * this.movement.speed;
-    this.y = this.y + this.direction.y * state.delta * this.movement.speed;
+    this.x += this.direction.x * this.movement.speed * state.delta;
+    this.y += this.direction.y * this.movement.speed * state.delta;
   }
 
   private setRotation() {
@@ -56,8 +57,6 @@ export class Rock extends GameObject {
     if (!this.ready) return;
 
     const { width, height, x, y, cx, cy } = this;
-
-    console.log(this);
 
     c.save();
     c.translate(x + cx, y + cy);

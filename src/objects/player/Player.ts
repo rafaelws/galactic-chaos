@@ -160,10 +160,12 @@ export class Player implements Destroyable {
 
     this.projectiles.push(
       new Projectile({
-        angle: this.rotationAngle,
         enemy: false,
-        from: this.hitbox,
         power: this.firePower,
+        movement: {
+          angle: this.rotationAngle,
+          start: this.hitbox,
+        },
       })
     );
     this.lastHit = 1; // activates hitClock()

@@ -47,10 +47,6 @@ export abstract class GameObject implements GameObject {
       ...params.movement,
     };
 
-    const movementAngle = toRad(this.movement.angle);
-    this.direction.x = Math.sin(movementAngle);
-    this.direction.y = Math.cos(movementAngle);
-
     this.impact = {
       power: 1,
       resistance: 0,
@@ -59,6 +55,12 @@ export abstract class GameObject implements GameObject {
     };
 
     this.impactClock = new Clock(this.impact.collisionTimeout, true);
+  }
+
+  protected setDirection() {
+    const movementAngle = toRad(this.movement.angle);
+    this.direction.x = Math.sin(movementAngle);
+    this.direction.y = Math.cos(movementAngle);
   }
 
   protected setDimensions({ width, height }: Boundaries) {

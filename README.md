@@ -9,8 +9,8 @@
     - [x] Can some types/interfaces be shared
     - [x] Ship (with GameObject and Counter)
     - [x] Rock (with GameObject and Counter)
-    - [] Projectile (too specific)
-    - [] Player (too specific)
+    - [x] Projectile
+    - [] Player
     - [] configure eslint
     - [x] simplify and use Concrete when necessary
 
@@ -21,6 +21,7 @@
 - [] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
 - [] {bug} fix level manager step function
 - [] {?} syntax sugar: enemy profiles
+- [] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
 
 # BASIC
 

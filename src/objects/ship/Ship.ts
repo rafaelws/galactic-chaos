@@ -26,6 +26,7 @@ export class Ship extends GameObject {
 
     const { width, height } = this.params.img;
     this.setDimensions({ width, height });
+    this.setDirection();
   }
 
   protected setStartingPoint(worldBoundaries: Boundaries) {
@@ -81,10 +82,12 @@ export class Ship extends GameObject {
 
     this.projectiles.push(
       new Projectile({
-        angle,
         enemy: true,
-        from: this.hitbox,
         power: this.fire.power,
+        movement: {
+          angle: angle,
+          start: this.hitbox,
+        },
       })
     );
   }

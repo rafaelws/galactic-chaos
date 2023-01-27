@@ -6,9 +6,9 @@ export interface RockParams extends GameObjectParams {
   /**
    * Infinite rotation over its own center.
    *
-   * Value in degrees.
+   * Value in degrees (positive or negative).
    *
-   * @default 0 //deg (positive=clockwise, negative=counterclockwise, 0=no rotation)
+   * @default 0 //deg (no rotation)
    */
   selfRotation?: number;
 }
