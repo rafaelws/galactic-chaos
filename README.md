@@ -11,15 +11,13 @@
 
 # BASIC
 
-- [x] assets
-  - [x] images: player, enemies, items
-- [x] asset loader
-  - [x] image
+- [x] {assets} images: player, enemies, items
+- [x] {asset loader} image
 - [x] level manager
 - [x] enemies
   - [x] rock
   - [x] ship (see TODO)
-  - [ ] bossses
+  - [ ] bosses
 - [x] mechanics
 
   - [x] game objects collision
@@ -36,17 +34,23 @@
 - [x] maintainability iteration
 
   - [x] clock utility
-  - [x] Can a class called GameObject be created to simplify some stuff?
-  - [x] Can some types/interfaces be shared
-  - [x] Ship (with GameObject and Counter)
-  - [x] Rock (with GameObject and Counter)
-  - [x] Projectile
-  - [x] Player
+  - [x] can a class called GameObject be created to simplify some stuff?
+  - [x] can some types/interfaces be shared?
+  - [x] ship (with GameObject and Clock)
+  - [x] rock (with GameObject and Clock)
+  - [x] projectile
+  - [x] player
   - [x] simplify and use Concrete when necessary
   - [x] upload to a remote to prevent data loss
 
 # Nice-to-haves
 
+- [ ] {player items}: spawn (drop when an enemy is killed), effects (collision event)
+- [ ] HUD
+- [ ] UI
+- [ ] level design
+- [ ] gamepad
+- [ ] {asset loader} audio
 - [ ] assets
 
   - [ ] effects and animations (e.g. hit/collision effect)
@@ -54,17 +58,6 @@
   - [ ] image: projectiles
   - [ ] fonts: ui, hud (Orbitron)
 
-- [ ] asset loader
-
-  - [ ] audio
-
-- [ ] player items
-  - [ ] spawn (drop when an enemy is killed)
-  - [ ] effects (collision event)
-- [ ] HUD
-- [ ] UI
-- [ ] level design
-- [ ] gamepad
 - [ ] handle resize on game objects (Projectile, Ship, Rock, Player...)
 - [ ] background (dynamic, with particles, reacting to the bg music)
 - [ ] overall status: time? score? enemies killed? shots fired?`
