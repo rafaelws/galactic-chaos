@@ -1,22 +1,13 @@
 # TODO
 
-- [] upload to a remote to prevent data loss
-- [] maintainability iteration
-
-  - [] simplify and use Concrete when necessary
-  - [] Can a class called GameObject be created to simplify some stuff?
-  - [] Can some types/interfaces be shared (impact, fire, etc)?
-  - [] Rock
-  - [] Ship (+see {bug})
-  - [] Projectile
-  - [] Player
-  - [] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
-  - [] configure eslint
-  - [] {bug} fix level manager step function
-
-- [] {feature} player items
-- [] {feature} ship movement patterns - arc, 8, sin, cos, pursuer, etc...
-- [] {feature} boss
+- [ ] {feature} ship movement patterns - arc, 8, sin, cos, pursuer, etc...
+- [ ] {feature} bosses
+- [ ] {feature} player items
+- [ ] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
+- [ ] {bug} fix level manager step function
+- [ ] {?} syntax sugar: enemy profiles
+- [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
+- [ ] configure eslint
 
 # BASIC
 
@@ -28,7 +19,7 @@
 - [x] enemies
   - [x] rock
   - [x] ship (see TODO)
-  - [] boss
+  - [ ] bossses
 - [x] mechanics
 
   - [x] game objects collision
@@ -42,29 +33,41 @@
     - [x] projectile
     - [x] player
 
+- [x] maintainability iteration
+
+  - [x] clock utility
+  - [x] Can a class called GameObject be created to simplify some stuff?
+  - [x] Can some types/interfaces be shared
+  - [x] Ship (with GameObject and Counter)
+  - [x] Rock (with GameObject and Counter)
+  - [x] Projectile
+  - [x] Player
+  - [x] simplify and use Concrete when necessary
+  - [x] upload to a remote to prevent data loss
+
 # Nice-to-haves
 
-- [] assets
+- [ ] assets
 
-  - [] effects and animations (e.g. hit/collision effect)
-  - [] audio: ost, ui
-  - [] image: projectiles
-  - [] fonts: ui, hud (Orbitron)
+  - [ ] effects and animations (e.g. hit/collision effect)
+  - [ ] audio: ost, ui
+  - [ ] image: projectiles
+  - [ ] fonts: ui, hud (Orbitron)
 
-- [] asset loader
+- [ ] asset loader
 
-  - [] audio
+  - [ ] audio
 
-- [] player items
-  - [] spawn (drop when an enemy is killed)
-  - [] effects (collision event)
-- [] level design
-- [] HUD
-- [] UI
-- [] background (dynamic, with particles, reacting to the bg music)
-- [] gamepad
-- [] overall status: time? score? enemies killed? shots fired?`
-- [] handle resize on game objects (Projectile, Ship, Rock, Player...)
+- [ ] player items
+  - [ ] spawn (drop when an enemy is killed)
+  - [ ] effects (collision event)
+- [ ] HUD
+- [ ] UI
+- [ ] level design
+- [ ] gamepad
+- [ ] handle resize on game objects (Projectile, Ship, Rock, Player...)
+- [ ] background (dynamic, with particles, reacting to the bg music)
+- [ ] overall status: time? score? enemies killed? shots fired?`
 
 ---
 

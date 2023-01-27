@@ -1,93 +1,14 @@
-import { Coordinate } from "@/common/meta";
+import { GameObjectParams } from "../shared";
 
-export interface RockImpact {
-  /**
-   * Impact (collision) power (integer > 0)
-   * @default 1
-   */
-  power?: number;
-
-  /**
-   * While `hp > 0` will hit again
-   *
-   * Uses `gameState.delta`
-   *
-   * It is a time window, so the player
-   * can react to consecutive impacts
-   *
-   * @default 100 //ms (if hp > 1)
-   */
-  collisionTimeout?: number;
-
-  /**
-   * Defines the amount of damage taken when
-   * the impact occurs.
-   *
-   * Considerations:
-   *  - If power == resistance, no damage is taken
-   *  - If power > resistance, take damage (`damage = power - resistance`)
-   *  - If power < resistance, heal (`heal = resistance - power`)
-   *
-   * @default 0
-   */
-  resistance?: number;
-}
-
-export interface RockParams {
+export interface RockParams extends GameObjectParams {
   img: HTMLImageElement;
 
   /**
-   * How many shots it takes to be destroyed (integer > 0)
-   * @default 1
-   */
-  hp?: number;
-
-  impact?: RockImpact;
-
-  /**
-   * starting point in %
-   * (0 <= x <= 1)
-   * (0 <= y <= 1)
+   * Infinite rotation over its own center.
    *
-   * Note: when setting y:
-   *  - 0 is top, 1 is bottom
-   *  - set `angle` accordingly (positive or negative)
-   *  - set `x` to either 1 or 0
+   * Value in degrees (positive or negative).
+   *
+   * @default 0 //deg (no rotation)
    */
-  start: Coordinate;
-
-  /**
-   * spawn angle in degrees
-   * @default 0 //deg
-   */
-  angle?: number;
-
-  /**
-   * time in ms until spawn/draw (not precise, uses delta)
-   * @default 0 //ms (immediately)
-   */
-  delay?: number;
-
-  /**
-   * velocity multiplier (0 to 1)
-   * @default 0.1
-   */
-  speed?: number;
-
-  /**
-   * to worldBoundaries.width (0 to 1)
-   */
-  // proportion?: number;
-
-  /**
-   * infinite rotation over its own center
-   */
-  rotation?: {
-    direction: "CLOCKWISE" | "COUNTERCLOCKWISE";
-
-    /**
-     * rotation velocity multiplier (0 to 1)
-     */
-    speed: number;
-  };
+  selfRotation?: number;
 }

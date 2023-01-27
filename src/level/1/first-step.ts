@@ -6,57 +6,73 @@ export function firstStep() {
   return [
     new Rock({
       img: rock3,
-      start: { x: 0.5, y: 0.5 },
       hp: 10,
+      selfRotation: -5,
+      movement: {
+        start: { x: 0.15, y: 0 },
+        speed: 0.3,
+        // angle: 60,
+      },
       impact: {
         power: 2,
         resistance: 1,
         collisionTimeout: 200,
       },
-      speed: 0.05,
-      rotation: {
-        direction: "CLOCKWISE",
-        speed: 0.5,
-      },
     }),
     new Rock({
       img: rock3,
       hp: 5,
+      selfRotation: 10,
+      spawnDelay: 1000,
+      movement: {
+        start: { x: 0, y: 0.5 },
+        angle: -60,
+      },
       impact: {
         collisionTimeout: 1000,
-      },
-      start: { x: 0.5, y: 0.5 },
-      angle: -60,
-      delay: 1000,
-      speed: 0.1,
-      rotation: {
-        direction: "COUNTERCLOCKWISE",
-        speed: 5,
       },
     }),
     new Rock({
       img: rock3,
-      start: { x: 0.5, y: 0 },
       hp: 10,
-      angle: 60,
-      delay: 2000,
-      speed: 0.2,
-      rotation: {
-        direction: "CLOCKWISE",
-        speed: 2,
+      spawnDelay: 2000,
+      movement: {
+        start: { x: 0.5, y: 0 },
+        angle: 60,
+        speed: 0.2,
       },
     }),
     new Ship({
       img: getImage(assets.img.ship.level1[0]),
+      hp: 30,
+      spawnDelay: 1000,
       movement: {
-        angle: 60,
+        angle: 15,
         start: { x: 0.5, y: 0 },
         speed: 0.2,
       },
       fire: {
-        rate: 350,
-        angle: 160,
+        rate: 100,
+        // angle: 55,
         // precision: "SIMPLE",
+      },
+    }),
+    new Ship({
+      img: getImage(assets.img.ship.level1[1]),
+      spawnDelay: 0,
+      hp: 30,
+      movement: {
+        angle: 15,
+        start: { x: 0.1, y: 0 },
+        speed: 0.2,
+      },
+      fire: {
+        rate: 300, //ok
+        // angle: 50,
+        precision: "ACCURATE",
+      },
+      impact: {
+        collisionTimeout: 1000, // TODO
       },
     }),
   ];
