@@ -1,4 +1,5 @@
 import { ImpactParams } from "./ImpactParams";
+import { MovementParams } from "./MovementParams";
 
 export interface GameObjectParams {
   /**
@@ -13,5 +14,11 @@ export interface GameObjectParams {
    */
   spawnDelay?: number;
 
+  /**
+   * to worldBoundaries.width (0 to 1)
+   */
+  // proportion?: number;
+
   impact?: ImpactParams;
+  movement?: MovementParams;
 }

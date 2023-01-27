@@ -1,4 +1,4 @@
-import { atan2 } from "@/common/math";
+import { atan2, toRad } from "@/common/math";
 import {
   Boundaries,
   Concrete,
@@ -9,6 +9,7 @@ import {
 import { Clock } from "./Clock";
 import { GameObjectParams } from "./GameObjectParams";
 import { ImpactParams } from "./ImpactParams";
+import { MovementParams } from "./MovementParams";
 
 export abstract class GameObject implements GameObject {
   protected x = NaN;
@@ -28,6 +29,9 @@ export abstract class GameObject implements GameObject {
 
   protected impact: Concrete<ImpactParams>;
 
+  protected movement: Concrete<MovementParams>;
+  protected direction: Coordinate = { x: 0, y: 0 };
+
   protected spawnClock: Clock;
   protected impactClock: Clock;
 
@@ -35,6 +39,17 @@ export abstract class GameObject implements GameObject {
     this.hp = params.hp || 1;
 
     this.spawnClock = new Clock(params.spawnDelay || 0);
+
+    this.movement = {
+      start: { x: 0.5, y: 0 },
+      angle: 0,
+      speed: 0.1,
+      ...params.movement,
+    };
+
+    const movementAngle = toRad(this.movement.angle);
+    this.direction.x = Math.sin(movementAngle);
+    this.direction.y = Math.cos(movementAngle);
 
     this.impact = {
       power: 1,
@@ -54,6 +69,24 @@ export abstract class GameObject implements GameObject {
     this.cy = height * 0.5;
     this.doubleHeight = height * 2;
     this.doubleWidth = width * 2;
+  }
+
+  protected setMovementStartingPoint(worldBoundaries: Boundaries) {
+    const { angle, start } = this.movement;
+
+    let x = 0;
+    let y = 0;
+
+    if (start.y > 0) {
+      y = start.y * worldBoundaries.height;
+      x = angle > 0 ? -this.width : worldBoundaries.width;
+    } else {
+      y = -this.height;
+      x = start.x * worldBoundaries.width;
+    }
+
+    this.x = x;
+    this.y = y;
   }
 
   protected isOutboundsDoubled(worldBoundaries: Boundaries): boolean {
@@ -92,8 +125,7 @@ export abstract class GameObject implements GameObject {
       return;
     }
 
-    if (isNaN(this.x) && isNaN(this.y))
-      this.setStartingPoint(state.worldBoundaries);
+    if (!this.hasStartingPoint) this.setStartingPoint(state.worldBoundaries);
 
     this.impactClock.increment(state.delta);
   }
@@ -127,5 +159,9 @@ export abstract class GameObject implements GameObject {
 
   public get hitbox(): HitBox {
     return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
+  }
+
+  public get hasStartingPoint(): boolean {
+    return !(isNaN(this.x) && isNaN(this.y));
   }
 }

@@ -1,38 +1,18 @@
 import { trigger } from "@/common/events";
 import { iterate } from "@/common/util";
 import { hasCollided, R180, randInRange, toRad } from "@/common/math";
-import {
-  Boundaries,
-  Concrete,
-  Coordinate,
-  GameState,
-  HitBox,
-} from "@/common/meta";
+import { Boundaries, Concrete, GameState, HitBox } from "@/common/meta";
 import { Projectile } from "@/objects";
 import { GameObject, Clock } from "@/objects/shared";
-import { ShipFire, ShipMovement, ShipParams } from ".";
+import { ShipFire, ShipParams } from ".";
 
 export class Ship extends GameObject {
-  private movement: Concrete<ShipMovement>;
-  private direction: Coordinate = { x: 0, y: 0 };
-
   private fire: Concrete<ShipFire>;
   private fireClock: Clock;
   private projectiles: Projectile[] = [];
 
   constructor(private readonly params: ShipParams) {
     super(params);
-
-    this.movement = {
-      start: { x: 0.5, y: 0 },
-      angle: 0,
-      speed: 0.1,
-      ...this.params.movement,
-    };
-
-    const movementAngle = toRad(this.movement.angle);
-    this.direction.x = Math.sin(movementAngle);
-    this.direction.y = Math.cos(movementAngle);
 
     this.fire = {
       rate: 0,
@@ -49,21 +29,7 @@ export class Ship extends GameObject {
   }
 
   protected setStartingPoint(worldBoundaries: Boundaries) {
-    const { angle, start } = this.movement;
-
-    let x = 0;
-    let y = 0;
-
-    if (start.y > 0) {
-      y = start.y * worldBoundaries.height;
-      x = angle > 0 ? -this.width : worldBoundaries.width;
-    } else {
-      y = -this.height;
-      x = start.x * worldBoundaries.width;
-    }
-
-    this.x = x;
-    this.y = y;
+    this.setMovementStartingPoint(worldBoundaries);
   }
 
   protected move(state: GameState) {
@@ -145,7 +111,6 @@ export class Ship extends GameObject {
     this.move(state);
 
     if (this.isOutboundsDoubled(state.worldBoundaries)) this.active = false;
-
     if (!this.impactClock.pending) this.checkCollision(state.player);
 
     iterate(this.projectiles, (p) => p.update(state));

@@ -4,22 +4,22 @@
 
   - [] maintainability iteration
 
-  - [] Ship movement
-  - [] counter utility
-  - [x] Can a class called GameObject be created to simplify some stuff?
-  - [x] Can some types/interfaces be shared
-  - [] Rock (with GameObject and Counter)
-  - [] Ship (with GameObject and Counter)
-  - [] Projectile (too specific)
-  - [] Player (too specific)
-  - [] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
-  - [] configure eslint
-  - [] {bug} fix level manager step function
-  - [] simplify and use Concrete when necessary
+    - [x] clock utility
+    - [x] Can a class called GameObject be created to simplify some stuff?
+    - [x] Can some types/interfaces be shared
+    - [x] Ship (with GameObject and Counter)
+    - [x] Rock (with GameObject and Counter)
+    - [] Projectile (too specific)
+    - [] Player (too specific)
+    - [] configure eslint
+    - [x] simplify and use Concrete when necessary
 
+- [] {feature} Ship movement patterns
 - [] {feature} player items
 - [] {feature} ship movement patterns - arc, 8, sin, cos, pursuer, etc...
 - [] {feature} boss
+- [] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
+- [] {bug} fix level manager step function
 - [] {?} syntax sugar: enemy profiles
 
 # BASIC
