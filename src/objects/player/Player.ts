@@ -15,6 +15,7 @@ import {
 import { PlayerParams } from "./PlayerParams";
 import { Projectile } from "../projectile";
 import { ListenerMap, set, unset } from "@/common/events";
+import { Clock } from "../shared";
 
 export class Player implements Destroyable {
   private x = NaN;
@@ -25,20 +26,24 @@ export class Player implements Destroyable {
   private height = 0;
   private rotationAngle = 0;
 
-  private projectiles: Projectile[] = [];
-  private fireTimeout = 300; //ms
   private firePower = 1;
-  private lastHit = -1; //ms ago
+  private fireTimeout = 300; //ms
+  private fireClock: Clock;
+  private projectiles: Projectile[] = [];
 
   private hp = 0;
+  private maxHp = 10;
+  private startingProportions: Coordinate = { x: 0.5, y: 0.95 };
 
   private debug = false;
   private listeners: ListenerMap = {};
 
   constructor(private readonly params: PlayerParams) {
-    this.hp = params.hp || 10;
+    this.hp = params.hp || this.maxHp;
     this.setDimensions();
     this.setupListeners();
+
+    this.fireClock = new Clock(this.fireTimeout, true);
   }
 
   private setupListeners() {
@@ -55,7 +60,7 @@ export class Player implements Destroyable {
   }
 
   private setStartingPoint(worldBoundaries: Boundaries) {
-    let [x, y] = [this.params.start?.x || 0.5, this.params.start?.y || 0.95];
+    const { x, y } = this.startingProportions;
     this.x = worldBoundaries.width * x - this.cx; // centered
     this.y = worldBoundaries.height * y - this.height; // 5% above ground
   }
@@ -107,11 +112,8 @@ export class Player implements Destroyable {
   public update(state: GameState, controls: ControlState): void {
     this.debug = state.debug;
     if (!state.worldBoundaries) return;
-
-    this.hitClock(state.delta);
-
-    if (isNaN(this.x) && isNaN(this.y))
-      this.setStartingPoint(state.worldBoundaries);
+    if (this.fireClock.pending) this.fireClock.increment(state.delta);
+    if (!this.hasStartingPoint) this.setStartingPoint(state.worldBoundaries);
 
     let action: ControlAction;
     for (action in controls) {
@@ -125,7 +127,7 @@ export class Player implements Destroyable {
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    if (isNaN(this.x) || isNaN(this.y)) return;
+    if (!this.hasStartingPoint) return;
     iterate(this.projectiles, (p) => p.draw(c));
 
     const { x, y, width, height, rotationAngle, cx, cy } = this;
@@ -136,10 +138,10 @@ export class Player implements Destroyable {
     c.drawImage(this.params.img, -cx, -cy, width, height);
     c.restore();
 
-    if (this.debug) this._debug(c);
+    if (this.debug) this.drawDebug(c);
   }
 
-  private _debug(c: CanvasRenderingContext2D) {
+  private drawDebug(c: CanvasRenderingContext2D) {
     const _y = Math.floor(this.y);
     const _x = Math.floor(this.x);
     const rad = Math.floor(toDeg(this.rotationAngle));
@@ -156,33 +158,17 @@ export class Player implements Destroyable {
   }
 
   private fire() {
-    if (!this.canHit) return;
-
-    this.projectiles.push(
-      new Projectile({
-        enemy: false,
-        power: this.firePower,
-        movement: {
-          angle: this.rotationAngle,
-          start: this.hitbox,
-        },
-      })
-    );
-    this.lastHit = 1; // activates hitClock()
-  }
-
-  private get canHit() {
-    return this.lastHit === -1;
-  }
-
-  private hitClock(delta: number) {
-    if (this.canHit) return;
-
-    if (this.lastHit >= this.fireTimeout) {
-      this.lastHit = -1;
-    } else if (this.lastHit > -1) {
-      this.lastHit += delta;
-    }
+    if (this.fireClock.pending) return;
+    let projectile = new Projectile({
+      enemy: false,
+      power: this.firePower,
+      movement: {
+        angle: this.rotationAngle,
+        start: this.hitbox,
+      },
+    });
+    this.projectiles.push(projectile);
+    this.fireClock.reset();
   }
 
   private handleHit(ev: Event) {
@@ -193,6 +179,10 @@ export class Player implements Destroyable {
       console.log("game over");
       // trigger('gameover')
     }
+  }
+
+  private get hasStartingPoint(): boolean {
+    return !(isNaN(this.x) && isNaN(this.y));
   }
 
   public get hitbox(): HitBox {
