@@ -48,15 +48,35 @@ export function firstStep() {
     }),
     new Ship({
       img: getImage(assets.img.ship.level1[0]),
+      hp: 30,
+      spawnDelay: 1000,
       movement: {
-        angle: -15,
-        start: { x: 0, y: 0.5 },
-        speed: 0.4,
+        angle: 15,
+        start: { x: 0.5, y: 0 },
+        speed: 0.2,
       },
       fire: {
         // rate: 0,
         // angle: 160,
         // precision: "SIMPLE",
+      },
+    }),
+    new Ship({
+      img: getImage(assets.img.ship.level1[1]),
+      spawnDelay: 1500, //ok
+      hp: 30,
+      movement: {
+        angle: 15,
+        start: { x: 0.1, y: 0 },
+        speed: 0.2,
+      },
+      fire: {
+        rate: 300, //ok
+        // angle: 50,
+        // precision: "SIMPLE",
+      },
+      impact: {
+        collisionTimeout: 1000, // TODO
       },
     }),
   ];
