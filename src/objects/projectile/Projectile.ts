@@ -11,6 +11,14 @@ export interface ProjectileParams extends GameObjectParams {
 export class Projectile extends GameObject {
   private power: number;
 
+  public get hitbox(): HitBox {
+    // palliative
+    return {
+      ...super.hitbox,
+      radius: this.cy * 0.5,
+    };
+  }
+
   constructor(private readonly params: ProjectileParams) {
     super(params);
 
@@ -29,11 +37,6 @@ export class Projectile extends GameObject {
   }
 
   protected move(state: GameState) {
-    /*
-    // TODO test this
-    this.x += this.direction.x * this.movement.speed * state.delta;
-    this.y += this.direction.y * this.movement.speed * state.delta;
-    */
     this.x -= this.direction.x * state.delta;
     this.y -= this.direction.y * state.delta;
   }

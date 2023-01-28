@@ -3,7 +3,7 @@
 - [ ] refac 2
 
   - [x] {refac} Make player a game object (setControls, extends GameObject)
-  - [>] {bug} fix Projectile hitbox
+  - [x] {bug} fix Projectile hitbox
   - [>] {refac} Use events to spawn everything (start with projectiles, listen to the event on LevelManager and add to the drawables array - rename to gameObjects)
   - [>] {bug} if a Ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
   - [>] {bug} fix level manager step function
@@ -16,6 +16,12 @@
 
 - [ ] {feature} bosses
 - [ ] {feature} ship: add 2 movement patterns ship movement
+
+- [ ] projectile
+
+  - [ ] {bug} decent hithox
+  - [ ] {feature} change speed
+  - [ ] appearance
 
 - [ ] {?} syntax sugar: enemy profiles
 
