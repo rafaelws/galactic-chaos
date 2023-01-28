@@ -29,6 +29,11 @@ export class Projectile extends GameObject {
   }
 
   protected move(state: GameState) {
+    /*
+    // TODO test this
+    this.x += this.direction.x * this.movement.speed * state.delta;
+    this.y += this.direction.y * this.movement.speed * state.delta;
+    */
     this.x -= this.direction.x * state.delta;
     this.y -= this.direction.y * state.delta;
   }
@@ -46,8 +51,8 @@ export class Projectile extends GameObject {
   }
 
   public update(state: GameState) {
+    super.update(state);
     if (!this.active) return;
-    this.preUpdate(state);
 
     this.move(state);
 
@@ -66,5 +71,7 @@ export class Projectile extends GameObject {
     c.fillStyle = this.params.enemy ? "red" : "blue";
     c.fillRect(-cx, -cy, width, height);
     c.restore();
+
+    if (this.debug) this.drawDebug(c);
   }
 }

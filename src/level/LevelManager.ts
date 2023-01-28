@@ -1,5 +1,4 @@
 import { iterate } from "@/common/util";
-import { hasCollided } from "@/common/math";
 import { ControlState } from "@/common/controls";
 import { Boundaries, Destroyable, GameObject, GameState } from "@/common/meta";
 import { assets, getImage, loadImages } from "@/common/asset";
@@ -17,14 +16,37 @@ export class LevelManager implements Destroyable {
   private currentStep = -1;
   private finalStep = -1;
 
-  private drawables: GameObject[] = [];
+  private gameObjects: GameObject[] = [];
   private readonly levels: Level[] = [firstLevel];
 
   private player?: Player;
 
+  private get level() {
+    return this.levels[this.currentLevel];
+  }
+
   constructor() {
     this.nextLevel();
   }
+
+  public destroy(): void {
+    if (this.player) this.player.destroy();
+  }
+
+  /*
+  private verifyProjectileCollision(drawable: GameObject) {
+    const projectiles = this.player!.getProjectiles();
+
+    iterate(projectiles, (projectile) => {
+      if (hasCollided(projectile.hitbox, drawable.hitbox)) {
+        // TODO
+        console.log("projectile hit", projectile, drawable);
+        projectile.handleHit(0);
+        drawable.handleHit(1);
+      }
+    });
+  }
+  */
 
   private nextLevel() {
     this.loaded = false;
@@ -39,7 +61,7 @@ export class LevelManager implements Destroyable {
   private step(): void {
     if (this.currentLevel >= this.finalLevel) return;
     if (this.currentStep < this.finalStep) {
-      this.drawables = this.level.steps[++this.currentStep]();
+      this.gameObjects = this.level.steps[++this.currentStep]();
     } else {
       this.nextLevel();
     }
@@ -63,7 +85,7 @@ export class LevelManager implements Destroyable {
   public update(
     delta: number,
     worldBoundaries: Boundaries,
-    controls: ControlState
+    controlState: ControlState
   ): void {
     if (this.loading) return;
 
@@ -85,17 +107,18 @@ export class LevelManager implements Destroyable {
       });
     } else {
       // IMPORTANT: player sets `state.player` on update
-      this.player.update(state, controls);
+      this.player.controlState = controlState;
+      this.player.update(state);
 
       let actives: GameObject[] = [];
-      iterate(this.drawables, (drawable) => {
-        drawable.update(state);
-        if (drawable.isActive) {
-          this.verifyProjectileCollision(drawable);
-          actives.push(drawable);
+      iterate(this.gameObjects, (gameObject) => {
+        gameObject.update(state);
+        if (gameObject.isActive) {
+          // this.verifyProjectileCollision(gameObject);
+          actives.push(gameObject);
         }
       });
-      this.drawables = actives;
+      this.gameObjects = actives;
     }
   }
 
@@ -103,29 +126,8 @@ export class LevelManager implements Destroyable {
     if (this.loading || !this.loaded) return;
 
     this.player?.draw(c);
-    iterate(this.drawables, (drawable) => drawable.draw(c));
+    iterate(this.gameObjects, (gameObject) => gameObject.draw(c));
 
-    if (this.drawables.length == 0) this.step();
-  }
-
-  private get level() {
-    return this.levels[this.currentLevel];
-  }
-
-  private verifyProjectileCollision(drawable: GameObject) {
-    const projectiles = this.player!.getProjectiles();
-
-    iterate(projectiles, (projectile) => {
-      if (hasCollided(projectile.hitbox, drawable.hitbox)) {
-        // TODO
-        console.log("projectile hit", projectile, drawable);
-        projectile.handleHit(0);
-        drawable.handleHit(1);
-      }
-    });
-  }
-
-  public destroy(): void {
-    if (this.player) this.player.destroy();
+    if (this.gameObjects.length == 0) this.step();
   }
 }

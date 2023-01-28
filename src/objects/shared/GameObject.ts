@@ -63,7 +63,7 @@ export abstract class GameObject implements GameObject {
     this.direction.y = Math.cos(movementAngle);
   }
 
-  protected setDimensions({ width, height }: Boundaries) {
+  protected setDimensions({ width, height }: Boundaries): void {
     // TODO handle screen resize
     this.width = width;
     this.height = height;
@@ -73,7 +73,8 @@ export abstract class GameObject implements GameObject {
     this.doubleWidth = width * 2;
   }
 
-  protected setMovementStartingPoint(worldBoundaries: Boundaries) {
+  // override if necessary
+  protected setStartingPoint(worldBoundaries: Boundaries): void {
     const { angle, start } = this.movement;
 
     let x = 0;
@@ -114,12 +115,14 @@ export abstract class GameObject implements GameObject {
     return -atan2({ x, y }, to);
   }
 
-  protected abstract setStartingPoint(worldBoundaries: Boundaries): void;
-  protected abstract move(state: GameState): void;
-  protected abstract checkCollision(player: HitBox): void;
-  public abstract handleHit(power: number): void;
+  // override if necessary
+  protected move(state: GameState): void {
+    this.x += this.direction.x * this.movement.speed * state.delta;
+    this.y += this.direction.y * this.movement.speed * state.delta;
+  }
 
-  protected preUpdate(state: GameState) {
+  // override if necessary
+  protected update(state: GameState): void {
     this.debug = state.debug;
 
     if (this.spawnClock.pending) {
@@ -128,12 +131,29 @@ export abstract class GameObject implements GameObject {
     }
 
     if (!this.hasStartingPoint) this.setStartingPoint(state.worldBoundaries);
-
     this.impactClock.increment(state.delta);
   }
 
-  public abstract update(state: GameState): void;
   public abstract draw(c: CanvasRenderingContext2D): void;
+
+  protected abstract checkCollision(player: HitBox): void;
+  public abstract handleHit(power: number): void;
+
+  protected get ready(): boolean {
+    return !(isNaN(this.x) || isNaN(this.y) || this.spawnClock.pending);
+  }
+
+  protected get hasStartingPoint(): boolean {
+    return !(isNaN(this.x) && isNaN(this.y));
+  }
+
+  public get isActive(): boolean {
+    return this.active;
+  }
+
+  public get hitbox(): HitBox {
+    return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
+  }
 
   protected drawDebug(c: CanvasRenderingContext2D): void {
     const _y = Math.floor(this.y);
@@ -149,21 +169,5 @@ export abstract class GameObject implements GameObject {
     c.beginPath();
     c.arc(this.hitbox.x, this.hitbox.y, this.hitbox.radius, 0, Math.PI * 2);
     c.stroke();
-  }
-
-  protected get ready(): boolean {
-    return !(isNaN(this.x) || isNaN(this.y) || this.spawnClock.pending);
-  }
-
-  public get isActive(): boolean {
-    return this.active;
-  }
-
-  public get hitbox(): HitBox {
-    return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
-  }
-
-  public get hasStartingPoint(): boolean {
-    return !(isNaN(this.x) && isNaN(this.y));
   }
 }

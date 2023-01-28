@@ -13,53 +13,56 @@ import {
   ControlAction,
 } from "@/common/controls";
 import { PlayerParams } from "./PlayerParams";
-import { Projectile } from "../projectile";
 import { ListenerMap, set, unset } from "@/common/events";
-import { Clock } from "../shared";
+import { Clock, GameObject } from "../shared";
 
-export class Player implements Destroyable {
-  private x = NaN;
-  private y = NaN;
-  private cx = 0;
-  private cy = 0;
-  private width = 0;
-  private height = 0;
-  private rotationAngle = 0;
+export class Player extends GameObject implements Destroyable {
+  private controls: ControlState = {};
 
-  private firePower = 1;
+  // private firePower = 1;
   private fireTimeout = 300; //ms
   private fireClock: Clock;
-  private projectiles: Projectile[] = [];
 
-  private hp = 0;
   private maxHp = 10;
+
+  private rotationAngle = 0;
   private startingProportions: Coordinate = { x: 0.5, y: 0.95 };
 
-  private debug = false;
   private listeners: ListenerMap = {};
 
+  public set controlState(controls: ControlState) {
+    this.controls = controls;
+  }
+
   constructor(private readonly params: PlayerParams) {
+    super(params);
     this.hp = params.hp || this.maxHp;
-    this.setDimensions();
+    this.setDimensions(params.img);
     this.setupListeners();
 
     this.fireClock = new Clock(this.fireTimeout, true);
   }
 
   private setupListeners() {
-    this.listeners = { impact: this.handleHit.bind(this) };
+    this.listeners = { impact: this.hitEvent.bind(this) };
     set(this.listeners);
   }
 
-  private setDimensions() {
-    // TODO handle screen resize
-    this.height = this.params.img.height;
-    this.width = this.params.img.width;
-    this.cx = this.width * 0.5;
-    this.cy = this.height * 0.5;
+  public destroy() {
+    unset(this.listeners);
   }
 
-  private setStartingPoint(worldBoundaries: Boundaries) {
+  private hitEvent(ev: Event) {
+    const power = (ev as CustomEvent).detail as number;
+    console.log("player hit", power);
+    this.hp -= power;
+    if (this.hp <= 0) {
+      console.log("game over");
+      // trigger('gameover')
+    }
+  }
+
+  protected setStartingPoint(worldBoundaries: Boundaries) {
     const { x, y } = this.startingProportions;
     this.x = worldBoundaries.width * x - this.cx; // centered
     this.y = worldBoundaries.height * y - this.height; // 5% above ground
@@ -75,6 +78,28 @@ export class Player implements Destroyable {
       this.rotationAngle += toDeg(velocity);
     }
   }
+
+  private fire() {
+    if (this.fireClock.pending) return;
+
+    // TODO trigger('player-projectile', ProjectileParams)
+    /*
+    const projectile = new Projectile({
+      enemy: false,
+      power: this.firePower,
+      movement: {
+        angle: this.rotationAngle,
+        start: this.hitbox,
+      },
+    });
+    */
+    // this.projectiles.push(projectile);
+    this.fireClock.reset();
+  }
+
+  // not needed
+  protected checkCollision(_: HitBox): void {}
+  public handleHit(_: number): void {}
 
   private act(
     gameState: GameState,
@@ -109,27 +134,21 @@ export class Player implements Destroyable {
     if (this.x + this.width > width) this.x = width - this.width;
   }
 
-  public update(state: GameState, controls: ControlState): void {
-    this.debug = state.debug;
-    if (!state.worldBoundaries) return;
+  public update(state: GameState): void {
+    super.update(state);
     if (this.fireClock.pending) this.fireClock.increment(state.delta);
-    if (!this.hasStartingPoint) this.setStartingPoint(state.worldBoundaries);
 
-    let action: ControlAction;
-    for (action in controls) {
-      this.act(state, action, controls[action]!);
-    }
+    const keys = Object.keys(this.controls) as ControlAction[];
+    iterate(keys, (action) => {
+      this.act(state, action, this.controls[action]!);
+    });
 
     // IMPORTANT
     state.player = this.hitbox;
-    iterate(this.projectiles, (p) => p.update(state));
-    this.projectiles = this.projectiles.filter((p) => p.isActive);
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    if (!this.hasStartingPoint) return;
-    iterate(this.projectiles, (p) => p.draw(c));
-
+    if (!this.ready) return;
     const { x, y, width, height, rotationAngle, cx, cy } = this;
 
     c.save();
@@ -139,61 +158,5 @@ export class Player implements Destroyable {
     c.restore();
 
     if (this.debug) this.drawDebug(c);
-  }
-
-  private drawDebug(c: CanvasRenderingContext2D) {
-    const _y = Math.floor(this.y);
-    const _x = Math.floor(this.x);
-    const rad = Math.floor(toDeg(this.rotationAngle));
-    c.strokeStyle = "red";
-    c.fillStyle = "white";
-    c.font = `${16}px sans-serif`;
-
-    // c.textAlign = "center";
-    c.fillText(`[${_x}, ${_y}] ${rad}°`, _x + this.width, _y);
-
-    c.beginPath();
-    c.arc(this.hitbox.x, this.hitbox.y, this.hitbox.radius, 0, Math.PI * 2);
-    c.stroke();
-  }
-
-  private fire() {
-    if (this.fireClock.pending) return;
-    let projectile = new Projectile({
-      enemy: false,
-      power: this.firePower,
-      movement: {
-        angle: this.rotationAngle,
-        start: this.hitbox,
-      },
-    });
-    this.projectiles.push(projectile);
-    this.fireClock.reset();
-  }
-
-  private handleHit(ev: Event) {
-    const power = (ev as CustomEvent).detail as number;
-    console.log("player hit", power);
-    this.hp -= power;
-    if (this.hp <= 0) {
-      console.log("game over");
-      // trigger('gameover')
-    }
-  }
-
-  private get hasStartingPoint(): boolean {
-    return !(isNaN(this.x) && isNaN(this.y));
-  }
-
-  public get hitbox(): HitBox {
-    return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
-  }
-
-  public destroy() {
-    unset(this.listeners);
-  }
-
-  public getProjectiles() {
-    return this.projectiles;
   }
 }

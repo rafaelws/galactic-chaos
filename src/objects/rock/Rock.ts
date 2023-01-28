@@ -1,6 +1,6 @@
 import { trigger } from "@/common/events";
 import { hasCollided, toRad } from "@/common/math";
-import { Boundaries, GameState, HitBox } from "@/common/meta";
+import { GameState, HitBox } from "@/common/meta";
 import { GameObject } from "../shared";
 import { RockParams } from "./RockParams";
 
@@ -14,15 +14,6 @@ export class Rock extends GameObject {
     const { width, height } = this.params.img;
     this.setDimensions({ width, height });
     this.setDirection();
-  }
-
-  protected setStartingPoint(worldBoundaries: Boundaries) {
-    this.setMovementStartingPoint(worldBoundaries);
-  }
-
-  protected move(state: GameState) {
-    this.x += this.direction.x * this.movement.speed * state.delta;
-    this.y += this.direction.y * this.movement.speed * state.delta;
   }
 
   private setRotation() {
@@ -44,7 +35,7 @@ export class Rock extends GameObject {
   }
 
   public update(state: GameState): void {
-    this.preUpdate(state);
+    super.update(state);
 
     this.setRotation();
     this.move(state);

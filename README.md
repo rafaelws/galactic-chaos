@@ -1,13 +1,23 @@
 # TODO
 
-- [ ] {feature} ship movement patterns - arc, 8, sin, cos, pursuer, etc...
+- [ ] refac 2
+
+  - [x] {refac} Make player a game object (setControls, extends GameObject)
+  - [>] {bug} fix Projectile hitbox
+  - [>] {refac} Use events to spawn everything (start with projectiles, listen to the event on LevelManager and add to the drawables array - rename to gameObjects)
+  - [>] {bug} if a Ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
+  - [>] {bug} fix level manager step function
+  - [ ] configure eslint
+
+- [ ] {feature} player items and status
+
+  - [ ] items (at least heal and shield) (spawn items using event)
+  - [ ] overlap damage image when hp is depleated
+
 - [ ] {feature} bosses
-- [ ] {feature} player items
-- [ ] {bug} if a ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
-- [ ] {bug} fix level manager step function
+- [ ] {feature} ship: add 2 movement patterns ship movement
+
 - [ ] {?} syntax sugar: enemy profiles
-- [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
-- [ ] configure eslint
 
 # BASIC
 
@@ -31,7 +41,7 @@
     - [x] projectile
     - [x] player
 
-- [x] maintainability iteration
+- [x] maintainability iteration (refac1)
 
   - [x] clock utility
   - [x] can a class called GameObject be created to simplify some stuff?
@@ -55,12 +65,13 @@
 
   - [ ] effects and animations (e.g. hit/collision effect)
   - [ ] audio: ost, ui
-  - [ ] image: projectiles
-  - [ ] fonts: ui, hud (Orbitron)
+  - [>] image: projectiles
+  - [>] fonts: ui, hud (Orbitron)
 
 - [ ] handle resize on game objects (Projectile, Ship, Rock, Player...)
 - [ ] background (dynamic, with particles, reacting to the bg music)
-- [ ] overall status: time? score? enemies killed? shots fired?`
+- [ ] overall status: time? score? enemies killed? shots fired?` (use LevelManager)
+- [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
 
 ---
 

@@ -1,7 +1,7 @@
 import { trigger } from "@/common/events";
 import { iterate } from "@/common/util";
 import { hasCollided, R180, randInRange, toRad } from "@/common/math";
-import { Boundaries, Concrete, GameState, HitBox } from "@/common/meta";
+import { Concrete, GameState, HitBox } from "@/common/meta";
 import { Projectile } from "@/objects";
 import { GameObject, Clock } from "@/objects/shared";
 import { ShipFire, ShipParams } from ".";
@@ -27,16 +27,6 @@ export class Ship extends GameObject {
     const { width, height } = this.params.img;
     this.setDimensions({ width, height });
     this.setDirection();
-  }
-
-  protected setStartingPoint(worldBoundaries: Boundaries) {
-    this.setMovementStartingPoint(worldBoundaries);
-  }
-
-  protected move(state: GameState) {
-    // TODO patterns
-    this.x += this.direction.x * this.movement.speed * state.delta;
-    this.y += this.direction.y * this.movement.speed * state.delta;
   }
 
   private setRotation(hitbox: HitBox) {
@@ -80,6 +70,7 @@ export class Ship extends GameObject {
       angle = this.fire.angle;
     }
 
+    // TODO trigger('enemy-projectile', ProjectileParams)
     this.projectiles.push(
       new Projectile({
         enemy: true,
@@ -107,8 +98,7 @@ export class Ship extends GameObject {
   }
 
   public update(state: GameState): void {
-    this.preUpdate(state);
-
+    super.update(state);
     this.setRotation(state.player);
     this.setFire(state.delta);
     this.move(state);
