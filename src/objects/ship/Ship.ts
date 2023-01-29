@@ -1,15 +1,13 @@
-import { trigger } from "@/common/events";
-import { iterate } from "@/common/util";
-import { hasCollided, R180, randInRange, toRad } from "@/common/math";
-import { Boundaries, Concrete, GameState, HitBox } from "@/common/meta";
-import { Projectile } from "@/objects";
-import { GameObject, Clock } from "@/objects/shared";
-import { ShipFire, ShipParams } from ".";
+import { GameEvent, trigger } from "@/common/events";
+import { R180, randInRange, toRad } from "@/common/math";
+import { Concrete, GameState, HitBox } from "@/common/meta";
+import { ProjectileParams, ShipParams } from "@/objects";
+import { GameObject, Clock } from "../shared";
+import { ShipFire } from "./ShipFireParams";
 
 export class Ship extends GameObject {
   private fire: Concrete<ShipFire>;
   private fireClock: Clock;
-  private projectiles: Projectile[] = [];
 
   constructor(private readonly params: ShipParams) {
     super(params);
@@ -27,16 +25,6 @@ export class Ship extends GameObject {
     const { width, height } = this.params.img;
     this.setDimensions({ width, height });
     this.setDirection();
-  }
-
-  protected setStartingPoint(worldBoundaries: Boundaries) {
-    this.setMovementStartingPoint(worldBoundaries);
-  }
-
-  protected move(state: GameState) {
-    // TODO patterns
-    this.x += this.direction.x * this.movement.speed * state.delta;
-    this.y += this.direction.y * this.movement.speed * state.delta;
   }
 
   private setRotation(hitbox: HitBox) {
@@ -80,55 +68,37 @@ export class Ship extends GameObject {
       angle = this.fire.angle;
     }
 
-    this.projectiles.push(
-      new Projectile({
-        enemy: true,
+    const params: ProjectileParams = {
+      enemy: true,
+      movement: {
+        angle: angle,
+        start: this.hitbox,
+      },
+      impact: {
         power: this.fire.power,
-        movement: {
-          angle: angle,
-          start: this.hitbox,
-        },
-      })
-    );
-  }
+      },
+    };
 
-  public handleHit(power: number): void {
-    this.hp -= power;
-    if (this.hp <= 0) this.active = false;
-  }
-
-  protected checkCollision(player: HitBox) {
-    if (this.active && hasCollided(this.hitbox, player)) {
-      const { power, resistance } = this.impact;
-      trigger("impact", power);
-      this.handleHit(power - resistance);
-      this.impactClock.reset();
-    }
+    trigger(GameEvent.spawnEnemyProjectile, params);
   }
 
   public update(state: GameState): void {
-    this.preUpdate(state);
+    super.update(state);
+    if (!this.ready) return;
 
     this.setRotation(state.player);
     this.setFire(state.delta);
     this.move(state);
 
     if (this.isOutboundsDoubled(state.worldBoundaries)) this.active = false;
-    if (!this.impactClock.pending) this.checkCollision(state.player);
-
-    iterate(this.projectiles, (p) => p.update(state));
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (!this.ready) return;
-    iterate(this.projectiles, (p) => p.draw(c));
-
-    const { width, height, x, y, cx, cy } = this;
-
     c.save();
-    c.translate(x + cx, y + cy);
+    c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(this.rotation - R180);
-    c.drawImage(this.params.img, -cx, -cy, width, height);
+    c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
     c.restore();
     if (this.debug) this.drawDebug(c);
   }

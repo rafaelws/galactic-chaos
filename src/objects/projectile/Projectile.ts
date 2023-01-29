@@ -1,22 +1,25 @@
-import { trigger } from "@/common/events";
-import { hasCollided } from "@/common/math";
 import { Boundaries, GameState, HitBox } from "@/common/meta";
-import { GameObject, GameObjectParams } from "../shared";
-
-export interface ProjectileParams extends GameObjectParams {
-  enemy: boolean;
-  power?: number;
-}
+import { GameObject } from "../shared";
+import { ProjectileParams } from "./ProjectileParams";
 
 export class Projectile extends GameObject {
-  private power: number;
-
   constructor(private readonly params: ProjectileParams) {
     super(params);
-
-    this.power = params.power || 1;
     this.direction.x = Math.sin(-this.movement.angle);
     this.direction.y = Math.cos(-this.movement.angle);
+  }
+
+  public get enemy() {
+    return this.params.enemy;
+  }
+
+  public get hitbox(): HitBox {
+    // palliative
+    // TODO draw a circle/arc at the point of the angle
+    return {
+      ...super.hitbox,
+      radius: this.cy * 0.5,
+    };
   }
 
   protected setStartingPoint(worldBoundaries: Boundaries) {
@@ -33,38 +36,21 @@ export class Projectile extends GameObject {
     this.y -= this.direction.y * state.delta;
   }
 
-  protected checkCollision(player: HitBox) {
-    if (this.active && this.params.enemy && hasCollided(this.hitbox, player)) {
-      trigger("impact", this.power);
-      this.active = false;
-    }
-  }
-
-  // will never happen for Enemy Projectile
-  public handleHit(_: number) {
-    this.active = false;
-  }
-
   public update(state: GameState) {
+    super.update(state);
     if (!this.active) return;
-    this.preUpdate(state);
-
     this.move(state);
-
     if (this.isOutbounds(state.worldBoundaries)) this.active = false;
-    this.checkCollision(state.player);
   }
 
   public draw(c: CanvasRenderingContext2D) {
     if (!this.active || !this.ready) return;
-
-    const { x, y, cx, cy, width, height } = this;
-
     c.save();
-    c.translate(x + cx, y + cy);
+    c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(this.movement.angle);
     c.fillStyle = this.params.enemy ? "red" : "blue";
-    c.fillRect(-cx, -cy, width, height);
+    c.fillRect(-this.cx, -this.cy, this.width, this.height);
     c.restore();
+    if (this.debug) this.drawDebug(c);
   }
 }

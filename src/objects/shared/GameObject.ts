@@ -63,7 +63,7 @@ export abstract class GameObject implements GameObject {
     this.direction.y = Math.cos(movementAngle);
   }
 
-  protected setDimensions({ width, height }: Boundaries) {
+  protected setDimensions({ width, height }: Boundaries): void {
     // TODO handle screen resize
     this.width = width;
     this.height = height;
@@ -73,7 +73,8 @@ export abstract class GameObject implements GameObject {
     this.doubleWidth = width * 2;
   }
 
-  protected setMovementStartingPoint(worldBoundaries: Boundaries) {
+  // override if necessary
+  protected setStartingPoint(worldBoundaries: Boundaries): void {
     const { angle, start } = this.movement;
 
     let x = 0;
@@ -91,15 +92,6 @@ export abstract class GameObject implements GameObject {
     this.y = y;
   }
 
-  protected isOutboundsDoubled(worldBoundaries: Boundaries): boolean {
-    return (
-      this.x + this.doubleWidth < 0 ||
-      this.y + this.doubleHeight < 0 ||
-      this.x - this.doubleWidth > worldBoundaries.width ||
-      this.y - this.doubleHeight > worldBoundaries.height
-    );
-  }
-
   protected isOutbounds(worldBoundaries: Boundaries): boolean {
     return (
       this.x + this.width < 0 ||
@@ -109,31 +101,70 @@ export abstract class GameObject implements GameObject {
     );
   }
 
+  protected isOutboundsDoubled(worldBoundaries: Boundaries): boolean {
+    return (
+      this.x + this.doubleWidth < 0 ||
+      this.y + this.doubleHeight < 0 ||
+      this.x - this.doubleWidth > worldBoundaries.width ||
+      this.y - this.doubleHeight > worldBoundaries.height
+    );
+  }
+
   protected calculateRotation(to: Coordinate): number {
     const { x, y } = this.hitbox;
     return -atan2({ x, y }, to);
   }
 
-  protected abstract setStartingPoint(worldBoundaries: Boundaries): void;
-  protected abstract move(state: GameState): void;
-  protected abstract checkCollision(player: HitBox): void;
-  public abstract handleHit(power: number): void;
+  // override if necessary
+  protected move(state: GameState): void {
+    this.x += this.direction.x * this.movement.speed * state.delta;
+    this.y += this.direction.y * this.movement.speed * state.delta;
+  }
 
-  protected preUpdate(state: GameState) {
+  // override if necessary
+  public update(state: GameState): void {
     this.debug = state.debug;
-
-    if (this.spawnClock.pending) {
-      this.spawnClock.increment(state.delta);
-      return;
-    }
-
     if (!this.hasStartingPoint) this.setStartingPoint(state.worldBoundaries);
 
+    this.spawnClock.increment(state.delta);
     this.impactClock.increment(state.delta);
   }
 
-  public abstract update(state: GameState): void;
   public abstract draw(c: CanvasRenderingContext2D): void;
+
+  public handleHit(power: number): void {
+    this.hp -= power;
+    if (this.hp <= 0) this.active = false;
+  }
+
+  public handleImpact(power: number): number {
+    if (this.impactClock.pending) return 0;
+    this.impactClock.reset();
+    this.handleHit(power - this.impact.resistance);
+    return this.impact.power;
+  }
+
+  /**
+   * Returns true if x and y are set and the spawnClock has finished
+   */
+  protected get ready(): boolean {
+    return this.hasStartingPoint && !this.spawnClock.pending;
+  }
+
+  /**
+   * Returns true if x and y are set
+   */
+  protected get hasStartingPoint(): boolean {
+    return !(isNaN(this.x) && isNaN(this.y));
+  }
+
+  public get isActive(): boolean {
+    return this.active;
+  }
+
+  public get hitbox(): HitBox {
+    return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
+  }
 
   protected drawDebug(c: CanvasRenderingContext2D): void {
     const _y = Math.floor(this.y);
@@ -149,21 +180,5 @@ export abstract class GameObject implements GameObject {
     c.beginPath();
     c.arc(this.hitbox.x, this.hitbox.y, this.hitbox.radius, 0, Math.PI * 2);
     c.stroke();
-  }
-
-  protected get ready(): boolean {
-    return !(isNaN(this.x) || isNaN(this.y) || this.spawnClock.pending);
-  }
-
-  public get isActive(): boolean {
-    return this.active;
-  }
-
-  public get hitbox(): HitBox {
-    return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
-  }
-
-  public get hasStartingPoint(): boolean {
-    return !(isNaN(this.x) && isNaN(this.y));
   }
 }

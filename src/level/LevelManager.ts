@@ -1,11 +1,13 @@
 import { iterate } from "@/common/util";
-import { hasCollided } from "@/common/math";
 import { ControlState } from "@/common/controls";
-import { Boundaries, Destroyable, GameObject, GameState } from "@/common/meta";
+import { Boundaries, Destroyable, GameState } from "@/common/meta";
 import { assets, getImage, loadImages } from "@/common/asset";
-import { Player } from "@/objects";
+
+import { GameObject, Player, Projectile } from "@/objects";
+
 import { Level } from "./Level";
 import { firstLevel } from "./1";
+import { EventManager } from "./EventManager";
 
 export class LevelManager implements Destroyable {
   private loaded = false;
@@ -17,29 +19,47 @@ export class LevelManager implements Destroyable {
   private currentStep = -1;
   private finalStep = -1;
 
-  private drawables: GameObject[] = [];
+  private player?: Player;
+  private gameObjects: GameObject[] = [];
+  private prependables: GameObject[] = [];
+
+  private eventManager: EventManager;
+
   private readonly levels: Level[] = [firstLevel];
 
-  private player?: Player;
+  private get level() {
+    return this.levels[this.currentLevel];
+  }
 
   constructor() {
+    this.eventManager = new EventManager({
+      onEnemyProjectile: (p: Projectile) => {
+        this.prependables.push(p);
+      },
+    });
+    this.finalLevel = this.levels.length;
     this.nextLevel();
   }
 
-  private nextLevel() {
-    this.loaded = false;
-    this.loading = false;
-    this.currentLevel++;
-    this.finalLevel = this.levels.length;
-    this.currentStep = -1;
-    this.finalStep = this.level.steps.length;
+  public destroy(): void {
+    this.eventManager.destroy();
   }
 
-  // *** FIXME ***
-  private step(): void {
-    if (this.currentLevel >= this.finalLevel) return;
-    if (this.currentStep < this.finalStep) {
-      this.drawables = this.level.steps[++this.currentStep]();
+  private nextLevel() {
+    if (++this.currentLevel < this.finalLevel) {
+      this.loaded = false;
+      this.loading = false;
+      this.currentStep = -1;
+      this.finalStep = this.level.steps.length;
+    } else {
+      console.log("game ended");
+      // trigger("gameend")
+    }
+  }
+
+  private nexStep(): void {
+    if (++this.currentStep < this.finalStep) {
+      this.gameObjects = this.level.steps[this.currentStep]();
     } else {
       this.nextLevel();
     }
@@ -63,7 +83,7 @@ export class LevelManager implements Destroyable {
   public update(
     delta: number,
     worldBoundaries: Boundaries,
-    controls: ControlState
+    controlState: ControlState
   ): void {
     if (this.loading) return;
 
@@ -84,18 +104,27 @@ export class LevelManager implements Destroyable {
         img: getImage(assets.img.player.self),
       });
     } else {
-      // IMPORTANT: player sets `state.player` on update
-      this.player.update(state, controls);
+      // IMPORTANT: set controlState before calling player.update
+      this.player.controlState = controlState;
+
+      // IMPORTANT: player.update sets playerHitbox to state (should be the first one to be called)
+      this.player.update(state);
+
+      // verify performance impacts
+      if (this.prependables.length > 0) {
+        this.gameObjects = this.prependables.concat(this.gameObjects);
+        this.prependables = [];
+      }
 
       let actives: GameObject[] = [];
-      iterate(this.drawables, (drawable) => {
-        drawable.update(state);
-        if (drawable.isActive) {
-          this.verifyProjectileCollision(drawable);
-          actives.push(drawable);
+      iterate(this.gameObjects, (gameObject) => {
+        gameObject.update(state);
+        if (gameObject.isActive) {
+          this.player?.checkCollisions(gameObject);
+          actives.push(gameObject);
         }
       });
-      this.drawables = actives;
+      this.gameObjects = actives;
     }
   }
 
@@ -103,29 +132,8 @@ export class LevelManager implements Destroyable {
     if (this.loading || !this.loaded) return;
 
     this.player?.draw(c);
-    iterate(this.drawables, (drawable) => drawable.draw(c));
+    iterate(this.gameObjects, (gameObject) => gameObject.draw(c));
 
-    if (this.drawables.length == 0) this.step();
-  }
-
-  private get level() {
-    return this.levels[this.currentLevel];
-  }
-
-  private verifyProjectileCollision(drawable: GameObject) {
-    const projectiles = this.player!.getProjectiles();
-
-    iterate(projectiles, (projectile) => {
-      if (hasCollided(projectile.hitbox, drawable.hitbox)) {
-        // TODO
-        console.log("projectile hit", projectile, drawable);
-        projectile.handleHit(0);
-        drawable.handleHit(1);
-      }
-    });
-  }
-
-  public destroy(): void {
-    if (this.player) this.player.destroy();
+    if (this.gameObjects.length == 0) this.nexStep();
   }
 }

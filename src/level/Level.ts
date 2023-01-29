@@ -1,4 +1,4 @@
-import { GameObject } from "@/common/meta";
+import { GameObject } from "@/objects";
 
 export type Step = {
   (): GameObject[];
