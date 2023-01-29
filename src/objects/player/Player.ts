@@ -1,65 +1,37 @@
-import { atan2, toDeg } from "@/common/math";
+import { atan2, hasCollided, toDeg } from "@/common/math";
 import { iterate } from "@/common/util";
-import {
-  Boundaries,
-  Coordinate,
-  Destroyable,
-  GameState,
-  HitBox,
-} from "@/common/meta";
+import { Boundaries, Coordinate, GameState } from "@/common/meta";
 import {
   ControlState,
   ControlStateData,
   ControlAction,
 } from "@/common/controls";
-import { PlayerParams } from "./PlayerParams";
-import { ListenerMap, set, unset } from "@/common/events";
+import { Projectile } from "@/objects";
 import { Clock, GameObject } from "../shared";
+import { PlayerParams } from "./PlayerParams";
 
-export class Player extends GameObject implements Destroyable {
-  private controls: ControlState = {};
-
-  // private firePower = 1;
-  private fireTimeout = 300; //ms
-  private fireClock: Clock;
-
+export class Player extends GameObject {
   private maxHp = 10;
 
   private rotationAngle = 0;
   private startingProportions: Coordinate = { x: 0.5, y: 0.95 };
 
-  private listeners: ListenerMap = {};
+  private firePower = 1;
+  private fireTimeout = 300; //ms
+  private fireClock: Clock;
 
-  public set controlState(controls: ControlState) {
-    this.controls = controls;
-  }
+  private controls: ControlState = {};
+  private projectiles: Projectile[] = [];
 
   constructor(private readonly params: PlayerParams) {
     super(params);
     this.hp = params.hp || this.maxHp;
     this.setDimensions(params.img);
-    this.setupListeners();
-
     this.fireClock = new Clock(this.fireTimeout, true);
   }
 
-  private setupListeners() {
-    this.listeners = { impact: this.hitEvent.bind(this) };
-    set(this.listeners);
-  }
-
-  public destroy() {
-    unset(this.listeners);
-  }
-
-  private hitEvent(ev: Event) {
-    const power = (ev as CustomEvent).detail as number;
-    console.log("player hit", power);
-    this.hp -= power;
-    if (this.hp <= 0) {
-      console.log("game over");
-      // trigger('gameover')
-    }
+  public set controlState(controls: ControlState) {
+    this.controls = controls;
   }
 
   protected setStartingPoint(worldBoundaries: Boundaries) {
@@ -82,40 +54,47 @@ export class Player extends GameObject implements Destroyable {
   private fire() {
     if (this.fireClock.pending) return;
 
-    // TODO trigger('player-projectile', ProjectileParams)
-    /*
-    const projectile = new Projectile({
-      enemy: false,
-      power: this.firePower,
-      movement: {
-        angle: this.rotationAngle,
-        start: this.hitbox,
-      },
-    });
-    */
-    // this.projectiles.push(projectile);
     this.fireClock.reset();
+    this.projectiles.push(
+      new Projectile({
+        enemy: false,
+        impact: {
+          power: this.firePower,
+        },
+        movement: {
+          angle: this.rotationAngle,
+          start: this.hitbox,
+        },
+      })
+    );
   }
 
-  // not needed
-  protected checkCollision(_: HitBox): void {}
-  public handleHit(_: number): void {}
+  public checkCollisions(gameObject: GameObject) {
+    if (gameObject.isActive && hasCollided(this.hitbox, gameObject.hitbox)) {
+      console.log("player => object hit");
+      const impactPower = gameObject.handleImpact(this.firePower);
+      this.handleHit(impactPower);
+    }
+
+    iterate(this.projectiles, (p) => {
+      if (p.isActive && hasCollided(p.hitbox, gameObject.hitbox)) {
+        console.log("projectile => object hit");
+        gameObject.handleHit(this.firePower);
+        p.handleHit(this.firePower);
+      }
+    });
+  }
 
   private act(
-    gameState: GameState,
+    state: GameState,
     action: ControlAction,
-    controlState: ControlStateData
+    control: ControlStateData
   ) {
-    const { active, rate = 1, coordinate } = controlState;
+    if (!control.active) return;
 
-    if (!active) return;
-
-    const {
-      worldBoundaries: { width, height },
-      delta,
-    } = gameState;
-
-    const velocity = rate * delta * 0.5;
+    const rate = control.rate || 1;
+    // TODO modulate velocity
+    const velocity = rate * state.delta * 0.5;
 
     // prettier-ignore
     switch (action) {
@@ -123,15 +102,17 @@ export class Player extends GameObject implements Destroyable {
       case "L_DOWN": this.y += velocity; break;
       case "L_LEFT": this.x -= velocity; break;
       case "L_RIGHT": this.x += velocity; break;
-      case "ROTATE": this.setRotation(velocity, coordinate); break;
+      case "ROTATE": this.setRotation(velocity, control.coordinate); break;
       case "RB": this.fire(); break;
     }
 
     // stay inbounds
     if (this.y < 0) this.y = 0;
-    if (this.y + this.height > height) this.y = height - this.height;
+    if (this.y + this.height > state.worldBoundaries.height)
+      this.y = state.worldBoundaries.height - this.height;
     if (this.x < 0) this.x = 0;
-    if (this.x + this.width > width) this.x = width - this.width;
+    if (this.x + this.width > state.worldBoundaries.width)
+      this.x = state.worldBoundaries.width - this.width;
   }
 
   public update(state: GameState): void {
@@ -145,18 +126,17 @@ export class Player extends GameObject implements Destroyable {
 
     // IMPORTANT
     state.player = this.hitbox;
+    iterate(this.projectiles, (p) => p.update(state));
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (!this.ready) return;
-    const { x, y, width, height, rotationAngle, cx, cy } = this;
-
+    iterate(this.projectiles, (p) => p.draw(c));
     c.save();
-    c.translate(x + cx, y + cy);
-    c.rotate(rotationAngle);
-    c.drawImage(this.params.img, -cx, -cy, width, height);
+    c.translate(this.x + this.cx, this.y + this.cy);
+    c.rotate(this.rotationAngle);
+    c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
     c.restore();
-
     if (this.debug) this.drawDebug(c);
   }
 }

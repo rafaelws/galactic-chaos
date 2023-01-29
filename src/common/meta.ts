@@ -22,14 +22,6 @@ export interface GameState {
   set player(hitbox: HitBox);
 }
 
-export interface GameObject {
-  handleHit(power: number): void;
-  get isActive(): boolean;
-  get hitbox(): HitBox;
-  update(state: GameState): void;
-  draw(c: CanvasRenderingContext2D): void;
-}
-
 export interface Destroyable {
   destroy(): void;
 }

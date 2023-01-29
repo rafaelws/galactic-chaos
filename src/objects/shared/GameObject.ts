@@ -92,21 +92,21 @@ export abstract class GameObject implements GameObject {
     this.y = y;
   }
 
-  protected isOutboundsDoubled(worldBoundaries: Boundaries): boolean {
-    return (
-      this.x + this.doubleWidth < 0 ||
-      this.y + this.doubleHeight < 0 ||
-      this.x - this.doubleWidth > worldBoundaries.width ||
-      this.y - this.doubleHeight > worldBoundaries.height
-    );
-  }
-
   protected isOutbounds(worldBoundaries: Boundaries): boolean {
     return (
       this.x + this.width < 0 ||
       this.y + this.height < 0 ||
       this.x - this.width > worldBoundaries.width ||
       this.y - this.height > worldBoundaries.height
+    );
+  }
+
+  protected isOutboundsDoubled(worldBoundaries: Boundaries): boolean {
+    return (
+      this.x + this.doubleWidth < 0 ||
+      this.y + this.doubleHeight < 0 ||
+      this.x - this.doubleWidth > worldBoundaries.width ||
+      this.y - this.doubleHeight > worldBoundaries.height
     );
   }
 
@@ -122,27 +122,38 @@ export abstract class GameObject implements GameObject {
   }
 
   // override if necessary
-  protected update(state: GameState): void {
+  public update(state: GameState): void {
     this.debug = state.debug;
-
-    if (this.spawnClock.pending) {
-      this.spawnClock.increment(state.delta);
-      return;
-    }
-
     if (!this.hasStartingPoint) this.setStartingPoint(state.worldBoundaries);
+
+    this.spawnClock.increment(state.delta);
     this.impactClock.increment(state.delta);
   }
 
   public abstract draw(c: CanvasRenderingContext2D): void;
 
-  protected abstract checkCollision(player: HitBox): void;
-  public abstract handleHit(power: number): void;
-
-  protected get ready(): boolean {
-    return !(isNaN(this.x) || isNaN(this.y) || this.spawnClock.pending);
+  public handleHit(power: number): void {
+    this.hp -= power;
+    if (this.hp <= 0) this.active = false;
   }
 
+  public handleImpact(power: number): number {
+    if (this.impactClock.pending) return 0;
+    this.impactClock.reset();
+    this.handleHit(power - this.impact.resistance);
+    return this.impact.power;
+  }
+
+  /**
+   * Returns true if x and y are set and the spawnClock has finished
+   */
+  protected get ready(): boolean {
+    return this.hasStartingPoint && !this.spawnClock.pending;
+  }
+
+  /**
+   * Returns true if x and y are set
+   */
   protected get hasStartingPoint(): boolean {
     return !(isNaN(this.x) && isNaN(this.y));
   }

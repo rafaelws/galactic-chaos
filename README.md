@@ -4,8 +4,8 @@
 
   - [x] {refac} Make player a game object (setControls, extends GameObject)
   - [x] {bug} fix Projectile hitbox
-  - [>] {refac} Use events to spawn everything (start with projectiles, listen to the event on LevelManager and add to the drawables array - rename to gameObjects)
-  - [>] {bug} if a Ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
+  - [x] {refac} Use events to spawn enemy projectiles
+  - [x] {bug} if a Ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
   - [>] {bug} fix level manager step function
   - [ ] configure eslint
 
@@ -80,6 +80,16 @@
 - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
 
 ---
+
+```
+Events:
+ - [ ] quit
+ - [ ] pause
+ - [x] spawnPlayerProjectile
+ - [>] spawnEnemyProjectile
+ - [ ] spwanPlayerItem
+ -
+```
 
 ```
 Gamepad Cheatsheet:

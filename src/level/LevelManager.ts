@@ -1,10 +1,13 @@
 import { iterate } from "@/common/util";
 import { ControlState } from "@/common/controls";
-import { Boundaries, Destroyable, GameObject, GameState } from "@/common/meta";
+import { Boundaries, Destroyable, GameState } from "@/common/meta";
 import { assets, getImage, loadImages } from "@/common/asset";
-import { Player } from "@/objects";
+
+import { GameObject, Player, Projectile } from "@/objects";
+
 import { Level } from "./Level";
 import { firstLevel } from "./1";
+import { EventManager } from "./EventManager";
 
 export class LevelManager implements Destroyable {
   private loaded = false;
@@ -16,37 +19,29 @@ export class LevelManager implements Destroyable {
   private currentStep = -1;
   private finalStep = -1;
 
-  private gameObjects: GameObject[] = [];
-  private readonly levels: Level[] = [firstLevel];
-
   private player?: Player;
+  private gameObjects: GameObject[] = [];
+
+  private eventManager: EventManager;
+
+  private readonly levels: Level[] = [firstLevel];
 
   private get level() {
     return this.levels[this.currentLevel];
   }
 
   constructor() {
+    this.eventManager = new EventManager({
+      onEnemyProjectile: (p: Projectile) => {
+        this.gameObjects.push(p);
+      },
+    });
     this.nextLevel();
   }
 
   public destroy(): void {
-    if (this.player) this.player.destroy();
+    this.eventManager.destroy();
   }
-
-  /*
-  private verifyProjectileCollision(drawable: GameObject) {
-    const projectiles = this.player!.getProjectiles();
-
-    iterate(projectiles, (projectile) => {
-      if (hasCollided(projectile.hitbox, drawable.hitbox)) {
-        // TODO
-        console.log("projectile hit", projectile, drawable);
-        projectile.handleHit(0);
-        drawable.handleHit(1);
-      }
-    });
-  }
-  */
 
   private nextLevel() {
     this.loaded = false;
@@ -106,15 +101,17 @@ export class LevelManager implements Destroyable {
         img: getImage(assets.img.player.self),
       });
     } else {
-      // IMPORTANT: player sets `state.player` on update
+      // IMPORTANT: set controlState before calling player.update
       this.player.controlState = controlState;
+
+      // IMPORTANT: player.update sets playerHitbox to state (should be the first one to be called)
       this.player.update(state);
 
       let actives: GameObject[] = [];
       iterate(this.gameObjects, (gameObject) => {
         gameObject.update(state);
         if (gameObject.isActive) {
-          // this.verifyProjectileCollision(gameObject);
+          this.player?.checkCollisions(gameObject);
           actives.push(gameObject);
         }
       });
