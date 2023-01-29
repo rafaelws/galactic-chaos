@@ -1,24 +1,20 @@
 # NEXT (>doing)
 
-- [ ] {feature} ship: add 2 movement patterns ship movement
+- [ ] {feature} player items
 
-- [ ] {refac} projectile
-
-  - [ ] ability to change speed
-  - [ ] appearance
-
-- [ ] {feature} player items and status
-
-  - [ ] items (at least heal and shield) (spawn items using event)
+  - [ ] hp
+  - [ ] shield
+  - [ ] spawn items using event
   - [ ] overlap damage image when hp is depleated
 
 - [ ] {feature} bosses
 
-- [ ] {?} syntax sugar: enemy profiles
-
 # TODO
 
 - [ ] player items
+  - [ ] hp
+  - [ ] shield
+  - [ ] special
 - [ ] enemies
   - [ ] bosses
 - [ ] HUD
@@ -35,8 +31,16 @@
 
 - [ ] handle screen resize on game objects
 - [ ] background: dynamic, with particles, reacting to the bg music
-- [ ] overall status: time? score? enemies killed? shots fired?` (use LevelManager)
-- [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
+- [ ] {low}overall status: time? score? enemies killed? shots fired?` (use LevelManager)
+- [ ] {low}{idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
+- [ ] {low}{refac} projectile
+
+  - [ ] ability to change speed
+  - [ ] appearance
+
+- [ ] {low}{idea} ship: add 2 movement patterns ship movement (using sin, cos)
+- [ ] {low}{idea} canon / beam struggle (time event)
+- [ ] {low}{idea} syntax sugar: enemy profiles
 
 # DONE
 

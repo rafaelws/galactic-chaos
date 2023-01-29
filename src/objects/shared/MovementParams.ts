@@ -34,11 +34,4 @@ export interface MovementParams {
    * @default 0.1
    */
   speed?: number;
-
-  /**
-   * - `LINEAR`: move as a rect
-   * - `ARC`: move as a arc
-   * @default "LINEAR"
-   */
-  // pattern?: "LINEAR" | "8" | "ARC";
 }
