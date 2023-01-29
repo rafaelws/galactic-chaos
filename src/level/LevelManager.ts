@@ -21,6 +21,7 @@ export class LevelManager implements Destroyable {
 
   private player?: Player;
   private gameObjects: GameObject[] = [];
+  private prependables: GameObject[] = [];
 
   private eventManager: EventManager;
 
@@ -33,9 +34,10 @@ export class LevelManager implements Destroyable {
   constructor() {
     this.eventManager = new EventManager({
       onEnemyProjectile: (p: Projectile) => {
-        this.gameObjects.push(p);
+        this.prependables.push(p);
       },
     });
+    this.finalLevel = this.levels.length;
     this.nextLevel();
   }
 
@@ -44,19 +46,20 @@ export class LevelManager implements Destroyable {
   }
 
   private nextLevel() {
-    this.loaded = false;
-    this.loading = false;
-    this.currentLevel++;
-    this.finalLevel = this.levels.length;
-    this.currentStep = -1;
-    this.finalStep = this.level.steps.length;
+    if (++this.currentLevel < this.finalLevel) {
+      this.loaded = false;
+      this.loading = false;
+      this.currentStep = -1;
+      this.finalStep = this.level.steps.length;
+    } else {
+      console.log("game ended");
+      // trigger("gameend")
+    }
   }
 
-  // *** FIXME ***
-  private step(): void {
-    if (this.currentLevel >= this.finalLevel) return;
-    if (this.currentStep < this.finalStep) {
-      this.gameObjects = this.level.steps[++this.currentStep]();
+  private nexStep(): void {
+    if (++this.currentStep < this.finalStep) {
+      this.gameObjects = this.level.steps[this.currentStep]();
     } else {
       this.nextLevel();
     }
@@ -107,6 +110,12 @@ export class LevelManager implements Destroyable {
       // IMPORTANT: player.update sets playerHitbox to state (should be the first one to be called)
       this.player.update(state);
 
+      // verify performance impacts
+      if (this.prependables.length > 0) {
+        this.gameObjects = this.prependables.concat(this.gameObjects);
+        this.prependables = [];
+      }
+
       let actives: GameObject[] = [];
       iterate(this.gameObjects, (gameObject) => {
         gameObject.update(state);
@@ -125,6 +134,6 @@ export class LevelManager implements Destroyable {
     this.player?.draw(c);
     iterate(this.gameObjects, (gameObject) => gameObject.draw(c));
 
-    if (this.gameObjects.length == 0) this.step();
+    if (this.gameObjects.length == 0) this.nexStep();
   }
 }

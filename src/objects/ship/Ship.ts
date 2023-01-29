@@ -1,5 +1,5 @@
 import { GameEvent, trigger } from "@/common/events";
-import { hasCollided, R180, randInRange, toRad } from "@/common/math";
+import { R180, randInRange, toRad } from "@/common/math";
 import { Concrete, GameState, HitBox } from "@/common/meta";
 import { ProjectileParams, ShipParams } from "@/objects";
 import { GameObject, Clock } from "../shared";

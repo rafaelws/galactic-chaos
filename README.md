@@ -1,13 +1,11 @@
-# TODO
+# NEXT (>doing)
 
-- [ ] refac 2
+- [ ] {feature} ship: add 2 movement patterns ship movement
 
-  - [x] {refac} Make player a game object (setControls, extends GameObject)
-  - [x] {bug} fix Projectile hitbox
-  - [x] {refac} Use events to spawn enemy projectiles
-  - [x] {bug} if a Ship is destroyed, its projectiles vanish (the projectiles should live by themselves)
-  - [>] {bug} fix level manager step function
-  - [ ] configure eslint
+- [ ] {refac} projectile
+
+  - [ ] ability to change speed
+  - [ ] appearance
 
 - [ ] {feature} player items and status
 
@@ -15,25 +13,39 @@
   - [ ] overlap damage image when hp is depleated
 
 - [ ] {feature} bosses
-- [ ] {feature} ship: add 2 movement patterns ship movement
-
-- [ ] projectile
-
-  - [ ] {bug} decent hithox
-  - [ ] {feature} change speed
-  - [ ] appearance
 
 - [ ] {?} syntax sugar: enemy profiles
 
-# BASIC
+# TODO
+
+- [ ] player items
+- [ ] enemies
+  - [ ] bosses
+- [ ] HUD
+- [ ] UI
+- [ ] gamepad
+- [ ] {asset loader} audio
+- [ ] level design
+- [ ] assets
+
+  - [ ] effects and animations (e.g. hit/collision effect)
+  - [ ] audio: ost, ui
+  - [ ] image: projectiles
+  - [ ] fonts: ui, hud (Orbitron)
+
+- [ ] handle screen resize on game objects
+- [ ] background: dynamic, with particles, reacting to the bg music
+- [ ] overall status: time? score? enemies killed? shots fired?` (use LevelManager)
+- [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
+
+# DONE
 
 - [x] {assets} images: player, enemies, items
 - [x] {asset loader} image
 - [x] level manager
 - [x] enemies
   - [x] rock
-  - [x] ship (see TODO)
-  - [ ] bosses
+  - [x] ship
 - [x] mechanics
 
   - [x] game objects collision
@@ -41,43 +53,31 @@
     - [x] enemy projectiles[] collision > player (event)
     - [x] player projectiles[] collision > enemies[] (notify)
     - [x] notify game objects on collision
-  - [x] game object params (hp, impact{power,resistance,collisionTimeout}, projectile power)
+  - [x] game object params (hp, impact{power,resistance,collisionTimeout}, projectile{impact{power}})
     - [x] rock
     - [x] ship
     - [x] projectile
     - [x] player
 
-- [x] maintainability iteration (refac1)
+- [x] refac1 (maintainability iteration)
 
   - [x] clock utility
   - [x] can a class called GameObject be created to simplify some stuff?
   - [x] can some types/interfaces be shared?
-  - [x] ship (with GameObject and Clock)
-  - [x] rock (with GameObject and Clock)
-  - [x] projectile
-  - [x] player
+  - [x] {refac} ship (with GameObject and Clock)
+  - [x] {refac} rock (with GameObject and Clock)
+  - [x] {refac} projectile
+  - [x] {refac} player
   - [x] simplify and use Concrete when necessary
   - [x] upload to a remote to prevent data loss
 
-# Nice-to-haves
+- [x] refac2
 
-- [ ] {player items}: spawn (drop when an enemy is killed), effects (collision event)
-- [ ] HUD
-- [ ] UI
-- [ ] level design
-- [ ] gamepad
-- [ ] {asset loader} audio
-- [ ] assets
-
-  - [ ] effects and animations (e.g. hit/collision effect)
-  - [ ] audio: ost, ui
-  - [>] image: projectiles
-  - [>] fonts: ui, hud (Orbitron)
-
-- [ ] handle resize on game objects (Projectile, Ship, Rock, Player...)
-- [ ] background (dynamic, with particles, reacting to the bg music)
-- [ ] overall status: time? score? enemies killed? shots fired?` (use LevelManager)
-- [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
+  - [x] {refac} Make player a game object (setControls, extends GameObject)
+  - [x] {bug} fix Projectile hitbox (palliative)
+  - [x] {refac} Use events to spawn enemy projectiles
+  - [x] {bug} if a Ship is destroyed, its projectiles vanish (solved by previous item)
+  - [x] {bug} fix level manager step function
 
 ---
 
@@ -85,8 +85,9 @@
 Events:
  - [ ] quit
  - [ ] pause
- - [x] spawnPlayerProjectile
- - [>] spawnEnemyProjectile
+ - [ ] gameend
+ - [ ] gameover
+ - [x] spawnEnemyProjectile
  - [ ] spwanPlayerItem
  -
 ```

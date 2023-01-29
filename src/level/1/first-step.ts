@@ -52,7 +52,7 @@ export function firstStep() {
         speed: 0.2,
       },
       fire: {
-        rate: 100,
+        rate: 500,
         // angle: 55,
         // precision: "SIMPLE",
       },
@@ -64,14 +64,15 @@ export function firstStep() {
       movement: {
         angle: 15,
         start: { x: 0.1, y: 0 },
-        speed: 0.2,
+        speed: 0.5,
       },
       fire: {
-        rate: 300, //ok
+        rate: 350,
         // angle: 50,
         precision: "ACCURATE",
       },
       impact: {
+        resistance: 0,
         collisionTimeout: 1000, // TODO
       },
     }),
