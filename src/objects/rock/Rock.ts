@@ -21,7 +21,7 @@ export class Rock extends GameObject {
 
   public update(state: GameState): void {
     super.update(state);
-    if (!this.ready) return;
+    if (!this.isReady) return;
 
     this.setRotation();
     this.move(state);
@@ -30,7 +30,7 @@ export class Rock extends GameObject {
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    if (!this.ready) return;
+    if (!this.isReady) return;
 
     c.save();
     c.translate(this.x + this.cx, this.y + this.cy);

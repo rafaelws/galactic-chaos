@@ -83,7 +83,7 @@ export class Ship extends GameObject {
 
   public update(state: GameState): void {
     super.update(state);
-    if (!this.ready) return;
+    if (!this.isReady) return;
 
     this.setRotation(state.player);
     this.setFire(state.delta);
@@ -93,7 +93,7 @@ export class Ship extends GameObject {
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    if (!this.ready) return;
+    if (!this.isReady) return;
     c.save();
     c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(this.rotation - R180);

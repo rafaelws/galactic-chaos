@@ -44,7 +44,7 @@ export class Projectile extends GameObject {
   }
 
   public draw(c: CanvasRenderingContext2D) {
-    if (!this.active || !this.ready) return;
+    if (!this.active || !this.isReady) return;
     c.save();
     c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(this.movement.angle);

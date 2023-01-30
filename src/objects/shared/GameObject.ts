@@ -147,7 +147,7 @@ export abstract class GameObject implements GameObject {
   /**
    * Returns true if x and y are set and the spawnClock has finished
    */
-  protected get ready(): boolean {
+  protected get isReady(): boolean {
     return this.hasStartingPoint && !this.spawnClock.pending;
   }
 

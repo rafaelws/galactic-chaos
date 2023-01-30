@@ -130,7 +130,7 @@ export class Player extends GameObject {
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    if (!this.ready) return;
+    if (!this.isReady) return;
     iterate(this.projectiles, (p) => p.draw(c));
     c.save();
     c.translate(this.x + this.cx, this.y + this.cy);
