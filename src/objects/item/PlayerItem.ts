@@ -1,8 +1,8 @@
 import { GameState } from "@/common/meta";
 import { Clock, GameObject } from "../shared";
-import { ItemParams } from "./ItemParams";
+import { PlayerItemParams } from "./PlayerItemParams";
 
-export class Item extends GameObject {
+export class PlayerItem extends GameObject {
   private timeoutClock: Clock;
   private frameClock: Clock;
 
@@ -13,7 +13,7 @@ export class Item extends GameObject {
   private accelerateTimePast = 0;
   private accelerateTimeoutAt: number;
 
-  constructor(private readonly params: ItemParams) {
+  constructor(private readonly params: PlayerItemParams) {
     super(params);
 
     this.hp = 1;
