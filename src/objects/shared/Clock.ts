@@ -1,7 +1,7 @@
 export class Clock {
   private timePast: number;
 
-  constructor(private readonly targetTime: number, readonly startFull = false) {
+  constructor(public targetTime: number, startFull = false) {
     this.timePast = startFull ? targetTime : 0;
   }
 
