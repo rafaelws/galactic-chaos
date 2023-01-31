@@ -7,12 +7,10 @@
 
 # TODO
 
-- [ ] enemies
-  - [ ] bosses
 - [ ] UI
 - [ ] HUD
 - [ ] gamepad
-- [ ] {asset loader} audio
+- [ ] asset loader: audio
 - [ ] level design
 - [ ] assets
 
@@ -47,6 +45,7 @@
 - [x] enemies
   - [x] rock
   - [x] ship
+  - [ ] bosses
 - [x] mechanics
 
   - [x] game objects collision
@@ -151,6 +150,7 @@ NOTES for the exp.share/'post mortem':
   - inheritance caveats
   - "why haven't you used an engine?"
   - ended rushing some features (e.g. items, player damage)
+  - nothing is responsive (resize)
   - approach: let the idea out, struggle, make it work, struggle a bit more, refactor
 - math, trigonometry
 ```

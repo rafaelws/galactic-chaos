@@ -142,10 +142,7 @@ export abstract class GameObject implements GameObject {
     this.hp -= power;
     if (this.hp <= 0) {
       if (!!this.spawnOnDestroy) {
-        this.spawnOnDestroy.setPosition({
-          x: this.hitbox.x,
-          y: this.hitbox.y,
-        });
+        this.spawnOnDestroy.setPosition({ x: this.x, y: this.y });
         trigger(GameEvent.spawn, this.spawnOnDestroy);
       }
       this.active = false;
