@@ -1,3 +1,5 @@
+import { Clock, GameEvent } from "@/common";
+import { trigger } from "@/common/events";
 import { atan2, toRad } from "@/common/math";
 import {
   Boundaries,
@@ -6,7 +8,7 @@ import {
   GameState,
   HitBox,
 } from "@/common/meta";
-import { Clock } from "./Clock";
+import { Effect, PlayerItem } from "@/objects";
 import { GameObjectParams } from "./GameObjectParams";
 import { ImpactParams } from "./ImpactParams";
 import { MovementParams } from "./MovementParams";
@@ -35,6 +37,8 @@ export abstract class GameObject implements GameObject {
   protected spawnClock: Clock;
   protected impactClock: Clock;
 
+  protected spawnOnDestroy?: PlayerItem;
+
   constructor(params: GameObjectParams) {
     this.hp = params.hp || 1;
 
@@ -50,11 +54,13 @@ export abstract class GameObject implements GameObject {
     this.impact = {
       power: 1,
       resistance: 0,
-      collisionTimeout: 100,
+      collisionTimeout: 250,
       ...params.impact,
     };
 
     this.impactClock = new Clock(this.impact.collisionTimeout, true);
+
+    this.spawnOnDestroy = params.spawnOnDestroy;
   }
 
   protected setDirection() {
@@ -134,7 +140,16 @@ export abstract class GameObject implements GameObject {
 
   public handleHit(power: number): void {
     this.hp -= power;
-    if (this.hp <= 0) this.active = false;
+    if (this.hp <= 0) {
+      if (!!this.spawnOnDestroy) {
+        this.spawnOnDestroy.setPosition({
+          x: this.hitbox.x,
+          y: this.hitbox.y,
+        });
+        trigger(GameEvent.spawn, this.spawnOnDestroy);
+      }
+      this.active = false;
+    }
   }
 
   public handleImpact(power: number): number {
@@ -144,10 +159,14 @@ export abstract class GameObject implements GameObject {
     return this.impact.power;
   }
 
+  public effect(): Effect | null {
+    return null;
+  }
+
   /**
    * Returns true if x and y are set and the spawnClock has finished
    */
-  protected get ready(): boolean {
+  protected get isReady(): boolean {
     return this.hasStartingPoint && !this.spawnClock.pending;
   }
 

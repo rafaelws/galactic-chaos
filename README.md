@@ -1,24 +1,16 @@
 # NEXT (>doing)
 
-- [ ] {feature} player items
-
-  - [ ] hp
-  - [ ] shield
-  - [ ] spawn items using event
-  - [ ] overlap damage image when hp is depleated
-
 - [ ] {feature} bosses
+- [ ] bloom effect on projectiles
+- [ ] search for similar games (reference)
+- [ ] look for svg copyleft/cc0 assets
 
 # TODO
 
-- [ ] player items
-  - [ ] hp
-  - [ ] shield
-  - [ ] special
 - [ ] enemies
   - [ ] bosses
-- [ ] HUD
 - [ ] UI
+- [ ] HUD
 - [ ] gamepad
 - [ ] {asset loader} audio
 - [ ] level design
@@ -44,6 +36,11 @@
 
 # DONE
 
+- [ ] player items
+  - [x] hp
+  - [ ] shield
+  - [ ] special
+  - [x] spawn items using event
 - [x] {assets} images: player, enemies, items
 - [x] {asset loader} image
 - [x] level manager
@@ -62,6 +59,7 @@
     - [x] ship
     - [x] projectile
     - [x] player
+  - [x] overlap damage image when hp is depleated (player)
 
 - [x] refac1 (maintainability iteration)
 
@@ -144,4 +142,15 @@ function requestFullscreen() {
   if (method) (root as HTMLElement)[method]();
 }
 
+```
+
+```
+NOTES for the exp.share/'post mortem':
+
+- not ideal design choices
+  - inheritance caveats
+  - "why haven't you used an engine?"
+  - ended rushing some features (e.g. items, player damage)
+  - approach: let the idea out, struggle, make it work, struggle a bit more, refactor
+- math, trigonometry
 ```

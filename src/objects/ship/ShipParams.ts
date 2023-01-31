@@ -2,10 +2,10 @@ import { GameObjectParams } from "@/objects/shared";
 
 export interface ShipParams extends GameObjectParams {
   img: HTMLImageElement;
-  fire?: ShipFire;
+  fire?: ShipFireParams;
 }
 
-export interface ShipFire {
+export interface ShipFireParams {
   /**
    * Interval between shots in `ms`
    *

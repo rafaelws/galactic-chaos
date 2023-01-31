@@ -1,11 +1,12 @@
-import { GameEvent, trigger } from "@/common/events";
+import { Clock, GameEvent } from "@/common";
+import { trigger } from "@/common/events";
 import { R180, randInRange, toRad } from "@/common/math";
 import { Concrete, GameState, HitBox } from "@/common/meta";
-import { ProjectileParams, ShipFire, ShipParams } from "@/objects";
-import { GameObject, Clock } from "../shared";
+import { ShipFireParams, ShipParams, Projectile } from "@/objects";
+import { GameObject } from "../shared";
 
 export class Ship extends GameObject {
-  private fire: Concrete<ShipFire>;
+  private fire: Concrete<ShipFireParams>;
   private fireClock: Clock;
 
   constructor(private readonly params: ShipParams) {
@@ -67,23 +68,24 @@ export class Ship extends GameObject {
       angle = this.fire.angle;
     }
 
-    const params: ProjectileParams = {
-      enemy: true,
-      movement: {
-        angle: angle,
-        start: this.hitbox,
-      },
-      impact: {
-        power: this.fire.power,
-      },
-    };
-
-    trigger(GameEvent.spawnEnemyProjectile, params);
+    trigger(
+      GameEvent.spawn,
+      new Projectile({
+        enemy: true,
+        movement: {
+          angle: angle,
+          start: this.hitbox,
+        },
+        impact: {
+          power: this.fire.power,
+        },
+      })
+    );
   }
 
   public update(state: GameState): void {
     super.update(state);
-    if (!this.ready) return;
+    if (!this.isReady) return;
 
     this.setRotation(state.player);
     this.setFire(state.delta);
@@ -93,7 +95,7 @@ export class Ship extends GameObject {
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    if (!this.ready) return;
+    if (!this.isReady) return;
     c.save();
     c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(this.rotation - R180);

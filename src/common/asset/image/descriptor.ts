@@ -55,11 +55,11 @@ export const img = {
     final: "/img/ship/50.png",
   },
   player: {
-    collectable: [
-      "/img/player/health/1.png",
-      "/img/player/shield/2.png",
-      "/img/player/special/3.png",
-    ],
+    items: {
+      heal: "/img/player/items/heal.png",
+      shield: "/img/player/items/shield.png",
+      special: "/img/player/items/special.png",
+    },
     damage: [
       "/img/player/damage/1.png",
       "/img/player/damage/2.png",

@@ -1,16 +1,24 @@
 import { assets, getImage } from "@/common/asset";
-import { Rock, Ship } from "@/objects";
+import { PlayerItem, Rock, Ship } from "@/objects";
 
 export function firstStep() {
   const rock3 = getImage(assets.img.rock.brown[3]);
   return [
+    new PlayerItem({
+      img: getImage(assets.img.player.items.heal),
+      position: { x: 500, y: 500 },
+      effect: {
+        type: "HEAL",
+        amount: 5,
+      },
+    }),
     new Rock({
       img: rock3,
-      hp: 10,
+      hp: 1,
       selfRotation: -5,
       movement: {
         start: { x: 0.15, y: 0 },
-        speed: 0.3,
+        speed: 0.03,
         // angle: 60,
       },
       impact: {
@@ -18,6 +26,10 @@ export function firstStep() {
         resistance: 1,
         collisionTimeout: 200,
       },
+      spawnOnDestroy: new PlayerItem({
+        effect: { type: "HEAL", amount: 1 },
+        img: getImage(assets.img.player.items.heal),
+      }),
     }),
     new Rock({
       img: rock3,
