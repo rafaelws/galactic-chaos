@@ -1,5 +1,6 @@
 import { ImpactParams } from "./ImpactParams";
 import { MovementParams } from "./MovementParams";
+import { PlayerItem } from "@/objects";
 
 export interface GameObjectParams {
   /**
@@ -21,4 +22,6 @@ export interface GameObjectParams {
 
   impact?: ImpactParams;
   movement?: MovementParams;
+
+  spawnOnDestroy?: PlayerItem;
 }

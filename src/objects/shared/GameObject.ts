@@ -1,4 +1,5 @@
-import { Clock } from "@/common";
+import { Clock, GameEvent } from "@/common";
+import { trigger } from "@/common/events";
 import { atan2, toRad } from "@/common/math";
 import {
   Boundaries,
@@ -7,7 +8,7 @@ import {
   GameState,
   HitBox,
 } from "@/common/meta";
-import { Effect } from "@/objects";
+import { Effect, PlayerItem } from "@/objects";
 import { GameObjectParams } from "./GameObjectParams";
 import { ImpactParams } from "./ImpactParams";
 import { MovementParams } from "./MovementParams";
@@ -36,6 +37,8 @@ export abstract class GameObject implements GameObject {
   protected spawnClock: Clock;
   protected impactClock: Clock;
 
+  protected spawnOnDestroy?: PlayerItem;
+
   constructor(params: GameObjectParams) {
     this.hp = params.hp || 1;
 
@@ -56,6 +59,8 @@ export abstract class GameObject implements GameObject {
     };
 
     this.impactClock = new Clock(this.impact.collisionTimeout, true);
+
+    this.spawnOnDestroy = params.spawnOnDestroy;
   }
 
   protected setDirection() {
@@ -135,7 +140,16 @@ export abstract class GameObject implements GameObject {
 
   public handleHit(power: number): void {
     this.hp -= power;
-    if (this.hp <= 0) this.active = false;
+    if (this.hp <= 0) {
+      if (!!this.spawnOnDestroy) {
+        this.spawnOnDestroy.setPosition({
+          x: this.hitbox.x,
+          y: this.hitbox.y,
+        });
+        trigger(GameEvent.spawn, this.spawnOnDestroy);
+      }
+      this.active = false;
+    }
   }
 
   public handleImpact(power: number): number {

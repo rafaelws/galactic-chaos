@@ -12,14 +12,18 @@ export interface PlayerItemParams extends GameObjectParams {
   effect: Effect;
 
   /**
-   * where to spawn the item
+   * Where to spawn the item.
+   *
+   * can be set later with PlayerItem#setPosition()
+   *
+   * @default { x: 0, y: 0 }
    */
-  at: Coordinate;
+  position?: Coordinate;
 
   /**
    * How much time does it take to disappear
    *
-   * @default 10000 //ms (10s)
+   * @default 5000 //ms
    */
   timeout?: number;
 }

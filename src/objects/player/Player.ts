@@ -71,13 +71,16 @@ export class Player extends GameObject {
   }
 
   public checkCollisions(gameObject: GameObject) {
+    const effect = gameObject.effect();
+
     if (gameObject.isActive && hasCollided(this.hitbox, gameObject.hitbox)) {
       console.log("player => object hit");
-      this.handleEffect(gameObject.effect());
+      this.handleEffect(effect);
       const impactPower = gameObject.handleImpact(this.firePower);
       this.handleHit(impactPower);
     }
 
+    if (!!effect) return;
     iterate(this.projectiles, (p) => {
       if (p.isActive && hasCollided(p.hitbox, gameObject.hitbox)) {
         console.log("projectile => object hit");
