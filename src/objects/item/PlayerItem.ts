@@ -1,6 +1,7 @@
+import { Clock } from "@/common";
 import { GameState } from "@/common/meta";
-import { Clock, GameObject } from "../shared";
-import { PlayerItemParams } from "./PlayerItemParams";
+import { GameObject } from "../shared";
+import { Effect, PlayerItemParams } from "./PlayerItemParams";
 
 export class PlayerItem extends GameObject {
   private timeoutClock: Clock;
@@ -18,7 +19,6 @@ export class PlayerItem extends GameObject {
 
     this.hp = 1;
     this.impact.power = 0;
-    this.impact.resistance = 1000;
 
     this.frameClock = new Clock(this.targetTimeoutTime);
     this.timeoutClock = new Clock(params.timeout || 10000);
@@ -29,6 +29,10 @@ export class PlayerItem extends GameObject {
 
     this.x = params.at.x;
     this.y = params.at.y;
+  }
+
+  public effect(): Effect | null {
+    return this.params.effect;
   }
 
   public update(state: GameState): void {

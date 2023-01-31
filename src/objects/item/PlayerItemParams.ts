@@ -1,12 +1,15 @@
 import { Coordinate } from "@/common/meta";
 import { GameObjectParams } from "../shared";
 
-export type PlayerItemType = "HEAL" | "SHIELD";
+export type Effect = {
+  type: "HEAL" | "SHIELD";
+  amount: number;
+};
 
 export interface PlayerItemParams extends GameObjectParams {
   img: HTMLImageElement;
 
-  type: PlayerItemType;
+  effect: Effect;
 
   /**
    * where to spawn the item

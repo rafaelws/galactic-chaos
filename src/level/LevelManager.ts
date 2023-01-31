@@ -1,13 +1,13 @@
+import { EventManager } from "@/common";
 import { iterate } from "@/common/util";
 import { ControlState } from "@/common/controls";
 import { Boundaries, Destroyable, GameState } from "@/common/meta";
 import { assets, getImage, loadImages } from "@/common/asset";
 
-import { GameObject, Player, Projectile } from "@/objects";
+import { GameObject, Player } from "@/objects";
 
 import { Level } from "./Level";
 import { firstLevel } from "./1";
-import { EventManager } from "./EventManager";
 
 export class LevelManager implements Destroyable {
   private loaded = false;
@@ -33,9 +33,7 @@ export class LevelManager implements Destroyable {
 
   constructor() {
     this.eventManager = new EventManager({
-      onEnemyProjectile: (p: Projectile) => {
-        this.prependables.push(p);
-      },
+      onSpawn: (object: GameObject) => this.prependables.push(object),
     });
     this.finalLevel = this.levels.length;
     this.nextLevel();
@@ -116,7 +114,7 @@ export class LevelManager implements Destroyable {
         this.prependables = [];
       }
 
-      let actives: GameObject[] = [];
+      const actives: GameObject[] = [];
       iterate(this.gameObjects, (gameObject) => {
         gameObject.update(state);
         if (gameObject.isActive) {

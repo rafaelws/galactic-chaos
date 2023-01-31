@@ -1,3 +1,4 @@
+import { Clock } from "@/common";
 import { atan2, toRad } from "@/common/math";
 import {
   Boundaries,
@@ -6,7 +7,7 @@ import {
   GameState,
   HitBox,
 } from "@/common/meta";
-import { Clock } from "./Clock";
+import { Effect } from "@/objects";
 import { GameObjectParams } from "./GameObjectParams";
 import { ImpactParams } from "./ImpactParams";
 import { MovementParams } from "./MovementParams";
@@ -142,6 +143,10 @@ export abstract class GameObject implements GameObject {
     this.impactClock.reset();
     this.handleHit(power - this.impact.resistance);
     return this.impact.power;
+  }
+
+  public effect(): Effect | null {
+    return null;
   }
 
   /**

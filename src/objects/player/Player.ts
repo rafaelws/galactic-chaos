@@ -1,3 +1,4 @@
+import { Clock } from "@/common";
 import { atan2, hasCollided, toDeg } from "@/common/math";
 import { iterate } from "@/common/util";
 import { Boundaries, Coordinate, GameState } from "@/common/meta";
@@ -6,8 +7,8 @@ import {
   ControlStateData,
   ControlAction,
 } from "@/common/controls";
-import { Projectile } from "@/objects";
-import { Clock, GameObject } from "../shared";
+import { Effect, Projectile } from "@/objects";
+import { GameObject } from "../shared";
 import { PlayerParams } from "./PlayerParams";
 
 export class Player extends GameObject {
@@ -72,6 +73,7 @@ export class Player extends GameObject {
   public checkCollisions(gameObject: GameObject) {
     if (gameObject.isActive && hasCollided(this.hitbox, gameObject.hitbox)) {
       console.log("player => object hit");
+      this.handleEffect(gameObject.effect());
       const impactPower = gameObject.handleImpact(this.firePower);
       this.handleHit(impactPower);
     }
@@ -83,6 +85,14 @@ export class Player extends GameObject {
         p.handleHit(this.firePower);
       }
     });
+  }
+
+  private handleEffect(effect: Effect | null) {
+    if (effect === null) return;
+    if (effect.type === "HEAL") {
+      const hp = this.hp + effect.amount;
+      this.hp = hp >= this.maxHp ? this.maxHp : hp;
+    }
   }
 
   private act(

@@ -39,10 +39,3 @@ export function unset(...listeners: ListenerMap[]) {
 export function readEvent<T>(ev: globalThis.Event): T {
   return (ev as globalThis.CustomEvent).detail as T;
 }
-
-export enum GameEvent {
-  start = "start",
-  quit = "quit",
-  pause = "pause",
-  spawnEnemyProjectile = "spawnEnemyProjectile",
-}
