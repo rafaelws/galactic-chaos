@@ -100,6 +100,11 @@ export class LevelManager implements Destroyable {
     if (!this.player) {
       this.player = new Player({
         img: getImage(assets.img.player.self),
+        damageStages: [
+          getImage(assets.img.player.damage[0]),
+          getImage(assets.img.player.damage[1]),
+          getImage(assets.img.player.damage[2]),
+        ],
       });
     } else {
       // IMPORTANT: set controlState before calling player.update

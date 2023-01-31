@@ -54,7 +54,7 @@ export abstract class GameObject implements GameObject {
     this.impact = {
       power: 1,
       resistance: 0,
-      collisionTimeout: 100,
+      collisionTimeout: 250,
       ...params.impact,
     };
 

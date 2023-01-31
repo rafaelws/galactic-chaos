@@ -13,7 +13,7 @@ export interface ImpactParams {
    * It is a time window, so the player
    * can react to consecutive impacts
    *
-   * @default 100 //ms (if hp > 1)
+   * @default 250 //ms (if hp > 1)
    */
   collisionTimeout?: number;
 

@@ -24,11 +24,22 @@ export class Player extends GameObject {
   private controls: ControlState = {};
   private projectiles: Projectile[] = [];
 
+  private damageStages: {
+    maxHp: number;
+    img: HTMLImageElement;
+  }[];
+
   constructor(private readonly params: PlayerParams) {
     super(params);
     this.hp = params.hp || this.maxHp;
     this.setDimensions(params.img);
     this.fireClock = new Clock(this.fireTimeout, true);
+
+    this.damageStages = [
+      { maxHp: this.maxHp * 0.25, img: params.damageStages[2] },
+      { maxHp: this.maxHp * 0.5, img: params.damageStages[1] },
+      { maxHp: this.maxHp * 0.75, img: params.damageStages[0] },
+    ];
   }
 
   public set controlState(controls: ControlState) {
@@ -74,7 +85,7 @@ export class Player extends GameObject {
     const effect = gameObject.effect();
 
     if (gameObject.isActive && hasCollided(this.hitbox, gameObject.hitbox)) {
-      console.log("player => object hit");
+      // console.log("player => object hit");
       this.handleEffect(effect);
       const impactPower = gameObject.handleImpact(this.firePower);
       this.handleHit(impactPower);
@@ -83,7 +94,7 @@ export class Player extends GameObject {
     if (!!effect) return;
     iterate(this.projectiles, (p) => {
       if (p.isActive && hasCollided(p.hitbox, gameObject.hitbox)) {
-        console.log("projectile => object hit");
+        // console.log("projectile => object hit");
         gameObject.handleHit(this.firePower);
         p.handleHit(this.firePower);
       }
@@ -142,14 +153,27 @@ export class Player extends GameObject {
     iterate(this.projectiles, (p) => p.update(state));
   }
 
+  private drawDamage(c: CanvasRenderingContext2D): void {
+    for (let i = 0; i < this.damageStages.length; i++) {
+      const { img, maxHp } = this.damageStages[i];
+      if (this.hp <= maxHp) {
+        c.drawImage(img, -this.cx, -this.cy, this.width, this.height);
+        break;
+      }
+    }
+  }
+
   public draw(c: CanvasRenderingContext2D): void {
     if (!this.isReady) return;
     iterate(this.projectiles, (p) => p.draw(c));
+
     c.save();
     c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(this.rotationAngle);
     c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
+    this.drawDamage(c);
     c.restore();
+
     if (this.debug) this.drawDebug(c);
   }
 }
