@@ -1,76 +1,43 @@
-import { Clock, GameEvent } from "@/common";
+import { Clock } from "@/common";
 import { trigger } from "@/common/events";
-import { atan2, toRad } from "@/common/math";
-import {
-  Boundaries,
-  Concrete,
-  Coordinate,
-  GameState,
-  HitBox,
-} from "@/common/meta";
-import { Effect, PlayerItem } from "@/objects";
+import { Boundaries, Coordinate, GameState, HitBox } from "@/common/meta";
+import { iterate } from "@/common/util";
+import { GameEvent } from "./GameEvent";
+import { Effect } from "./Effect";
 import { GameObjectParams } from "./GameObjectParams";
-import { ImpactParams } from "./ImpactParams";
-import { MovementParams } from "./MovementParams";
 
-export abstract class GameObject implements GameObject {
-  protected x = NaN;
-  protected y = NaN;
-  protected width = 0;
-  protected height = 0;
-  protected cx = 0;
-  protected cy = 0;
-  protected doubleWidth = 0;
-  protected doubleHeight = 0;
-  protected rotation = 0;
-
+export abstract class GameObject {
+  // status
+  protected hp: number;
   protected active = true;
   protected debug = false;
 
-  protected hp: number;
+  // position
+  protected x = NaN;
+  protected y = NaN;
+  protected rotation = 0;
 
-  protected impact: Concrete<ImpactParams>;
-
-  protected movement: Concrete<MovementParams>;
-  protected direction: Coordinate = { x: 0, y: 0 };
+  // dimensions
+  protected cx = 0;
+  protected cy = 0;
+  protected width = 0;
+  protected height = 0;
+  protected doubleWidth = 0;
+  protected doubleHeight = 0;
 
   protected spawnClock: Clock;
-  protected impactClock: Clock;
 
-  protected spawnOnDestroy?: PlayerItem;
+  protected spawnables: GameObject[];
 
   constructor(params: GameObjectParams) {
     this.hp = params.hp || 1;
 
-    this.spawnClock = new Clock(params.spawnDelay || 0);
-
-    this.movement = {
-      start: { x: 0.5, y: 0 },
-      angle: 0,
-      speed: 0.1,
-      ...params.movement,
-    };
-
-    this.impact = {
-      power: 1,
-      resistance: 0,
-      collisionTimeout: 250,
-      ...params.impact,
-    };
-
-    this.impactClock = new Clock(this.impact.collisionTimeout, true);
-
-    this.spawnOnDestroy = params.spawnOnDestroy;
+    this.spawnClock = new Clock(params.spawnTimeout || 0);
+    this.spawnables = params.spawnables || [];
   }
 
-  protected setDirection() {
-    const movementAngle = toRad(this.movement.angle);
-    this.direction.x = Math.sin(movementAngle);
-    this.direction.y = Math.cos(movementAngle);
-  }
-
+  // TODO handle screen resize
   protected setDimensions({ width, height }: Boundaries): void {
-    // TODO handle screen resize
     this.width = width;
     this.height = height;
     this.cx = width * 0.5;
@@ -79,99 +46,75 @@ export abstract class GameObject implements GameObject {
     this.doubleWidth = width * 2;
   }
 
-  // override if necessary
-  protected setStartingPoint(worldBoundaries: Boundaries): void {
-    const { angle, start } = this.movement;
-
-    let x = 0;
-    let y = 0;
-
-    if (start.y > 0) {
-      y = start.y * worldBoundaries.height;
-      x = angle > 0 ? -this.width : worldBoundaries.width;
-    } else {
-      y = -this.height;
-      x = start.x * worldBoundaries.width;
-    }
-
-    this.x = x;
-    this.y = y;
-  }
-
-  protected isOutbounds(worldBoundaries: Boundaries): boolean {
-    return (
-      this.x + this.width < 0 ||
-      this.y + this.height < 0 ||
-      this.x - this.width > worldBoundaries.width ||
-      this.y - this.height > worldBoundaries.height
-    );
-  }
-
-  protected isOutboundsDoubled(worldBoundaries: Boundaries): boolean {
-    return (
-      this.x + this.doubleWidth < 0 ||
-      this.y + this.doubleHeight < 0 ||
-      this.x - this.doubleWidth > worldBoundaries.width ||
-      this.y - this.doubleHeight > worldBoundaries.height
-    );
-  }
-
-  protected calculateRotation(to: Coordinate): number {
-    const { x, y } = this.hitbox;
-    return -atan2({ x, y }, to);
-  }
-
-  // override if necessary
-  protected move(state: GameState): void {
-    this.x += this.direction.x * this.movement.speed * state.delta;
-    this.y += this.direction.y * this.movement.speed * state.delta;
-  }
-
-  // override if necessary
+  // ALWAYS override
   public update(state: GameState): void {
     this.debug = state.debug;
-    if (!this.hasStartingPoint) this.setStartingPoint(state.worldBoundaries);
-
     this.spawnClock.increment(state.delta);
-    this.impactClock.increment(state.delta);
+    // if (!this.hasPosition)
   }
 
   public abstract draw(c: CanvasRenderingContext2D): void;
 
-  public handleHit(power: number): void {
-    this.hp -= power;
+  private spawnOnDestroy() {
+    if (this.spawnables.length === 0) return;
+    iterate(this.spawnables, (spawnable) => {
+      spawnable.position = this.position;
+      trigger(GameEvent.spawn, spawnable);
+    });
+  }
+
+  public hpLoss(amount: number): void {
+    this.hp -= amount;
     if (this.hp <= 0) {
-      if (!!this.spawnOnDestroy) {
-        this.spawnOnDestroy.setPosition({ x: this.x, y: this.y });
-        trigger(GameEvent.spawn, this.spawnOnDestroy);
-      }
+      this.spawnOnDestroy();
       this.active = false;
     }
   }
 
-  public handleImpact(power: number): number {
-    if (this.impactClock.pending) return 0;
-    this.impactClock.reset();
-    this.handleHit(power - this.impact.resistance);
-    return this.impact.power;
+  public abstract effect(): Effect | null;
+
+  /**
+   * Returns true if x and y are NOT NaN
+   */
+  protected get hasPosition(): boolean {
+    return !(isNaN(this.x) && isNaN(this.y));
   }
 
-  public effect(): Effect | null {
-    return null;
+  protected get position(): Coordinate {
+    return { x: this.x, y: this.y };
+  }
+
+  protected set position({ x, y }: Coordinate) {
+    this.x = x;
+    this.y = y;
+  }
+
+  protected get dimensions(): Boundaries {
+    return { width: this.width, height: this.height };
+  }
+
+  protected get doubledDimensions(): Boundaries {
+    return { width: this.doubleWidth, height: this.doubleHeight };
+  }
+
+  protected isOutbounds(
+    world: Boundaries,
+    { width, height }: Boundaries = this.doubledDimensions,
+    { x, y }: Coordinate = this.position
+  ): boolean {
+    return (
+      x + width < 0 ||
+      y + height < 0 ||
+      x - width > world.width ||
+      y - height > world.height
+    );
   }
 
   /**
-   * Returns true if x and y are set and the spawnClock has finished
+   * Returns true if x and y are NOT NaN and the spawnClock has finished
    */
   protected get isReady(): boolean {
-    return this.hasStartingPoint && !this.spawnClock.pending;
-  }
-
-  /**
-   * Returns true if x and y are set
-   */
-  protected get hasStartingPoint(): boolean {
-    return !(isNaN(this.x) && isNaN(this.y));
+    return this.hasPosition && !this.spawnClock.pending;
   }
 
   public get isActive(): boolean {

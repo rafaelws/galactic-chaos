@@ -1,43 +1,62 @@
 import { toRad } from "@/common/math";
 import { GameState } from "@/common/meta";
-import { GameObject } from "../shared";
+import { Effect, GameObject, Impact, Movement } from "../shared";
 import { RockParams } from "./RockParams";
 
 export class Rock extends GameObject {
-  private selfRotation: number;
+  private rotationSpeed: number;
+  private movement: Movement;
+  private impact: Impact;
 
   constructor(private readonly params: RockParams) {
     super(params);
-    this.selfRotation = params.selfRotation || 0;
 
-    const { width, height } = this.params.img;
-    this.setDimensions({ width, height });
-    this.setDirection();
+    this.setDimensions(this.params.img);
+    this.rotationSpeed = params.rotationSpeed || 0;
+
+    this.movement = new Movement(params.movement);
+    this.movement.setDirection();
+
+    this.impact = new Impact(params.impact);
   }
 
-  private setRotation() {
-    this.rotation += this.selfRotation;
+  public hpLoss(amount: number): void {
+    super.hpLoss(amount - this.impact.resistence);
+  }
+
+  public effect(): Effect | null {
+    return {
+      type: "DAMAGE",
+      amount: this.impact.onImpact(),
+    };
   }
 
   public update(state: GameState): void {
     super.update(state);
+    if (!this.hasPosition)
+      this.position = this.movement.startPosition(
+        this.dimensions,
+        state.worldBoundaries
+      );
     if (!this.isReady) return;
 
-    this.setRotation();
-    this.move(state);
+    this.impact.update(state.delta);
 
-    if (this.isOutboundsDoubled(state.worldBoundaries)) this.active = false;
+    this.rotation += this.rotationSpeed;
+    this.position = this.movement.increment(this.position, state.delta);
+
+    if (this.isOutbounds(state.worldBoundaries)) {
+      this.active = false;
+    }
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (!this.isReady) return;
-
     c.save();
     c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(toRad(this.rotation));
     c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
     c.restore();
-
     if (this.debug) this.drawDebug(c);
   }
 }

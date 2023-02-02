@@ -1,6 +1,9 @@
-import { GameObjectParams } from "../shared";
+import { Coordinate } from "@/common/meta";
 
-// remember to populate impact with, at least, power
-export interface ProjectileParams extends GameObjectParams {
+export interface ProjectileParams {
+  hp?: number;
   enemy: boolean;
+  power: number;
+  angle: number;
+  start: Coordinate;
 }

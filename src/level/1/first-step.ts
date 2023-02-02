@@ -1,5 +1,18 @@
 import { assets, getImage } from "@/common/asset";
-import { PlayerItem, Rock, Ship } from "@/objects";
+import { Boss, PlayerItem, Rock, Ship } from "@/objects";
+
+export function __firstStep() {
+  const rock3 = getImage(assets.img.rock.brown[3]);
+  return [
+    new Rock({
+      img: rock3,
+    }),
+    // new Boss({
+    //   hp: 30,
+    //   phases: [],
+    // }),
+  ];
+}
 
 export function firstStep() {
   const rock3 = getImage(assets.img.rock.brown[3]);
@@ -15,7 +28,7 @@ export function firstStep() {
     new Rock({
       img: rock3,
       hp: 1,
-      selfRotation: -5,
+      rotationSpeed: -5,
       movement: {
         start: { x: 0.15, y: 0 },
         speed: 0.03,
@@ -23,19 +36,21 @@ export function firstStep() {
       },
       impact: {
         power: 2,
-        resistance: 1,
+        resistance: 0, // if player.firePower == 1, then this one is indestructible
         collisionTimeout: 200,
       },
-      spawnOnDestroy: new PlayerItem({
-        effect: { type: "HEAL", amount: 1 },
-        img: getImage(assets.img.player.items.heal),
-      }),
+      spawnables: [
+        new PlayerItem({
+          effect: { type: "HEAL", amount: 1 },
+          img: getImage(assets.img.player.items.heal),
+        }),
+      ],
     }),
     new Rock({
       img: rock3,
       hp: 5,
-      selfRotation: 10,
-      spawnDelay: 1000,
+      rotationSpeed: 10,
+      spawnTimeout: 1000,
       movement: {
         start: { x: 0, y: 0.5 },
         angle: -60,
@@ -47,7 +62,7 @@ export function firstStep() {
     new Rock({
       img: rock3,
       hp: 10,
-      spawnDelay: 2000,
+      spawnTimeout: 2000,
       movement: {
         start: { x: 0.5, y: 0 },
         angle: 60,
@@ -56,8 +71,7 @@ export function firstStep() {
     }),
     new Ship({
       img: getImage(assets.img.ship.level1[0]),
-      hp: 30,
-      spawnDelay: 1000,
+      spawnTimeout: 1000,
       movement: {
         angle: 15,
         start: { x: 0.5, y: 0 },
@@ -71,8 +85,7 @@ export function firstStep() {
     }),
     new Ship({
       img: getImage(assets.img.ship.level1[1]),
-      spawnDelay: 0,
-      hp: 30,
+      spawnTimeout: 0,
       movement: {
         angle: 15,
         start: { x: 0.1, y: 0 },
@@ -84,7 +97,7 @@ export function firstStep() {
         precision: "ACCURATE",
       },
       impact: {
-        resistance: 0,
+        resistance: 1, // if player.firePower === 1, then this one is indestructible
         collisionTimeout: 1000, // TODO
       },
     }),

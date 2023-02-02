@@ -1,13 +1,6 @@
 import { ListenerMap, readEvent, set, unset } from "@/common/events";
 import { Destroyable } from "@/common/meta";
-import { GameObject } from "@/objects";
-
-export enum GameEvent {
-  // start = "start",
-  // quit = "quit",
-  // pause = "pause",
-  spawn = "spawn",
-}
+import { GameEvent, GameObject } from "@/objects";
 
 export interface EventManagerParams {
   onSpawn: (gameObject: GameObject) => void;

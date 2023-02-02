@@ -1,6 +1,4 @@
-import { ImpactParams } from "./ImpactParams";
-import { MovementParams } from "./MovementParams";
-import { PlayerItem } from "@/objects";
+import { GameObject } from "./GameObject";
 
 export interface GameObjectParams {
   /**
@@ -13,15 +11,13 @@ export interface GameObjectParams {
    * Time in ms until spawn (uses delta, not precise)
    * @default 0
    */
-  spawnDelay?: number;
+  spawnTimeout?: number;
 
   /**
-   * to worldBoundaries.width (0 to 1)
+   * Spawn objects at the last position after
+   * the object is destroyed.
+   *
+   * @default []
    */
-  // proportion?: number;
-
-  impact?: ImpactParams;
-  movement?: MovementParams;
-
-  spawnOnDestroy?: PlayerItem;
+  spawnables?: GameObject[];
 }

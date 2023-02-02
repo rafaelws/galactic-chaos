@@ -1,7 +1,7 @@
 import { Clock } from "@/common";
 import { Coordinate, GameState } from "@/common/meta";
-import { GameObject } from "../shared";
-import { Effect, PlayerItemParams } from "./PlayerItemParams";
+import { Effect, GameObject } from "../shared";
+import { PlayerItemParams } from "./PlayerItemParams";
 
 export class PlayerItem extends GameObject {
   private timeoutClock: Clock;
@@ -15,17 +15,13 @@ export class PlayerItem extends GameObject {
   private accelerateTimeoutAt: number;
 
   constructor(private readonly params: PlayerItemParams) {
-    super(params);
-
-    this.hp = 1;
-    this.impact.power = 0;
+    super({ hp: 1 });
 
     this.frameClock = new Clock(this.targetTimeoutTime);
     this.timeoutClock = new Clock(params.timeout || 5000);
     this.accelerateTimeoutAt = this.timeoutClock.targetTime * 0.7;
 
-    const { width, height } = this.params.img;
-    this.setDimensions({ width, height });
+    this.setDimensions(this.params.img);
 
     this.x = params.position?.x || 0;
     this.y = params.position?.y || 0;

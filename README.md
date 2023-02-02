@@ -142,15 +142,3 @@ function requestFullscreen() {
 }
 
 ```
-
-```
-NOTES for the exp.share/'post mortem':
-
-- not ideal design choices
-  - inheritance caveats
-  - "why haven't you used an engine?"
-  - ended rushing some features (e.g. items, player damage)
-  - nothing is responsive (resize)
-  - approach: let the idea out, struggle, make it work, struggle a bit more, refactor
-- math, trigonometry
-```

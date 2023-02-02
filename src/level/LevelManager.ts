@@ -1,4 +1,3 @@
-import { EventManager } from "@/common";
 import { iterate } from "@/common/util";
 import { ControlState } from "@/common/controls";
 import { Boundaries, Destroyable, GameState } from "@/common/meta";
@@ -8,6 +7,7 @@ import { GameObject, Player } from "@/objects";
 
 import { Level } from "./Level";
 import { firstLevel } from "./1";
+import { EventManager } from "./EventManager";
 
 export class LevelManager implements Destroyable {
   private loaded = false;
@@ -123,7 +123,7 @@ export class LevelManager implements Destroyable {
       iterate(this.gameObjects, (gameObject) => {
         gameObject.update(state);
         if (gameObject.isActive) {
-          this.player?.checkCollisions(gameObject);
+          this.player?.checkCollision(gameObject);
           actives.push(gameObject);
         }
       });
