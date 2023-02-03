@@ -2,6 +2,8 @@ import { Coordinate } from "@/common/meta";
 
 export interface MovementParams {
   /**
+   * Relative measure (will be calculated against worldBoundaries)
+   *
    * Remember to:
    *  - spawn outside the canvas
    *  - set `movement.angle` accordingly (positive or negative)

@@ -1,13 +1,12 @@
 import { iterate } from "@/common/util";
-import { ControlState } from "@/common/controls";
 import { Boundaries, Destroyable, GameState } from "@/common/meta";
+import { ListenerMap, readEvent, set, unset } from "@/common/events";
+import { ControlState } from "@/common/controls";
 import { assets, getImage, loadImages } from "@/common/asset";
-
-import { GameObject, Player } from "@/objects";
+import { GameEvent, GameObject, Player } from "@/objects";
 
 import { Level } from "./Level";
 import { firstLevel } from "./1";
-import { EventManager } from "./EventManager";
 
 export class LevelManager implements Destroyable {
   private loaded = false;
@@ -23,24 +22,28 @@ export class LevelManager implements Destroyable {
   private gameObjects: GameObject[] = [];
   private prependables: GameObject[] = [];
 
-  private eventManager: EventManager;
+  private listeners: ListenerMap;
 
   private readonly levels: Level[] = [firstLevel];
+
+  constructor() {
+    this.listeners = {
+      [GameEvent.spawn]: (ev: globalThis.Event) => {
+        this.prependables.push(readEvent<GameObject>(ev));
+      },
+    };
+    set(this.listeners);
+
+    this.finalLevel = this.levels.length;
+    this.nextLevel();
+  }
 
   private get level() {
     return this.levels[this.currentLevel];
   }
 
-  constructor() {
-    this.eventManager = new EventManager({
-      onSpawn: (object: GameObject) => this.prependables.push(object),
-    });
-    this.finalLevel = this.levels.length;
-    this.nextLevel();
-  }
-
   public destroy(): void {
-    this.eventManager.destroy();
+    unset(this.listeners);
   }
 
   private nextLevel() {

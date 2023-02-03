@@ -63,7 +63,7 @@ export abstract class GameObject {
     });
   }
 
-  public hpLoss(amount: number): void {
+  protected hpLoss(amount: number): void {
     this.hp -= amount;
     if (this.hp <= 0) {
       this.spawnOnDestroy();
@@ -71,7 +71,8 @@ export abstract class GameObject {
     }
   }
 
-  public abstract effect(): Effect | null;
+  public abstract get effect(): Effect;
+  public abstract handleEffect(effect: Effect): void;
 
   /**
    * Returns true if x and y are NOT NaN

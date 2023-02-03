@@ -1,20 +1,21 @@
 import { assets, getImage } from "@/common/asset";
-import { Boss, PlayerItem, Rock, Ship } from "@/objects";
+import { PlayerItem, Rock, Ship } from "@/objects";
 
-export function __firstStep() {
-  const rock3 = getImage(assets.img.rock.brown[3]);
+export function firstStep() {
   return [
-    new Rock({
-      img: rock3,
+    new PlayerItem({
+      img: getImage(assets.img.player.items.heal),
+      timeout: 1,
+      position: { x: 500, y: 500 },
+      effect: {
+        type: "HEAL",
+        amount: 5,
+      },
     }),
-    // new Boss({
-    //   hp: 30,
-    //   phases: [],
-    // }),
   ];
 }
 
-export function firstStep() {
+export function _firstStep() {
   const rock3 = getImage(assets.img.rock.brown[3]);
   return [
     new PlayerItem({

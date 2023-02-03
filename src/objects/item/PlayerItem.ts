@@ -32,7 +32,12 @@ export class PlayerItem extends GameObject {
     this.y = position.y;
   }
 
-  public effect(): Effect | null {
+  // TODO
+  public handleEffect(_: Effect): void {
+    this.active = false;
+  }
+
+  public get effect(): Effect {
     return this.params.effect;
   }
 

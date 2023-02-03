@@ -36,9 +36,14 @@ export class Projectile extends GameObject {
     this.y -= this.direction.y * state.delta;
   }
 
-  public effect(): Effect | null {
+  // TODO
+  public handleEffect(effect: Effect): void {
+    this.hpLoss(effect.amount);
+  }
+
+  public get effect(): Effect {
     return {
-      type: "DAMAGE",
+      type: "PROJECTILE",
       amount: this.params.power,
     };
   }

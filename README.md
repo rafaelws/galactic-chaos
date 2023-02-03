@@ -1,36 +1,36 @@
 # NEXT (>doing)
 
-- [ ] {feature} bosses
-- [ ] bloom effect on projectiles
-- [ ] search for similar games (reference)
-- [ ] look for svg copyleft/cc0 assets
+- [ ] {bug} impact timeout not working properly (review collision and Effect)
+- [x] {feature} bosses
 
-# TODO
+# TODO (> planned)
 
-- [ ] UI
-- [ ] HUD
-- [ ] gamepad
-- [ ] asset loader: audio
-- [ ] level design
-- [ ] assets
+- [>] UI
+- [>] HUD
+- [>] gamepad
+- [>] assets
 
-  - [ ] effects and animations (e.g. hit/collision effect)
-  - [ ] audio: ost, ui
-  - [ ] image: projectiles
-  - [ ] fonts: ui, hud (Orbitron)
+  - [>] fonts: ui, hud (Orbitron)
+  - [>] effects and animations (e.g. hit/collision effect)
+  - [>] audio: ost, ui
 
-- [ ] handle screen resize on game objects
-- [ ] background: dynamic, with particles, reacting to the bg music
-- [ ] {low}overall status: time? score? enemies killed? shots fired?` (use LevelManager)
-- [ ] {low}{idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
-- [ ] {low}{refac} projectile
+- [ ] {low} projectile
 
+  - [>] {idea} deflect projectile on hit (that would be cool)
+  - [>] appearance (image? bloom effect?)
+  - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
   - [ ] ability to change speed
-  - [ ] appearance
 
+- [>] asset loader: audio
+- [>] level design
+- [>] background: dynamic, with particles, reacting to the bg music
+- [ ] {bug} handle screen resize on game objects
+- [ ] {low} overall status: time? score? enemies killed? shots fired?` (use LevelManager)
 - [ ] {low}{idea} ship: add 2 movement patterns ship movement (using sin, cos)
 - [ ] {low}{idea} canon / beam struggle (time event)
 - [ ] {low}{idea} syntax sugar: enemy profiles
+- [ ] {research} look for similar games (reference)
+- [ ] {research} look for svg copyleft/cc0 assets
 
 # DONE
 

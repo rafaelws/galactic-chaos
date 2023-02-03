@@ -17,6 +17,8 @@ export interface GameObjectParams {
    * Spawn objects at the last position after
    * the object is destroyed.
    *
+   * Useful to drop PlayerItem[]
+   *
    * @default []
    */
   spawnables?: GameObject[];

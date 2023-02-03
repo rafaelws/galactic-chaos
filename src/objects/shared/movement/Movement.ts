@@ -3,8 +3,8 @@ import { Boundaries, Concrete, Coordinate } from "@/common/meta";
 import { MovementParams } from "./MovementParams";
 
 export class Movement {
-  private movement: Concrete<MovementParams>;
-  private direction: Coordinate = { x: 0, y: 0 };
+  protected movement: Concrete<MovementParams>;
+  protected direction: Coordinate = { x: 0, y: 0 };
 
   constructor(params?: MovementParams) {
     this.movement = {

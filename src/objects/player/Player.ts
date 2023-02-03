@@ -16,7 +16,7 @@ export class Player extends GameObject {
 
   private relativePosition: Coordinate = { x: 0.5, y: 0.95 };
 
-  private firePower = 1;
+  private power = 1;
   private fireTimeout = 300; //ms
   private fireClock: Clock;
 
@@ -24,7 +24,7 @@ export class Player extends GameObject {
   private projectiles: Projectile[] = [];
 
   private damageLayers: {
-    maxHp: number;
+    hp: number;
     img: HTMLImageElement;
   }[];
 
@@ -35,10 +35,12 @@ export class Player extends GameObject {
     this.fireClock = new Clock(this.fireTimeout, true);
 
     this.damageLayers = [
-      { maxHp: this.maxHp * 0.25, img: params.damageStages[2] },
-      { maxHp: this.maxHp * 0.5, img: params.damageStages[1] },
-      { maxHp: this.maxHp * 0.75, img: params.damageStages[0] },
+      { hp: this.maxHp * 0.25, img: params.damageStages[2] },
+      { hp: this.maxHp * 0.5, img: params.damageStages[1] },
+      { hp: this.maxHp * 0.75, img: params.damageStages[0] },
     ];
+
+    // trigger(GameEvent.PlayerHp, {maxHp: this.maxHp, hp: this.hp})
   }
 
   public set controlState(controls: ControlState) {
@@ -71,44 +73,50 @@ export class Player extends GameObject {
     this.projectiles.push(
       new Projectile({
         enemy: false,
-        power: this.firePower,
+        power: this.power,
         angle: this.rotation,
         start: this.hitbox,
       })
     );
   }
 
-  public effect(): Effect | null {
-    return null;
+  public get effect(): Effect {
+    return {
+      type: "IMPACT",
+      amount: this.power,
+    };
   }
 
   public checkCollision(gameObject: GameObject) {
-    const effect = gameObject.effect();
+    const effect = gameObject.effect;
 
     if (gameObject.isActive && hasCollided(this.hitbox, gameObject.hitbox)) {
       // console.log("player => object hit");
       this.handleEffect(effect);
-      gameObject.hpLoss(this.firePower);
+      gameObject.handleEffect(effect.amount > 0 ? this.effect : effect);
     }
 
-    if (!!effect && effect.type !== "DAMAGE") return;
-    iterate(this.projectiles, (p) => {
-      if (p.isActive && hasCollided(p.hitbox, gameObject.hitbox)) {
-        // console.log("projectile => object hit");
-        gameObject.hpLoss(this.firePower);
-        p.hpLoss(this.firePower);
-      }
-    });
+    if (effect.type === "IMPACT" || effect.type === "PROJECTILE") {
+      iterate(this.projectiles, (p) => {
+        if (p.isActive && hasCollided(p.hitbox, gameObject.hitbox)) {
+          // console.log("projectile => object hit");
+          // TODO
+          gameObject.handleEffect(p.effect);
+          p.handleEffect(effect);
+        }
+      });
+    }
   }
 
-  private handleEffect(effect: Effect | null) {
+  public handleEffect(effect: Effect) {
     if (effect === null) return;
     if (effect.type === "HEAL") {
       const hp = this.hp + effect.amount;
       this.hp = hp >= this.maxHp ? this.maxHp : hp;
-    } else if (effect.type === "DAMAGE") {
+    } else if (effect.type === "PROJECTILE") {
       this.hpLoss(effect.amount);
     }
+    // trigger(GameEvent.PlayerHp, {maxHp: this.maxHp, hp: this.hp})
   }
 
   private act(
@@ -161,8 +169,8 @@ export class Player extends GameObject {
 
   private drawDamageLayer(c: CanvasRenderingContext2D): void {
     for (let i = 0; i < this.damageLayers.length; i++) {
-      const { img, maxHp } = this.damageLayers[i];
-      if (this.hp <= maxHp) {
+      const { img, hp } = this.damageLayers[i];
+      if (this.hp <= hp) {
         c.drawImage(img, -this.cx, -this.cy, this.width, this.height);
         break;
       }

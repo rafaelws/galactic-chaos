@@ -20,13 +20,18 @@ export class Rock extends GameObject {
     this.impact = new Impact(params.impact);
   }
 
-  public hpLoss(amount: number): void {
-    super.hpLoss(amount - this.impact.resistence);
+  public handleEffect(effect: Effect): void {
+    const { type, amount } = effect;
+    if (type === "IMPACT") {
+      this.hpLoss(amount - this.impact.resistence);
+    } else if (type === "PROJECTILE") {
+      this.hpLoss(amount);
+    }
   }
 
-  public effect(): Effect | null {
+  public get effect(): Effect {
     return {
-      type: "DAMAGE",
+      type: "IMPACT",
       amount: this.impact.onImpact(),
     };
   }
