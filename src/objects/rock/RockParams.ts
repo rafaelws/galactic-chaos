@@ -1,4 +1,4 @@
-import { GameObjectParams } from "../shared";
+import { GameObjectParams, ImpactParams, MovementParams } from "../shared";
 
 export interface RockParams extends GameObjectParams {
   img: HTMLImageElement;
@@ -6,9 +6,12 @@ export interface RockParams extends GameObjectParams {
   /**
    * Infinite rotation over its own center.
    *
-   * Value in degrees (positive or negative).
+   * Value in degrees (positive or negative) to increment at each update.
    *
    * @default 0 //deg (no rotation)
    */
-  selfRotation?: number;
+  rotationSpeed?: number;
+
+  movement?: MovementParams;
+  impact?: ImpactParams;
 }

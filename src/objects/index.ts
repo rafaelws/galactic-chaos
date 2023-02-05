@@ -8,4 +8,7 @@ export * from "./ship/ShipParams";
 export * from "./ship/Ship";
 export * from "./item/PlayerItem";
 export * from "./item/PlayerItemParams";
+export * from "./boss/Boss";
+export * from "./boss/BossParams";
 export * from "./shared/GameObject";
+export * from "./shared/GameEvent";

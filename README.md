@@ -1,36 +1,41 @@
 # NEXT (>doing)
 
-- [ ] {feature} bosses
-- [ ] bloom effect on projectiles
-- [ ] search for similar games (reference)
-- [ ] look for svg copyleft/cc0 assets
+- [x] {bug} impact timeout not working properly (review collision and Effect)
+- [>] {feature} HUD
+- [ ] {feature} UI
+- [ ] {bug} gamepad (make it work interchangeably with keyboard/mouse)
+- [ ] level design (design level1)
+- [ ] {bug} improve projectile hitbox
+- [ ] {bug} improve player hitbox
 
-# TODO
+# TODO (> planned)
 
-- [ ] UI
-- [ ] HUD
-- [ ] gamepad
-- [ ] asset loader: audio
-- [ ] level design
-- [ ] assets
+- [>] UI
+- [>] HUD
+- [>] gamepad
+- [>] assets
 
-  - [ ] effects and animations (e.g. hit/collision effect)
-  - [ ] audio: ost, ui
-  - [ ] image: projectiles
-  - [ ] fonts: ui, hud (Orbitron)
+  - [>] fonts: ui, hud (Orbitron)
+  - [>] effects and animations (e.g. hit/collision effect)
+  - [>] audio: ost, ui
 
-- [ ] handle screen resize on game objects
-- [ ] background: dynamic, with particles, reacting to the bg music
-- [ ] {low}overall status: time? score? enemies killed? shots fired?` (use LevelManager)
-- [ ] {low}{idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
-- [ ] {low}{refac} projectile
+- [ ] {low} projectile
 
+  - [>] {idea} deflect projectile on hit (that would be cool)
+  - [>] appearance (image? bloom effect?)
+  - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
   - [ ] ability to change speed
-  - [ ] appearance
 
+- [>] asset loader: audio
+- [>] level design
+- [>] background: dynamic, with particles, reacting to the bg music
+- [ ] {bug} handle screen resize on game objects
+- [ ] {low} overall status: time? score? enemies killed? shots fired?` (use LevelManager)
 - [ ] {low}{idea} ship: add 2 movement patterns ship movement (using sin, cos)
 - [ ] {low}{idea} canon / beam struggle (time event)
 - [ ] {low}{idea} syntax sugar: enemy profiles
+- [ ] {research} look for similar games (reference)
+- [ ] {research} look for svg copyleft/cc0 assets
 
 # DONE
 
@@ -45,7 +50,7 @@
 - [x] enemies
   - [x] rock
   - [x] ship
-  - [ ] bosses
+  - [x] bosses
 - [x] mechanics
 
   - [x] game objects collision
@@ -141,16 +146,4 @@ function requestFullscreen() {
   if (method) (root as HTMLElement)[method]();
 }
 
-```
-
-```
-NOTES for the exp.share/'post mortem':
-
-- not ideal design choices
-  - inheritance caveats
-  - "why haven't you used an engine?"
-  - ended rushing some features (e.g. items, player damage)
-  - nothing is responsive (resize)
-  - approach: let the idea out, struggle, make it work, struggle a bit more, refactor
-- math, trigonometry
 ```

@@ -1,12 +1,7 @@
 import { Coordinate } from "@/common/meta";
-import { GameObjectParams } from "../shared";
+import { Effect } from "../shared";
 
-export type Effect = {
-  type: "HEAL" | "SHIELD";
-  amount: number;
-};
-
-export interface PlayerItemParams extends GameObjectParams {
+export interface PlayerItemParams {
   img: HTMLImageElement;
 
   effect: Effect;

@@ -7,25 +7,24 @@ import {
   ControlStateData,
   ControlAction,
 } from "@/common/controls";
-import { Effect, Projectile } from "@/objects";
-import { GameObject } from "../shared";
+import { Projectile } from "@/objects";
+import { Effect, GameObject } from "../shared";
 import { PlayerParams } from "./PlayerParams";
 
 export class Player extends GameObject {
   private maxHp = 10;
 
-  private rotationAngle = 0;
-  private startingProportions: Coordinate = { x: 0.5, y: 0.95 };
+  private relativePosition: Coordinate = { x: 0.5, y: 0.95 };
 
-  private firePower = 1;
+  private power = 1;
   private fireTimeout = 300; //ms
   private fireClock: Clock;
 
   private controls: ControlState = {};
   private projectiles: Projectile[] = [];
 
-  private damageStages: {
-    maxHp: number;
+  private damageLayers: {
+    hp: number;
     img: HTMLImageElement;
   }[];
 
@@ -35,78 +34,88 @@ export class Player extends GameObject {
     this.setDimensions(params.img);
     this.fireClock = new Clock(this.fireTimeout, true);
 
-    this.damageStages = [
-      { maxHp: this.maxHp * 0.25, img: params.damageStages[2] },
-      { maxHp: this.maxHp * 0.5, img: params.damageStages[1] },
-      { maxHp: this.maxHp * 0.75, img: params.damageStages[0] },
+    this.damageLayers = [
+      { hp: this.maxHp * 0.25, img: params.damageStages[2] },
+      { hp: this.maxHp * 0.5, img: params.damageStages[1] },
+      { hp: this.maxHp * 0.75, img: params.damageStages[0] },
     ];
+
+    // trigger(GameEvent.PlayerHp, {maxHp: this.maxHp, hp: this.hp})
   }
 
   public set controlState(controls: ControlState) {
     this.controls = controls;
   }
 
-  protected setStartingPoint(worldBoundaries: Boundaries) {
-    const { x, y } = this.startingProportions;
-    this.x = worldBoundaries.width * x - this.cx; // centered
-    this.y = worldBoundaries.height * y - this.height; // 5% above ground
+  protected startPosition(worldBoundaries: Boundaries): Coordinate {
+    const { x, y } = this.relativePosition;
+    return {
+      x: worldBoundaries.width * x - this.cx, // centered
+      y: worldBoundaries.height * y - this.height, // 5% above ground
+    };
   }
 
   private setRotation(velocity: number, to?: Coordinate) {
     if (to) {
       // mouse: rotates from the center of the player
-      this.rotationAngle = -atan2(this.hitbox, to);
+      this.rotation = -atan2(this.hitbox, to);
     } else {
       // -1 <= velocity <= 1
       // TODO rotationSpeed for the gamepad
-      this.rotationAngle += toDeg(velocity);
+      this.rotation += toDeg(velocity);
     }
   }
 
   private fire() {
     if (this.fireClock.pending) return;
-
     this.fireClock.reset();
+
     this.projectiles.push(
       new Projectile({
         enemy: false,
-        impact: {
-          power: this.firePower,
-        },
-        movement: {
-          angle: this.rotationAngle,
-          start: this.hitbox,
-        },
+        power: this.power,
+        angle: this.rotation,
+        start: this.hitbox,
       })
     );
   }
 
-  public checkCollisions(gameObject: GameObject) {
-    const effect = gameObject.effect();
+  public effect(): Effect {
+    return {
+      type: "IMPACT",
+      amount: this.power,
+    };
+  }
 
+  public checkCollision(gameObject: GameObject) {
+    // verify player against gameObject
     if (gameObject.isActive && hasCollided(this.hitbox, gameObject.hitbox)) {
-      // console.log("player => object hit");
+      const effect = gameObject.effect();
       this.handleEffect(effect);
-      const impactPower = gameObject.handleImpact(this.firePower);
-      this.handleHit(impactPower);
+      gameObject.handleEffect(effect.amount > 0 ? this.effect() : effect);
     }
 
-    if (!!effect) return;
+    // verify projectiles against gameObject
     iterate(this.projectiles, (p) => {
       if (p.isActive && hasCollided(p.hitbox, gameObject.hitbox)) {
-        // console.log("projectile => object hit");
-        gameObject.handleHit(this.firePower);
-        p.handleHit(this.firePower);
+        const { type } = gameObject.effect();
+        if (type === "IMPACT" || type === "PROJECTILE") {
+          gameObject.handleEffect(p.effect());
+          p.handleEffect(p.effect());
+        }
       }
     });
   }
 
-  private handleEffect(effect: Effect | null) {
+  public handleEffect(effect: Effect) {
     if (effect === null) return;
     if (effect.type === "HEAL") {
       const hp = this.hp + effect.amount;
       this.hp = hp >= this.maxHp ? this.maxHp : hp;
+    } else if (effect.type === "PROJECTILE") {
+      this.hpLoss(effect.amount);
     }
+    // trigger(GameEvent.PlayerHp, {maxHp: this.maxHp, hp: this.hp})
   }
 
   private act(
@@ -141,7 +150,11 @@ export class Player extends GameObject {
 
   public update(state: GameState): void {
     super.update(state);
-    if (this.fireClock.pending) this.fireClock.increment(state.delta);
+
+    if (!this.hasPosition)
+      this.position = this.startPosition(state.worldBoundaries);
+
+    this.fireClock.increment(state.delta);
 
     const keys = Object.keys(this.controls) as ControlAction[];
     iterate(keys, (action) => {
@@ -153,10 +166,10 @@ export class Player extends GameObject {
     iterate(this.projectiles, (p) => p.update(state));
   }
 
-  private drawDamage(c: CanvasRenderingContext2D): void {
-    for (let i = 0; i < this.damageStages.length; i++) {
-      const { img, maxHp } = this.damageStages[i];
-      if (this.hp <= maxHp) {
+  private drawDamageLayer(c: CanvasRenderingContext2D): void {
+    for (let i = 0; i < this.damageLayers.length; i++) {
+      const { img, hp } = this.damageLayers[i];
+      if (this.hp <= hp) {
         c.drawImage(img, -this.cx, -this.cy, this.width, this.height);
         break;
       }
@@ -169,9 +182,9 @@ export class Player extends GameObject {
 
     c.save();
     c.translate(this.x + this.cx, this.y + this.cy);
-    c.rotate(this.rotationAngle);
+    c.rotate(this.rotation);
     c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
-    this.drawDamage(c);
+    this.drawDamageLayer(c);
     c.restore();
 
     if (this.debug) this.drawDebug(c);
