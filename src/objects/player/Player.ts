@@ -8,8 +8,9 @@ import {
   ControlAction,
 } from "@/common/controls";
 import { Projectile } from "@/objects";
-import { Effect, GameObject } from "../shared";
+import { Effect, GameEvent, GameObject } from "../shared";
 import { PlayerParams } from "./PlayerParams";
+import { trigger } from "@/common/events";
 
 export class Player extends GameObject {
   private maxHp = 10;
@@ -40,7 +41,7 @@ export class Player extends GameObject {
       { hp: this.maxHp * 0.75, img: params.damageStages[0] },
     ];
 
-    // trigger(GameEvent.PlayerHp, {maxHp: this.maxHp, hp: this.hp})
+    trigger(GameEvent.playerHp, { maxHp: this.maxHp, hp: this.hp });
   }
 
   public set controlState(controls: ControlState) {
@@ -108,14 +109,13 @@ export class Player extends GameObject {
   }
 
   public handleEffect(effect: Effect) {
-    if (effect === null) return;
     if (effect.type === "HEAL") {
       const hp = this.hp + effect.amount;
       this.hp = hp >= this.maxHp ? this.maxHp : hp;
     } else if (effect.type === "PROJECTILE") {
       this.hpLoss(effect.amount);
     }
-    // trigger(GameEvent.PlayerHp, {maxHp: this.maxHp, hp: this.hp})
+    trigger(GameEvent.playerHp, { maxHp: this.maxHp, hp: this.hp });
   }
 
   private act(

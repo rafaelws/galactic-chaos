@@ -1,6 +1,6 @@
-// import './style.css'
-// document.querySelector<HTMLDivElement>("#app");
-import "./index.css";
+import "./css/main.css";
+import "./css/hud.css";
+
 import { start } from "./main/loop";
 
 start();

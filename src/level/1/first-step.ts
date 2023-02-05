@@ -5,7 +5,7 @@ export function firstStep() {
   return [
     new PlayerItem({
       img: getImage(assets.img.player.items.heal),
-      timeout: 1,
+      timeout: 100 * 1000,
       position: { x: 500, y: 500 },
       effect: {
         type: "HEAL",

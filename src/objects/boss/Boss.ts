@@ -28,7 +28,7 @@ export class Boss extends GameObject {
     this.finalPhase = params.phases.length;
     this.setDimensions(this.params.img);
     this.nextPhase();
-    // TODO trigger(GameEvent.BossHp, {maxHp: this.maxHp, hp: this.hp})
+    trigger(GameEvent.bossHp, { maxHp: this.maxHp, hp: this.hp });
   }
 
   private get phase() {
@@ -60,6 +60,7 @@ export class Boss extends GameObject {
     } else if (type === "PROJECTILE") {
       this.hpLoss(amount);
     }
+    trigger(GameEvent.bossHp, { maxHp: this.maxHp, hp: this.hp });
   }
 
   public effect(): Effect {

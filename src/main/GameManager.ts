@@ -3,6 +3,7 @@ import { KeyboardAndMouse, InputHandler } from "@/common/controls";
 import { Destroyable } from "@/common/meta";
 import { CanvasManager } from "./CanvasManager";
 import { LevelManager } from "@/level";
+import { hud } from "@/hud";
 
 // const debug = import.meta.env.VITE_DEBUG || true;
 
@@ -26,7 +27,7 @@ export class GameManager implements Destroyable {
 
     this.listeners = { pause: this.handlePause.bind(this) };
     set(this.listeners);
-    this.destroyables = [this.input, this.cm, this.lm];
+    this.destroyables = [hud(), this.input, this.cm, this.lm];
   }
 
   private handlePause(ev: Event) {

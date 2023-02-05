@@ -1,17 +1,13 @@
 # NEXT (>doing)
 
-- [x] {bug} impact timeout not working properly (review collision and Effect)
-- [>] {feature} HUD
-- [ ] {feature} UI
+- [>] {feature} UI
 - [ ] {bug} gamepad (make it work interchangeably with keyboard/mouse)
+- [ ] {bug} improve projectile hitbox and appearance (image? bloom effect?)
+- [ ] improve player hitbox
 - [ ] level design (design level1)
-- [ ] {bug} improve projectile hitbox
-- [ ] {bug} improve player hitbox
 
 # TODO (> planned)
 
-- [>] UI
-- [>] HUD
 - [>] gamepad
 - [>] assets
 
@@ -39,6 +35,7 @@
 
 # DONE
 
+- [x] HUD
 - [ ] player items
   - [x] hp
   - [ ] shield
@@ -84,6 +81,10 @@
   - [x] {refac} Use events to spawn enemy projectiles
   - [x] {bug} if a Ship is destroyed, its projectiles vanish (solved by previous item)
   - [x] {bug} fix level manager step function
+
+- others:
+
+  - [x] {bug} impact timeout not working properly (review collision and Effect)
 
 ---
 
