@@ -80,7 +80,7 @@ export class Player extends GameObject {
     );
   }
 
-  public get effect(): Effect {
+  public effect(): Effect {
     return {
       type: "IMPACT",
       amount: this.power,
@@ -88,24 +88,23 @@ export class Player extends GameObject {
   }
 
   public checkCollision(gameObject: GameObject) {
-    const effect = gameObject.effect;
-
+    // verify player against gameObject
     if (gameObject.isActive && hasCollided(this.hitbox, gameObject.hitbox)) {
-      // console.log("player => object hit");
+      const effect = gameObject.effect();
       this.handleEffect(effect);
-      gameObject.handleEffect(effect.amount > 0 ? this.effect : effect);
+      gameObject.handleEffect(effect.amount > 0 ? this.effect() : effect);
     }
 
-    if (effect.type === "IMPACT" || effect.type === "PROJECTILE") {
-      iterate(this.projectiles, (p) => {
-        if (p.isActive && hasCollided(p.hitbox, gameObject.hitbox)) {
-          // console.log("projectile => object hit");
-          // TODO
-          gameObject.handleEffect(p.effect);
-          p.handleEffect(effect);
+    // verify projectiles against gameObject
+    iterate(this.projectiles, (p) => {
+      if (p.isActive && hasCollided(p.hitbox, gameObject.hitbox)) {
+        const { type } = gameObject.effect();
+        if (type === "IMPACT" || type === "PROJECTILE") {
+          gameObject.handleEffect(p.effect());
+          p.handleEffect(p.effect());
         }
-      });
-    }
+      }
+    });
   }
 
   public handleEffect(effect: Effect) {

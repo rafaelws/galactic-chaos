@@ -30,7 +30,7 @@ export class Ship extends GameObject {
     }
   }
 
-  public get effect(): Effect {
+  public effect(): Effect {
     return {
       type: "IMPACT",
       amount: this.impact.onImpact(),

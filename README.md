@@ -1,7 +1,12 @@
 # NEXT (>doing)
 
-- [ ] {bug} impact timeout not working properly (review collision and Effect)
-- [x] {feature} bosses
+- [x] {bug} impact timeout not working properly (review collision and Effect)
+- [>] {feature} HUD
+- [ ] {feature} UI
+- [ ] {bug} gamepad (make it work interchangeably with keyboard/mouse)
+- [ ] level design (design level1)
+- [ ] {bug} improve projectile hitbox
+- [ ] {bug} improve player hitbox
 
 # TODO (> planned)
 
@@ -45,7 +50,7 @@
 - [x] enemies
   - [x] rock
   - [x] ship
-  - [ ] bosses
+  - [x] bosses
 - [x] mechanics
 
   - [x] game objects collision

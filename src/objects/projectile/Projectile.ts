@@ -41,7 +41,7 @@ export class Projectile extends GameObject {
     this.hpLoss(effect.amount);
   }
 
-  public get effect(): Effect {
+  public effect(): Effect {
     return {
       type: "PROJECTILE",
       amount: this.params.power,

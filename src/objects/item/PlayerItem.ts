@@ -37,7 +37,7 @@ export class PlayerItem extends GameObject {
     this.active = false;
   }
 
-  public get effect(): Effect {
+  public effect(): Effect {
     return this.params.effect;
   }
 

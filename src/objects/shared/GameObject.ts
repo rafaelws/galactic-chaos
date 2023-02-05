@@ -71,7 +71,7 @@ export abstract class GameObject {
     }
   }
 
-  public abstract get effect(): Effect;
+  public abstract effect(): Effect;
   public abstract handleEffect(effect: Effect): void;
 
   /**
