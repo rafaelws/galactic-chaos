@@ -106,10 +106,9 @@ function query(gamepad: Gamepad): ControlState {
 }
 
 export class Joystick implements InputHandler {
-  // TODO
   public getState(): ControlState {
     const gamepad = navigator.getGamepads().find((pad) => !!pad);
-    return query(gamepad!);
+    return gamepad ? query(gamepad) : {};
   }
 
   public destroy() {}

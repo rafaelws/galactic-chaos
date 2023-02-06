@@ -4,16 +4,16 @@ import { Destroyable } from "@/common/meta";
 import { CanvasManager } from "./CanvasManager";
 import { LevelManager } from "@/level";
 import { hud } from "@/hud";
-
-// const debug = import.meta.env.VITE_DEBUG || true;
+import { Clock } from "@/common";
+import { GameEvent } from "@/objects";
 
 export class GameManager implements Destroyable {
   private cm: CanvasManager;
   private lm: LevelManager;
   private input: InputHandler;
 
-  private started = false;
   private paused = false;
+  private pauseClock: Clock;
 
   private listeners: ListenerMap = {};
   private destroyables: Destroyable[] = [];
@@ -21,6 +21,9 @@ export class GameManager implements Destroyable {
   constructor() {
     this.cm = new CanvasManager();
     this.lm = new LevelManager();
+
+    // TODO test interval with gamepad
+    this.pauseClock = new Clock(250, true);
 
     // TODO controls will be either gamepad or keyboard/mouse
     this.input = new KeyboardAndMouse();
@@ -40,28 +43,32 @@ export class GameManager implements Destroyable {
   }
 
   private update(delta: number) {
-    if (this.paused) return;
+    this.pauseClock.increment(delta);
 
     const controls = this.input.getState();
 
-    // TODO start || esc
-    if (controls.START?.active) {
-      trigger("pause", true);
-      // this.paused = true;
+    if (!this.pauseClock.pending && controls.START?.active) {
+      this.paused = !this.paused;
+      trigger(GameEvent.pause, this.paused);
+      this.pauseClock.reset();
     }
 
+    if (this.paused) {
+      if (controls.SELECT?.active) {
+        trigger(GameEvent.quit);
+      }
+      return;
+    }
     this.lm.update(delta, this.cm.getBoundaries(), controls);
   }
 
   private draw() {
+    if (this.paused) return;
     this.cm.clear();
     this.lm.draw(this.cm.context);
   }
 
   public nextFrame(delta: number) {
-    if (!this.started) this.started = true;
-    if (this.paused) return;
-
     this.update(delta);
     this.draw();
   }
