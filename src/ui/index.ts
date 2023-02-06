@@ -14,6 +14,7 @@ const elements = {
   pauseMenu: "pause-menu",
   mainMenu: "main-menu",
   gameOverMenu: "game-over-menu",
+  gameEndMenu: "game-end-menu",
   loading: "loading",
 };
 
@@ -29,6 +30,7 @@ function hideAll() {
   hide(elements.playerHp);
   hide(elements.pauseMenu);
   hide(elements.gameOverMenu);
+  hide(elements.gameEndMenu);
   hide(elements.mainMenu);
 }
 
@@ -63,6 +65,7 @@ const listeners: ListenerMap = {
   [GameEvent.quit]: quit,
   [GameEvent.pause]: pause,
   [GameEvent.gameOver]: gameOver,
+  [GameEvent.gameEnd]: gameEnd,
 };
 
 function reset() {
@@ -82,11 +85,23 @@ function pause(ev: globalThis.Event) {
 }
 
 function gameOver() {
+  hideAll();
+  loop.destroy();
   readInput([
     { action: "START", fn: start },
     { action: "SELECT", fn: quit },
   ]);
   show(elements.gameOverMenu);
+}
+
+function gameEnd() {
+  hideAll();
+  loop.destroy();
+  readInput([
+    { action: "START", fn: start },
+    { action: "SELECT", fn: quit },
+  ]);
+  show(elements.gameEndMenu);
 }
 
 function start() {

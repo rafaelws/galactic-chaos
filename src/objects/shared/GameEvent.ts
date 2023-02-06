@@ -10,4 +10,5 @@ export enum GameEvent {
   spawn = "spawn",
   playerHp = "playerHp",
   bossHp = "bossHp",
+  gameEnd = "gameEnd",
 }

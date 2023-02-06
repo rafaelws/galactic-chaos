@@ -45,13 +45,15 @@ canvas {
   position: absolute;
   inset: 0;
   z-index: 2;
+  text-align: right;
+  line-height: 1.1;
 }
 
 .menu .hint-text {
+  font-size: 1rem;
   position: absolute;
   top: 1rem;
   right: 0.5rem;
-  text-align: right;
 }
 
 .menu .main-text {

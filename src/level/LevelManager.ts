@@ -1,6 +1,6 @@
 import { iterate } from "@/common/util";
 import { Boundaries, Destroyable, GameState } from "@/common/meta";
-import { ListenerMap, readEvent, set, unset } from "@/common/events";
+import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
 import { ControlState } from "@/common/controls";
 import { assets, getImage, loadImages } from "@/common/asset";
 import { GameEvent, GameObject, Player } from "@/objects";
@@ -53,8 +53,7 @@ export class LevelManager implements Destroyable {
       this.currentStep = -1;
       this.finalStep = this.level.steps.length;
     } else {
-      console.log("game ended");
-      // trigger("gameend")
+      trigger(GameEvent.gameEnd);
     }
   }
 
