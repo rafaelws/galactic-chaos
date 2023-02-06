@@ -1,19 +1,21 @@
 # NEXT (>doing)
 
-- [>] {feature} UI
-- [ ] {bug} gamepad (make it work interchangeably with keyboard/mouse)
-- [ ] {bug} improve projectile hitbox and appearance (image? bloom effect?)
-- [ ] improve player hitbox
+- [x] game event: game over
+- [>] game event: game end
 - [ ] level design (design level1)
+- [ ] {improve} player hitbox
+- [ ] {improve} projectile hitbox and appearance (image? bloom effect?)
+- [ ] {bug} gamepad (make it work interchangeably with keyboard/mouse)
 
 # TODO (> planned)
 
 - [>] gamepad
 - [>] assets
 
-  - [>] fonts: ui, hud (Orbitron)
-  - [>] effects and animations (e.g. hit/collision effect)
+  - [x] fonts: ui, hud (Orbitron)
   - [>] audio: ost, ui
+  - [>] effects and animations (e.g. hit/collision effect)
+  - [>] asset loader: audio
 
 - [ ] {low} projectile
 
@@ -22,9 +24,8 @@
   - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
   - [ ] ability to change speed
 
-- [>] asset loader: audio
 - [>] level design
-- [>] background: dynamic, with particles, reacting to the bg music
+- [>] (!) background: dynamic, with particles, reacting to the bg music (depends on OST and audio loader/manager)
 - [ ] {bug} handle screen resize on game objects
 - [ ] {low} overall status: time? score? enemies killed? shots fired?` (use LevelManager)
 - [ ] {low}{idea} ship: add 2 movement patterns ship movement (using sin, cos)
@@ -36,6 +37,7 @@
 # DONE
 
 - [x] HUD
+- [x] UI
 - [ ] player items
   - [x] hp
   - [ ] shield
@@ -61,6 +63,7 @@
     - [x] projectile
     - [x] player
   - [x] overlap damage image when hp is depleated (player)
+  - [ ] gamepad
 
 - [x] refac1 (maintainability iteration)
 
@@ -82,38 +85,32 @@
   - [x] {bug} if a Ship is destroyed, its projectiles vanish (solved by previous item)
   - [x] {bug} fix level manager step function
 
-- others:
-
-  - [x] {bug} impact timeout not working properly (review collision and Effect)
-
 ---
 
 ```
-Events:
- - [ ] quit
- - [ ] pause
- - [ ] gameend
- - [ ] gameover
- - [x] spawnEnemyProjectile
- - [ ] spwanPlayerItem
- -
-```
+Game Events:
+ - [x] quit
+ - [x] pause
+ - [x] spawn (gameObject)
+ - [x] gameover
+ - [>] gameend
 
-```
+- - -
+
 Gamepad Cheatsheet:
 
 left analog stick
-- axes[0]: negative: left, positive: right (horizontal)
-- axes[1]: negative: up, positive: down (vertical)
+- axes[0] = negative: left, positive: right (horizontal)
+- axes[1] = negative: up, positive: down (vertical)
 
 right analog stick
-- axes[2]: negative: left, positive: right (horizontal)
-- axes[3]: negative: up, positive: down (vertical)
+- axes[2] = negative: left, positive: right (horizontal)
+- axes[3] = negative: up, positive: down (vertical)
 
-A / xis:       buttons[0]
-B / circulo:   buttons[1]
-X / quadrado:  buttons[2]
-Y / triangulo: buttons[3]
+A / x:         buttons[0]
+B / circle:    buttons[1]
+X / square:    buttons[2]
+Y / triangle:  buttons[3]
 
 LB / L1:       buttons[4]
 RB / R1:       buttons[5]
@@ -129,22 +126,5 @@ d_up:          buttons[12]
 d_down:        buttons[13]
 d_left:        buttons[14]
 d_right:       buttons[15]
-x/ps (joker):  buttons[16]
-```
-
-```
-// TODO
-function requestFullscreen() {
-  const vendors = [
-    "requestFullscreen",
-    "requestFullScreen",
-    "mozRequestFullScreen",
-    "webkitRequestFullScreen",
-    "msRequestFullscreen",
-  ];
-  const root = document.querySelector("#root")!;
-  const method = vendors.find((name) => name in root);
-  if (method) (root as HTMLElement)[method]();
-}
-
+x/ps:          buttons[16]
 ```

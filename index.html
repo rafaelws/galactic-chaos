@@ -2,24 +2,54 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron&family=Saira+Semi+Condensed:wght@300&display=swap"
-      rel="stylesheet"
-    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- <link rel="icon" type="image/svg+xml" href="/vite.svg" /> -->
-    <title>WIP</title>
+    <title>[WIP] game</title>
   </head>
   <body>
+    <img
+      id="loading"
+      style="position: absolute; inset: 0; height: 100%; width: 100%; z-index: 10"
+      src="/loading.svg"
+    />
+
+    <div id="main-menu" class="menu" style="display: none;">
+      <p class="hint-text">press &lt;f11&gt; to enter fullscreen</p>
+      <p class="main-text">press &lt;enter&gt; or &lt;start&gt;</p>
+    </div>
+
+    <div id="pause-menu" class="menu" style="display: none;">
+      <p class="hint-text">
+        press &lt;enter&gt; or &lt;start&gt; to resume<br/>
+        press &lt;q&gt; or &lt;select&gt; to quit
+      </p>
+      <p class="main-text">pause</p>
+    </div>
+
+    <div id="game-over-menu" class="menu" style="display: none;">
+      <p class="hint-text">
+        press &lt;enter&gt; or &lt;start&gt; to restart<br/>
+        press &lt;q&gt; or &lt;select&gt; to quit
+      </p>
+      <p class="main-text">game over</p>
+    </div>
+
+    <div id="game-end-menu" class="menu" style="display: none;">
+      <p class="hint-text">
+        press &lt;enter&gt; or &lt;start&gt; to restart<br/>
+        press &lt;q&gt; or &lt;select&gt; to quit
+      </p>
+      <p class="main-text">thanks for playing<br/>game end</p>
+    </div>
+
     <div id="player-hp" class="hp-container">
       <div class="hp"></div>
     </div>
+
     <div id="boss-hp" class="hp-container">
       <div class="hp"></div>
     </div>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

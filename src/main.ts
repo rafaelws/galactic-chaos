@@ -1,6 +1,5 @@
 import "./css/main.css";
 import "./css/hud.css";
+import { mainMenu } from "./ui";
 
-import { start } from "./main/loop";
-
-start();
+document.addEventListener("DOMContentLoaded", mainMenu);

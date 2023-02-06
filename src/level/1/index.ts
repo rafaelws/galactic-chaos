@@ -3,13 +3,12 @@ import { Level } from "../Level";
 import { firstStep } from "./first-step";
 import { secondStep } from "./second-step";
 
+// TODO review imported assets
 export const firstLevel: Level = {
   steps: [firstStep, secondStep],
   images: [
     assets.img.player.self,
     assets.img.player.items.heal,
-    assets.img.player.items.shield,
-    assets.img.player.items.special,
     assets.img.player.damage[0],
     assets.img.player.damage[1],
     assets.img.player.damage[2],

@@ -1,6 +1,6 @@
 :root {
-  --danger-color: rgb(172, 57, 57, 0.95);
-  --player-color: rgb(48, 178, 233, 0.95);
+  --danger-color: rgba(172, 57, 57, 0.95);
+  --player-color: rgba(48, 178, 233, 0.95);
 }
 
 .hp-container {
@@ -31,7 +31,7 @@
 #player-hp.hp-container {
   /* transform: perspective(10%) rotateY(35deg) rotateX(20deg); */
   bottom: 0.5rem;
-  width: 20%;
+  width: 10%;
 }
 
 @keyframes glow {
