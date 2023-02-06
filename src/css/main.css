@@ -33,20 +33,19 @@ canvas {
   position: absolute;
   inset: 0;
   z-index: 0;
-}
-
-#main-menu {
-  background-color: black;
+  animation: fade-in 1s;
 }
 
 .menu {
   display: none;
-  background-color: rgba(255, 255, 255, 0.125);
+  background-color: black;
+  background-color: rgba(0, 0, 0, 0.75);
   position: absolute;
   inset: 0;
   z-index: 2;
   text-align: right;
   line-height: 1.1;
+  animation: fade-in 1s;
 }
 
 .menu .hint-text {
@@ -56,12 +55,17 @@ canvas {
   right: 0.5rem;
 }
 
+
 .menu .main-text {
   position: absolute;
   bottom: 1rem;
   right: 0.5rem;
   font-size: 4rem;
-  animation: text-glow 1.5s infinite;
+  animation: text-glow 2s infinite;
+}
+
+#game-over-menu, #game-end-menu {
+  animation: fade-in 2s;
 }
 
 @keyframes text-glow {
@@ -76,4 +80,9 @@ canvas {
   100% {
     text-shadow: 0 0 5px white;
   }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
