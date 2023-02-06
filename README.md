@@ -1,7 +1,7 @@
 # NEXT (>doing)
 
-- [ ] game event: game end
-- [ ] game event: game over
+- [x] game event: game over
+- [>] game event: game end
 - [ ] level design (design level1)
 - [ ] {improve} player hitbox
 - [ ] {improve} projectile hitbox and appearance (image? bloom effect?)
@@ -13,8 +13,9 @@
 - [>] assets
 
   - [x] fonts: ui, hud (Orbitron)
-  - [>] effects and animations (e.g. hit/collision effect)
   - [>] audio: ost, ui
+  - [>] effects and animations (e.g. hit/collision effect)
+  - [>] asset loader: audio
 
 - [ ] {low} projectile
 
@@ -23,9 +24,8 @@
   - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
   - [ ] ability to change speed
 
-- [>] asset loader: audio
 - [>] level design
-- [>] background: dynamic, with particles, reacting to the bg music
+- [>] (!) background: dynamic, with particles, reacting to the bg music (depends on OST and audio loader/manager)
 - [ ] {bug} handle screen resize on game objects
 - [ ] {low} overall status: time? score? enemies killed? shots fired?` (use LevelManager)
 - [ ] {low}{idea} ship: add 2 movement patterns ship movement (using sin, cos)
@@ -63,6 +63,7 @@
     - [x] projectile
     - [x] player
   - [x] overlap damage image when hp is depleated (player)
+  - [ ] gamepad
 
 - [x] refac1 (maintainability iteration)
 
@@ -91,21 +92,20 @@ Game Events:
  - [x] quit
  - [x] pause
  - [x] spawn (gameObject)
+ - [x] gameover
  - [>] gameend
- - [>] gameover
- -
-```
 
-```
+- - -
+
 Gamepad Cheatsheet:
 
 left analog stick
-- axes[0]: negative: left, positive: right (horizontal)
-- axes[1]: negative: up, positive: down (vertical)
+- axes[0] = negative: left, positive: right (horizontal)
+- axes[1] = negative: up, positive: down (vertical)
 
 right analog stick
-- axes[2]: negative: left, positive: right (horizontal)
-- axes[3]: negative: up, positive: down (vertical)
+- axes[2] = negative: left, positive: right (horizontal)
+- axes[3] = negative: up, positive: down (vertical)
 
 A / x:         buttons[0]
 B / circle:    buttons[1]

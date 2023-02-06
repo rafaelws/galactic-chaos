@@ -116,6 +116,9 @@ export class Player extends GameObject {
       this.hpLoss(effect.amount);
     }
     trigger(GameEvent.playerHp, { maxHp: this.maxHp, hp: this.hp });
+
+    if (this.hp <= 0)
+      trigger(GameEvent.gameOver, { maxHp: this.maxHp, hp: this.hp });
   }
 
   private act(

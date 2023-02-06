@@ -1,20 +1,20 @@
 import { GameManager } from "./GameManager";
 
 export function setup() {
-  let lts = 0;
-  let delta = 0;
-  let raf: number;
-  let manager: GameManager;
+  let raf: number | null;
+  let manager: GameManager | null;
 
   return {
     start() {
+      let lts = 0;
+      let delta = 0;
       manager = new GameManager();
 
       function loop(ts: DOMHighResTimeStamp) {
         delta = ts - lts;
         lts = ts;
 
-        if (delta > 0) manager.nextFrame(delta);
+        if (delta > 0) manager?.nextFrame(delta);
 
         raf = requestAnimationFrame(loop);
       }
@@ -24,6 +24,8 @@ export function setup() {
     destroy() {
       if (raf) cancelAnimationFrame(raf);
       manager?.destroy();
+      raf = null;
+      manager = null;
     },
   };
 }

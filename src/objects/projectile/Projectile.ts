@@ -3,12 +3,18 @@ import { Effect, GameObject } from "../shared";
 import { ProjectileParams } from "./ProjectileParams";
 
 export class Projectile extends GameObject {
+  private color: string;
   private direction: Coordinate = { x: 0, y: 0 };
 
   constructor(private readonly params: ProjectileParams) {
     super(params);
     this.direction.x = Math.sin(-params.angle);
     this.direction.y = Math.cos(-params.angle);
+    this.color = params.color
+      ? params.color
+      : params.enemy
+      ? "rgba(172, 57, 57, 0.95)"
+      : "rgba(48, 178, 233, 0.95)";
   }
 
   public get hitbox(): HitBox {
@@ -67,7 +73,7 @@ export class Projectile extends GameObject {
     c.save();
     c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(this.params.angle);
-    c.fillStyle = this.params.enemy ? "red" : "blue";
+    c.fillStyle = this.color;
     c.fillRect(-this.cx, -this.cy, this.width, this.height);
     c.restore();
     if (this.debug) this.drawDebug(c);

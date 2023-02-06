@@ -1,6 +1,6 @@
 :root {
-  --danger-color: rgb(172, 57, 57, 0.95);
-  --player-color: rgb(48, 178, 233, 0.95);
+  --danger-color: rgba(172, 57, 57, 0.95);
+  --player-color: rgba(48, 178, 233, 0.95);
 }
 
 .hp-container {

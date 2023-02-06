@@ -6,4 +6,5 @@ export interface ProjectileParams {
   power: number;
   angle: number;
   start: Coordinate;
+  color?: string;
 }
