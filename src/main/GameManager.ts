@@ -1,4 +1,4 @@
-import { set, unset, trigger, ListenerMap } from "@/common/events";
+import { set, unset, trigger, ListenerMap, readEvent } from "@/common/events";
 import { KeyboardAndMouse, InputHandler } from "@/common/controls";
 import { Destroyable } from "@/common/meta";
 import { CanvasManager } from "./CanvasManager";
@@ -6,6 +6,8 @@ import { LevelManager } from "@/level";
 import { hud } from "@/hud";
 import { Clock } from "@/common";
 import { GameEvent } from "@/objects";
+
+const debug = false;
 
 export class GameManager implements Destroyable {
   private cm: CanvasManager;
@@ -28,13 +30,13 @@ export class GameManager implements Destroyable {
     // TODO controls will be either gamepad or keyboard/mouse
     this.input = new KeyboardAndMouse();
 
-    this.listeners = { pause: this.handlePause.bind(this) };
+    this.listeners = {
+      pause: (ev: globalThis.Event) => {
+        this.paused = readEvent<boolean>(ev);
+      },
+    };
     set(this.listeners);
     this.destroyables = [hud(), this.input, this.cm, this.lm];
-  }
-
-  private handlePause(ev: Event) {
-    this.paused = (ev as CustomEvent).detail;
   }
 
   public destroy() {
@@ -59,7 +61,7 @@ export class GameManager implements Destroyable {
       }
       return;
     }
-    this.lm.update(delta, this.cm.getBoundaries(), controls);
+    this.lm.update(delta, this.cm.getBoundaries(), controls, debug);
   }
 
   private draw() {
@@ -71,11 +73,12 @@ export class GameManager implements Destroyable {
   public nextFrame(delta: number) {
     this.update(delta);
     this.draw();
+    if (debug) this._debug(delta);
   }
 
-  /*
-  private _debug() {
-    const { width, height } = worldBoundaries;
+  private _debug(delta: number) {
+    const c = this.cm.context;
+    const { width, height } = this.cm.getBoundaries();
     const lines = [
       `${width}x${height}`,
       `${Math.floor(1000 / delta)}fps`,
@@ -86,5 +89,4 @@ export class GameManager implements Destroyable {
     c.font = `${16}px sans-serif`;
     c.fillText(lines.join(", "), 5, 16);
   }
-  */
 }

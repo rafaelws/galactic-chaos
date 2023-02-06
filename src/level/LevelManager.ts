@@ -84,7 +84,8 @@ export class LevelManager implements Destroyable {
   public update(
     delta: number,
     worldBoundaries: Boundaries,
-    controlState: ControlState
+    controlState: ControlState,
+    debug = false
   ): void {
     if (this.loading) return;
 
@@ -94,7 +95,7 @@ export class LevelManager implements Destroyable {
     }
 
     let state: GameState = {
-      debug: true,
+      debug,
       delta,
       worldBoundaries,
       player: { x: 0, y: 0, radius: 0 },
