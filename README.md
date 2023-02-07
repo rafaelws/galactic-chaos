@@ -1,16 +1,18 @@
 # NEXT (>doing)
 
 - [>] effects
-  - [>] (!) background: dynamic, with particles, reacting to the bg music (depends on OST and audio loader/manager)
   - [>] effects and animations (e.g. hit/collision effect)
+  - [>] background: particles
+- [ ] audio
+  - [ ] loader
+  - [ ] manager
+  - [ ] reactive background (WebAudioAPI - verify browser support)
 - [ ] level design (design level1)
-- [ ] {improve} circle collision calculation (without sqrt)
-- [ ] verify performance issues
-- [ ] {improve} projectile hitbox
-- [ ] {improve} player hitbox
-- [x] {improve} projectile appearance
-- [x] {bug} gamepad (make it work interchangeably with keyboard/mouse)
-  - [x] solution: on ANY menu, the game is notified of the preferred input
+- [ ] improvements
+  - [x] circle collision calculation (without sqrt)
+  - [ ] projectile hitbox
+  - [ ] player hitbox
+  - [ ] verify performance issues
 
 # TODO (> planned)
 
@@ -48,8 +50,9 @@
   - [ ] shield
   - [ ] special
   - [x] spawn items using event
-- [x] {assets} images: player, enemies, items
-- [x] {asset loader} image
+- [ ] assets:
+  - [x] loader and images (player, enemies, items...)
+  - [ ] loader, audio and audio manager
 - [x] level manager
 - [x] enemies
   - [x] rock
@@ -62,10 +65,10 @@
     - [x] enemy projectiles[] collision > player (event)
     - [x] player projectiles[] collision > enemies[] (notify)
     - [x] notify game objects on collision
-  - [x] game object params (hp, impact{power,resistance,collisionTimeout}, projectile{impact{power}})
+  - [x] game object params (hp, spawnTimeout, spawnables, impact{power,resistance,collisionTimeout})
     - [x] rock
     - [x] ship
-    - [x] projectile
+    - [x] projectile (color, power)
     - [x] player
   - [x] overlap damage image when hp is depleated (player)
   - [x] gamepad
@@ -89,6 +92,11 @@
   - [x] {refac} Use events to spawn enemy projectiles
   - [x] {bug} if a Ship is destroyed, its projectiles vanish (solved by previous item)
   - [x] {bug} fix level manager step function
+
+- misc
+  - [x] {improve} projectile appearance
+  - [x] {bug|improve} gamepad (make it work interchangeably with keyboard/mouse)
+    - [x] solution: on ANY menu, the game is notified of the preferred input
 
 ---
 
