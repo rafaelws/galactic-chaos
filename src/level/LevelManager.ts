@@ -3,7 +3,7 @@ import { Boundaries, Destroyable, GameState } from "@/common/meta";
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
 import { ControlState } from "@/common/controls";
 import { assets, getImage, loadImages } from "@/common/asset";
-import { GameEvent, GameObject, Player } from "@/objects";
+import { BackgroundManager, GameEvent, GameObject, Player } from "@/objects";
 
 import { Level } from "./Level";
 import { firstLevel } from "./1";
@@ -19,6 +19,7 @@ export class LevelManager implements Destroyable {
   private finalStep = -1;
 
   private player?: Player;
+  private background?: BackgroundManager;
   private gameObjects: GameObject[] = [];
   private prependables: GameObject[] = [];
 
@@ -122,6 +123,9 @@ export class LevelManager implements Destroyable {
         this.prependables = [];
       }
 
+      if (!this.background) this.background = new BackgroundManager();
+      else this.background.update(state);
+
       const actives: GameObject[] = [];
       iterate(this.gameObjects, (gameObject) => {
         gameObject.update(state);
@@ -136,7 +140,7 @@ export class LevelManager implements Destroyable {
 
   public draw(c: CanvasRenderingContext2D): void {
     if (this.loading || !this.loaded) return;
-
+    this.background?.draw(c);
     this.player?.draw(c);
     iterate(this.gameObjects, (gameObject) => gameObject.draw(c));
 

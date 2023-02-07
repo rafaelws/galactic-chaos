@@ -2,13 +2,13 @@
 
 - [>] effects
   - [>] effects and animations (e.g. hit/collision effect)
-  - [>] background: particles
-- [ ] audio
+  - [x] background: particles
+- \*[ ] audio
   - [ ] loader
   - [ ] manager
   - [ ] reactive background (WebAudioAPI - verify browser support)
 - [ ] level design (design level1)
-- [ ] improvements
+- \*[ ] improvements
   - [x] circle collision calculation (without sqrt)
   - [ ] projectile hitbox
   - [ ] player hitbox

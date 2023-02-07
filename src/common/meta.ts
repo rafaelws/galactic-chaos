@@ -29,3 +29,8 @@ export interface Destroyable {
 export type Concrete<T> = {
   [Property in keyof T]-?: T[Property];
 };
+
+export interface Drawable {
+  update(state: GameState): void;
+  draw(c: CanvasRenderingContext2D): void;
+}

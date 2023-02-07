@@ -1,12 +1,18 @@
 import { Clock } from "@/common";
 import { trigger } from "@/common/events";
-import { Boundaries, Coordinate, GameState, HitBox } from "@/common/meta";
+import {
+  Boundaries,
+  Coordinate,
+  Drawable,
+  GameState,
+  HitBox,
+} from "@/common/meta";
 import { iterate } from "@/common/util";
 import { GameEvent } from "./GameEvent";
 import { Effect } from "./Effect";
 import { GameObjectParams } from "./GameObjectParams";
 
-export abstract class GameObject {
+export abstract class GameObject implements Drawable {
   // status
   protected hp: number;
   protected active = true;
