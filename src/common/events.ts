@@ -15,7 +15,7 @@ export function off(eventName: string, listener: Listener) {
 export function trigger(eventName: string, eventDetailData?: any) {
   return window.dispatchEvent(
     new globalThis.CustomEvent(eventName, {
-      detail: eventDetailData || null,
+      detail: eventDetailData,
     })
   );
 }

@@ -31,8 +31,7 @@ const indexedButtons = [
   "JOKER",
 ];
 
-// TODO
-const drift = 0;
+const drift = 0.1;
 
 function isActive(button: GamepadButton) {
   return button.value > 0 || button.pressed;

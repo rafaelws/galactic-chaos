@@ -1,11 +1,16 @@
 # NEXT (>doing)
 
-- [x] game event: game over
-- [>] game event: game end
+- [>] effects
+  - [>] (!) background: dynamic, with particles, reacting to the bg music (depends on OST and audio loader/manager)
+  - [>] effects and animations (e.g. hit/collision effect)
 - [ ] level design (design level1)
+- [ ] {improve} circle collision calculation (without sqrt)
+- [ ] verify performance issues
+- [ ] {improve} projectile hitbox
 - [ ] {improve} player hitbox
-- [ ] {improve} projectile hitbox and appearance (image? bloom effect?)
-- [ ] {bug} gamepad (make it work interchangeably with keyboard/mouse)
+- [x] {improve} projectile appearance
+- [x] {bug} gamepad (make it work interchangeably with keyboard/mouse)
+  - [x] solution: on ANY menu, the game is notified of the preferred input
 
 # TODO (> planned)
 
@@ -13,19 +18,19 @@
 - [>] assets
 
   - [x] fonts: ui, hud (Orbitron)
-  - [>] audio: ost, ui
   - [>] effects and animations (e.g. hit/collision effect)
   - [>] asset loader: audio
+  - [>] audio: ui
+  - [>] audio: ost
 
 - [ ] {low} projectile
 
+  - [x] appearance (image? bloom effect?)
   - [>] {idea} deflect projectile on hit (that would be cool)
-  - [>] appearance (image? bloom effect?)
   - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
   - [ ] ability to change speed
 
 - [>] level design
-- [>] (!) background: dynamic, with particles, reacting to the bg music (depends on OST and audio loader/manager)
 - [ ] {bug} handle screen resize on game objects
 - [ ] {low} overall status: time? score? enemies killed? shots fired?` (use LevelManager)
 - [ ] {low}{idea} ship: add 2 movement patterns ship movement (using sin, cos)
@@ -63,7 +68,7 @@
     - [x] projectile
     - [x] player
   - [x] overlap damage image when hp is depleated (player)
-  - [ ] gamepad
+  - [x] gamepad
 
 - [x] refac1 (maintainability iteration)
 
@@ -93,7 +98,7 @@ Game Events:
  - [x] pause
  - [x] spawn (gameObject)
  - [x] gameover
- - [>] gameend
+ - [x] gameend
 
 - - -
 

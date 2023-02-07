@@ -1,5 +1,10 @@
 import { set, unset, trigger, ListenerMap, readEvent } from "@/common/events";
-import { KeyboardAndMouse, InputHandler } from "@/common/controls";
+import {
+  KeyboardAndMouse,
+  InputHandler,
+  Joystick,
+  PreferredInput,
+} from "@/common/controls";
 import { Destroyable } from "@/common/meta";
 import { CanvasManager } from "./CanvasManager";
 import { LevelManager } from "@/level";
@@ -12,10 +17,13 @@ const debug = false;
 export class GameManager implements Destroyable {
   private cm: CanvasManager;
   private lm: LevelManager;
-  private input: InputHandler;
+  private ih: InputHandler = new KeyboardAndMouse();
+  private preferredInput: PreferredInput = PreferredInput.KeyboardAndMouse;
 
   private paused = false;
   private pauseClock: Clock;
+  private startingPauseTime = 2000;
+  private pauseTime = 350;
 
   private listeners: ListenerMap = {};
   private destroyables: Destroyable[] = [];
@@ -24,19 +32,22 @@ export class GameManager implements Destroyable {
     this.cm = new CanvasManager();
     this.lm = new LevelManager();
 
-    // TODO test interval with gamepad
-    this.pauseClock = new Clock(250, true);
+    // targetTime will change after the first interaction
+    // required because the gamepad updates waaaay too fast.
+    this.pauseClock = new Clock(this.startingPauseTime);
 
-    // TODO controls will be either gamepad or keyboard/mouse
-    this.input = new KeyboardAndMouse();
+    this.checkPreferredInput();
 
     this.listeners = {
       pause: (ev: globalThis.Event) => {
-        this.paused = readEvent<boolean>(ev);
+        const paused = readEvent<boolean>(ev);
+        if (!paused) this.checkPreferredInput();
+        this.paused = paused;
       },
     };
     set(this.listeners);
-    this.destroyables = [hud(), this.input, this.cm, this.lm];
+    // TODO test input handler destroyable after switch
+    this.destroyables = [hud(), this.ih, this.cm, this.lm];
   }
 
   public destroy() {
@@ -44,33 +55,42 @@ export class GameManager implements Destroyable {
     for (let target of this.destroyables) target.destroy();
   }
 
-  private update(delta: number) {
-    this.pauseClock.increment(delta);
+  private checkPreferredInput() {
+    const preferredInput = sessionStorage.getItem(PreferredInput.Id);
 
-    const controls = this.input.getState();
+    if (!!preferredInput && preferredInput !== this.preferredInput) {
+      this.ih.destroy();
+      this.preferredInput = preferredInput as PreferredInput;
+      this.ih =
+        preferredInput === PreferredInput.Joystick
+          ? new Joystick()
+          : new KeyboardAndMouse();
+    }
+  }
+
+  private update(delta: number) {
+    const controls = this.ih.getState();
 
     if (!this.pauseClock.pending && controls.START?.active) {
-      this.paused = !this.paused;
-      trigger(GameEvent.pause, this.paused);
-      this.pauseClock.reset();
-    }
+      if (this.pauseClock.targetTime === this.startingPauseTime)
+        this.pauseClock.targetTime = this.pauseTime;
 
-    if (this.paused) {
-      if (controls.SELECT?.active) {
-        trigger(GameEvent.quit);
-      }
+      trigger(GameEvent.pause, true);
+      this.pauseClock.reset();
       return;
     }
+    this.pauseClock.increment(delta);
+
     this.lm.update(delta, this.cm.getBoundaries(), controls, debug);
   }
 
   private draw() {
-    if (this.paused) return;
     this.cm.clear();
     this.lm.draw(this.cm.context);
   }
 
   public nextFrame(delta: number) {
+    if (this.paused) return;
     this.update(delta);
     this.draw();
     if (debug) this._debug(delta);

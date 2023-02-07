@@ -1,14 +1,15 @@
-import { ListenerMap, readEvent, set, unset } from "@/common/events";
+import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
 import {
   ControlAction,
   InputHandler,
   Joystick,
   KeyboardAndMouse,
+  PreferredInput,
 } from "@/common/controls";
 import { GameEvent } from "@/objects";
 import { setup } from "@/main/loop";
 
-const elements = {
+const elements: { [index: string]: string } = {
   playerHp: "player-hp",
   bossHp: "boss-hp",
   pauseMenu: "pause-menu",
@@ -25,13 +26,9 @@ const show = (elId: string) => changeDisplay(elId, true);
 const hide = (elId: string) => changeDisplay(elId, false);
 
 function hideAll() {
-  hide(elements.loading);
-  hide(elements.bossHp);
-  hide(elements.playerHp);
-  hide(elements.pauseMenu);
-  hide(elements.gameOverMenu);
-  hide(elements.gameEndMenu);
-  hide(elements.mainMenu);
+  for (const el in elements) {
+    hide(elements[el]);
+  }
 }
 
 type TriggerOnInput = {
@@ -46,11 +43,17 @@ function readInput(inputs: TriggerOnInput[]) {
 
   const interval = setInterval(() => {
     inputs.forEach((input) => {
-      const hit =
-        km.getState()[input.action]?.active ||
-        gp.getState()[input.action]?.active;
+      const joystickHit = gp.getState()[input.action]?.active;
+      const keyboardHit = km.getState()[input.action]?.active;
+      const hit = joystickHit || keyboardHit;
 
       if (hit) {
+        sessionStorage.setItem(
+          PreferredInput.Id,
+          joystickHit
+            ? PreferredInput.Joystick
+            : PreferredInput.KeyboardAndMouse
+        );
         km.destroy();
         gp.destroy();
         clearInterval(interval);
@@ -81,7 +84,24 @@ function quit() {
 
 function pause(ev: globalThis.Event) {
   const paused = readEvent<boolean>(ev);
-  paused ? show(elements.pauseMenu) : hide(elements.pauseMenu);
+  if (!paused) return;
+
+  show(elements.pauseMenu);
+
+  // this timeout is required because the gamepad
+  // is waaaaay to fast (and caused a pause loop)
+  setTimeout(() => {
+    readInput([
+      { action: "SELECT", fn: quit },
+      {
+        action: "START",
+        fn: () => {
+          trigger(GameEvent.pause, false);
+          hide(elements.pauseMenu);
+        },
+      },
+    ]);
+  }, 350);
 }
 
 function gameOver() {

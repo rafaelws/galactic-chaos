@@ -1,5 +1,5 @@
 import { Clock } from "@/common";
-import { atan2, hasCollided, toDeg } from "@/common/math";
+import { atan2, hasCollided, toRad } from "@/common/math";
 import { iterate } from "@/common/util";
 import { Boundaries, Coordinate, GameState } from "@/common/meta";
 import {
@@ -62,8 +62,11 @@ export class Player extends GameObject {
       this.rotation = -atan2(this.hitbox, to);
     } else {
       // -1 <= velocity <= 1
-      // TODO rotationSpeed for the gamepad
-      this.rotation += toDeg(velocity);
+      // TODO implement rotationSpeed for the gamepad?
+      // 0.01745 =~ Math.PI / 180
+      // 0.25 = 25% of the intended velocity
+      // this.rotationAngle += 0.01745 * velocity * 0.25;
+      this.rotation += toRad(velocity);
     }
   }
 

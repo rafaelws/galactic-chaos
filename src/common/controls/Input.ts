@@ -1,5 +1,11 @@
 import { Coordinate, Destroyable } from "@/common/meta";
 
+export enum PreferredInput {
+  Id = "@game.preferred-input",
+  KeyboardAndMouse = "KM",
+  Joystick = "GP",
+}
+
 export type ControlState = {
   [type in ControlAction]?: ControlStateData;
 };
