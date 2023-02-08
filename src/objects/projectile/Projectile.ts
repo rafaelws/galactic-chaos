@@ -5,8 +5,8 @@ import { ProjectileParams } from "./ProjectileParams";
 
 export class Projectile extends GameObject {
   private color: string;
-  private currentBrightness = 1;
-  private pulseClock: Clock;
+  private brightness = 1;
+  private brightnessClock: Clock;
   private direction: Coordinate = { x: 0, y: 0 };
 
   constructor(private readonly params: ProjectileParams) {
@@ -19,7 +19,7 @@ export class Projectile extends GameObject {
       ? "rgb(172, 57, 57)"
       : "rgb(48, 178, 233)";
 
-    this.pulseClock = new Clock(350);
+    this.brightnessClock = new Clock(350);
   }
 
   public get hitbox(): HitBox {
@@ -62,10 +62,10 @@ export class Projectile extends GameObject {
   public update(state: GameState) {
     super.update(state);
 
-    this.pulseClock.increment(state.delta);
-    if (!this.pulseClock.pending) {
-      this.currentBrightness = this.currentBrightness === 1 ? 2 : 1;
-      this.pulseClock.reset();
+    this.brightnessClock.increment(state.delta);
+    if (!this.brightnessClock.pending) {
+      this.brightness = this.brightness === 1 ? 2 : 1;
+      this.brightnessClock.reset();
     }
 
     if (!this.hasPosition)
@@ -86,9 +86,9 @@ export class Projectile extends GameObject {
     c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(this.params.angle);
     c.fillStyle = this.color;
-    // TODO verify if this hinders overall performance
-    // does not work on safari/ios
-    c.filter = `brightness(${this.currentBrightness})`;
+    // TODO if too many on screen, overall performance is harmed
+    // TODO check if it works on safari/ios
+    c.filter = `brightness(${this.brightness})`;
     c.fillRect(-this.cx, -this.cy, this.width, this.height);
     c.restore();
     if (this.debug) this.drawDebug(c);

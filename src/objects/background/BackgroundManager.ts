@@ -30,6 +30,7 @@ export class BackgroundManager implements Drawable {
           },
           radius: randInRange(0.15, 0.85),
           speed: randInRange(0.1, 5),
+          glowSpeed: randInRange(1000, 2000),
         })
       );
     }

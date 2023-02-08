@@ -40,3 +40,7 @@ export function hasCollided(a: HitBox, b: HitBox) {
   const radius = a.radius + b.radius;
   return x * x + y * y < radius * radius;
 }
+
+export function lerp(start: number, end: number, t: number) {
+  return start * (1 - t) + end * t;
+}
