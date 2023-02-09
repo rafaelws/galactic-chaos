@@ -1,28 +1,29 @@
 import { assets, getImage } from "@/common/asset";
 import { PlayerItem, Rock, Ship } from "@/objects";
+import { EffectType } from "@/objects/shared";
 
-export function firstStep() {
+export function _firstStep() {
   return [
     new PlayerItem({
       img: getImage(assets.img.player.items.heal),
       timeout: 100 * 1000,
       position: { x: 500, y: 500 },
       effect: {
-        type: "HEAL",
+        type: EffectType.heal,
         amount: 5,
       },
     }),
   ];
 }
 
-export function _firstStep() {
+export function firstStep() {
   const rock3 = getImage(assets.img.rock.brown[3]);
   return [
     new PlayerItem({
       img: getImage(assets.img.player.items.heal),
       position: { x: 500, y: 500 },
       effect: {
-        type: "HEAL",
+        type: EffectType.heal,
         amount: 5,
       },
     }),
@@ -42,7 +43,7 @@ export function _firstStep() {
       },
       spawnables: [
         new PlayerItem({
-          effect: { type: "HEAL", amount: 1 },
+          effect: { type: EffectType.heal, amount: 1 },
           img: getImage(assets.img.player.items.heal),
         }),
       ],

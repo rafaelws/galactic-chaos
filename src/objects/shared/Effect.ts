@@ -1,4 +1,10 @@
+export enum EffectType {
+  heal = "HEAL",
+  impact = "IMPACT",
+  projectile = "PROJECTILE",
+}
+
 export type Effect = {
-  type: "HEAL" | "SHIELD" | "IMPACT" | "PROJECTILE";
+  type: EffectType;
   amount: number;
 };

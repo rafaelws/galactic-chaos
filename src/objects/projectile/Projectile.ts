@@ -1,7 +1,12 @@
 import { Clock } from "@/common";
 import { Boundaries, Coordinate, GameState, HitBox } from "@/common/meta";
-import { Effect, GameObject } from "../shared";
+import { Effect, EffectType, GameObject } from "../shared";
 import { ProjectileParams } from "./ProjectileParams";
+
+export enum ProjectileColor {
+  enemy = "rgb(172, 57, 57)",
+  player = "rgb(48, 178, 233)",
+}
 
 export class Projectile extends GameObject {
   private color: string;
@@ -16,8 +21,8 @@ export class Projectile extends GameObject {
     this.color = params.color
       ? params.color
       : params.enemy
-      ? "rgb(172, 57, 57)"
-      : "rgb(48, 178, 233)";
+      ? ProjectileColor.enemy
+      : ProjectileColor.player;
 
     this.brightnessClock = new Clock(350);
   }
@@ -54,7 +59,7 @@ export class Projectile extends GameObject {
 
   public effect(): Effect {
     return {
-      type: "PROJECTILE",
+      type: EffectType.projectile,
       amount: this.params.power,
     };
   }
@@ -88,6 +93,7 @@ export class Projectile extends GameObject {
     c.fillStyle = this.color;
     // TODO if too many on screen, overall performance is harmed
     // TODO check if it works on safari/ios
+    // TODO find an alternative effect (e.g. alpha lerpin')
     c.filter = `brightness(${this.brightness})`;
     c.fillRect(-this.cx, -this.cy, this.width, this.height);
     c.restore();

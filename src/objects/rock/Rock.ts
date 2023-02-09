@@ -1,6 +1,6 @@
 import { toRad } from "@/common/math";
 import { GameState } from "@/common/meta";
-import { Effect, GameObject, Impact, Movement } from "../shared";
+import { Effect, EffectType, GameObject, Impact, Movement } from "../shared";
 import { RockParams } from "./RockParams";
 
 export class Rock extends GameObject {
@@ -22,16 +22,16 @@ export class Rock extends GameObject {
 
   public handleEffect(effect: Effect): void {
     const { type, amount } = effect;
-    if (type === "IMPACT") {
+    if (type === EffectType.impact) {
       this.hpLoss(amount - this.impact.resistence);
-    } else if (type === "PROJECTILE") {
+    } else if (type === EffectType.projectile) {
       this.hpLoss(amount);
     }
   }
 
   public effect(): Effect {
     return {
-      type: "IMPACT",
+      type: EffectType.impact,
       amount: this.impact.onImpact(),
     };
   }

@@ -6,7 +6,11 @@ import { Star } from "./Star";
 export class BackgroundManager implements Drawable {
   private stars: Star[] = [];
 
-  constructor(private howManyStars: number = 1000) {}
+  constructor(private howManyParticles = 1000) {}
+
+  public get isActive() {
+    return true;
+  }
 
   private genColor() {
     // between cyan and magenta
@@ -18,7 +22,7 @@ export class BackgroundManager implements Drawable {
 
   private createStars(state: GameState) {
     const length = this.stars.length;
-    const amount = this.howManyStars - length;
+    const amount = this.howManyParticles - length;
     const started = length > 0;
     for (let i = 0; i < amount; i++) {
       this.stars.push(

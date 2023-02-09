@@ -33,4 +33,5 @@ export type Concrete<T> = {
 export interface Drawable {
   update(state: GameState): void;
   draw(c: CanvasRenderingContext2D): void;
+  get isActive(): boolean;
 }
