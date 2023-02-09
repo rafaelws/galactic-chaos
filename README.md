@@ -1,45 +1,17 @@
-# NEXT (>doing)
+# TODO
 
-- [>] effects
-  - [>] effects and animations (e.g. hit/collision effect)
-  - [x] background: particles
 - [ ] audio
   - [ ] loader
   - [ ] manager
+  - [ ] ost
+  - [ ] ui effects
+  - [ ] gameplay effects?
   - [ ] reactive background (WebAudioAPI - verify browser support)
-- [ ] level design (design level1)
+- [ ] level design
 - [ ] improvements
-  - [x] circle collision calculation (without sqrt)
-  - [ ] projectile hitbox
-  - [ ] player hitbox
+  - [ ] projectile appearance (alpha lerp?) [performance concearn]
   - [ ] verify performance issues
-
-# TODO (> planned)
-
-- [>] gamepad
-- [>] assets
-
-  - [x] fonts: ui, hud (Orbitron)
-  - [>] effects and animations (e.g. hit/collision effect)
-  - [>] asset loader: audio
-  - [>] audio: ui
-  - [>] audio: ost
-
-- [ ] {low} projectile
-
-  - [x] appearance (image? bloom effect?)
-  - [>] {idea} deflect projectile on hit (that would be cool)
-  - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
-  - [ ] ability to change speed
-
-- [>] level design
-- [ ] {bug} handle screen resize on game objects
-- [ ] {low} overall status: time? score? enemies killed? shots fired?` (use LevelManager)
-- [ ] {low}{idea} ship: add 2 movement patterns ship movement (using sin, cos)
-- [ ] {low}{idea} canon / beam struggle (time event)
-- [ ] {low}{idea} syntax sugar: enemy profiles
-- [ ] {research} look for similar games (reference)
-- [ ] {research} look for svg copyleft/cc0 assets
+  - [ ] gampead mechanics
 
 # DONE
 
@@ -50,7 +22,8 @@
   - [ ] shield
   - [ ] special
   - [x] spawn items using event
-- [ ] assets:
+- [ ] assets
+  - [x] font (orbitron) [check Saira]
   - [x] loader and images (player, enemies, items...)
   - [ ] loader, audio and audio manager
 - [x] level manager
@@ -73,6 +46,11 @@
   - [x] overlap damage image when hp is depleated (player)
   - [x] gamepad
 
+- [x] effects
+
+  - [x] animations (e.g. projectile hit/collision effect)
+  - [x] background particles
+
 - [x] refac1 (maintainability iteration)
 
   - [x] clock utility
@@ -94,9 +72,28 @@
   - [x] {bug} fix level manager step function
 
 - misc
-  - [x] {improve} projectile appearance
+  - [x] {improvement} projectile appearance
   - [x] {bug|improve} gamepad (make it work interchangeably with keyboard/mouse)
     - [x] solution: on ANY menu, the game is notified of the preferred input
+  - [x] {improvement} circle collision calculation (without sqrt)
+
+---
+
+# Backlog
+
+- [ ] projectile
+  - [ ] {idea} deflect projectile on hit (that would be cool)
+  - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
+  - [ ] {mechanic} ability to change speed
+- [ ] {bug} handle screen resize on game objects
+- [ ] {low} overall status: time? score? enemies killed? shots fired?` (use LevelManager)
+- [ ] {low}{idea} ship: add 2 movement patterns ship movement (using sin, cos)
+- [ ] {low}{idea} canon / beam struggle (time event)
+- [ ] {low}{idea} syntax sugar: enemy profiles
+- [ ] {research} look for similar games (reference)
+- [ ] {research} look for svg copyleft/cc0 assets
+- [ ] improve projectile hitbox
+- [ ] improve player hitbox
 
 ---
 

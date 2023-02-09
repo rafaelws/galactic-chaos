@@ -4,9 +4,10 @@ import { EffectType } from "../shared";
 
 export enum ExplosionProfileName {
   playerImpact = "PLAYER_IMPACT",
-  playerProjectile = "PLAYER_PROJECTILE",
-  enemyProjectile = "ENEMY_PROJECTILE",
+  playerProjectileImpact = "PLAYER_PROJECTILE",
+  enemyProjectileImpact = "ENEMY_PROJECTILE",
   playerHeal = "PLAYER_HEAL",
+  projectileImpact = "PROJECTILE_IMPACT",
 }
 
 export function inferExplosionProfile(
@@ -18,7 +19,7 @@ export function inferExplosionProfile(
     case EffectType.impact:
       return ExplosionProfileName.playerImpact;
     case EffectType.projectile:
-      return ExplosionProfileName.enemyProjectile;
+      return ExplosionProfileName.enemyProjectileImpact;
   }
 }
 
@@ -33,12 +34,12 @@ export type ExplosionProfileMap = {
 };
 
 export const explosionProfiles: ExplosionProfileMap = {
-  [ExplosionProfileName.enemyProjectile]: {
+  [ExplosionProfileName.enemyProjectileImpact]: {
     color: ProjectileColor.enemy,
     amount: 25,
     boundaries: { height: 2, width: 10 },
   },
-  [ExplosionProfileName.playerProjectile]: {
+  [ExplosionProfileName.playerProjectileImpact]: {
     color: ProjectileColor.player,
     amount: 15,
     boundaries: { height: 1, width: 15 },
@@ -52,5 +53,10 @@ export const explosionProfiles: ExplosionProfileMap = {
     color: "#03C04A",
     amount: 100,
     boundaries: { height: 1, width: 20 },
+  },
+  [ExplosionProfileName.projectileImpact]: {
+    color: "#B13DBB",
+    amount: 75,
+    boundaries: { height: 3, width: 30 },
   },
 } as const;

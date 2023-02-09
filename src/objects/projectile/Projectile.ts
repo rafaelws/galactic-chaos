@@ -91,10 +91,9 @@ export class Projectile extends GameObject {
     c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(this.params.angle);
     c.fillStyle = this.color;
-    // TODO if too many on screen, overall performance is harmed
-    // TODO check if it works on safari/ios
-    // TODO find an alternative effect (e.g. alpha lerpin')
-    c.filter = `brightness(${this.brightness})`;
+    // FIXME performance hinderance
+    // FIXME find an alternative effect (e.g. alpha lerpin')
+    // c.filter = `brightness(${this.brightness})`;
     c.fillRect(-this.cx, -this.cy, this.width, this.height);
     c.restore();
     if (this.debug) this.drawDebug(c);

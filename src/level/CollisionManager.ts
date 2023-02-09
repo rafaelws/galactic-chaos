@@ -53,7 +53,9 @@ export class CollisionManager implements Drawable {
 
           this.addExplosion(
             gameObject.hitbox,
-            ExplosionProfileName.playerProjectile
+            type === EffectType.projectile
+              ? ExplosionProfileName.projectileImpact
+              : ExplosionProfileName.playerProjectileImpact
           );
         }
       }
