@@ -3,10 +3,11 @@ import { Boundaries, Destroyable, GameState } from "@/common/meta";
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
 import { ControlState } from "@/common/controls";
 import { assets, getImage, loadImages } from "@/common/asset";
-import { GameEvent, GameObject, Player } from "@/objects";
+import { BackgroundManager, GameEvent, GameObject, Player } from "@/objects";
 
 import { Level } from "./Level";
 import { firstLevel } from "./1";
+import { CollisionManager } from "./CollisionManager";
 
 export class LevelManager implements Destroyable {
   private loaded = false;
@@ -19,6 +20,8 @@ export class LevelManager implements Destroyable {
   private finalStep = -1;
 
   private player?: Player;
+  private background?: BackgroundManager;
+  private collision?: CollisionManager;
   private gameObjects: GameObject[] = [];
   private prependables: GameObject[] = [];
 
@@ -122,24 +125,30 @@ export class LevelManager implements Destroyable {
         this.prependables = [];
       }
 
+      if (!this.collision) this.collision = new CollisionManager(this.player);
+
+      if (!this.background) this.background = new BackgroundManager();
+      else this.background.update(state);
+
       const actives: GameObject[] = [];
       iterate(this.gameObjects, (gameObject) => {
         gameObject.update(state);
         if (gameObject.isActive) {
-          this.player?.checkCollision(gameObject);
+          this.collision?.check(gameObject);
           actives.push(gameObject);
         }
       });
       this.gameObjects = actives;
+      this.collision.update(state);
     }
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (this.loading || !this.loaded) return;
-
+    this.background?.draw(c);
     this.player?.draw(c);
     iterate(this.gameObjects, (gameObject) => gameObject.draw(c));
-
+    this.collision?.draw(c);
     if (this.gameObjects.length == 0) this.nexStep();
   }
 }

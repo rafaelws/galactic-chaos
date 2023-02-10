@@ -5,6 +5,7 @@ import { iterate } from "@/common/util";
 import {
   CyclicMovement,
   Effect,
+  EffectType,
   Fire,
   GameEvent,
   GameObject,
@@ -55,9 +56,9 @@ export class Boss extends GameObject {
 
   public handleEffect(effect: Effect): void {
     const { type, amount } = effect;
-    if (type === "IMPACT") {
+    if (type === EffectType.impact) {
       this.hpLoss(amount - this.impact.resistence);
-    } else if (type === "PROJECTILE") {
+    } else if (type === EffectType.projectile) {
       this.hpLoss(amount);
     }
     trigger(GameEvent.bossHp, { maxHp: this.maxHp, hp: this.hp });
@@ -65,7 +66,7 @@ export class Boss extends GameObject {
 
   public effect(): Effect {
     return {
-      type: "IMPACT",
+      type: EffectType.impact,
       amount: this.impact.onImpact(),
     };
   }

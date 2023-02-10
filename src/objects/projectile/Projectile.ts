@@ -1,12 +1,14 @@
-import { Clock } from "@/common";
 import { Boundaries, Coordinate, GameState, HitBox } from "@/common/meta";
-import { Effect, GameObject } from "../shared";
+import { Effect, EffectType, GameObject } from "../shared";
 import { ProjectileParams } from "./ProjectileParams";
+
+export enum ProjectileColor {
+  enemy = "rgb(172, 57, 57)",
+  player = "rgb(48, 178, 233)",
+}
 
 export class Projectile extends GameObject {
   private color: string;
-  private currentBrightness = 1;
-  private pulseClock: Clock;
   private direction: Coordinate = { x: 0, y: 0 };
 
   constructor(private readonly params: ProjectileParams) {
@@ -16,10 +18,8 @@ export class Projectile extends GameObject {
     this.color = params.color
       ? params.color
       : params.enemy
-      ? "rgb(172, 57, 57)"
-      : "rgb(48, 178, 233)";
-
-    this.pulseClock = new Clock(350);
+      ? ProjectileColor.enemy
+      : ProjectileColor.player;
   }
 
   public get hitbox(): HitBox {
@@ -31,10 +31,10 @@ export class Projectile extends GameObject {
     };
   }
 
-  protected startPoint(worldBoundaries: Boundaries): Coordinate {
+  protected startPoint(_: Boundaries): Coordinate {
     // TODO rethink dimensions
-    const width = worldBoundaries.width * 0.0025;
-    const height = worldBoundaries.height * 0.05;
+    const width = 3.5;
+    const height = 50;
     this.setDimensions({ width, height });
     return {
       x: this.params.start.x - this.cx,
@@ -54,19 +54,13 @@ export class Projectile extends GameObject {
 
   public effect(): Effect {
     return {
-      type: "PROJECTILE",
+      type: EffectType.projectile,
       amount: this.params.power,
     };
   }
 
   public update(state: GameState) {
     super.update(state);
-
-    this.pulseClock.increment(state.delta);
-    if (!this.pulseClock.pending) {
-      this.currentBrightness = this.currentBrightness === 1 ? 2 : 1;
-      this.pulseClock.reset();
-    }
 
     if (!this.hasPosition)
       this.position = this.startPoint(state.worldBoundaries);
@@ -86,9 +80,6 @@ export class Projectile extends GameObject {
     c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(this.params.angle);
     c.fillStyle = this.color;
-    // TODO verify if this hinders overall performance
-    // does not work on safari/ios
-    c.filter = `brightness(${this.currentBrightness})`;
     c.fillRect(-this.cx, -this.cy, this.width, this.height);
     c.restore();
     if (this.debug) this.drawDebug(c);

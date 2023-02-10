@@ -1,5 +1,5 @@
 import { Clock } from "@/common";
-import { atan2, hasCollided, toRad } from "@/common/math";
+import { atan2, toRad } from "@/common/math";
 import { iterate } from "@/common/util";
 import { Boundaries, Coordinate, GameState } from "@/common/meta";
 import {
@@ -8,7 +8,7 @@ import {
   ControlAction,
 } from "@/common/controls";
 import { Projectile } from "@/objects";
-import { Effect, GameEvent, GameObject } from "../shared";
+import { Effect, EffectType, GameEvent, GameObject } from "../shared";
 import { PlayerParams } from "./PlayerParams";
 import { trigger } from "@/common/events";
 
@@ -46,6 +46,10 @@ export class Player extends GameObject {
 
   public set controlState(controls: ControlState) {
     this.controls = controls;
+  }
+
+  public get ownProjectiles() {
+    return this.projectiles;
   }
 
   protected startPosition(worldBoundaries: Boundaries): Coordinate {
@@ -86,36 +90,16 @@ export class Player extends GameObject {
 
   public effect(): Effect {
     return {
-      type: "IMPACT",
+      type: EffectType.impact,
       amount: this.power,
     };
   }
 
-  public checkCollision(gameObject: GameObject) {
-    // verify player against gameObject
-    if (gameObject.isActive && hasCollided(this.hitbox, gameObject.hitbox)) {
-      const effect = gameObject.effect();
-      this.handleEffect(effect);
-      gameObject.handleEffect(effect.amount > 0 ? this.effect() : effect);
-    }
-
-    // verify projectiles against gameObject
-    iterate(this.projectiles, (p) => {
-      if (p.isActive && hasCollided(p.hitbox, gameObject.hitbox)) {
-        const { type } = gameObject.effect();
-        if (type === "IMPACT" || type === "PROJECTILE") {
-          gameObject.handleEffect(p.effect());
-          p.handleEffect(p.effect());
-        }
-      }
-    });
-  }
-
   public handleEffect(effect: Effect) {
-    if (effect.type === "HEAL") {
+    if (effect.type === EffectType.heal) {
       const hp = this.hp + effect.amount;
       this.hp = hp >= this.maxHp ? this.maxHp : hp;
-    } else if (effect.type === "PROJECTILE") {
+    } else if (effect.type === EffectType.projectile) {
       this.hpLoss(effect.amount);
     }
     trigger(GameEvent.playerHp, { maxHp: this.maxHp, hp: this.hp });
@@ -169,7 +153,13 @@ export class Player extends GameObject {
 
     // IMPORTANT
     state.player = this.hitbox;
-    iterate(this.projectiles, (p) => p.update(state));
+
+    let actives: Projectile[] = [];
+    iterate(this.projectiles, (p) => {
+      p.update(state);
+      if (p.isActive) actives.push(p);
+    });
+    this.projectiles = actives;
   }
 
   private drawDamageLayer(c: CanvasRenderingContext2D): void {

@@ -1,7 +1,14 @@
 import { R180 } from "@/common/math";
 import { GameState } from "@/common/meta";
 import { ShipParams } from "@/objects";
-import { Effect, Fire, GameObject, Impact, Movement } from "../shared";
+import {
+  Effect,
+  EffectType,
+  Fire,
+  GameObject,
+  Impact,
+  Movement,
+} from "../shared";
 
 export class Ship extends GameObject {
   private movement: Movement;
@@ -23,16 +30,16 @@ export class Ship extends GameObject {
 
   public handleEffect(effect: Effect): void {
     const { type, amount } = effect;
-    if (type === "IMPACT") {
+    if (type === EffectType.impact) {
       this.hpLoss(amount - this.impact.resistence);
-    } else if (type === "PROJECTILE") {
+    } else if (type === EffectType.projectile) {
       this.hpLoss(amount);
     }
   }
 
   public effect(): Effect {
     return {
-      type: "IMPACT",
+      type: EffectType.impact,
       amount: this.impact.onImpact(),
     };
   }

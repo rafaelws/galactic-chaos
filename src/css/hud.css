@@ -15,6 +15,7 @@
   background-color: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.35);
   transition: background-color 350ms;
+  animation: fade-in 500ms;
 }
 
 .hp {
