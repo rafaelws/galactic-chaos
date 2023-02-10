@@ -1,4 +1,3 @@
-import { Clock } from "@/common";
 import { Boundaries, Coordinate, GameState, HitBox } from "@/common/meta";
 import { Effect, EffectType, GameObject } from "../shared";
 import { ProjectileParams } from "./ProjectileParams";
@@ -10,8 +9,6 @@ export enum ProjectileColor {
 
 export class Projectile extends GameObject {
   private color: string;
-  private brightness = 1;
-  private brightnessClock: Clock;
   private direction: Coordinate = { x: 0, y: 0 };
 
   constructor(private readonly params: ProjectileParams) {
@@ -23,8 +20,6 @@ export class Projectile extends GameObject {
       : params.enemy
       ? ProjectileColor.enemy
       : ProjectileColor.player;
-
-    this.brightnessClock = new Clock(350);
   }
 
   public get hitbox(): HitBox {
@@ -36,10 +31,10 @@ export class Projectile extends GameObject {
     };
   }
 
-  protected startPoint(worldBoundaries: Boundaries): Coordinate {
+  protected startPoint(_: Boundaries): Coordinate {
     // TODO rethink dimensions
-    const width = worldBoundaries.width * 0.0025;
-    const height = worldBoundaries.height * 0.05;
+    const width = 3.5;
+    const height = 50;
     this.setDimensions({ width, height });
     return {
       x: this.params.start.x - this.cx,
@@ -67,12 +62,6 @@ export class Projectile extends GameObject {
   public update(state: GameState) {
     super.update(state);
 
-    this.brightnessClock.increment(state.delta);
-    if (!this.brightnessClock.pending) {
-      this.brightness = this.brightness === 1 ? 2 : 1;
-      this.brightnessClock.reset();
-    }
-
     if (!this.hasPosition)
       this.position = this.startPoint(state.worldBoundaries);
 
@@ -91,9 +80,6 @@ export class Projectile extends GameObject {
     c.translate(this.x + this.cx, this.y + this.cy);
     c.rotate(this.params.angle);
     c.fillStyle = this.color;
-    // FIXME performance hinderance
-    // FIXME find an alternative effect (e.g. alpha lerpin')
-    // c.filter = `brightness(${this.brightness})`;
     c.fillRect(-this.cx, -this.cy, this.width, this.height);
     c.restore();
     if (this.debug) this.drawDebug(c);

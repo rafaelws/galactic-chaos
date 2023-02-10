@@ -153,7 +153,13 @@ export class Player extends GameObject {
 
     // IMPORTANT
     state.player = this.hitbox;
-    iterate(this.projectiles, (p) => p.update(state));
+
+    let actives: Projectile[] = [];
+    iterate(this.projectiles, (p) => {
+      p.update(state);
+      if (p.isActive) actives.push(p);
+    });
+    this.projectiles = actives;
   }
 
   private drawDamageLayer(c: CanvasRenderingContext2D): void {

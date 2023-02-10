@@ -9,7 +9,7 @@
   - [ ] reactive background (WebAudioAPI - verify browser support)
 - [ ] level design
 - [ ] improvements
-  - [ ] projectile appearance (alpha lerp?) [performance concearn]
+  - [ ] projectile appearance [performance concearn using filter]
   - [ ] verify performance issues
   - [ ] gampead mechanics
 

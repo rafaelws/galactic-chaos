@@ -10,16 +10,16 @@ export class Star implements Drawable {
   private y: number;
   private height: number;
 
-  private brightness = 0.5;
-  private targetBrightness = 0.5;
-  private brightnessClock: Clock;
+  private alpha = 0.5;
+  private targetAlpha = 0.5;
+  private alphaClock: Clock;
 
   constructor(private params: StarParams) {
     this.x = params.position.x;
     this.y = params.position.y;
     this.height = params.radius * 2;
     this.y -= this.height;
-    this.brightnessClock = new Clock(params.glowSpeed || 1000);
+    this.alphaClock = new Clock(params.glowSpeed || 1000);
   }
 
   public get isActive() {
@@ -43,15 +43,15 @@ export class Star implements Drawable {
     this.y += delta * this.params.speed; // * this.acceleration
     this.active = this.y - this.height < state.worldBoundaries.height;
 
-    this.brightnessClock.increment(state.delta);
-    if (!this.brightnessClock.pending) {
-      this.targetBrightness = this.targetBrightness > 0.5 ? 0.5 : 1;
-      this.brightnessClock.reset();
+    if (this.alphaClock.pending) {
+      this.alphaClock.increment(state.delta);
+    } else {
+      this.targetAlpha = this.targetAlpha > 0.5 ? 0.5 : 1;
+      this.alphaClock.reset();
     }
 
-    if (this.brightness !== this.targetBrightness) {
-      this.brightness = lerp(this.brightness, this.targetBrightness, 0.01);
-      // this.brightness = this.targetBrightness;
+    if (this.alpha !== this.targetAlpha) {
+      this.alpha = lerp(this.alpha, this.targetAlpha, state.delta * 0.01);
     }
   }
 
@@ -60,12 +60,7 @@ export class Star implements Drawable {
     c.beginPath();
     c.arc(this.x, this.y, this.params.radius, 0, Math.PI * 2, false);
     c.fillStyle = this.params.color;
-    // shadowBlur and filter harms performance
-    // when having too many objects on screen
-    // c.shadowColor = this.params.color;
-    // c.shadowBlur = 5;
-    // c.filter = `brightness(${this.brightness})`;
-    c.globalAlpha = this.brightness;
+    c.globalAlpha = this.alpha;
     c.fill();
     c.closePath();
     c.restore();
