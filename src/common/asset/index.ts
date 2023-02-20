@@ -1,6 +1,8 @@
-export * from "./image/loader";
-import { img } from "./image/descriptor";
+export * from "./loader";
+import { img } from "./imageDescriptor";
+import { audio } from "./audioDescriptor";
 
 export const assets = {
   img,
+  audio,
 } as const;

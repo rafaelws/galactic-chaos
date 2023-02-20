@@ -1,15 +1,27 @@
 # TODO
 
+- [ ] new movement implementation
+- [ ] level design
 - [ ] audio
+
   - [ ] loader
   - [ ] manager
-  - [ ] ost
+  - [x] ost
+    - [x] main menu (loop)
+    - [x] game over (short)
+    - [ ] game end (long song)
+    - [x] pause (alternate loop)
+    - [x] level song (medium)
+    - [x] boss song (medium)
   - [ ] ui effects
-  - [ ] gameplay effects?
+    - [ ] pause
+    - [ ] (re)start
+  - [ ] gameplay sounds
+  - [ ] gameplay effects
   - [ ] reactive background (WebAudioAPI - verify browser support)
-- [ ] level design
+
 - [ ] improvements
-  - [ ] projectile appearance [performance concearn using filter]
+  - [x] projectile appearance [performance concearn using filter]
   - [ ] verify performance issues
   - [ ] gampead mechanics
 
