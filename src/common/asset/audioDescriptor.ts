@@ -3,7 +3,7 @@ export const audio = {
     main: "/audio/main-menu.ogg",
     pause: "/audio/pause.ogg",
     gameOver: "/audio/game-over.ogg",
-    gameEnd: "",
+    // gameEnd: "",
   },
   levels: [
     {

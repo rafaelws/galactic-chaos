@@ -1,4 +1,5 @@
-export * from "./loader";
+export * from "./imageLoader";
+export * from "./audioLoader";
 import { img } from "./imageDescriptor";
 import { audio } from "./audioDescriptor";
 

@@ -1,6 +1,8 @@
 import { assets, getImage } from "@/common/asset";
+import { trigger } from "@/common/events";
 import { PlayerItem, Rock, Ship } from "@/objects";
 import { EffectType } from "@/objects/shared";
+import { AudioEvent } from "@/ui/AudioManager";
 
 export function _firstStep() {
   return [
@@ -17,6 +19,10 @@ export function _firstStep() {
 }
 
 export function firstStep() {
+  trigger(AudioEvent.mainStream, {
+    filePath: assets.audio.levels[0].theme,
+  });
+
   const rock3 = getImage(assets.img.rock.brown[3]);
   return [
     new PlayerItem({

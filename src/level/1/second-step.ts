@@ -1,7 +1,9 @@
 import { assets, getImage } from "@/common/asset";
+import { trigger } from "@/common/events";
 import { randInRange } from "@/common/math";
 import { Boss, BossPhase, PlayerItem, Rock, Ship } from "@/objects";
-import { ImpactParams } from "@/objects/shared";
+import { EffectType, ImpactParams } from "@/objects/shared";
+import { AudioEvent } from "@/ui/AudioManager";
 
 function secondPhaseRocks(): Rock[] {
   let rocks = [];
@@ -53,7 +55,7 @@ function finalPhaseShips(): Ship[] {
   const newItem = () =>
     new PlayerItem({
       img: getImage(assets.img.player.items.heal),
-      effect: { type: "HEAL", amount: 5 },
+      effect: { type: EffectType.heal, amount: 5 },
       timeout: 10 * 1000,
     });
 
@@ -158,6 +160,10 @@ function phases(): BossPhase[] {
 }
 
 export function secondStep() {
+  trigger(AudioEvent.mainStream, {
+    filePath: assets.audio.levels[0].boss,
+  });
+
   return [
     new Boss({
       hp: 100,

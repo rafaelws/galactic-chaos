@@ -2,7 +2,7 @@ import { iterate } from "@/common/util";
 import { Boundaries, Destroyable, GameState } from "@/common/meta";
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
 import { ControlState } from "@/common/controls";
-import { assets, getImage, loadAssets } from "@/common/asset";
+import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
 import { BackgroundManager, GameEvent, GameObject, Player } from "@/objects";
 
 import { Level } from "./Level";
@@ -76,8 +76,8 @@ export class LevelManager implements Destroyable {
     const { images, audios } = this.level;
 
     await Promise.all([
-      ...loadAssets(audios || []),
-      ...loadAssets(images || []),
+      ...preloadAudio(audios || []),
+      ...preloadImages(images || []),
     ]);
 
     this.loaded = true;

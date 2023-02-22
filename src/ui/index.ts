@@ -1,13 +1,21 @@
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
-import {
-  ControlAction,
-  InputHandler,
-  Joystick,
-  KeyboardAndMouse,
-  PreferredInput,
-} from "@/common/controls";
 import { GameEvent } from "@/objects";
 import { setup } from "@/main/loop";
+import { AudioEvent, AudioManager } from "./AudioManager";
+import { assets, preloadAudio } from "@/common/asset";
+import { readInput } from "./readInput";
+
+const pauseTimeout = 350;
+
+const loop = setup();
+let audioManager: AudioManager | null = null;
+
+const listeners: ListenerMap = {
+  [GameEvent.quit]: quit,
+  [GameEvent.pause]: pause,
+  [GameEvent.gameOver]: gameOver,
+  [GameEvent.gameEnd]: gameEnd,
+};
 
 const elements: { [index: string]: string } = {
   playerHp: "player-hp",
@@ -31,46 +39,6 @@ function hideAll() {
   }
 }
 
-type TriggerOnInput = {
-  action: ControlAction;
-  fn: () => void;
-};
-
-function readInput(inputs: TriggerOnInput[]) {
-  const intervalTime = 50; // works better for gamepad
-  const km: InputHandler = new KeyboardAndMouse();
-  const gp: InputHandler = new Joystick();
-
-  const interval = setInterval(() => {
-    inputs.forEach((input) => {
-      const joystickHit = gp.getState()[input.action]?.active;
-      const keyboardHit = km.getState()[input.action]?.active;
-      const hit = joystickHit || keyboardHit;
-
-      if (hit) {
-        sessionStorage.setItem(
-          PreferredInput.Id,
-          joystickHit
-            ? PreferredInput.Joystick
-            : PreferredInput.KeyboardAndMouse
-        );
-        km.destroy();
-        gp.destroy();
-        clearInterval(interval);
-        input.fn();
-      }
-    });
-  }, intervalTime);
-}
-
-const loop = setup();
-const listeners: ListenerMap = {
-  [GameEvent.quit]: quit,
-  [GameEvent.pause]: pause,
-  [GameEvent.gameOver]: gameOver,
-  [GameEvent.gameEnd]: gameEnd,
-};
-
 function reset() {
   unset(listeners);
   loop.destroy();
@@ -86,10 +54,15 @@ function pause(ev: globalThis.Event) {
   const paused = readEvent<boolean>(ev);
   if (!paused) return;
 
+  trigger(AudioEvent.pause, {
+    filePath: assets.audio.menu.pause,
+    loop: true,
+  });
+
   show(elements.pauseMenu);
 
-  // this timeout is required because the gamepad
-  // is waaaaay to fast (and caused a pause loop)
+  // this timeout is required due to the gamepad
+  // being waaaaay to fast (and caused a pause loop)
   setTimeout(() => {
     readInput([
       { action: "SELECT", fn: quit },
@@ -97,14 +70,20 @@ function pause(ev: globalThis.Event) {
         action: "START",
         fn: () => {
           trigger(GameEvent.pause, false);
+          trigger(AudioEvent.resume);
           hide(elements.pauseMenu);
         },
       },
     ]);
-  }, 350);
+  }, pauseTimeout);
 }
 
 function gameOver() {
+  trigger(AudioEvent.mainStream, {
+    filePath: assets.audio.menu.gameOver,
+    loop: true,
+  });
+
   hideAll();
   loop.destroy();
   readInput([
@@ -130,8 +109,24 @@ function start() {
   loop.start();
 }
 
-export function mainMenu() {
+function setupAudio() {
+  if (!audioManager) audioManager = new AudioManager();
+
+  return Promise.all(
+    preloadAudio([
+      assets.audio.menu.main,
+      assets.audio.menu.pause,
+      assets.audio.menu.gameOver,
+    ])
+  );
+}
+
+export async function mainMenu() {
+  await setupAudio();
   hide(elements.loading);
+  trigger(AudioEvent.mainStream, {
+    filePath: assets.audio.menu.main,
+  });
   readInput([{ action: "START", fn: start }]);
   show(elements.mainMenu);
 }
