@@ -3,7 +3,7 @@ import { trigger } from "@/common/events";
 import { randInRange } from "@/common/math";
 import { Boss, BossPhase, PlayerItem, Rock, Ship } from "@/objects";
 import { EffectType, ImpactParams } from "@/objects/shared";
-import { AudioEvent } from "@/ui/AudioManager";
+import { AudioEvent } from "@/common";
 
 function secondPhaseRocks(): Rock[] {
   let rocks = [];

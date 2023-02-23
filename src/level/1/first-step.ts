@@ -2,7 +2,7 @@ import { assets, getImage } from "@/common/asset";
 import { trigger } from "@/common/events";
 import { PlayerItem, Rock, Ship } from "@/objects";
 import { EffectType } from "@/objects/shared";
-import { AudioEvent } from "@/ui/AudioManager";
+import { AudioEvent } from "@/common";
 
 export function _firstStep() {
   return [

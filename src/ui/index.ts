@@ -1,7 +1,7 @@
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
 import { GameEvent } from "@/objects";
 import { setup } from "@/main/loop";
-import { AudioEvent, AudioManager } from "./AudioManager";
+import { AudioEvent, AudioManager } from "@/common";
 import { assets, preloadAudio } from "@/common/asset";
 import { readInput } from "./readInput";
 
