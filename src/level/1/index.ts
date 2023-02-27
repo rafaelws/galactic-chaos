@@ -26,4 +26,5 @@ export const firstLevel: Level = {
     assets.img.ship.level1[1],
     assets.img.ship.level1[2],
   ],
+  audios: [assets.audio.levels[0].theme, assets.audio.levels[0].boss],
 };

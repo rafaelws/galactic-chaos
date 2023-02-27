@@ -151,9 +151,7 @@ export class Player extends GameObject {
       this.act(state, action, this.controls[action]!);
     });
 
-    // IMPORTANT
-    state.player = this.hitbox;
-
+    // TODO compare iterate vs filter vs raw for with index
     let actives: Projectile[] = [];
     iterate(this.projectiles, (p) => {
       p.update(state);

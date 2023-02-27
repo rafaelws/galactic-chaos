@@ -1,15 +1,26 @@
 # TODO
 
-- [ ] audio
-  - [ ] loader
-  - [ ] manager
-  - [ ] ost
-  - [ ] ui effects
-  - [ ] gameplay effects?
-  - [ ] reactive background (WebAudioAPI - verify browser support)
+- [ ] new movement implementation
 - [ ] level design
+- [ ] ui: configurations (enable audio, audio volume [ost, effects], bg density)
+- [ ] audio
+
+  - [x] loader
+  - [x] manager
+  - [x] ost
+    - [x] main menu (loop)
+    - [x] game over (short)
+    - [ ] game end (long song)
+    - [x] pause (alternate loop)
+    - [x] level song (medium)
+    - [x] boss song (medium)
+  - [ ] ui effects
+    - [ ] pause
+    - [ ] (re)start
+  - [ ] gameplay effects (collision, projectile, item)
+
 - [ ] improvements
-  - [ ] projectile appearance [performance concearn using filter]
+  - [x] projectile appearance [performance concearn using filter]
   - [ ] verify performance issues
   - [ ] gampead mechanics
 
@@ -31,6 +42,8 @@
 - [ ] {research} look for svg copyleft/cc0 assets
 - [ ] improve projectile hitbox
 - [ ] improve player hitbox
+- [ ] Web Audio API - fadeIn/Out with ramp w/ gain methods are not widely supported
+- [ ] reactive background (using WebAudioAPI. verify browser support)
 
 # DONE
 
@@ -39,10 +52,10 @@
 - [x] player items (basics)
   - [x] hp
   - [x] spawn items using event
-- [ ] assets
+- [x] assets
   - [x] font (orbitron) [check Saira]
   - [x] loader and images (player, enemies, items...)
-  - [ ] loader, audio and audio manager
+  - [x] loader, audio and audio manager
 - [x] level manager
 - [x] enemies
   - [x] rock

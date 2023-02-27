@@ -19,7 +19,6 @@ export interface GameState {
   get delta(): number;
   get worldBoundaries(): Boundaries;
   get player(): HitBox;
-  set player(hitbox: HitBox);
 }
 
 export interface Destroyable {

@@ -2,7 +2,7 @@ import { iterate } from "@/common/util";
 import { Boundaries, Destroyable, GameState } from "@/common/meta";
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
 import { ControlState } from "@/common/controls";
-import { assets, getImage, loadImages } from "@/common/asset";
+import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
 import { BackgroundManager, GameEvent, GameObject, Player } from "@/objects";
 
 import { Level } from "./Level";
@@ -70,17 +70,19 @@ export class LevelManager implements Destroyable {
 
   private async load(): Promise<void> {
     if (this.loading || this.loaded) return;
-
     this.loading = true;
+    // TODO trigger loading=true
 
-    // TODO audio
-    const { images } = this.level;
-    if (!!images) {
-      await Promise.all(loadImages(...images));
-    }
+    const { images, audios } = this.level;
+
+    await Promise.all([
+      ...preloadAudio(audios || []),
+      ...preloadImages(images || []),
+    ]);
 
     this.loaded = true;
     this.loading = false;
+    // TODO trigger loading=false
   }
 
   public update(
@@ -96,13 +98,6 @@ export class LevelManager implements Destroyable {
       return;
     }
 
-    let state: GameState = {
-      debug,
-      delta,
-      worldBoundaries,
-      player: { x: 0, y: 0, radius: 0 },
-    };
-
     if (!this.player) {
       this.player = new Player({
         img: getImage(assets.img.player.self),
@@ -112,12 +107,20 @@ export class LevelManager implements Destroyable {
           getImage(assets.img.player.damage[2]),
         ],
       });
+      if (!this.collision) this.collision = new CollisionManager(this.player);
+      if (!this.background) this.background = new BackgroundManager();
     } else {
-      // IMPORTANT: set controlState before calling player.update
+      // most operations are order dependent
+      const playerState: GameState = {
+        debug,
+        delta,
+        worldBoundaries,
+        player: { x: 0, y: 0, radius: 0 },
+      };
       this.player.controlState = controlState;
+      this.player.update(playerState);
 
-      // IMPORTANT: player.update sets playerHitbox to state (should be the first one to be called)
-      this.player.update(state);
+      const state = { ...playerState, player: this.player.hitbox };
 
       // verify performance impacts
       if (this.prependables.length > 0) {
@@ -125,10 +128,8 @@ export class LevelManager implements Destroyable {
         this.prependables = [];
       }
 
-      if (!this.collision) this.collision = new CollisionManager(this.player);
-
-      if (!this.background) this.background = new BackgroundManager();
-      else this.background.update(state);
+      // update/rendering order: background, player/gameObjects, collisions
+      this.background?.update(state);
 
       const actives: GameObject[] = [];
       iterate(this.gameObjects, (gameObject) => {
@@ -139,16 +140,22 @@ export class LevelManager implements Destroyable {
         }
       });
       this.gameObjects = actives;
-      this.collision.update(state);
+
+      this.collision?.update(state);
     }
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (this.loading || !this.loaded) return;
+
+    // update/rendering order: background, player/gameObjects, collisions
     this.background?.draw(c);
+
     this.player?.draw(c);
     iterate(this.gameObjects, (gameObject) => gameObject.draw(c));
+
     this.collision?.draw(c);
+
     if (this.gameObjects.length == 0) this.nexStep();
   }
 }
