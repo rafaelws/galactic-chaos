@@ -122,7 +122,7 @@ function setupAudio() {
 }
 
 export async function mainMenu() {
-  await setupAudio();
+  // await setupAudio();
   hide(elements.loading);
   trigger(AudioEvent.mainStream, {
     filePath: assets.audio.menu.main,

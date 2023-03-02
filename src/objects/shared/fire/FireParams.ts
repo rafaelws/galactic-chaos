@@ -22,7 +22,7 @@ export interface FireParams {
   /**
    * - SIMPLE: fire at `angle`
    * - ACCURATE: fire directly at player
-   * - LOOSE: fire at player w/ random deviation
+   * - LOOSE: fire at player w/ randomized +-25%
    * @default "SIMPLE" // (or none, if rate == 0)
    */
   precision?: "SIMPLE" | "LOOSE" | "ACCURATE";

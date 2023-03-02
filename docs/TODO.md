@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] new movement implementation
+- [ ] new/refac movement implementation
 - [ ] level design
 - [ ] ui: configurations (enable audio, audio volume [ost, effects], bg density)
 - [ ] audio
