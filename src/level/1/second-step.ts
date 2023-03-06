@@ -5,6 +5,17 @@ import { Boss, BossPhase, PlayerItem, Rock, Ship } from "@/objects";
 import { EffectType, ImpactParams } from "@/objects/shared";
 import { AudioEvent } from "@/common";
 
+export function secondStep() {
+  return [
+    new PlayerItem({
+      img: getImage(assets.img.player.items.heal),
+      effect: { type: EffectType.heal, amount: 5 },
+      timeout: 10 * 1000,
+    }),
+  ];
+}
+
+/*
 function secondPhaseRocks(): Rock[] {
   let rocks = [];
 
@@ -172,3 +183,4 @@ export function secondStep() {
     }),
   ];
 }
+*/

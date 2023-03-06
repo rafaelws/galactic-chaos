@@ -1,59 +1,120 @@
-import { toRad } from "@/common/math";
+import { lerpCoordinate, shaper } from "@/common/math";
 import { Boundaries, Concrete, Coordinate } from "@/common/meta";
-import { MovementParams } from "./MovementParams";
+import { Step, MovementNature, MovementParams } from "./MovementParams";
+
+/**
+4 params: starting x or y, length, amplitude, frequency
+uma coordenada se move de forma linear, e.g: x += delta * speed;
+a outra coordenada: y += Math.sin(x * length + frequency) * amplitude * delta * speed;
+*/
 
 export class Movement {
-  protected movement: Concrete<MovementParams>;
-  protected direction: Coordinate = { x: 0, y: 0 };
+  private readonly defaults = {
+    speed: 0.1,
+    nature: MovementNature.LINEAR,
+  };
 
-  constructor(params?: MovementParams) {
-    this.movement = {
-      start: { x: 0.5, y: 0 },
-      angle: 0,
-      speed: 0.1,
-      ...params,
-    };
+  private steps: Step[];
+  private stepIndex = -1;
+  // private repeatable: boolean;
+  // private reverseable: boolean;
+
+  private current: Concrete<Step> | null = null;
+  private next: Concrete<Step> | null = null;
+
+  private from: Coordinate | null = null;
+  private to: Coordinate | null = null;
+  private deltaSum: number = 0;
+
+  constructor(
+    private readonly delta: number,
+    private readonly world: Boundaries,
+    private readonly object: Boundaries,
+    params: MovementParams
+  ) {
+    this.steps = params.steps;
+    // this.repeatable = params?.repeatable || false;
+    // this.reverseable = params?.reverseable || false;
+    this.step();
   }
 
-  /**
-   * Calculates the position relative to the world boundaries.
-   *
-   * See `movement.start` on MovementParams.
-   *
-   * @param gameObject.dimensions
-   * @param world - GameState.worldBoundaries
-   * @returns startPosition (absolute x and y)
-   */
-  public startPosition(
-    { width, height }: Boundaries,
-    world: Boundaries
-  ): Coordinate {
-    const { angle, start } = this.movement;
+  private step() {
+    ++this.stepIndex;
 
-    let x = 0;
-    let y = 0;
+    /*
+    if (this.stepIndex >= this.steps.length)
+      console.log("current step is out of bounds");
 
-    if (start.y > 0) {
-      y = start.y * world.height;
-      x = angle > 0 ? -width : world.width;
-    } else {
-      y = -height;
-      x = start.x * world.width;
-    }
+    if (this.stepIndex + 1 >= this.steps.length)
+      console.log("next step is out of bounds");
+    */
+
+    this.current = null;
+    this.next = null;
+
+    const current = this.steps[this.stepIndex];
+    if (!!current)
+      this.current = {
+        ...this.defaults,
+        ...this.steps[this.stepIndex],
+      };
+
+    const nextIndex = this.stepIndex + 1;
+    const next = this.steps[nextIndex];
+    if (!!next)
+      this.next = {
+        ...this.defaults,
+        ...this.steps[nextIndex],
+      };
+
+    // console.log({ steps: this.steps, current: this.current, next: this.next });
+  }
+
+  public startPosition(): Coordinate {
+    const start = this.current?.position;
+    let { x, y } = this.worldPosition(start);
+
+    if (start?.x === 0) x -= this.object.width;
+    if (start?.y === 0) y -= this.object.height;
+
+    // console.log({ startPosition: { x, y } });
 
     return { x, y };
   }
 
-  public setDirection() {
-    const angle = toRad(this.movement.angle);
-    this.direction.x = Math.sin(angle);
-    this.direction.y = Math.cos(angle);
+  private worldPosition(target: Coordinate = { x: 0, y: 0 }) {
+    return { x: target.x * this.world.width, y: target.y * this.world.height };
   }
 
-  public increment({ x, y }: Coordinate, delta: number): Coordinate {
-    return {
-      x: x + this.direction.x * this.movement.speed * delta,
-      y: y + this.direction.y * this.movement.speed * delta,
-    };
+  private factor() {
+    this.deltaSum += this.delta;
+    return this.deltaSum * 0.0001 * (this.current?.speed || 1);
+  }
+
+  public update(): Coordinate {
+    if (this.from === null) {
+      this.from = this.startPosition();
+    }
+
+    if (this.to === null) {
+      this.to = this.worldPosition(this.next?.position);
+    }
+
+    // const t = shaper.easeInOutSine(this.factor());
+    const t = this.factor();
+    // console.log({ deltaSum: this.deltaSum, tFunction: t });
+    const { x, y } = lerpCoordinate(this.from, this.to, t);
+
+    // next movement
+    if (t >= 1) {
+      // console.log(">= 1");
+      this.from = null;
+      this.to = null;
+      this.deltaSum = 0;
+      this.step();
+      // return this.update({ x, y }, world, delta);
+    }
+    // TODO handle repeatable and reversable
+    return { x, y };
   }
 }

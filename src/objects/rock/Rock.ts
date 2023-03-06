@@ -5,7 +5,7 @@ import { RockParams } from "./RockParams";
 
 export class Rock extends GameObject {
   private rotationSpeed: number;
-  private movement: Movement;
+  private movement: Movement | null = null;
   private impact: Impact;
 
   constructor(private readonly params: RockParams) {
@@ -13,10 +13,6 @@ export class Rock extends GameObject {
 
     this.setDimensions(this.params.img);
     this.rotationSpeed = params.rotationSpeed || 0;
-
-    this.movement = new Movement(params.movement);
-    this.movement.setDirection();
-
     this.impact = new Impact(params.impact);
   }
 
@@ -38,17 +34,22 @@ export class Rock extends GameObject {
 
   public update(state: GameState): void {
     super.update(state);
-    if (!this.hasPosition)
-      this.position = this.movement.startPosition(
+    if (this.movement === null) {
+      this.movement = new Movement(
+        state.delta,
+        state.worldBoundaries,
         this.dimensions,
-        state.worldBoundaries
+        this.params.movement
       );
+    }
+
+    if (!this.hasPosition) this.position = this.movement.startPosition();
     if (!this.isReady) return;
 
     this.impact.update(state.delta);
 
     this.rotation += this.rotationSpeed;
-    this.position = this.movement.increment(this.position, state.delta);
+    this.position = this.movement.update();
 
     if (this.isOutbounds(state.worldBoundaries)) {
       this.active = false;

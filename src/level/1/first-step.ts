@@ -1,10 +1,12 @@
 import { assets, getImage } from "@/common/asset";
-import { trigger } from "@/common/events";
+import { toRad } from "@/common/math";
+// import { trigger } from "@/common/events";
 import { PlayerItem, Rock, Ship } from "@/objects";
 import { EffectType } from "@/objects/shared";
-import { AudioEvent } from "@/common";
+// import { AudioEvent } from "@/common";
 
-export function _firstStep() {
+export function firstStep() {
+  const img = getImage(assets.img.rock.brown[8]);
   return [
     new PlayerItem({
       img: getImage(assets.img.player.items.heal),
@@ -15,9 +17,22 @@ export function _firstStep() {
         amount: 5,
       },
     }),
+    new Rock({
+      img: img,
+      rotationSpeed: 1,
+      movement: {
+        steps: [
+          { position: { x: 0, y: 0 }, speed: 5 },
+          { position: { x: 0.2, y: 0.2 }, speed: 3 },
+          { position: { x: 0.8, y: 0.2 }, speed: 7 },
+          { position: { x: 1, y: 0 }, speed: 4 },
+        ],
+      },
+    }),
   ];
 }
 
+/*
 export function firstStep() {
   trigger(AudioEvent.mainStream, {
     filePath: assets.audio.levels[0].theme,
@@ -111,3 +126,4 @@ export function firstStep() {
     }),
   ];
 }
+*/

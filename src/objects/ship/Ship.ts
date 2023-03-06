@@ -11,7 +11,7 @@ import {
 } from "../shared";
 
 export class Ship extends GameObject {
-  private movement: Movement;
+  private movement: Movement | null = null;
   private impact: Impact;
   private fire: Fire;
 
@@ -20,11 +20,7 @@ export class Ship extends GameObject {
 
     this.setDimensions(this.params.img);
 
-    this.movement = new Movement(params.movement);
-    this.movement.setDirection();
-
     this.impact = new Impact(params.impact);
-
     this.fire = new Fire(params.fire);
   }
 
@@ -46,17 +42,22 @@ export class Ship extends GameObject {
 
   public update(state: GameState): void {
     super.update(state);
-    if (!this.hasPosition)
-      this.position = this.movement.startPosition(
+
+    if (this.movement === null)
+      this.movement = new Movement(
+        state.delta,
+        state.worldBoundaries,
         this.dimensions,
-        state.worldBoundaries
+        this.params.movement
       );
+
+    if (!this.hasPosition) this.position = this.movement.startPosition();
     if (!this.isReady) return;
 
     this.impact.update(state.delta);
 
     this.rotation = this.fire.update(this.hitbox, state);
-    this.position = this.movement.increment(this.position, state.delta);
+    this.position = this.movement.update();
 
     if (this.isOutbounds(state.worldBoundaries)) {
       this.active = false;

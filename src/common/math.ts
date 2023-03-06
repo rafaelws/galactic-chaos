@@ -41,6 +41,55 @@ export function hasCollided(a: HitBox, b: HitBox) {
   return x * x + y * y < radius * radius;
 }
 
-export function lerp(start: number, end: number, t: number) {
-  return start * (1 - t) + end * t;
+// unclamped
+export function ulerp(start: number, end: number, t: number) {
+  return start + (end - start) * t;
 }
+
+export function clamp01(n: number) {
+  if (n < 0) return 0;
+  else if (n > 1) return 1;
+  else return n;
+}
+
+export function lerp(start: number, end: number, t: number) {
+  // return start * (1 - t) + end * t;
+  // return end * t + start * (1.0 - t);
+
+  // return start + (end - start) * clamp01(t);
+  // return start * (1 - t) + end * t;
+
+  // return Math.pow(start * (end / start), t);
+  return start + (end - start) * clamp01(t);
+}
+
+export function lerpCoordinate(
+  start: Coordinate,
+  end: Coordinate,
+  t: number
+): Coordinate {
+  return {
+    x: lerp(start.x, end.x, t),
+    y: lerp(start.y, end.y, t),
+  };
+}
+
+export function ulerpCoordinate(
+  start: Coordinate,
+  end: Coordinate,
+  t: number
+): Coordinate {
+  return {
+    x: ulerp(start.x, end.x, t),
+    y: ulerp(start.y, end.y, t),
+  };
+}
+
+export const shaper = {
+  frameIndependent(t: number, delta: number) {
+    return 1.0 - Math.pow(t, delta);
+  },
+  easeInOutSine(t: number) {
+    return -(Math.cos(Math.PI * t) - 1) * 0.5;
+  },
+};

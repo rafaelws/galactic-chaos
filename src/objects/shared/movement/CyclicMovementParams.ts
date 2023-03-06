@@ -1,5 +1,5 @@
 import { Coordinate } from "@/common/meta";
-import { MovementParams } from "./MovementParams";
+import { MovementParamsLegacy } from "./MovementParamsLegacy";
 
 export interface Cycle {
   /**
@@ -25,7 +25,7 @@ export interface Cycle {
   // reverse?: boolean;
 }
 
-export interface CyclicMovementParams extends MovementParams {
+export interface CyclicMovementParams extends MovementParamsLegacy {
   /**
    * Describes a cyclic movement.
    */

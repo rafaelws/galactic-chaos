@@ -1,7 +1,8 @@
 # TODO
 
-- [ ] new/refac movement implementation
+- [ ] refac movement implementation
 - [ ] level design
+- [ ] replace player img
 - [ ] ui: configurations (enable audio, audio volume [ost, effects], bg density)
 - [ ] audio
 
@@ -14,10 +15,14 @@
     - [x] pause (alternate loop)
     - [x] level song (medium)
     - [x] boss song (medium)
+    - [ ] make longer versions of the theme songs\*
   - [ ] ui effects
     - [ ] pause
     - [ ] (re)start
   - [ ] gameplay effects (collision, projectile, item)
+
+- [ ] fix background movement and star glowing function (alpha lerp)
+- [ ] docs: think of using an interactive form to showcase game objects (see `dat.gui`)
 
 - [ ] improvements
   - [x] projectile appearance [performance concearn using filter]
