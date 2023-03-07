@@ -1,5 +1,5 @@
 import { iterate } from "@/common/util";
-import { Boundaries, Destroyable, GameState } from "@/common/meta";
+import { Boundaries, Destroyable, GameState, NoDebug } from "@/common/meta";
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
 import { ControlState } from "@/common/controls";
 import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
@@ -89,7 +89,7 @@ export class LevelManager implements Destroyable {
     delta: number,
     worldBoundaries: Boundaries,
     controlState: ControlState,
-    debug = false
+    debug = NoDebug
   ): void {
     if (this.loading) return;
 

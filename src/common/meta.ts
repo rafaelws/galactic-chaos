@@ -1,3 +1,6 @@
+import { DebugParams } from "./debug";
+export * from "./debug";
+
 export interface Boundaries {
   width: number;
   height: number;
@@ -15,7 +18,7 @@ export interface HitBox {
 }
 
 export interface GameState {
-  get debug(): boolean;
+  get debug(): DebugParams;
   get delta(): number;
   get worldBoundaries(): Boundaries;
   get player(): HitBox;

@@ -1,18 +1,20 @@
 # TODO
 
 - [ ] New Movement Implementation
-  - [x] lerp, quadratic bezier, cubic bezier
-  - [ ] draw debug lines
   - [ ] movement end
+  - [ ] repeatable
+  - [ ] Boss
   - [ ] multiple steps
   - [ ] reversible
-  - [ ] repeatable
   - [x] Rock
-  - [ ] Ship
-  - [ ] Boos
+  - [x] Ship
+  - [x] draw debug lines
+  - [x] lerp, quadratic bezier, cubic bezier
+- [x] granular debug for game objects
 - [ ] level design
 - [ ] replace player img
 - [ ] ui: configurations (enable audio, audio volume [ost, effects], bg density)
+- [ ] consider using lerp for alpha (star, explosion)
 - [ ] audio
 
   - [x] loader
@@ -30,7 +32,6 @@
     - [ ] (re)start
   - [ ] gameplay effects (collision, projectile, item)
 
-- [ ] fix background movement and star glowing function (alpha lerp)
 - [ ] docs: think of using an interactive form to showcase game objects (see `dat.gui`)
 
 - [ ] improvements

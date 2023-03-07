@@ -1,7 +1,12 @@
 import { Clock } from "@/common";
 import { atan2, toRad } from "@/common/math";
 import { iterate } from "@/common/util";
-import { Boundaries, Coordinate, GameState } from "@/common/meta";
+import {
+  Boundaries,
+  Coordinate,
+  GameObjectName,
+  GameState,
+} from "@/common/meta";
 import {
   ControlState,
   ControlStateData,
@@ -181,6 +186,6 @@ export class Player extends GameObject {
     this.drawDamageLayer(c);
     c.restore();
 
-    if (this.debug) this.drawDebug(c);
+    this.drawDebug(c, GameObjectName.Player);
   }
 }

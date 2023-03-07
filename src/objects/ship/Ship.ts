@@ -1,5 +1,5 @@
 import { R180 } from "@/common/math";
-import { GameState } from "@/common/meta";
+import { GameObjectName, GameState } from "@/common/meta";
 import { ShipParams } from "@/objects";
 import {
   Effect,
@@ -71,6 +71,6 @@ export class Ship extends GameObject {
     c.rotate(this.rotation - R180);
     c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
     c.restore();
-    if (this.debug) this.drawDebug(c);
+    this.drawDebug(c, GameObjectName.Ship);
   }
 }

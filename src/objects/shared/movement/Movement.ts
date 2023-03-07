@@ -2,12 +2,6 @@ import { coordinate } from "@/common/math";
 import { Boundaries, Concrete, Coordinate } from "@/common/meta";
 import { MovementNature, MovementParams, Step } from "./MovementParams";
 
-type CubicBezierCoefficientCache = {
-  a: Coordinate;
-  b: Coordinate;
-  c: Coordinate;
-};
-
 const zeroCoordinate = { x: 0, y: 0 } as const;
 const zeroCoordinatePoints = {
   p0: zeroCoordinate,
@@ -22,6 +16,12 @@ interface PointCache {
   p2: Coordinate;
   p3: Coordinate;
 }
+
+type CubicBezierCoefficientCache = {
+  a: Coordinate;
+  b: Coordinate;
+  c: Coordinate;
+};
 
 export class Movement {
   private readonly stepDefaults: Concrete<Step> = {
@@ -134,8 +134,6 @@ export class Movement {
   public update(): Coordinate {
     const t = this.factor();
     let c: Coordinate = zeroCoordinate;
-
-    console.log({ curr: this.pointCache });
 
     switch (this.current?.nature) {
       case MovementNature.Linear:

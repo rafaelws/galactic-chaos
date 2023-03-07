@@ -4,6 +4,8 @@ import {
   Boundaries,
   Coordinate,
   Drawable,
+  DebugParams,
+  GameObjectName,
   GameState,
   HitBox,
 } from "@/common/meta";
@@ -13,10 +15,19 @@ import { Effect } from "./Effect";
 import { GameObjectParams } from "./GameObjectParams";
 
 export abstract class GameObject implements Drawable {
+  private points: Coordinate[] = [];
+
   // status
   protected hp: number;
   protected active = true;
-  protected debug = false;
+
+  protected debug: DebugParams = {
+    entities: false,
+    global: false,
+    hitboxes: false,
+    statusText: false,
+    trajectory: false,
+  };
 
   // position
   protected x = NaN;
@@ -132,19 +143,36 @@ export abstract class GameObject implements Drawable {
     return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
   }
 
-  protected drawDebug(c: CanvasRenderingContext2D): void {
-    const _y = Math.floor(this.y);
-    const _x = Math.floor(this.x);
-    const rad = Math.floor(this.rotation);
-    c.strokeStyle = "red";
-    c.fillStyle = "white";
-    c.font = `${16}px sans-serif`;
+  protected drawDebug(c: CanvasRenderingContext2D, name: GameObjectName): void {
+    if (typeof this.debug.entities === "boolean") {
+      if (!this.debug.entities) return;
+    } else {
+      if (!this.debug.entities.includes(name)) return;
+    }
 
-    // c.textAlign = "center";
-    c.fillText(`[${_x}, ${_y}] ${rad}°`, _x, _y);
+    c.save();
+    if (this.debug.statusText) {
+      const _y = Math.floor(this.y);
+      const _x = Math.floor(this.x);
+      const rad = Math.floor(this.rotation);
+      c.fillStyle = "white";
+      c.font = `${16}px sans-serif`;
+      // c.textAlign = "center";
+      c.fillText(`[${_x}, ${_y}] ${rad}°`, _x, _y);
+    }
 
-    c.beginPath();
-    c.arc(this.hitbox.x, this.hitbox.y, this.hitbox.radius, 0, Math.PI * 2);
-    c.stroke();
+    if (this.debug.hitboxes) {
+      c.strokeStyle = "red";
+      c.beginPath();
+      c.arc(this.hitbox.x, this.hitbox.y, this.hitbox.radius, 0, Math.PI * 2);
+      c.stroke();
+    }
+
+    if (this.debug.trajectory) {
+      c.fillStyle = "white";
+      this.points.push(this.position);
+      iterate(this.points, (p) => c.fillRect(p.x, p.y, 1, 1));
+    }
+    c.restore();
   }
 }

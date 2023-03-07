@@ -1,4 +1,10 @@
-import { Boundaries, Coordinate, GameState, HitBox } from "@/common/meta";
+import {
+  Boundaries,
+  Coordinate,
+  GameObjectName,
+  GameState,
+  HitBox,
+} from "@/common/meta";
 import { Effect, EffectType, GameObject } from "../shared";
 import { ProjectileParams } from "./ProjectileParams";
 
@@ -82,6 +88,11 @@ export class Projectile extends GameObject {
     c.fillStyle = this.color;
     c.fillRect(-this.cx, -this.cy, this.width, this.height);
     c.restore();
-    if (this.debug) this.drawDebug(c);
+    this.drawDebug(
+      c,
+      this.params.enemy
+        ? GameObjectName.EnemyProjectile
+        : GameObjectName.PlayerProjectile
+    );
   }
 }

@@ -1,5 +1,5 @@
 import { Clock } from "@/common";
-import { Coordinate, GameState } from "@/common/meta";
+import { Coordinate, GameObjectName, GameState } from "@/common/meta";
 import { Effect, GameObject } from "../shared";
 import { PlayerItemParams } from "./PlayerItemParams";
 
@@ -66,6 +66,6 @@ export class PlayerItem extends GameObject {
   public draw(c: CanvasRenderingContext2D): void {
     if (!this.isReady || !this.showing) return;
     c.drawImage(this.params.img, this.x, this.y, this.width, this.height);
-    if (this.debug) this.drawDebug(c);
+    this.drawDebug(c, GameObjectName.PlayerItem);
   }
 }

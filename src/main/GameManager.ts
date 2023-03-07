@@ -5,14 +5,20 @@ import {
   Joystick,
   PreferredInput,
 } from "@/common/controls";
-import { Destroyable } from "@/common/meta";
+import { DebugParams, debugProfiles, Destroyable } from "@/common/meta";
 import { CanvasManager } from "./CanvasManager";
 import { LevelManager } from "@/level";
 import { hud } from "@/hud";
 import { Clock } from "@/common";
 import { GameEvent } from "@/objects";
 
-const debug = false;
+const debug: DebugParams = {
+  entities: [...debugProfiles.Enemies],
+  global: false,
+  hitboxes: true,
+  statusText: false,
+  trajectory: true,
+};
 
 export class GameManager implements Destroyable {
   private cm: CanvasManager;
@@ -93,10 +99,11 @@ export class GameManager implements Destroyable {
     if (this.paused) return;
     this.update(delta);
     this.draw();
-    if (debug) this._debug(delta);
+    this.debug(delta);
   }
 
-  private _debug(delta: number) {
+  private debug(delta: number) {
+    if (!debug.global) return;
     const c = this.cm.context;
     const { width, height } = this.cm.getBoundaries();
     const lines = [
