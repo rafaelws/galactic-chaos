@@ -11,7 +11,8 @@ export class Star implements Drawable {
   private height: number;
 
   private alpha = 0.5;
-  private targetAlpha = 0.5;
+  // private startAlpha = 0.5;
+  private endAlpha = 0.5;
   private alphaClock: Clock;
 
   constructor(private params: StarParams) {
@@ -40,18 +41,20 @@ export class Star implements Drawable {
       this.acceleration = lerp(this.acceleration, accelerate, delta);
     }
     */
+
     this.y += delta * this.params.speed; // * this.acceleration
     this.active = this.y - this.height < state.worldBoundaries.height;
 
+    // FIXME
     if (this.alphaClock.pending) {
       this.alphaClock.increment(state.delta);
     } else {
-      this.targetAlpha = this.targetAlpha > 0.5 ? 0.5 : 1;
+      this.endAlpha = this.endAlpha > 0.5 ? 0.5 : 1;
       this.alphaClock.reset();
     }
 
-    if (this.alpha !== this.targetAlpha) {
-      this.alpha = lerp(this.alpha, this.targetAlpha, state.delta * 0.01);
+    if (this.alpha !== this.endAlpha) {
+      this.alpha = lerp.i(this.alpha, this.endAlpha, state.delta * 0.01);
     }
   }
 

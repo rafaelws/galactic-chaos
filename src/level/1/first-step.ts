@@ -1,12 +1,10 @@
 import { assets, getImage } from "@/common/asset";
-import { toRad } from "@/common/math";
-// import { trigger } from "@/common/events";
 import { PlayerItem, Rock, Ship } from "@/objects";
-import { EffectType } from "@/objects/shared";
+import { EffectType, MovementNature } from "@/objects/shared";
+// import { trigger } from "@/common/events";
 // import { AudioEvent } from "@/common";
 
 export function firstStep() {
-  const img = getImage(assets.img.rock.brown[8]);
   return [
     new PlayerItem({
       img: getImage(assets.img.player.items.heal),
@@ -18,14 +16,33 @@ export function firstStep() {
       },
     }),
     new Rock({
-      img: img,
+      img: getImage(assets.img.rock.brown[8]),
       rotationSpeed: 1,
       movement: {
         steps: [
-          { position: { x: 0, y: 0 }, speed: 5 },
-          { position: { x: 0.2, y: 0.2 }, speed: 3 },
-          { position: { x: 0.8, y: 0.2 }, speed: 7 },
-          { position: { x: 1, y: 0 }, speed: 4 },
+          {
+            nature: MovementNature.CubicBezier,
+            p0: { x: 0, y: 0 },
+            p1: { x: 0.6, y: 0.5 },
+            p2: { x: 0.1, y: 0.8 },
+            p3: { x: 1, y: 0 },
+            speed: 1,
+          },
+        ],
+      },
+    }),
+    new Rock({
+      img: getImage(assets.img.rock.brown[4]),
+      rotationSpeed: 1,
+      movement: {
+        steps: [
+          {
+            nature: MovementNature.QuadraticBezier,
+            p0: { x: 0, y: 0.15 },
+            p1: { x: 0.5, y: 0.23 },
+            p2: { x: 0, y: 0.35 },
+            speed: 1,
+          },
         ],
       },
     }),

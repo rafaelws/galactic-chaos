@@ -1,30 +1,29 @@
 import { Coordinate } from "@/common/meta";
 
-export const MovementNature = {
-  LINEAR: "LINEAR",
-  // SIN: "SIN",
-} as const;
+// TODO ParabolaMovement?
 
-type MovementNatureType = keyof typeof MovementNature;
+export enum MovementNature {
+  Linear = "l",
+  QuadraticBezier = "qb",
+  CubicBezier = "cb",
+}
 
+/**
+ * Linear: requires p0 and p1
+ * QuadraticBezier: requires p0, p1(pivot) and p2
+ * CubicBezier: requires p0, p1(control point), p2(control point) and p3
+ */
 export interface Step {
-  position: Coordinate;
-
-  /**
-   * default=lerp, TODO=slerp, sin...
-   * @default MovementNature.LINEAR
-   */
-  nature?: MovementNatureType;
-
-  /**
-   * Overall velocity increment rate
-   * @default 0.1
-   */
+  nature: MovementNature;
+  p0: Coordinate;
+  p1: Coordinate;
+  p2?: Coordinate;
+  p3?: Coordinate;
   speed?: number;
 }
 
 export interface MovementParams {
   steps: Step[];
-  // repeatable?: boolean;
-  // reverseable?: boolean;
+  repeatable?: boolean;
+  reverseable?: boolean;
 }

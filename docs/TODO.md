@@ -1,6 +1,15 @@
 # TODO
 
-- [ ] refac movement implementation
+- [ ] New Movement Implementation
+  - [x] lerp, quadratic bezier, cubic bezier
+  - [ ] draw debug lines
+  - [ ] movement end
+  - [ ] multiple steps
+  - [ ] reversible
+  - [ ] repeatable
+  - [x] Rock
+  - [ ] Ship
+  - [ ] Boos
 - [ ] level design
 - [ ] replace player img
 - [ ] ui: configurations (enable audio, audio volume [ost, effects], bg density)
