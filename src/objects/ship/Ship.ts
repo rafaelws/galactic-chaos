@@ -59,7 +59,7 @@ export class Ship extends GameObject {
     this.rotation = this.fire.update(this.hitbox, state);
     this.position = this.movement.update();
 
-    if (this.isOutbounds(state.worldBoundaries)) {
+    if (this.isOutbounds(state.worldBoundaries) || this.movement.ended) {
       this.active = false;
     }
   }
@@ -67,7 +67,7 @@ export class Ship extends GameObject {
   public draw(c: CanvasRenderingContext2D): void {
     if (!this.isReady) return;
     c.save();
-    c.translate(this.x + this.cx, this.y + this.cy);
+    c.translate(this.x, this.y);
     c.rotate(this.rotation - R180);
     c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
     c.restore();

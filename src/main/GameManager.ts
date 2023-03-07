@@ -5,20 +5,23 @@ import {
   Joystick,
   PreferredInput,
 } from "@/common/controls";
-import { DebugParams, debugProfiles, Destroyable } from "@/common/meta";
+import { Destroyable, NoDebug } from "@/common/meta";
 import { CanvasManager } from "./CanvasManager";
 import { LevelManager } from "@/level";
 import { hud } from "@/hud";
 import { Clock } from "@/common";
 import { GameEvent } from "@/objects";
 
+const debug = NoDebug;
+/*
 const debug: DebugParams = {
-  entities: [...debugProfiles.Enemies],
-  global: false,
+  entities: true,
+  global: true,
   hitboxes: true,
-  statusText: false,
+  statusText: true,
   trajectory: true,
 };
+*/
 
 export class GameManager implements Destroyable {
   private cm: CanvasManager;

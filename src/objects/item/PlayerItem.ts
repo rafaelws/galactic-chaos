@@ -65,7 +65,13 @@ export class PlayerItem extends GameObject {
 
   public draw(c: CanvasRenderingContext2D): void {
     if (!this.isReady || !this.showing) return;
-    c.drawImage(this.params.img, this.x, this.y, this.width, this.height);
+    c.drawImage(
+      this.params.img,
+      this.x - this.cx,
+      this.y - this.cy,
+      this.width,
+      this.height
+    );
     this.drawDebug(c, GameObjectName.PlayerItem);
   }
 }

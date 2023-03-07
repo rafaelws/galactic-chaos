@@ -43,8 +43,8 @@ export class Projectile extends GameObject {
     const height = 50;
     this.setDimensions({ width, height });
     return {
-      x: this.params.start.x - this.cx,
-      y: this.params.start.y - this.cy,
+      x: this.params.start.x,
+      y: this.params.start.y,
     };
   }
 
@@ -83,7 +83,7 @@ export class Projectile extends GameObject {
   public draw(c: CanvasRenderingContext2D) {
     if (!this.active || !this.isReady) return;
     c.save();
-    c.translate(this.x + this.cx, this.y + this.cy);
+    c.translate(this.x, this.y);
     c.rotate(this.params.angle);
     c.fillStyle = this.color;
     c.fillRect(-this.cx, -this.cy, this.width, this.height);

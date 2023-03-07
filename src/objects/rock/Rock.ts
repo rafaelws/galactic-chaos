@@ -48,10 +48,10 @@ export class Rock extends GameObject {
 
     this.impact.update(state.delta);
 
-    this.rotation += this.rotationSpeed;
+    this.rotation += toRad(this.rotationSpeed);
     this.position = this.movement.update();
 
-    if (this.isOutbounds(state.worldBoundaries)) {
+    if (this.isOutbounds(state.worldBoundaries) || this.movement.ended) {
       this.active = false;
     }
   }
@@ -59,8 +59,8 @@ export class Rock extends GameObject {
   public draw(c: CanvasRenderingContext2D): void {
     if (!this.isReady) return;
     c.save();
-    c.translate(this.x + this.cx, this.y + this.cy);
-    c.rotate(toRad(this.rotation));
+    c.translate(this.x, this.y);
+    c.rotate(this.rotation);
     c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
     c.restore();
     this.drawDebug(c, GameObjectName.Rock);

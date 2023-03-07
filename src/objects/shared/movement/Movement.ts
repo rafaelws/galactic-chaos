@@ -26,7 +26,7 @@ type CubicBezierCoefficientCache = {
 export class Movement {
   private readonly stepDefaults: Concrete<Step> = {
     nature: MovementNature.Linear,
-    speed: 0.1,
+    speed: 1,
     ...zeroCoordinatePoints,
   };
 
@@ -39,9 +39,8 @@ export class Movement {
   private pointCache: PointCache = zeroCoordinatePoints;
   private cubicCache: CubicBezierCoefficientCache | null = null;
 
-  // TODO
-  // private repeatable: boolean;
-  // private reverseable: boolean;
+  private repeatable: boolean;
+  private hasEnded = false;
 
   constructor(
     private readonly delta: number,
@@ -50,15 +49,23 @@ export class Movement {
     params: MovementParams
   ) {
     this.steps = params.steps;
-    // this.repeatable = params?.repeatable || false;
-    // this.reverseable = params?.reverseable || false;
+    this.repeatable = params?.repeatable || false;
     this.step();
   }
 
-  private step() {
-    // TODO deal with prepeatable, reverseable
+  private step(): void {
     ++this.stepIndex;
     this.current = null;
+
+    if (this.stepIndex >= this.steps.length) {
+      if (this.repeatable) {
+        this.stepIndex = -1;
+        return this.step();
+      } else {
+        this.hasEnded = true;
+        return;
+      }
+    }
 
     const current = this.steps[this.stepIndex];
     if (!!current) {
@@ -73,10 +80,34 @@ export class Movement {
         p2: this.worldPosition(this.current.p2),
         p3: this.worldPosition(this.current.p3),
       };
+
+      // const { nature } = this.current;
+      // this.pointCache.p0 = this.offsetZero(this.current.p0, this.pointCache.p0);
+      /*
+      if (nature === MovementNature.Linear) {
+        this.pointCache.p1 = this.offset(this.current.p1, this.pointCache.p1);
+      } else if (nature === MovementNature.QuadraticBezier) {
+        this.pointCache.p2 = this.offset(this.current.p2, this.pointCache.p2);
+      } else {
+        this.pointCache.p3 = this.offset(this.current.p3, this.pointCache.p3);
+      }
+      */
     }
   }
 
+  public offset(relative: Coordinate, absolute: Coordinate) {
+    const { width, height } = this.object;
+    let x = absolute.x;
+    let y = absolute.y;
+    if (relative.x <= 0) x -= width;
+    if (relative.y <= 0) y -= height;
+    if (relative.x >= 1) x += width;
+    if (relative.y >= 1) y += height;
+    return { x, y };
+  }
+
   public startPosition(): Coordinate {
+    /*
     const start = this.current?.p0;
     let { x, y } = this.worldPosition(start);
 
@@ -84,6 +115,8 @@ export class Movement {
     if (start?.y === 0) y -= this.object.height;
 
     return { x, y };
+    */
+    return this.pointCache.p0;
   }
 
   private worldPosition(target: Coordinate = zeroCoordinate) {
@@ -154,5 +187,9 @@ export class Movement {
       this.step();
     }
     return c;
+  }
+
+  public get ended() {
+    return this.hasEnded;
   }
 }

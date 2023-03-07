@@ -4,7 +4,109 @@ import { EffectType, MovementNature } from "@/objects/shared";
 // import { trigger } from "@/common/events";
 // import { AudioEvent } from "@/common";
 
+const shipLinear = {
+  repeatable: true,
+  steps: [
+    {
+      speed: 0.5,
+      nature: MovementNature.Linear,
+      p0: { x: 0, y: 0.15 },
+      p1: { x: 1, y: 0.15 },
+    },
+    {
+      speed: 0.5,
+      nature: MovementNature.Linear,
+      p0: { x: 1, y: 0.15 },
+      p1: { x: 0, y: 0.15 },
+    },
+  ],
+};
+
+const cubic = {
+  repeatable: true,
+  steps: [
+    {
+      nature: MovementNature.CubicBezier,
+      // p0: { x: 0, y: 0 },
+      // p1: { x: 1, y: 1 },
+      // p2: { x: 0, y: 1 },
+      // p3: { x: 0, y: 1 },
+
+      // p0: { x: 0, y: 0.2 },
+      // p1: { x: 0.3, y: 0.4 },
+      // p2: { x: 0, y: 0.7 },
+      // p3: { x: 0.4, y: 0.3 },
+
+      p0: { x: 1, y: 0 },
+      p1: { x: 0, y: 1 },
+      p2: { x: 1, y: 1 },
+      p3: { x: 0, y: 0 },
+    },
+    /*
+    {
+      nature: MovementNature.CubicBezier,
+      p0: { x: 0.4, y: 0.3 },
+      p1: { x: 0.5, y: 0.7 },
+      p2: { x: 0, y: 0.2 },
+      p3: { x: 1, y: 0 },
+      speed: 8,
+    },
+    */
+  ],
+};
+
+const leftQuadratic = {
+  repeatable: true,
+  steps: [
+    {
+      nature: MovementNature.QuadraticBezier,
+      p0: { x: 0, y: 0.15 },
+      p1: { x: 0.5, y: 0.5 },
+      p2: { x: 1, y: 0.15 },
+      speed: 5,
+    },
+  ],
+};
+
+const crossScreenlinear = {
+  repeatable: true,
+  steps: [
+    {
+      nature: MovementNature.Linear,
+      p0: { x: 0, y: 0 },
+      p1: { x: 1, y: 1 },
+    },
+    {
+      nature: MovementNature.Linear,
+      p0: { x: 1, y: 1 },
+      p1: { x: 0, y: 0 },
+    },
+  ],
+};
+
 export function firstStep() {
+  const ship = new Ship({
+    img: getImage(assets.img.ship.level1[0]),
+    // movement: linear,
+    // movement: cubic,
+    movement: shipLinear,
+    fire: {
+      precision: "SIMPLE",
+      rate: 1000,
+    },
+  });
+
+  const quadraticRock = new Rock({
+    img: getImage(assets.img.rock.brown[4]),
+    rotationSpeed: 1,
+    movement: leftQuadratic,
+  });
+
+  const cubicRock = new Rock({
+    img: getImage(assets.img.rock.brown[8]),
+    movement: cubic,
+  });
+
   return [
     new PlayerItem({
       img: getImage(assets.img.player.items.heal),
@@ -15,37 +117,8 @@ export function firstStep() {
         amount: 5,
       },
     }),
-    new Rock({
-      img: getImage(assets.img.rock.brown[8]),
-      rotationSpeed: 1,
-      movement: {
-        steps: [
-          {
-            nature: MovementNature.CubicBezier,
-            p0: { x: 0, y: 0 },
-            p1: { x: 0.6, y: 0.5 },
-            p2: { x: 0.1, y: 0.8 },
-            p3: { x: 1, y: 0 },
-            speed: 1,
-          },
-        ],
-      },
-    }),
-    new Rock({
-      img: getImage(assets.img.rock.brown[4]),
-      rotationSpeed: 1,
-      movement: {
-        steps: [
-          {
-            nature: MovementNature.QuadraticBezier,
-            p0: { x: 0, y: 0.15 },
-            p1: { x: 0.5, y: 0.23 },
-            p2: { x: 0, y: 0.35 },
-            speed: 1,
-          },
-        ],
-      },
-    }),
+    ship,
+    // cubicRock,
   ];
 }
 

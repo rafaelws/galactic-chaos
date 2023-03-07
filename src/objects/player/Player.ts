@@ -20,8 +20,6 @@ import { trigger } from "@/common/events";
 export class Player extends GameObject {
   private maxHp = 10;
 
-  private relativePosition: Coordinate = { x: 0.5, y: 0.95 };
-
   private power = 1;
   private fireTimeout = 300; //ms
   private fireClock: Clock;
@@ -58,10 +56,9 @@ export class Player extends GameObject {
   }
 
   protected startPosition(worldBoundaries: Boundaries): Coordinate {
-    const { x, y } = this.relativePosition;
     return {
-      x: worldBoundaries.width * x - this.cx, // centered
-      y: worldBoundaries.height * y - this.height, // 5% above ground
+      x: worldBoundaries.width * 0.5, // centered
+      y: worldBoundaries.height * 0.95 - this.cy, // 5% above bottom
     };
   }
 
@@ -135,12 +132,12 @@ export class Player extends GameObject {
     }
 
     // stay inbounds
-    if (this.y < 0) this.y = 0;
-    if (this.y + this.height > state.worldBoundaries.height)
-      this.y = state.worldBoundaries.height - this.height;
-    if (this.x < 0) this.x = 0;
-    if (this.x + this.width > state.worldBoundaries.width)
-      this.x = state.worldBoundaries.width - this.width;
+    if (this.y < this.cy) this.y = this.cy;
+    if (this.y - this.cy + this.height > state.worldBoundaries.height)
+      this.y = state.worldBoundaries.height - this.height + this.cy;
+    if (this.x < this.cx) this.x = this.cx;
+    if (this.x - this.cx + this.width > state.worldBoundaries.width)
+      this.x = state.worldBoundaries.width - this.width + this.cx;
   }
 
   public update(state: GameState): void {
@@ -180,7 +177,7 @@ export class Player extends GameObject {
     iterate(this.projectiles, (p) => p.draw(c));
 
     c.save();
-    c.translate(this.x + this.cx, this.y + this.cy);
+    c.translate(this.x, this.y);
     c.rotate(this.rotation);
     c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
     this.drawDamageLayer(c);

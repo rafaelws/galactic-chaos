@@ -1,11 +1,10 @@
 # TODO
 
 - [ ] New Movement Implementation
-  - [ ] movement end
-  - [ ] repeatable
+  - [ ] fix movement end
   - [ ] Boss
-  - [ ] multiple steps
-  - [ ] reversible
+  - [x] multiple steps
+  - [x] repeatable
   - [x] Rock
   - [x] Ship
   - [x] draw debug lines
@@ -15,6 +14,7 @@
 - [ ] replace player img
 - [ ] ui: configurations (enable audio, audio volume [ost, effects], bg density)
 - [ ] consider using lerp for alpha (star, explosion)
+- [ ] refac FireParams to use enum?
 - [ ] audio
 
   - [x] loader
@@ -32,12 +32,17 @@
     - [ ] (re)start
   - [ ] gameplay effects (collision, projectile, item)
 
-- [ ] docs: think of using an interactive form to showcase game objects (see `dat.gui`)
+- [ ] docs: consider using an interactive form to showcase game objects (see `dat.gui`)
 
 - [ ] improvements
   - [x] projectile appearance [performance concearn using filter]
   - [ ] verify performance issues
   - [ ] gampead mechanics
+
+# Known Issues
+
+- Movement is instantiated once per object. If the world boundaries, frame time (monitor frequency) or object dimensions change, the movement will not behave as expected.
+- Dimensions are set once per object. If the world boundaries change (resize), the object's won't.
 
 # Backlog
 

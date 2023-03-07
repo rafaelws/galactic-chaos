@@ -25,5 +25,4 @@ export interface Step {
 export interface MovementParams {
   steps: Step[];
   repeatable?: boolean;
-  reverseable?: boolean;
 }

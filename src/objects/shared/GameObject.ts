@@ -13,6 +13,7 @@ import { iterate } from "@/common/util";
 import { GameEvent } from "./GameEvent";
 import { Effect } from "./Effect";
 import { GameObjectParams } from "./GameObjectParams";
+import { toDeg } from "@/common/math";
 
 export abstract class GameObject implements Drawable {
   private points: Coordinate[] = [];
@@ -140,7 +141,7 @@ export abstract class GameObject implements Drawable {
   }
 
   public get hitbox(): HitBox {
-    return { radius: this.cy, x: this.x + this.cx, y: this.y + this.cy };
+    return { radius: this.cy, x: this.x, y: this.y };
   }
 
   protected drawDebug(c: CanvasRenderingContext2D, name: GameObjectName): void {
@@ -154,11 +155,11 @@ export abstract class GameObject implements Drawable {
     if (this.debug.statusText) {
       const _y = Math.floor(this.y);
       const _x = Math.floor(this.x);
-      const rad = Math.floor(this.rotation);
+      const deg = Math.floor(toDeg(this.rotation));
       c.fillStyle = "white";
       c.font = `${16}px sans-serif`;
       // c.textAlign = "center";
-      c.fillText(`[${_x}, ${_y}] ${rad}°`, _x, _y);
+      c.fillText(`[${_x}, ${_y}] ${deg}°`, _x, _y);
     }
 
     if (this.debug.hitboxes) {
@@ -170,6 +171,9 @@ export abstract class GameObject implements Drawable {
 
     if (this.debug.trajectory) {
       c.fillStyle = "white";
+
+      if (this.points.length > 1000) this.points.splice(0, 500);
+
       this.points.push(this.position);
       iterate(this.points, (p) => c.fillRect(p.x, p.y, 1, 1));
     }
