@@ -1,3 +1,9 @@
+export enum FirePrecision {
+  Simple = "SIMPLE",
+  Loose = "LOOSE",
+  Accurate = "ACCURATE",
+}
+
 export interface FireParams {
   /**
    * Interval between shots in `ms`
@@ -20,10 +26,10 @@ export interface FireParams {
   angle?: number;
 
   /**
-   * - SIMPLE: fire at `angle`
-   * - ACCURATE: fire directly at player
-   * - LOOSE: fire at player w/ randomized +-25%
-   * @default "SIMPLE" // (or none, if rate == 0)
+   * - Simple: fire at `angle`
+   * - Accurate: fire directly at player
+   * - Loose: fire at player w/ randomized +-25%
+   * @default FirePrecision.Simple // (or none, if rate == 0)
    */
-  precision?: "SIMPLE" | "LOOSE" | "ACCURATE";
+  precision?: FirePrecision;
 }

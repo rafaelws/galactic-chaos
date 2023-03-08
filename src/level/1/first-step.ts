@@ -1,6 +1,6 @@
 import { assets, getImage } from "@/common/asset";
 import { PlayerItem, Rock, Ship } from "@/objects";
-import { EffectType, MovementNature } from "@/objects/shared";
+import { EffectType, FirePrecision, MovementNature } from "@/objects/shared";
 // import { trigger } from "@/common/events";
 // import { AudioEvent } from "@/common";
 
@@ -8,13 +8,13 @@ const shipLinear = {
   repeatable: true,
   steps: [
     {
-      speed: 0.5,
+      speed: 2,
       nature: MovementNature.Linear,
       p0: { x: 0, y: 0.15 },
       p1: { x: 1, y: 0.15 },
     },
     {
-      speed: 0.5,
+      speed: 2,
       nature: MovementNature.Linear,
       p0: { x: 1, y: 0.15 },
       p1: { x: 0, y: 0.15 },
@@ -41,6 +41,13 @@ const cubic = {
       p1: { x: 0, y: 1 },
       p2: { x: 1, y: 1 },
       p3: { x: 0, y: 0 },
+    },
+    {
+      nature: MovementNature.CubicBezier,
+      p0: { x: 0, y: 0 },
+      p1: { x: 1, y: 1 },
+      p2: { x: 0, y: 1 },
+      p3: { x: 0, y: 1 },
     },
     /*
     {
@@ -85,26 +92,61 @@ const crossScreenlinear = {
 };
 
 export function firstStep() {
-  const ship = new Ship({
-    img: getImage(assets.img.ship.level1[0]),
-    // movement: linear,
-    // movement: cubic,
-    movement: shipLinear,
-    fire: {
-      precision: "SIMPLE",
-      rate: 1000,
-    },
-  });
+  // trigger(AudioEvent.mainStream, {
+  //   filePath: assets.audio.levels[0].theme,
+  // });
 
   const quadraticRock = new Rock({
     img: getImage(assets.img.rock.brown[4]),
     rotationSpeed: 1,
     movement: leftQuadratic,
+    impact: {
+      power: 2,
+      resistance: 0, // if player.firePower == 1, then this one is indestructible
+      collisionTimeout: 200,
+    },
+    spawnables: [
+      new PlayerItem({
+        effect: { type: EffectType.heal, amount: 1 },
+        img: getImage(assets.img.player.items.heal),
+      }),
+    ],
   });
 
   const cubicRock = new Rock({
     img: getImage(assets.img.rock.brown[8]),
     movement: cubic,
+    impact: {
+      collisionTimeout: 1000,
+    },
+  });
+
+  const ship = new Ship({
+    img: getImage(assets.img.ship.level1[0]),
+    hp: 10,
+    spawnTimeout: 2000,
+    movement: cubic,
+    // movement: linear,
+    // movement: shipLinear,
+    // movement: leftQuadratic,
+    fire: {
+      precision: FirePrecision.Simple,
+      rate: 1000,
+    },
+  });
+
+  const ship2 = new Ship({
+    img: getImage(assets.img.ship.level1[0]),
+    movement: crossScreenlinear,
+    fire: {
+      precision: FirePrecision.Loose,
+      rate: 2000,
+    },
+  });
+
+  const ship3 = new Ship({
+    img: getImage(assets.img.ship.level1[1]),
+    movement: shipLinear,
   });
 
   return [
@@ -118,102 +160,9 @@ export function firstStep() {
       },
     }),
     ship,
-    // cubicRock,
+    cubicRock,
+    quadraticRock,
+    ship2,
+    ship3,
   ];
 }
-
-/*
-export function firstStep() {
-  trigger(AudioEvent.mainStream, {
-    filePath: assets.audio.levels[0].theme,
-  });
-
-  const rock3 = getImage(assets.img.rock.brown[3]);
-  return [
-    new PlayerItem({
-      img: getImage(assets.img.player.items.heal),
-      position: { x: 500, y: 500 },
-      effect: {
-        type: EffectType.heal,
-        amount: 5,
-      },
-    }),
-    new Rock({
-      img: rock3,
-      hp: 1,
-      rotationSpeed: -5,
-      movement: {
-        start: { x: 0.15, y: 0 },
-        speed: 0.03,
-        // angle: 60,
-      },
-      impact: {
-        power: 2,
-        resistance: 0, // if player.firePower == 1, then this one is indestructible
-        collisionTimeout: 200,
-      },
-      spawnables: [
-        new PlayerItem({
-          effect: { type: EffectType.heal, amount: 1 },
-          img: getImage(assets.img.player.items.heal),
-        }),
-      ],
-    }),
-    new Rock({
-      img: rock3,
-      hp: 5,
-      rotationSpeed: 10,
-      spawnTimeout: 1000,
-      movement: {
-        start: { x: 0, y: 0.5 },
-        angle: -60,
-      },
-      impact: {
-        collisionTimeout: 1000,
-      },
-    }),
-    new Rock({
-      img: rock3,
-      hp: 10,
-      spawnTimeout: 2000,
-      movement: {
-        start: { x: 0.5, y: 0 },
-        angle: 60,
-        speed: 0.2,
-      },
-    }),
-    new Ship({
-      img: getImage(assets.img.ship.level1[0]),
-      spawnTimeout: 1000,
-      movement: {
-        angle: 15,
-        start: { x: 0.5, y: 0 },
-        speed: 0.2,
-      },
-      fire: {
-        rate: 500,
-        // angle: 55,
-        // precision: "SIMPLE",
-      },
-    }),
-    new Ship({
-      img: getImage(assets.img.ship.level1[1]),
-      spawnTimeout: 0,
-      movement: {
-        angle: 15,
-        start: { x: 0.1, y: 0 },
-        speed: 0.5,
-      },
-      fire: {
-        rate: 350,
-        // angle: 50,
-        precision: "ACCURATE",
-      },
-      impact: {
-        resistance: 1, // if player.firePower === 1, then this one is indestructible
-        collisionTimeout: 1000, // TODO
-      },
-    }),
-  ];
-}
-*/

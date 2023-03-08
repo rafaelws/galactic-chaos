@@ -1,7 +1,7 @@
 # TODO
 
 - [ ] New Movement Implementation
-  - [ ] Boss
+  - [>] Boss (needs testing)
   - [x] fix movement end
   - [x] multiple steps
   - [x] repeatable

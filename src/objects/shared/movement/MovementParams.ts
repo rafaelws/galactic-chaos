@@ -13,7 +13,7 @@ export enum MovementNature {
  * QuadraticBezier: requires p0, p1(pivot) and p2
  * CubicBezier: requires p0, p1(control point), p2(control point) and p3
  */
-export interface Step {
+export interface MovementStep {
   nature: MovementNature;
   p0: Coordinate;
   p1: Coordinate;
@@ -23,6 +23,6 @@ export interface Step {
 }
 
 export interface MovementParams {
-  steps: Step[];
+  steps: MovementStep[];
   repeatable?: boolean;
 }

@@ -172,7 +172,7 @@ export abstract class GameObject implements Drawable {
     if (this.debug.trajectory) {
       c.fillStyle = "white";
 
-      if (this.points.length > 1000) this.points.splice(0, 500);
+      if (this.points.length > 2000) this.points.splice(0, 500);
 
       this.points.push(this.position);
       iterate(this.points, (p) => c.fillRect(p.x, p.y, 1, 1));

@@ -1,6 +1,6 @@
 import { coordinate } from "@/common/math";
 import { Boundaries, Concrete, Coordinate } from "@/common/meta";
-import { MovementNature, MovementParams, Step } from "./MovementParams";
+import { MovementNature, MovementParams, MovementStep } from "./MovementParams";
 
 const zeroCoordinate = { x: 0, y: 0 } as const;
 const zeroCoordinatePoints = {
@@ -24,16 +24,16 @@ type CubicBezierCoefficientCache = {
 };
 
 export class Movement {
-  private readonly stepDefaults: Concrete<Step> = {
+  private readonly stepDefaults: Concrete<MovementStep> = {
     nature: MovementNature.Linear,
     speed: 1,
     ...zeroCoordinatePoints,
   };
 
-  private steps: Step[];
+  private steps: MovementStep[];
   private stepIndex = -1;
 
-  private current: Concrete<Step> | null = null;
+  private current: Concrete<MovementStep> | null = null;
   private deltaSum: number = 0;
 
   private pointCache: PointCache = zeroCoordinatePoints;

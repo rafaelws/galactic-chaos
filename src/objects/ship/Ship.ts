@@ -56,7 +56,7 @@ export class Ship extends GameObject {
 
     this.impact.update(state.delta);
 
-    this.rotation = this.fire.update(this.hitbox, state);
+    this.rotation = this.fire.update(state.delta, state.player, this.hitbox);
     this.position = this.movement.update();
 
     if (this.isOutbounds(state.worldBoundaries) || this.movement.ended) {
