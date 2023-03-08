@@ -1,5 +1,5 @@
 import { R180 } from "@/common/math";
-import { GameState } from "@/common/meta";
+import { GameObjectName, GameState } from "@/common/meta";
 import { ShipParams } from "@/objects";
 import {
   Effect,
@@ -11,7 +11,7 @@ import {
 } from "../shared";
 
 export class Ship extends GameObject {
-  private movement: Movement;
+  private movement: Movement | null = null;
   private impact: Impact;
   private fire: Fire;
 
@@ -20,11 +20,7 @@ export class Ship extends GameObject {
 
     this.setDimensions(this.params.img);
 
-    this.movement = new Movement(params.movement);
-    this.movement.setDirection();
-
     this.impact = new Impact(params.impact);
-
     this.fire = new Fire(params.fire);
   }
 
@@ -46,19 +42,24 @@ export class Ship extends GameObject {
 
   public update(state: GameState): void {
     super.update(state);
-    if (!this.hasPosition)
-      this.position = this.movement.startPosition(
+
+    if (this.movement === null)
+      this.movement = new Movement(
+        state.delta,
+        state.worldBoundaries,
         this.dimensions,
-        state.worldBoundaries
+        this.params.movement
       );
+
+    if (!this.hasPosition) this.position = this.movement.startPosition();
     if (!this.isReady) return;
 
     this.impact.update(state.delta);
 
-    this.rotation = this.fire.update(this.hitbox, state);
-    this.position = this.movement.increment(this.position, state.delta);
+    this.rotation = this.fire.update(state.delta, state.player, this.hitbox);
+    this.position = this.movement.update();
 
-    if (this.isOutbounds(state.worldBoundaries)) {
+    if (this.isOutbounds(state.worldBoundaries) || this.movement.ended) {
       this.active = false;
     }
   }
@@ -66,10 +67,10 @@ export class Ship extends GameObject {
   public draw(c: CanvasRenderingContext2D): void {
     if (!this.isReady) return;
     c.save();
-    c.translate(this.x + this.cx, this.y + this.cy);
+    c.translate(this.x, this.y);
     c.rotate(this.rotation - R180);
     c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
     c.restore();
-    if (this.debug) this.drawDebug(c);
+    this.drawDebug(c, GameObjectName.Ship);
   }
 }

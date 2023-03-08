@@ -1,3 +1,6 @@
+import { DebugParams } from "./debug";
+export * from "./debug";
+
 export interface Boundaries {
   width: number;
   height: number;
@@ -8,6 +11,10 @@ export interface Coordinate {
   y: number;
 }
 
+export function c(x: number, y: number): Coordinate {
+  return { x, y };
+}
+
 export interface HitBox {
   x: number;
   y: number;
@@ -15,7 +22,7 @@ export interface HitBox {
 }
 
 export interface GameState {
-  get debug(): boolean;
+  get debug(): DebugParams;
   get delta(): number;
   get worldBoundaries(): Boundaries;
   get player(): HitBox;

@@ -1,8 +1,9 @@
 # TODO
 
-- [ ] new/refac movement implementation
-- [ ] level design
 - [ ] ui: configurations (enable audio, audio volume [ost, effects], bg density)
+- [ ] level design
+- [ ] replace player img
+- [ ] consider using lerp for alpha (star, explosion)
 - [ ] audio
 
   - [x] loader
@@ -14,15 +15,24 @@
     - [x] pause (alternate loop)
     - [x] level song (medium)
     - [x] boss song (medium)
-  - [ ] ui effects
+    - [ ] make longer versions of the theme songs\*
+  - [>] ui effects
     - [ ] pause
     - [ ] (re)start
-  - [ ] gameplay effects (collision, projectile, item)
+  - [>] gameplay effects (collision, projectile, item)
 
 - [ ] improvements
+
   - [x] projectile appearance [performance concearn using filter]
   - [ ] verify performance issues
   - [ ] gampead mechanics
+
+- [ ] docs: consider using an interactive form to showcase game objects (see `dat.gui`)
+
+# Known Issues
+
+- Movement is instantiated once per object. If the world boundaries, frame time (monitor frequency) or object dimensions change, the movement will not behave as expected.
+- Dimensions are set once per object. If the world boundaries change (resize), the object's won't.
 
 # Backlog
 
@@ -32,7 +42,7 @@
 - [ ] projectile
   - [ ] {idea} deflect projectile on hit (that would be cool)
   - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
-  - [ ] {mechanic} ability to change speed
+  - [ ] {idea} projectile upgrades (size, amount, speed, rate)
 - [ ] {bug} handle screen resize on game objects
 - [ ] {low} overall status: time? score? enemies killed? shots fired?` (use LevelManager)
 - [ ] {low}{idea} ship: add 2 movement patterns ship movement (using sin, cos)
@@ -102,7 +112,22 @@
   - [x] {bug} fix level manager step function
 
 - misc
+
   - [x] {improvement} projectile appearance
   - [x] {bug|improve} gamepad (make it work interchangeably with keyboard/mouse)
     - [x] solution: on ANY menu, the game is notified of the preferred input
   - [x] {improvement} circle collision calculation (without sqrt)
+
+- [x] New Movement Implementation
+
+  - [x] "fluent" way to create movement params
+  - [x] Boss
+  - [x] fix movement end
+  - [x] multiple steps
+  - [x] repeatable
+  - [x] Rock
+  - [x] Ship
+  - [x] draw debug lines
+  - [x] lerp, quadratic bezier, cubic bezier
+
+- [x] granular debug for game objects

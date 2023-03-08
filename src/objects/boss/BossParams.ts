@@ -1,9 +1,9 @@
 import {
-  CyclicMovementParams,
   FireParams,
   GameObject,
   GameObjectParams,
   ImpactParams,
+  MovementParams,
 } from "../shared";
 
 export type BossNextPhaseParams = {
@@ -16,11 +16,11 @@ export type BossNextPhaseFn = {
 };
 
 export type BossPhase = {
-  nextPhaseCondition: BossNextPhaseFn;
+  movement: MovementParams;
   fire?: FireParams;
-  cyclicMovement?: CyclicMovementParams;
   impact?: ImpactParams;
   spawnables?: GameObject[];
+  nextPhaseCondition: BossNextPhaseFn;
 };
 
 export interface BossParams extends GameObjectParams {

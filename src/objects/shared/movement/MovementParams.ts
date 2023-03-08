@@ -1,39 +1,28 @@
 import { Coordinate } from "@/common/meta";
 
-export interface MovementParams {
-  /**
-   * Relative measure (will be calculated against worldBoundaries)
-   *
-   * Remember to:
-   *  - spawn outside the canvas
-   *  - set `movement.angle` accordingly (positive or negative)
-   *  - `x` and `y` are decimals (0 <= `n` <= 1)
-   *  - `x`: 0 is left, 1 is right
-   *  - `y`: 0 is top, 1 is bottom
-   *
-   * When setting `y`:
-   *  - `x` should be either 0 or 1
-   *
-   * When setting `x`:
-   *  - `y` should be ALWAYS 0
-   *
-   * @default { x: 0.5, y: 0 }
-   */
-  start?: Coordinate;
+// TODO ParabolaMovement?
 
-  /**
-   * Spawn angle in degrees.
-   *
-   * Advised to be set between -90 and 90
-   * (negative=left, positive=right)
-   *
-   * @default 0
-   */
-  angle?: number;
+export enum MovementNature {
+  Linear = "l",
+  QuadraticBezier = "qb",
+  CubicBezier = "cb",
+}
 
-  /**
-   * Velocity multiplier (`0 < speed <= 1`)
-   * @default 0.1
-   */
+/**
+ * Linear: requires p0 and p1
+ * QuadraticBezier: requires p0, p1(pivot) and p2
+ * CubicBezier: requires p0, p1(control point), p2(control point) and p3
+ */
+export interface MovementStep {
+  nature: MovementNature;
+  p0: Coordinate;
+  p1: Coordinate;
+  p2?: Coordinate;
+  p3?: Coordinate;
   speed?: number;
+}
+
+export interface MovementParams {
+  steps: MovementStep[];
+  repeatable?: boolean;
 }

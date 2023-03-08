@@ -8,7 +8,7 @@ import {
 export interface ShipParams extends GameObjectParams {
   img: HTMLImageElement;
 
-  movement?: MovementParams;
+  movement: MovementParams;
   impact?: ImpactParams;
   fire?: FireParams;
 }

@@ -41,6 +41,95 @@ export function hasCollided(a: HitBox, b: HitBox) {
   return x * x + y * y < radius * radius;
 }
 
-export function lerp(start: number, end: number, t: number) {
-  return start * (1 - t) + end * t;
+export function clamp(t: number, min: number, max: number) {
+  if (t < min) return min;
+  else if (t > max) return max;
+  else return t;
 }
+
+export function clamp01(t: number) {
+  if (t < 0) return 0;
+  else if (t > 1) return 1;
+  else return t;
+}
+
+export const lerp = {
+  // precise, unclamped
+  p(a: number, b: number, t: number) {
+    return (1 - t) * a + t * b;
+  },
+  // imprecise, unclamped
+  i(a: number, b: number, t: number) {
+    return a + t * (b - a);
+  },
+  // precise, clamp01
+  pc01(a: number, b: number, t: number) {
+    return this.p(a, b, clamp01(t));
+  },
+  // imprecise, clamp01
+  ic01(a: number, b: number, t: number) {
+    return this.i(a, b, clamp01(t));
+  },
+  // precise, clamped
+  pc(a: number, b: number, t: number, min: number, max: number) {
+    return this.p(a, b, clamp(t, min, max));
+  },
+  // imprecise, clamped
+  ic(a: number, b: number, t: number, min: number, max: number) {
+    return this.i(a, b, clamp(t, min, max));
+  },
+  // shapes of `t`
+  tShaper: {
+    easeInOutSine(t: number) {
+      return -(Math.cos(Math.PI * t) - 1) * 0.5;
+    },
+    parabola(t: number, k: number) {
+      return Math.pow(4 * t * (1 - t), k);
+    },
+  },
+};
+
+export const coordinate = {
+  /**
+   * precise, clamp01
+   */
+  lerp(start: Coordinate, end: Coordinate, t: number): Coordinate {
+    return {
+      x: lerp.pc01(start.x, end.x, t),
+      y: lerp.pc01(start.y, end.y, t),
+    };
+  },
+
+  /**
+   * sum n coordinates
+   */
+  sum(...coords: Coordinate[]) {
+    let x = 0;
+    let y = 0;
+
+    for (let i = 0; i < coords.length; i++) {
+      const c = coords[i];
+      x += c.x;
+      y += c.y;
+    }
+
+    return { x, y };
+  },
+
+  /**
+   * Multiplies x and y by the `f` factor
+   * @param c - the coordinate
+   * @param f - the factor
+   * @returns the coordinate multiplied by the factor
+   */
+  mtpf(c: Coordinate, f: number) {
+    return { x: c.x * f, y: c.y * f };
+  },
+
+  /**
+   * coordinate signal inversion
+   */
+  si(c: Coordinate) {
+    return { x: -c.x, y: -c.y };
+  },
+};

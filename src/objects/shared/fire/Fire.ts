@@ -1,9 +1,9 @@
 import { Clock } from "@/common";
 import { trigger } from "@/common/events";
 import { atan2, R180, randInRange, toRad } from "@/common/math";
-import { Concrete, Coordinate, GameState } from "@/common/meta";
+import { Concrete, Coordinate, HitBox } from "@/common/meta";
 import { GameEvent, Projectile } from "@/objects";
-import { FireParams } from "./FireParams";
+import { FireParams, FirePrecision } from "./FireParams";
 
 export class Fire {
   private fire: Concrete<FireParams>;
@@ -13,7 +13,7 @@ export class Fire {
     this.fire = {
       rate: 0,
       power: 1,
-      precision: "SIMPLE",
+      precision: FirePrecision.Simple,
       ...params,
       angle: params?.angle ? toRad(params.angle) : R180,
     };
@@ -24,9 +24,9 @@ export class Fire {
   private shoot(center: Coordinate, rotation: number): void {
     let angle = 0;
 
-    if (this.fire.precision === "ACCURATE") {
+    if (this.fire.precision === FirePrecision.Accurate) {
       angle = rotation;
-    } else if (this.fire.precision === "LOOSE") {
+    } else if (this.fire.precision === FirePrecision.Loose) {
       angle = rotation + randInRange(-0.25, 0.25);
     } else {
       // SIMPLE
@@ -53,16 +53,15 @@ export class Fire {
   }
 
   /**
-   * @param center - Coordinate (`x + cx, y + cy`), HitBox (gameObject.hitbox)
-   * @param state - GameState
+   * @param center gameObject.hitbox
    * @returns rotation
    */
-  public update(center: Coordinate, state: GameState): number {
-    const rotation = this.getRotation(center, state.player);
+  public update(delta: number, player: HitBox, center: Coordinate): number {
+    const rotation = this.getRotation(center, player);
 
     if (this.fire.rate === 0) return rotation;
     if (this.fireClock.pending) {
-      this.fireClock.increment(state.delta);
+      this.fireClock.increment(delta);
     } else {
       this.shoot(center, rotation);
       this.fireClock.reset();

@@ -12,6 +12,6 @@ export interface RockParams extends GameObjectParams {
    */
   rotationSpeed?: number;
 
-  movement?: MovementParams;
+  movement: MovementParams;
   impact?: ImpactParams;
 }

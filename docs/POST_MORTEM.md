@@ -24,3 +24,13 @@ Too much automated behavior turned out to obscure important funcionallity detail
 In an attempt to solve this, some specialized classes were created for each behavior.
 
 It ended with more code, but it felt like the better way in the end.
+
+Lerping:
+
+- Determine start and end points (they should not change).
+- `t` should change over time, from 0 to 1 (one can extrapolate with 0 > t > 1).
+- depending on the value of `t`, one can shape the movement
+
+Doing the wrong way:
+
+Using a fixed `t` value and changing the start point over time. As a collateral, the movement starts fast and takes more time to reach the destination (if ever).

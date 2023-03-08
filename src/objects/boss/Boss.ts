@@ -1,15 +1,15 @@
 import { trigger } from "@/common/events";
 import { R180 } from "@/common/math";
-import { GameState } from "@/common/meta";
+import { GameObjectName, GameState } from "@/common/meta";
 import { iterate } from "@/common/util";
 import {
-  CyclicMovement,
   Effect,
   EffectType,
   Fire,
   GameEvent,
   GameObject,
   Impact,
+  Movement,
 } from "../shared";
 import { BossParams } from "./BossParams";
 
@@ -18,15 +18,15 @@ export class Boss extends GameObject {
 
   private fire: Fire = new Fire();
   private impact: Impact = new Impact();
-  private movement: CyclicMovement = new CyclicMovement();
+  private movement: Movement | null = null;
 
   private currentPhase = -1;
-  private finalPhase: number;
+  private phasesLength: number;
 
   constructor(private params: BossParams) {
     super(params);
     this.maxHp = params.hp || 30;
-    this.finalPhase = params.phases.length;
+    this.phasesLength = params.phases.length;
     this.setDimensions(this.params.img);
     this.nextPhase();
     trigger(GameEvent.bossHp, { maxHp: this.maxHp, hp: this.hp });
@@ -41,10 +41,9 @@ export class Boss extends GameObject {
   }
 
   private nextPhase() {
-    if (++this.currentPhase < this.finalPhase) {
-      const { cyclicMovement, impact, fire, spawnables } = this.phase;
-      this.movement = new CyclicMovement(cyclicMovement);
-      this.movement.setDirection();
+    if (++this.currentPhase < this.phasesLength) {
+      const { impact, fire, spawnables } = this.phase;
+      this.movement = null;
       this.impact = new Impact(impact);
       this.fire = new Fire(fire);
 
@@ -73,40 +72,37 @@ export class Boss extends GameObject {
 
   public update(state: GameState): void {
     super.update(state);
-    this.impact.update(state.delta);
 
-    if (this.phase.nextPhaseCondition(this.phaseParams)) {
-      this.nextPhase();
+    if (this.phase.nextPhaseCondition(this.phaseParams)) this.nextPhase();
+
+    if (this.movement === null) {
+      this.movement = new Movement(
+        state.delta,
+        state.worldBoundaries,
+        this.dimensions,
+        {
+          ...this.phase.movement,
+          repeatable: true,
+        }
+      );
     }
 
-    const world = state.worldBoundaries;
-
-    if (!this.hasPosition)
-      this.position = this.movement.startPosition(this.dimensions, world);
-
+    if (!this.hasPosition) this.position = this.movement.startPosition();
     if (!this.isReady) return;
 
-    this.rotation = this.fire.update(this.hitbox, state);
-    this.position = this.movement.increment(this.position, state.delta);
+    this.impact.update(state.delta);
 
-    if (
-      this.movement.update(
-        this.position,
-        world,
-        this.isOutbounds(state.worldBoundaries, this.dimensions)
-      )
-    ) {
-      this.position = this.movement.startPosition(this.dimensions, world);
-    }
+    this.rotation = this.fire.update(state.delta, state.player, this.hitbox);
+    this.position = this.movement.update();
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (!this.isReady) return;
     c.save();
-    c.translate(this.x + this.cx, this.y + this.cy);
+    c.translate(this.x, this.y);
     c.rotate(this.rotation - R180);
     c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
     c.restore();
-    if (this.debug) this.drawDebug(c);
+    this.drawDebug(c, GameObjectName.Boss);
   }
 }
