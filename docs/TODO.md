@@ -1,8 +1,8 @@
 # TODO
 
 - [ ] New Movement Implementation
-  - [ ] fix movement end
   - [ ] Boss
+  - [x] fix movement end
   - [x] multiple steps
   - [x] repeatable
   - [x] Rock
@@ -52,7 +52,7 @@
 - [ ] projectile
   - [ ] {idea} deflect projectile on hit (that would be cool)
   - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
-  - [ ] {mechanic} ability to change speed
+  - [ ] {idea} projectile upgrades (size, amount, speed, rate)
 - [ ] {bug} handle screen resize on game objects
 - [ ] {low} overall status: time? score? enemies killed? shots fired?` (use LevelManager)
 - [ ] {low}{idea} ship: add 2 movement patterns ship movement (using sin, cos)

@@ -81,17 +81,15 @@ export class Movement {
         p3: this.worldPosition(this.current.p3),
       };
 
-      // const { nature } = this.current;
-      // this.pointCache.p0 = this.offsetZero(this.current.p0, this.pointCache.p0);
-      /*
-      if (nature === MovementNature.Linear) {
+      this.pointCache.p0 = this.offset(this.current.p0, this.pointCache.p0);
+
+      if (this.current.nature === MovementNature.Linear) {
         this.pointCache.p1 = this.offset(this.current.p1, this.pointCache.p1);
-      } else if (nature === MovementNature.QuadraticBezier) {
+      } else if (this.current.nature === MovementNature.QuadraticBezier) {
         this.pointCache.p2 = this.offset(this.current.p2, this.pointCache.p2);
       } else {
         this.pointCache.p3 = this.offset(this.current.p3, this.pointCache.p3);
       }
-      */
     }
   }
 
@@ -107,15 +105,6 @@ export class Movement {
   }
 
   public startPosition(): Coordinate {
-    /*
-    const start = this.current?.p0;
-    let { x, y } = this.worldPosition(start);
-
-    if (start?.x === 0) x -= this.object.width;
-    if (start?.y === 0) y -= this.object.height;
-
-    return { x, y };
-    */
     return this.pointCache.p0;
   }
 
