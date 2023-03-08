@@ -1,63 +1,51 @@
+import { c } from "@/common/meta";
 import { assets, getImage } from "@/common/asset";
 import { trigger } from "@/common/events";
 import { randInRange } from "@/common/math";
 import { Boss, BossPhase, PlayerItem, Rock, Ship } from "@/objects";
-import { EffectType, ImpactParams } from "@/objects/shared";
+import {
+  EffectType,
+  FirePrecision,
+  ImpactParams,
+  FluentMovement,
+} from "@/objects/shared";
 import { AudioEvent } from "@/common";
 
-export function secondStep() {
-  return [
-    new PlayerItem({
-      img: getImage(assets.img.player.items.heal),
-      effect: { type: EffectType.heal, amount: 5 },
-      timeout: 10 * 1000,
-    }),
-  ];
-}
-
-/*
 function secondPhaseRocks(): Rock[] {
   let rocks = [];
+  for (let i = 1; i <= 18; i++) {
+    const whichRock = Math.floor(randInRange(5, 10));
+    const img = getImage(assets.img.rock.brown[whichRock]);
+    const rockCommon = {
+      impact: { collisionTimeout: 1000 },
+      spawnTimeout: (i <= 9 ? 1 : 2) * 5000,
+      img,
+      rotationSpeed: randInRange(-5, 5),
+    };
 
-  const baseTimeout = 15000;
-  const impact = { collisionTimeout: 1000 };
-
-  for (let j = 0; j <= 1; j++) {
-    for (let i = 1; i < 9; i++) {
-      const whichRock = Math.floor(randInRange(5, 10));
-      const img = getImage(assets.img.rock.brown[whichRock]);
-      const base = {
-        impact,
-        spawnTimeout: j * baseTimeout,
-        img,
-      };
-      rocks.push(
-        new Rock({
-          ...base,
-          rotationSpeed: 5,
-          movement: {
-            start: { x: 0, y: randInRange(0.01, 0.6) },
-            angle: randInRange(15, 45),
-          },
-        }),
-        new Rock({
-          ...base,
-          rotationSpeed: -5,
-          movement: {
-            start: { x: 1, y: randInRange(0.01, 0.6) },
-            angle: -randInRange(15, 45),
-          },
-        }),
-        new Rock({
-          ...base,
-          rotationSpeed: randInRange(-3, 3),
-          movement: {
-            start: { x: 0.1 * i, y: 0 },
-            angle: randInRange(-45, 45),
-          },
-        })
-      );
-    }
+    rocks.push(
+      // from above
+      new Rock({
+        ...rockCommon,
+        movement: new FluentMovement()
+          .linear(c(randInRange(0, 1), 0), c(randInRange(0, 1), 1))
+          .get(),
+      }),
+      // right to left
+      new Rock({
+        ...rockCommon,
+        movement: new FluentMovement()
+          .linear(c(1, randInRange(0, 1)), c(0, randInRange(0, 1)))
+          .get(),
+      }),
+      // left to right
+      new Rock({
+        ...rockCommon,
+        movement: new FluentMovement()
+          .linear(c(0, randInRange(0, 1)), c(1, randInRange(0, 1)))
+          .get(),
+      })
+    );
   }
   return rocks;
 }
@@ -70,41 +58,42 @@ function finalPhaseShips(): Ship[] {
       timeout: 10 * 1000,
     });
 
-  const base = {
+  const shipCommon = {
     impact: { collisionTimeout: 1000 },
     fire: { rate: 350 },
   };
 
   return [
     new Ship({
-      ...base,
+      ...shipCommon,
       img: getImage(assets.img.ship.level1[0]),
-      movement: { start: { x: 1, y: 0.1 }, angle: 90 },
+      movement: new FluentMovement().linear(c(1, 0.1), c(0, 0.1)).get(),
       spawnables: [newItem()],
     }),
     new Ship({
-      ...base,
+      ...shipCommon,
       img: getImage(assets.img.ship.level1[0]),
-      movement: { start: { x: 0, y: 0.1 }, angle: -90 },
+      movement: new FluentMovement().linear(c(0, 0.1), c(1, 0.1)).get(),
       spawnables: [newItem()],
     }),
     new Ship({
-      ...base,
+      ...shipCommon,
       spawnTimeout: 3000,
       img: getImage(assets.img.ship.level1[1]),
-      movement: { start: { x: 0, y: 0.3 }, angle: 90 },
+      movement: new FluentMovement().linear(c(1, 0.3), c(0, 0.3)).get(),
       spawnables: [newItem()],
     }),
     new Ship({
-      ...base,
+      ...shipCommon,
       spawnTimeout: 3000,
       img: getImage(assets.img.ship.level1[1]),
-      movement: { start: { x: 0, y: 0.3 }, angle: -90 },
+      movement: new FluentMovement().linear(c(0, 0.3), c(1, 0.3)).get(),
       spawnables: [newItem()],
     }),
   ];
 }
 
+// TODO
 function phases(): BossPhase[] {
   const impact: ImpactParams = {
     collisionTimeout: 1000,
@@ -118,15 +107,13 @@ function phases(): BossPhase[] {
       power: 1,
       rate: 50,
     },
-    cyclicMovement: {
-      angle: 60,
-      speed: 0.55,
-      // start: { x: 0.1, y: 0 },
-      start: { x: 0, y: 0 },
-      cycle: {
-        increment: { y: 0, x: 0.1 },
-      },
-    },
+    movement: new FluentMovement()
+      .quadraticBezier(c(0, 0), c(0.5, 1), c(1, 0))
+      .linear(c(1, 0), c(0, 0.5))
+      .linear(c(0, 0.5), c(1, 1))
+      // .quadraticBezier(c(1, 0), c(0.5, 0.3), c(0, 1))
+      // .linear(c(0, 1), c(1, 0.6))
+      .get(),
   };
 
   const secondPhase: BossPhase = {
@@ -134,17 +121,14 @@ function phases(): BossPhase[] {
     impact,
     fire: {
       power: 1.5,
-      rate: 150,
-      precision: "LOOSE",
+      rate: 250,
+      precision: FirePrecision.Loose,
     },
-    cyclicMovement: {
-      angle: -25,
-      speed: 0.5,
-      start: { x: 1, y: 0 },
-      cycle: {
-        increment: { y: 0, x: -0.35 },
-      },
-    },
+    movement: new FluentMovement()
+      .cubicBezier(c(0, 0), c(0.5, 0.35), c(0.35, 0.5), c(0, 1), 2)
+      .cubicBezier(c(1, 0), c(0.35, 0.5), c(0.5, 0.35), c(0, 0), 2)
+      .repeatable()
+      .get(),
     spawnables: secondPhaseRocks(),
   };
 
@@ -153,17 +137,16 @@ function phases(): BossPhase[] {
     impact,
     fire: {
       power: 2,
-      rate: 150,
-      precision: "ACCURATE",
+      rate: 300,
+      precision: FirePrecision.Accurate,
     },
-    cyclicMovement: {
-      angle: 90,
-      speed: 0.75,
-      start: { x: 0, y: 0.01 },
-      cycle: {
-        increment: { y: 0.1, x: 0 },
-      },
-    },
+    movement: new FluentMovement()
+      .linear(c(0, 0.2), c(1, 0.2), 3)
+      .linear(c(1, 0.35), c(0, 0.35), 3)
+      .linear(c(1, 0.5), c(0, 0.5), 3)
+      .linear(c(0, 0.65), c(1, 0.65), 3)
+      .linear(c(0, 0.8), c(1, 0.8), 3)
+      .get(),
     spawnables: finalPhaseShips(),
   };
 
@@ -177,10 +160,9 @@ export function secondStep() {
 
   return [
     new Boss({
-      hp: 100,
+      hp: 30,
       phases: phases(),
       img: getImage(assets.img.ship.level1[2]),
     }),
   ];
 }
-*/

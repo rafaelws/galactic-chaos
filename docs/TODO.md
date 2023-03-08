@@ -1,20 +1,9 @@
 # TODO
 
-- [ ] New Movement Implementation
-  - [>] Boss (needs testing)
-  - [x] fix movement end
-  - [x] multiple steps
-  - [x] repeatable
-  - [x] Rock
-  - [x] Ship
-  - [x] draw debug lines
-  - [x] lerp, quadratic bezier, cubic bezier
-- [x] granular debug for game objects
+- [ ] ui: configurations (enable audio, audio volume [ost, effects], bg density)
 - [ ] level design
 - [ ] replace player img
-- [ ] ui: configurations (enable audio, audio volume [ost, effects], bg density)
 - [ ] consider using lerp for alpha (star, explosion)
-- [ ] refac FireParams to use enum?
 - [ ] audio
 
   - [x] loader
@@ -27,17 +16,18 @@
     - [x] level song (medium)
     - [x] boss song (medium)
     - [ ] make longer versions of the theme songs\*
-  - [ ] ui effects
+  - [>] ui effects
     - [ ] pause
     - [ ] (re)start
-  - [ ] gameplay effects (collision, projectile, item)
-
-- [ ] docs: consider using an interactive form to showcase game objects (see `dat.gui`)
+  - [>] gameplay effects (collision, projectile, item)
 
 - [ ] improvements
+
   - [x] projectile appearance [performance concearn using filter]
   - [ ] verify performance issues
   - [ ] gampead mechanics
+
+- [ ] docs: consider using an interactive form to showcase game objects (see `dat.gui`)
 
 # Known Issues
 
@@ -122,7 +112,22 @@
   - [x] {bug} fix level manager step function
 
 - misc
+
   - [x] {improvement} projectile appearance
   - [x] {bug|improve} gamepad (make it work interchangeably with keyboard/mouse)
     - [x] solution: on ANY menu, the game is notified of the preferred input
   - [x] {improvement} circle collision calculation (without sqrt)
+
+- [x] New Movement Implementation
+
+  - [x] "fluent" way to create movement params
+  - [x] Boss
+  - [x] fix movement end
+  - [x] multiple steps
+  - [x] repeatable
+  - [x] Rock
+  - [x] Ship
+  - [x] draw debug lines
+  - [x] lerp, quadratic bezier, cubic bezier
+
+- [x] granular debug for game objects

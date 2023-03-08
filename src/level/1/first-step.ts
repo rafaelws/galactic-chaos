@@ -1,100 +1,65 @@
 import { assets, getImage } from "@/common/asset";
+import { c } from "@/common/meta";
 import { PlayerItem, Rock, Ship } from "@/objects";
-import { EffectType, FirePrecision, MovementNature } from "@/objects/shared";
-// import { trigger } from "@/common/events";
-// import { AudioEvent } from "@/common";
+import { EffectType, FirePrecision, FluentMovement } from "@/objects/shared";
+import { trigger } from "@/common/events";
+import { AudioEvent } from "@/common";
 
-const shipLinear = {
-  repeatable: true,
-  steps: [
-    {
-      speed: 2,
-      nature: MovementNature.Linear,
-      p0: { x: 0, y: 0.15 },
-      p1: { x: 1, y: 0.15 },
-    },
-    {
-      speed: 2,
-      nature: MovementNature.Linear,
-      p0: { x: 1, y: 0.15 },
-      p1: { x: 0, y: 0.15 },
-    },
-  ],
-};
+const shipLinear = new FluentMovement()
+  .linear(c(0, 0.15), c(1, 0.15))
+  .linear(c(1, 0.15), c(0, 0.15), 2)
+  .repeatable()
+  .get();
 
-const cubic = {
-  repeatable: true,
-  steps: [
-    {
-      nature: MovementNature.CubicBezier,
-      // p0: { x: 0, y: 0 },
-      // p1: { x: 1, y: 1 },
-      // p2: { x: 0, y: 1 },
-      // p3: { x: 0, y: 1 },
+const cubic = new FluentMovement()
+  .repeatable()
+  .cubicBezier(c(1, 0), c(0, 1), c(1, 1), c(0, 0))
+  // p0: { x: 0, y: 0 },
+  // p1: { x: 1, y: 1 },
+  // p2: { x: 0, y: 1 },
+  // p3: { x: 0, y: 1 },
 
-      // p0: { x: 0, y: 0.2 },
-      // p1: { x: 0.3, y: 0.4 },
-      // p2: { x: 0, y: 0.7 },
-      // p3: { x: 0.4, y: 0.3 },
+  // p0: { x: 0, y: 0.2 },
+  // p1: { x: 0.3, y: 0.4 },
+  // p2: { x: 0, y: 0.7 },
+  // p3: { x: 0.4, y: 0.3 },
+  .cubicBezier(c(0, 0), c(1, 1), c(0, 1), c(0, 1))
+  // p0: { x: 0.4, y: 0.3 },
+  // p1: { x: 0.5, y: 0.7 },
+  // p2: { x: 0, y: 0.2 },
+  // p3: { x: 1, y: 0 },
+  // speed: 8,
+  .get();
 
-      p0: { x: 1, y: 0 },
-      p1: { x: 0, y: 1 },
-      p2: { x: 1, y: 1 },
-      p3: { x: 0, y: 0 },
-    },
-    {
-      nature: MovementNature.CubicBezier,
-      p0: { x: 0, y: 0 },
-      p1: { x: 1, y: 1 },
-      p2: { x: 0, y: 1 },
-      p3: { x: 0, y: 1 },
-    },
-    /*
-    {
-      nature: MovementNature.CubicBezier,
-      p0: { x: 0.4, y: 0.3 },
-      p1: { x: 0.5, y: 0.7 },
-      p2: { x: 0, y: 0.2 },
-      p3: { x: 1, y: 0 },
-      speed: 8,
-    },
-    */
-  ],
-};
+const leftQuadratic = new FluentMovement()
+  .quadraticBezier(c(0, 0.15), c(0.5, 0.5), c(1, 0.15), 5)
+  .repeatable()
+  .get();
 
-const leftQuadratic = {
-  repeatable: true,
-  steps: [
-    {
-      nature: MovementNature.QuadraticBezier,
-      p0: { x: 0, y: 0.15 },
-      p1: { x: 0.5, y: 0.5 },
-      p2: { x: 1, y: 0.15 },
-      speed: 5,
-    },
-  ],
-};
+const crossScreenlinear = new FluentMovement()
+  .linear(c(0, 0), c(1, 1))
+  .linear(c(1, 1), c(0, 0))
+  .repeatable()
+  .get();
 
-const crossScreenlinear = {
-  repeatable: true,
-  steps: [
-    {
-      nature: MovementNature.Linear,
-      p0: { x: 0, y: 0 },
-      p1: { x: 1, y: 1 },
-    },
-    {
-      nature: MovementNature.Linear,
-      p0: { x: 1, y: 1 },
-      p1: { x: 0, y: 0 },
-    },
-  ],
-};
+// export function firstStep() {
+//   return [
+//     new PlayerItem({
+//       img: getImage(assets.img.player.items.heal),
+//       timeout: 100 * 1000,
+//       position: { x: 500, y: 500 },
+//       effect: {
+//         type: EffectType.heal,
+//         amount: 5,
+//       },
+//     }),
+//   ];
+// }
 
-export function firstStep() {
-  // trigger(AudioEvent.mainStream, {
-  //   filePath: assets.audio.levels[0].theme,
-  // });
+export function _firstStep() {
+  trigger(AudioEvent.mainStream, {
+    filePath: assets.audio.levels[0].theme,
+  });
 
   const quadraticRock = new Rock({
     img: getImage(assets.img.rock.brown[4]),
