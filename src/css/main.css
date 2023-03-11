@@ -102,3 +102,70 @@ canvas {
     opacity: 1;
   }
 }
+
+#options {
+  display: none;
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  font-size: 1.5rem;
+  line-height: 2;
+  padding: 1rem 1rem 0.5rem;
+  top: 0;
+  width: 50%;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+}
+
+.field span {
+  flex-grow: 1;
+  text-align: left;
+}
+
+.field .toggle {
+  border-radius: 3px;
+  height: 1.75rem;
+  background-color: white;
+  opacity: 0.5;
+  width: 5rem;
+  padding: 0.1rem;
+  margin-left: 0.5rem;
+  transition: all 500ms ease-in-out;
+}
+
+.field .toggle .handle {
+  border-radius: 3px;
+  height: 100%;
+  width: 50%;
+  background-color: grey;
+  transition: all 200ms ease-in-out;
+}
+
+.field .toggle.active {
+  opacity: 0.75;
+}
+
+.field .toggle.active .handle {
+  margin-left: 50%;
+  background-color: black;
+}
+
+.field .slider {
+  border-radius: 3px;
+  height: 1.75rem;
+  background-color: white;
+  opacity: 0.8;
+  width: 10rem;
+  padding: 0.1rem;
+  margin-left: 0.5rem;
+}
+
+.field .slider .handle {
+  border-radius: 3px;
+  height: 100%;
+  width: 20%;
+  background-color: black;
+}

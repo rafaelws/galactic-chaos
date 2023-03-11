@@ -6,6 +6,7 @@ import { assets, preloadAudio } from "@/common/asset";
 import { readInput } from "./readInput";
 
 const pauseTimeout = 350;
+let isOptionsOpen = false;
 
 const loop = setup();
 let audioManager: AudioManager | null = null;
@@ -25,6 +26,7 @@ const elements: { [index: string]: string } = {
   gameOverMenu: "game-over-menu",
   gameEndMenu: "game-end-menu",
   loading: "loading",
+  options: "options",
 };
 
 function changeDisplay(elId: string, visible = true): void {
@@ -121,12 +123,22 @@ function setupAudio() {
   );
 }
 
+function options() {
+  console.log({ isOptionsOpen });
+  isOptionsOpen ? hide(elements.options) : show(elements.options);
+  isOptionsOpen = !isOptionsOpen;
+  // TODO read input
+}
+
 export async function mainMenu() {
-  // await setupAudio();
+  await setupAudio();
   hide(elements.loading);
   trigger(AudioEvent.mainStream, {
     filePath: assets.audio.menu.main,
   });
-  readInput([{ action: "START", fn: start }]);
+  readInput([
+    { action: "START", fn: start },
+    { action: "SELECT", fn: options },
+  ]);
   show(elements.mainMenu);
 }

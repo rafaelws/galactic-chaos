@@ -1,31 +1,33 @@
 # TODO
 
-- [ ] ui: configurations (enable audio, audio volume [ost, effects], bg density)
+- [ ] ui: configurations (>enable audio, >audio volume [ost, effects], >bg density, choose input, credits?)
+- [ ] fix Boss movement transition
+- [ ] fix audio transition
+- [ ] debug points on bezier curves
 - [ ] level design
-- [ ] replace player img
-- [ ] consider using lerp for alpha (star, explosion)
-- [ ] audio
+- [ ] audio (ui sfx, gameplay sfx, game end song)
 
   - [x] loader
   - [x] manager
   - [x] ost
-    - [x] main menu (loop)
+    - [ ] game end (short)
     - [x] game over (short)
-    - [ ] game end (long song)
-    - [x] pause (alternate loop)
-    - [x] level song (medium)
-    - [x] boss song (medium)
-    - [ ] make longer versions of the theme songs\*
-  - [>] ui effects
-    - [ ] pause
-    - [ ] (re)start
-  - [>] gameplay effects (collision, projectile, item)
+    - [x] level song (short)
+    - [x] boss song (short)
+    - [x] main menu (loop)
+    - [x] pause (loop)
+  - [ ] ui sfx
+    - [ ] pause, (re)start
+    - [ ] ui "tick"
+  - [ ] gameplay sfx (collision, projectile, item)
 
 - [ ] improvements
 
   - [x] projectile appearance [performance concearn using filter]
   - [ ] verify performance issues
   - [ ] gampead mechanics
+  - [ ] replace player img
+  - [ ] consider using lerp for alpha (star, explosion)
 
 - [ ] docs: consider using an interactive form to showcase game objects (see `dat.gui`)
 
