@@ -1,7 +1,8 @@
-import { iterate } from "@/common/util";
-import { Boundaries, Destroyable, GameState, NoDebug } from "@/common/meta";
+import { Boundaries, Destroyable, GameState } from "@/common/meta";
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
+import { iterate } from "@/common/util";
 import { ControlState } from "@/common/controls";
+import { NoDebug } from "@/common/debug";
 import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
 import { BackgroundManager, GameEvent, GameObject, Player } from "@/objects";
 

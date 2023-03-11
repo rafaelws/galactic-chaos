@@ -1,5 +1,6 @@
+import { GameState } from "@/common/meta";
 import { toRad } from "@/common/math";
-import { GameObjectName, GameState } from "@/common/meta";
+import { GameObjectName } from "@/common/debug";
 import { Effect, EffectType, GameObject, Impact, Movement } from "../shared";
 import { RockParams } from "./RockParams";
 

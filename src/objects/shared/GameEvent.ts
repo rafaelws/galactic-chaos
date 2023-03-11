@@ -1,4 +1,4 @@
-export interface HpEvent {
+export interface HpEventData {
   maxHp: number;
   hp: number;
 }

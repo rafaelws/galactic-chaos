@@ -1,7 +1,8 @@
-import { trigger } from "@/common/events";
+import { GameState } from "@/common/meta";
 import { R180 } from "@/common/math";
-import { GameObjectName, GameState } from "@/common/meta";
+import { trigger } from "@/common/events";
 import { iterate } from "@/common/util";
+import { GameObjectName } from "@/common/debug";
 import {
   Effect,
   EffectType,
