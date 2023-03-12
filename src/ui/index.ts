@@ -28,10 +28,10 @@ const elements: { [index: string]: string } = {
   gameOverMenu: "game-over-menu",
   gameEndMenu: "game-end-menu",
   loading: "loading",
-  options: "options",
 };
 
 function hideAll() {
+  Options.close();
   for (const el in elements) {
     hide(elements[el]);
   }

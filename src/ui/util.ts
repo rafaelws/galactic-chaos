@@ -1,4 +1,6 @@
-export const $ = (query: string) => document.querySelector(query);
+export function $<T extends Element>(query: string) {
+  return document.querySelector<T>(query);
+}
 
 export function changeDisplay(elId: string, visible = true): void {
   document.getElementById(elId)!.style.display = visible ? "block" : "none";

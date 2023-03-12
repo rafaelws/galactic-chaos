@@ -1,14 +1,19 @@
+import { Config } from "@/common";
 import { throttle } from "@/common/util";
 import { TriggerOnInput } from "./readInput";
 import { $, hide, show } from "./util";
 
 export namespace Options {
   const elId = "options";
-  const el = `#${elId}`;
 
+  let currentFieldIx = 0;
   let isOptionsOpen = false;
 
-  let fieldIx = 0;
+  type Operation = "-" | "+" | null;
+
+  function fields<T extends Element>() {
+    return document.querySelectorAll<T>(`#${elId} .field`);
+  }
 
   function makeAllInactive() {
     const all = fields();
@@ -18,69 +23,117 @@ export namespace Options {
     return all.length;
   }
 
-  function fields() {
-    return document.querySelectorAll(`${el} .field`);
+  function current<T extends Element>() {
+    return $<T>(`#${elId} .field[data-ix="${currentFieldIx}"]`);
   }
 
-  function makeActive() {
-    $(`${el} .field[data-ix="${fieldIx}"]`)?.classList.add("active");
+  function makeCurrentActive() {
+    current()?.classList.add("active");
   }
 
   function up() {
     if (!isOptionsOpen) return;
     const length = makeAllInactive();
-    if (--fieldIx < 0) fieldIx = length - 1;
-    makeActive();
+    if (--currentFieldIx < 0) currentFieldIx = length - 1;
+    makeCurrentActive();
   }
 
   function down() {
     if (!isOptionsOpen) return;
     const length = makeAllInactive();
-    if (++fieldIx + 1 > length) fieldIx = 0;
-    makeActive();
+    if (++currentFieldIx + 1 > length) currentFieldIx = 0;
+    makeCurrentActive();
   }
 
   function left() {
     if (!isOptionsOpen) return;
+    action("-", current<HTMLElement>());
   }
 
   function right() {
     if (!isOptionsOpen) return;
+    action("+", current<HTMLElement>());
   }
 
-  const ttime = 150;
+  function action(operation: Operation, el: HTMLElement | null) {
+    if (!el?.dataset) return;
+    switch (el.dataset.type) {
+      case "toggle":
+        uiToggle(operation, el);
+        break;
+      case "slider":
+        uiSlider(operation, el);
+        break;
+    }
+  }
+
+  function uiToggle(operation: Operation, el: HTMLElement) {
+    let value = el.dataset.value === "true" ? true : false;
+
+    if (operation !== null) value = operation === "+" ? true : false;
+
+    if (value) {
+      el.querySelector<HTMLElement>(".toggle")?.classList.add("active");
+    } else {
+      el.querySelector<HTMLElement>(".toggle")?.classList.remove("active");
+    }
+  }
+
+  function uiSlider(operation: Operation, el: HTMLElement) {
+    let value = Number(el.dataset.value);
+    const max = Number(el.dataset.max);
+
+    if (operation !== null) {
+      const step = Number(el.dataset.step);
+      const min = Number(el.dataset.min);
+      value += operation === "+" ? step : -step;
+
+      if (value <= min) value = min;
+      if (value >= max) value = max;
+      Config.set(el.dataset.key as Config.Key, value);
+      el.dataset.value = "" + parseFloat("" + value);
+    }
+
+    // .handle is 20% wide
+    const normalized = (value / max) * 80;
+    el.querySelector<HTMLElement>(".handle")!.style.marginLeft =
+      normalized + "%";
+  }
+
+  function init(config: Config.Map) {
+    fields<HTMLElement>().forEach((el) => {
+      el.dataset.value = config[el.dataset.key as Config.Key];
+      action(null, el);
+    });
+  }
+
+  function open() {
+    isOptionsOpen = true;
+    init(Config.all());
+    currentFieldIx = 0;
+    makeCurrentActive();
+    show(elId);
+  }
+
+  export function close() {
+    isOptionsOpen = false;
+    makeAllInactive();
+    hide(elId);
+  }
 
   export const actions: TriggerOnInput[] = [
-    { action: "D_UP", destroy: false, fn: throttle(up, ttime) },
-    { action: "L_UP", destroy: false, fn: throttle(up, ttime) },
-    { action: "L_DOWN", destroy: false, fn: throttle(down, ttime) },
-    { action: "D_DOWN", destroy: false, fn: throttle(down, ttime) },
+    { action: "D_UP", destroy: false, fn: throttle(up, 150) },
+    { action: "L_UP", destroy: false, fn: throttle(up, 150) },
+    { action: "L_DOWN", destroy: false, fn: throttle(down, 150) },
+    { action: "D_DOWN", destroy: false, fn: throttle(down, 150) },
 
-    { action: "D_LEFT", destroy: false, fn: throttle(left, ttime) },
-    { action: "L_LEFT", destroy: false, fn: throttle(left, ttime) },
-    { action: "D_RIGHT", destroy: false, fn: throttle(right, ttime) },
-    { action: "L_RIGHT", destroy: false, fn: throttle(right, ttime) },
+    { action: "D_LEFT", destroy: false, fn: throttle(left, 25) },
+    { action: "L_LEFT", destroy: false, fn: throttle(left, 25) },
+    { action: "D_RIGHT", destroy: false, fn: throttle(right, 25) },
+    { action: "L_RIGHT", destroy: false, fn: throttle(right, 25) },
   ];
 
   export function toggle() {
     isOptionsOpen ? close() : open();
-    isOptionsOpen = !isOptionsOpen;
-  }
-
-  function open() {
-    show(elId);
-    $(el)?.classList.add("active");
-
-    fieldIx = 0;
-    makeActive();
-  }
-
-  function close() {
-    const $el = $(el);
-    $el?.classList.remove("active");
-    $el?.addEventListener("animationend", function onEnd() {
-      hide(elId);
-      $el?.removeEventListener("animationend", onEnd);
-    });
   }
 }

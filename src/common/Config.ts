@@ -4,6 +4,8 @@ import { Store } from "./Store";
 export namespace Config {
   const storageKey = "configuration";
 
+  export type Map = { [ix in Key]: any };
+
   export enum Input {
     KeyboardAndMouse = "KM",
     Joystick = "GP",
@@ -16,18 +18,23 @@ export namespace Config {
     AudioGain = "AudioGain",
   }
 
-  const defaults: { [ix in Key]: any } = {
+  const defaults: Map = {
     Input: Input.KeyboardAndMouse,
     BackgroundDensity: 2000,
     AudioEnabled: false,
-    AudioGain: 0.8,
+    // On AudioManager, multiply this value by 0.1
+    AudioGain: 8,
   } as const;
 
-  export function get<T>(key: Key) {
+  export function all() {
     return {
       ...defaults,
       ...Store.get(storageKey),
-    }[key] as T;
+    };
+  }
+
+  export function get<T>(key: Key) {
+    return all()[key] as T;
   }
 
   export function set<T>(key: Key, value: T) {
