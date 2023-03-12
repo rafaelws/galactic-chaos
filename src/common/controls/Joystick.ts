@@ -1,13 +1,11 @@
-// WIP
-// config 1: gamepad or keyboard/mouse (choose gamepad index)
-// config 2: if controller disconnect:
-//        A) go back to keyboard/mouse
-//     or B) check for another controller before going to keyboard/mouse
-// config 3: configure controller stick drift (individually; left and right)
-// config 4: if gamepad unplugged,
-//        A) go back to keyboard/mouse
-//     or B) look for another avaliable gamepad (if none, do A)
-// config 5: gamepad drift
+// TODO
+// PreferredInput: gamepad or keyboard/mouse (choose gamepad index?)
+// configure controller stick drift (left and right)
+// if gamepad unplugged/disconnect,
+//    A) look for another avaliable gamepad (if none, do A)
+// or B) go back to keyboard/mouse
+
+// TODO throttle function
 
 import { ControlAction, ControlState, ControlStateData, InputHandler } from ".";
 

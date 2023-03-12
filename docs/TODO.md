@@ -28,6 +28,7 @@
   - [ ] gampead mechanics
   - [ ] replace player img
   - [ ] consider using lerp for alpha (star, explosion)
+  - [ ] consider rewriting Input.ts with enum or const
 
 - [ ] docs: consider using an interactive form to showcase game objects (see `dat.gui`)
 
