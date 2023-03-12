@@ -6,6 +6,11 @@
   font-style: normal;
 }
 
+:root {
+  --danger-color: rgba(172, 57, 57, 0.95);
+  --player-color: rgba(48, 178, 233, 0.95);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -79,38 +84,6 @@ canvas {
   top: 1.5rem;
 }
 
-@keyframes text-glow {
-  0% {
-    text-shadow: 0 0 5px white;
-  }
-
-  50% {
-    text-shadow: 0 0 0 white;
-  }
-
-  100% {
-    text-shadow: 0 0 5px white;
-  }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
 #options {
   display: none;
   position: absolute;
@@ -182,4 +155,82 @@ canvas {
   width: 20%;
   background-color: black;
   transition: all 100ms;
+}
+
+.hp-container {
+  z-index: 1;
+  display: none;
+
+  position: absolute;
+  left: 0.5rem;
+
+  height: 0.5rem;
+
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  transition: background-color 350ms;
+  animation: fade-in 500ms;
+}
+
+.hp {
+  height: 100%;
+  transition: width 350ms;
+}
+
+#boss-hp.hp-container {
+  top: 0.5rem;
+  right: 0.5rem;
+  /* animation: glow 1.5s infinite; */
+}
+
+#player-hp.hp-container {
+  /* transform: perspective(10%) rotateY(35deg) rotateX(20deg); */
+  bottom: 0.5rem;
+  width: 10%;
+}
+
+@keyframes text-glow {
+  0% {
+    text-shadow: 0 0 5px white;
+  }
+
+  50% {
+    text-shadow: 0 0 0 white;
+  }
+
+  100% {
+    text-shadow: 0 0 5px white;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes glow {
+  0% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.33);
+  }
+
+  100% {
+    filter: brightness(1);
+  }
 }
