@@ -31,8 +31,11 @@ export namespace Config {
   }
 
   export function set<T>(key: Key, value: T) {
-    const config = Store.get(storageKey);
+    let config = Store.get(storageKey);
+
+    if (!config) config = {};
     config[key] = value;
+
     Store.set(storageKey, config);
     trigger(key, value);
   }

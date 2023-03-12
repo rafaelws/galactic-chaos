@@ -4,9 +4,11 @@ import { setup } from "@/main/loop";
 import { AudioEvent, AudioManager } from "@/common";
 import { assets, preloadAudio } from "@/common/asset";
 import { readInput } from "./readInput";
+import { throttle } from "@/common/util";
+import { hide, show } from "./util";
+import { Options } from "./options";
 
 const pauseTimeout = 350;
-let isOptionsOpen = false;
 
 const loop = setup();
 let audioManager: AudioManager | null = null;
@@ -28,12 +30,6 @@ const elements: { [index: string]: string } = {
   loading: "loading",
   options: "options",
 };
-
-function changeDisplay(elId: string, visible = true): void {
-  document.getElementById(elId)!.style.display = visible ? "block" : "none";
-}
-const show = (elId: string) => changeDisplay(elId, true);
-const hide = (elId: string) => changeDisplay(elId, false);
 
 function hideAll() {
   for (const el in elements) {
@@ -123,22 +119,19 @@ function setupAudio() {
   );
 }
 
-function options() {
-  console.log({ isOptionsOpen });
-  isOptionsOpen ? hide(elements.options) : show(elements.options);
-  isOptionsOpen = !isOptionsOpen;
-  // TODO read input
-}
-
 export async function mainMenu() {
   await setupAudio();
+
   hide(elements.loading);
+
   trigger(AudioEvent.mainStream, {
     filePath: assets.audio.menu.main,
   });
+
   readInput([
     { action: "START", fn: start },
-    { action: "SELECT", fn: options },
+    { action: "SELECT", fn: throttle(Options.toggle), destroy: false },
+    ...Options.actions,
   ]);
   show(elements.mainMenu);
 }

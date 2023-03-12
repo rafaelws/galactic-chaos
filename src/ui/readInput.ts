@@ -24,19 +24,16 @@ export function readInput(inputs: TriggerOnInput[]) {
       const hit = joystickHit || keyboardHit;
 
       if (hit) {
-        // TODO make a configuration
-        fn();
-
-        Config.set(
-          Config.Key.Input,
-          joystickHit ? Config.Input.Joystick : Config.Input.KeyboardAndMouse
-        );
-
         if (destroy) {
+          Config.set(
+            Config.Key.Input,
+            joystickHit ? Config.Input.Joystick : Config.Input.KeyboardAndMouse
+          );
           km.destroy();
           gp.destroy();
           clearInterval(interval);
         }
+        fn();
       }
     });
   }, intervalTime);

@@ -2,8 +2,8 @@
 
 - [ ] ui: configurations (>enable audio, >audio volume [ost, effects], >bg density, choose input, credits?)
 - [ ] fix Boss movement transition
-- [ ] fix audio transition
-- [ ] debug points on bezier curves
+- [ ] fix audio transitions
+- [ ] debug movement points (both bezier and linear)
 - [ ] level design
 - [ ] audio (ui sfx, gameplay sfx, game end song)
 
@@ -23,12 +23,15 @@
 
 - [ ] improvements
 
-  - [x] projectile appearance [performance concearn using filter]
+  - [ ] fadeOut menus on ui/index.ts
+  - [ ] make projectile and player movement smoother
+  - [ ] test new throttle function @ pause (GameManager.ts and ui/index.ts)
   - [ ] verify performance issues
   - [ ] gampead mechanics
   - [ ] replace player img
-  - [ ] consider using lerp for alpha (star, explosion)
+  - [ ] consider using lerp for alpha and movement (star, explosion)
   - [ ] consider rewriting Input.ts with enum or const
+  - [x] projectile appearance [performance concearn using filter]
 
 - [ ] docs: consider using an interactive form to showcase game objects (see `dat.gui`)
 

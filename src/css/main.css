@@ -44,7 +44,6 @@ canvas {
 
 .menu {
   display: none;
-  background-color: black;
   background-color: rgba(0, 0, 0, 0.75);
   position: absolute;
   inset: 0;
@@ -103,6 +102,15 @@ canvas {
   }
 }
 
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 #options {
   display: none;
   position: absolute;
@@ -113,6 +121,16 @@ canvas {
   padding: 1rem 1rem 0.5rem;
   top: 0;
   width: 50%;
+  animation: fade-out 1s;
+}
+
+#options.active {
+  animation: fade-in 1s;
+}
+
+.field.active {
+  /* TODO */
+  background-color: red;
 }
 
 .field {
