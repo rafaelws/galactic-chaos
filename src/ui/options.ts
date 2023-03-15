@@ -1,10 +1,10 @@
 import { Config } from "@/common";
 import { throttle } from "@/common/util";
 import { TriggerOnInput } from "./readInput";
-import { $, hide, show } from "./util";
+import { $, fadeIn, fadeOut } from "./util";
 
 export namespace Options {
-  const elId = "options";
+  const elQuery = "#options";
 
   let isOptionsOpen = false;
   let currentFieldIx = 0;
@@ -12,7 +12,7 @@ export namespace Options {
   type Operation = "-" | "+" | null;
 
   function fields<T extends Element>() {
-    return document.querySelectorAll<T>(`#${elId} .field`);
+    return document.querySelectorAll<T>(`${elQuery} .field`);
   }
 
   function makeAllInactive() {
@@ -24,7 +24,7 @@ export namespace Options {
   }
 
   function current<T extends Element>() {
-    return $<T>(`#${elId} .field[data-ix="${currentFieldIx}"]`);
+    return $<T>(`${elQuery} .field[data-ix="${currentFieldIx}"]`);
   }
 
   function makeCurrentActive() {
@@ -115,21 +115,13 @@ export namespace Options {
     init(Config.all());
     currentFieldIx = 0;
     makeCurrentActive();
-    // $(`#${elId}`)?.classList.toggle("fade-in fade-out");
-    // show(elId);
-    const $el = $(`#${elId}`);
-    $el?.classList.remove("fade-out");
-    $el?.classList.add("fade-in");
+    fadeIn(elQuery);
   }
 
   export function close() {
     isOptionsOpen = false;
     makeAllInactive();
-    // $(`#${elId}`)?.classList.toggle("fade-in fade-out");
-    // hide(elId);
-    const $el = $(`#${elId}`);
-    $el?.classList.remove("fade-in");
-    $el?.classList.add("fade-out");
+    fadeOut(elQuery);
   }
 
   export const actions: TriggerOnInput[] = [

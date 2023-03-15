@@ -85,7 +85,6 @@ canvas {
 }
 
 #options {
-  display: none;
   position: absolute;
   z-index: 3;
   inset: 0;
@@ -189,18 +188,12 @@ canvas {
   width: 10%;
 }
 
-@keyframes text-glow {
-  0% {
-    text-shadow: 0 0 5px white;
-  }
+.fade-in {
+  animation: fade-in 2s forwards;
+}
 
-  50% {
-    text-shadow: 0 0 0 white;
-  }
-
-  100% {
-    text-shadow: 0 0 5px white;
-  }
+.fade-out {
+  animation: fade-out 2s forwards;
 }
 
 @keyframes fade-in {
@@ -232,5 +225,19 @@ canvas {
 
   100% {
     filter: brightness(1);
+  }
+}
+
+@keyframes text-glow {
+  0% {
+    text-shadow: 0 0 5px white;
+  }
+
+  50% {
+    text-shadow: 0 0 0 white;
+  }
+
+  100% {
+    text-shadow: 0 0 5px white;
   }
 }
