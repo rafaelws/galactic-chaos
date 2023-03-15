@@ -1,6 +1,7 @@
 import { Destroyable } from "@/common/meta";
 import { ListenerMap, readEvent, set, unset } from "@/common/events";
 import { getAudio } from "@/common/asset";
+import { Config } from "./Config";
 
 export interface MainstreamEvent {
   filePath: string;
@@ -17,6 +18,7 @@ export const AudioEvent = {
 
 export class AudioManager implements Destroyable {
   private ctx: AudioContext;
+  private gainNode: GainNode;
 
   private listeners: ListenerMap;
 
@@ -25,9 +27,14 @@ export class AudioManager implements Destroyable {
   private currentTrackPlayDate: number = 0;
   private currentTrackTimePast: number = 0;
 
+  private enabled = false;
+
   constructor() {
     this.listeners = this.setupListeners();
     this.ctx = new AudioContext();
+    this.gainNode = this.ctx.createGain();
+    this.setGain(Config.get(Config.Key.AudioGain));
+    this.setEnabled(Config.get(Config.Key.AudioEnabled));
   }
 
   private setupListeners() {
@@ -44,6 +51,12 @@ export class AudioManager implements Destroyable {
       [AudioEvent.enable]: (_: globalThis.Event) => {
         this.ctx.resume();
       },
+      [Config.Key.AudioEnabled]: (ev: globalThis.Event) => {
+        this.setEnabled(readEvent<boolean>(ev));
+      },
+      [Config.Key.AudioGain]: (ev: globalThis.Event) => {
+        this.setGain(readEvent<number>(ev));
+      },
     };
     set(listeners);
     return listeners;
@@ -56,7 +69,7 @@ export class AudioManager implements Destroyable {
   private async createTrack(buffer: ArrayBuffer) {
     const track = this.ctx.createBufferSource();
     track.buffer = await this.ctx.decodeAudioData(buffer.slice(0));
-    track.connect(this.ctx.destination);
+    track.connect(this.gainNode).connect(this.ctx.destination);
     return track;
   }
 
@@ -87,6 +100,8 @@ export class AudioManager implements Destroyable {
 
     this.currentTrackPlayDate = Date.now();
     this.lastEvent = ev;
+
+    this.setEnabled(this.enabled);
   }
 
   private async pause(ev: MainstreamEvent) {
@@ -95,9 +110,27 @@ export class AudioManager implements Destroyable {
 
     await this.prepareTrack(ev);
     this.currentTrack?.start();
+
+    this.setEnabled(this.enabled);
   }
 
   private async resume() {
     if (!!this.lastEvent) this.mainStream(this.lastEvent);
+  }
+
+  private setGain(amount: number) {
+    const gain = amount * 0.1;
+    this.gainNode.gain.value = gain;
+  }
+
+  private setEnabled(enabled: boolean) {
+    // if (enabled === this.enabled) return;
+    this.enabled = enabled;
+
+    if (enabled) {
+      if (this.ctx.state === "suspended") this.ctx.resume();
+    } else {
+      if (this.ctx.state === "running") this.ctx.suspend();
+    }
   }
 }

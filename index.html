@@ -6,41 +6,63 @@
     <link rel="icon" type="image/png" href="/icon.png" />
     <title>galactic chaos</title>
   </head>
-  <body>
+  <body style="background-color: black;">
     <img
       id="loading"
       style="position: absolute; inset: 0; height: 100%; width: 100%; z-index: 10"
       src="/loading.svg"
     />
 
+    <div id="options" style="opacity: 0">
+      <div class="field" data-key="AudioEnabled" data-ix="0" data-type="toggle">
+        <span>Audio</span>
+        <div class="toggle">
+          <div class="handle"></div>
+        </div>
+      </div>
+      <div class="field" data-key="AudioGain" data-ix="1" data-type="slider" data-step="1" data-min="0" data-max="12">
+        <span>Audio Volume</span>
+        <div class="slider">
+          <div class="handle"></div>
+        </div>
+      </div>
+      <div class="field" data-key="BackgroundDensity" data-ix="2" data-type="slider" data-step="200" data-min="0" data-max="2000">
+        <span>Background Density</span>
+        <div class="slider">
+          <div class="handle"></div>
+        </div>
+      </div>
+    </div>
+
     <div id="main-menu" class="menu" style="display: none;">
       <p class="hint-text">
-        press &lt;f11&gt; to enter fullscreen<br/>
-        press &lt;enter&gt; or &lt;start&gt;
+        &lt;f11&gt; to enter (or exit) fullscreen<br/>
+        &lt;q&gt; or &lt;select&gt; to show options<br/>
+        &lt;enter&gt; or &lt;start&gt;<br/>
       </p>
       <p class="main-text">galactic chaos</p>
     </div>
 
     <div id="pause-menu" class="menu" style="display: none;">
       <p class="hint-text">
-        press &lt;enter&gt; or &lt;start&gt; to resume<br/>
-        press &lt;q&gt; or &lt;select&gt; to quit
+        &lt;enter&gt; or &lt;start&gt; to resume<br/>
+        &lt;q&gt; or &lt;select&gt; to quit
       </p>
       <p class="main-text">pause</p>
     </div>
 
     <div id="game-over-menu" class="menu" style="display: none;">
       <p class="hint-text">
-        press &lt;enter&gt; or &lt;start&gt; to restart<br/>
-        press &lt;q&gt; or &lt;select&gt; to quit
+        &lt;enter&gt; or &lt;start&gt; to restart<br/>
+        &lt;q&gt; or &lt;select&gt; to quit
       </p>
       <p class="main-text">game over</p>
     </div>
 
     <div id="game-end-menu" class="menu" style="display: none;">
       <p class="hint-text">
-        press &lt;enter&gt; or &lt;start&gt; to restart<br/>
-        press &lt;q&gt; or &lt;select&gt; to quit
+        &lt;enter&gt; or &lt;start&gt; to restart<br/>
+        &lt;q&gt; or &lt;select&gt; to quit
       </p>
       <p class="main-text">
         thanks for playing<br/>

@@ -1,17 +1,13 @@
-import { Clock } from "@/common";
+import { Boundaries, Coordinate, GameState } from "@/common/meta";
 import { atan2, toRad } from "@/common/math";
 import { iterate } from "@/common/util";
-import {
-  Boundaries,
-  Coordinate,
-  GameObjectName,
-  GameState,
-} from "@/common/meta";
+import { GameObjectName } from "@/common/debug";
 import {
   ControlState,
   ControlStateData,
   ControlAction,
 } from "@/common/controls";
+import { Clock } from "@/common";
 import { Projectile } from "@/objects";
 import { Effect, EffectType, GameEvent, GameObject } from "../shared";
 import { PlayerParams } from "./PlayerParams";

@@ -1,13 +1,15 @@
-import { iterate } from "@/common/util";
-import { Boundaries, Destroyable, GameState, NoDebug } from "@/common/meta";
+import { Boundaries, Destroyable, GameState } from "@/common/meta";
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
+import { iterate } from "@/common/util";
 import { ControlState } from "@/common/controls";
+import { NoDebug } from "@/common/debug";
 import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
 import { BackgroundManager, GameEvent, GameObject, Player } from "@/objects";
 
 import { Level } from "./Level";
 import { firstLevel } from "./1";
 import { CollisionManager } from "./CollisionManager";
+import { Config } from "@/common";
 
 export class LevelManager implements Destroyable {
   private loaded = false;
@@ -33,6 +35,9 @@ export class LevelManager implements Destroyable {
     this.listeners = {
       [GameEvent.spawn]: (ev: globalThis.Event) => {
         this.prependables.push(readEvent<GameObject>(ev));
+      },
+      [Config.Key.BackgroundDensity]: (ev: globalThis.Event) => {
+        if (this.background) this.background.density = readEvent<number>(ev);
       },
     };
     set(this.listeners);
@@ -108,7 +113,10 @@ export class LevelManager implements Destroyable {
         ],
       });
       if (!this.collision) this.collision = new CollisionManager(this.player);
-      if (!this.background) this.background = new BackgroundManager();
+      if (!this.background)
+        this.background = new BackgroundManager(
+          Config.get(Config.Key.BackgroundDensity)
+        );
     } else {
       // most operations are order dependent
       const playerState: GameState = {

@@ -1,33 +1,27 @@
+import { Destroyable } from "@/common/meta";
 import { set, unset, trigger, ListenerMap, readEvent } from "@/common/events";
-import {
-  KeyboardAndMouse,
-  InputHandler,
-  Joystick,
-  PreferredInput,
-} from "@/common/controls";
-import { Destroyable, NoDebug } from "@/common/meta";
+import { KeyboardAndMouse, InputHandler, Joystick } from "@/common/controls";
+import { DebugParams, debugProfiles, NoDebug } from "@/common/debug";
 import { CanvasManager } from "./CanvasManager";
 import { LevelManager } from "@/level";
 import { hud } from "@/hud";
-import { Clock } from "@/common";
+import { Clock, Config } from "@/common";
 import { GameEvent } from "@/objects";
 
 const debug = NoDebug;
-/*
-const debug: DebugParams = {
-  entities: true,
-  global: true,
-  hitboxes: true,
-  statusText: true,
-  trajectory: true,
-};
-*/
+// const debug: DebugParams = {
+//   entities: [...debugProfiles.Boss],
+//   global: false,
+//   hitboxes: true,
+//   statusText: false,
+//   trajectory: true,
+// };
 
 export class GameManager implements Destroyable {
   private cm: CanvasManager;
   private lm: LevelManager;
   private ih: InputHandler = new KeyboardAndMouse();
-  private preferredInput: PreferredInput = PreferredInput.KeyboardAndMouse;
+  private preferredInput = Config.Input.KeyboardAndMouse;
 
   private paused = false;
   private pauseClock: Clock;
@@ -65,24 +59,26 @@ export class GameManager implements Destroyable {
   }
 
   private checkPreferredInput() {
-    const preferredInput = sessionStorage.getItem(PreferredInput.Id);
+    const preferredInput = Config.get<Config.Input>(Config.Key.Input);
 
-    if (!!preferredInput && preferredInput !== this.preferredInput) {
+    if (preferredInput !== this.preferredInput) {
       this.ih.destroy();
-      this.preferredInput = preferredInput as PreferredInput;
       this.ih =
-        preferredInput === PreferredInput.Joystick
+        preferredInput === Config.Input.Joystick
           ? new Joystick()
           : new KeyboardAndMouse();
+      this.preferredInput = preferredInput;
     }
   }
 
   private update(delta: number) {
     const controls = this.ih.getState();
 
+    // TODO improve pause throttling
     if (!this.pauseClock.pending && controls.START?.active) {
-      if (this.pauseClock.targetTime === this.startingPauseTime)
+      if (this.pauseClock.targetTime === this.startingPauseTime) {
         this.pauseClock.targetTime = this.pauseTime;
+      }
 
       trigger(GameEvent.pause, true);
       this.pauseClock.reset();

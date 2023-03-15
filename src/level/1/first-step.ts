@@ -56,7 +56,7 @@ const crossScreenlinear = new FluentMovement()
 //   ];
 // }
 
-export function _firstStep() {
+export function firstStep() {
   trigger(AudioEvent.mainStream, {
     filePath: assets.audio.levels[0].theme,
   });

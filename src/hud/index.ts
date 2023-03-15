@@ -1,12 +1,12 @@
 import { ListenerMap, readEvent, set, unset } from "@/common/events";
-import { GameEvent, HpEvent } from "@/objects";
+import { GameEvent, HpEventData } from "@/objects";
 
-function calculatePercent({ hp, maxHp }: HpEvent) {
+function calculatePercent({ hp, maxHp }: HpEventData) {
   return hp > 0 && maxHp > 0 ? (hp / maxHp) * 100 : 0;
 }
 
 function onPlayerHp(ev: globalThis.Event) {
-  const percent = calculatePercent(readEvent<HpEvent>(ev));
+  const percent = calculatePercent(readEvent<HpEventData>(ev));
   const containerEl = document.getElementById("player-hp")!;
   const hpEl = containerEl.querySelector<HTMLDivElement>(".hp")!;
 
@@ -24,7 +24,7 @@ function onPlayerHp(ev: globalThis.Event) {
 }
 
 function onBossHp(ev: globalThis.Event) {
-  const percent = calculatePercent(readEvent<HpEvent>(ev));
+  const percent = calculatePercent(readEvent<HpEventData>(ev));
   const containerEl = document.getElementById("boss-hp")!;
   if (percent <= 0) {
     containerEl.style.display = "none";

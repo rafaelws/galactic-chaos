@@ -1,10 +1,5 @@
-import {
-  Boundaries,
-  Coordinate,
-  GameObjectName,
-  GameState,
-  HitBox,
-} from "@/common/meta";
+import { Boundaries, Coordinate, GameState, HitBox } from "@/common/meta";
+import { GameObjectName } from "@/common/debug";
 import { Effect, EffectType, GameObject } from "../shared";
 import { ProjectileParams } from "./ProjectileParams";
 

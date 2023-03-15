@@ -1,33 +1,7 @@
 # TODO
 
-- [ ] ui: configurations (enable audio, audio volume [ost, effects], bg density)
+- [ ] fix Boss movement transition
 - [ ] level design
-- [ ] replace player img
-- [ ] consider using lerp for alpha (star, explosion)
-- [ ] audio
-
-  - [x] loader
-  - [x] manager
-  - [x] ost
-    - [x] main menu (loop)
-    - [x] game over (short)
-    - [ ] game end (long song)
-    - [x] pause (alternate loop)
-    - [x] level song (medium)
-    - [x] boss song (medium)
-    - [ ] make longer versions of the theme songs\*
-  - [>] ui effects
-    - [ ] pause
-    - [ ] (re)start
-  - [>] gameplay effects (collision, projectile, item)
-
-- [ ] improvements
-
-  - [x] projectile appearance [performance concearn using filter]
-  - [ ] verify performance issues
-  - [ ] gampead mechanics
-
-- [ ] docs: consider using an interactive form to showcase game objects (see `dat.gui`)
 
 # Known Issues
 
@@ -36,6 +10,21 @@
 
 # Backlog
 
+- [ ] improvements
+
+  - [ ] test new throttle function @ pause (GameManager.ts and ui/index.ts)
+  - [ ] debug movement points (both bezier and linear)
+  - [ ] request fullscreen through controller
+  - [ ] make projectile and player movement smoother
+  - [ ] verify performance issues
+  - [ ] gampead mechanics
+  - [ ] replace player img
+  - [ ] fix audio transitions
+  - [ ] consider using lerp for alpha and movement (star, explosion)
+  - [ ] consider rewriting Input.ts with enum or const
+  - [x] projectile appearance [performance concearn using filter]
+
+- [ ] docs: consider using an interactive form to showcase game objects (see `dat.gui`)
 - [ ] player items
   - [ ] shield
   - [ ] special
@@ -54,6 +43,15 @@
 - [ ] improve player hitbox
 - [ ] Web Audio API - fadeIn/Out with ramp w/ gain methods are not widely supported
 - [ ] reactive background (using WebAudioAPI. verify browser support)
+- [ ] audio
+  - [ ] ost
+    - [ ] game end (short)
+  - [ ] ui sfx
+    - [ ] pause, (re)start
+    - [ ] ui "tick"
+  - [ ] gameplay sfx (collision, projectile, item)
+- [ ] fade-in/out menus
+- [ ] fade-in/out hud
 
 # DONE
 
@@ -131,3 +129,20 @@
   - [x] lerp, quadratic bezier, cubic bezier
 
 - [x] granular debug for game objects
+- [x] audio (ui sfx, gameplay sfx, game end song)
+
+  - [x] loader
+  - [x] manager
+  - [x] ost
+
+    - [x] game over (short)
+    - [x] level song (short)
+    - [x] boss song (short)
+    - [x] main menu (loop)
+    - [x] pause (loop)
+
+- [x] configuration
+  - [x] settings for: enable audio, audio volume, background density
+  - [x] ui configuration on game start
+  - [x] ui configuration on pause (always open)
+  - [x] fade-in/out options

@@ -1,12 +1,13 @@
+import { Config } from "@/common";
 import {
   ControlAction,
   InputHandler,
   Joystick,
   KeyboardAndMouse,
-  PreferredInput,
 } from "@/common/controls";
 
 export type TriggerOnInput = {
+  destroy?: boolean;
   action: ControlAction;
   fn: () => void;
 };
@@ -17,22 +18,22 @@ export function readInput(inputs: TriggerOnInput[]) {
   const gp: InputHandler = new Joystick();
 
   const interval = setInterval(() => {
-    inputs.forEach((input) => {
-      const joystickHit = gp.getState()[input.action]?.active;
-      const keyboardHit = km.getState()[input.action]?.active;
+    inputs.forEach(({ action, fn, destroy = true }) => {
+      const joystickHit = gp.getState()[action]?.active;
+      const keyboardHit = km.getState()[action]?.active;
       const hit = joystickHit || keyboardHit;
 
       if (hit) {
-        sessionStorage.setItem(
-          PreferredInput.Id,
-          joystickHit
-            ? PreferredInput.Joystick
-            : PreferredInput.KeyboardAndMouse
-        );
-        km.destroy();
-        gp.destroy();
-        clearInterval(interval);
-        input.fn();
+        if (destroy) {
+          Config.set(
+            Config.Key.Input,
+            joystickHit ? Config.Input.Joystick : Config.Input.KeyboardAndMouse
+          );
+          km.destroy();
+          gp.destroy();
+          clearInterval(interval);
+        }
+        fn();
       }
     });
   }, intervalTime);

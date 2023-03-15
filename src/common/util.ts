@@ -6,3 +6,14 @@ export function iterate<T>(
     fn(items[i], i);
   }
 }
+
+export function throttle(fn: Function, time = 200) {
+  let lastCallTime = Date.now() + time;
+  return () => {
+    const now = Date.now();
+    if (now - lastCallTime >= time) {
+      fn(arguments);
+      lastCallTime = now;
+    }
+  };
+}

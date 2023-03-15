@@ -1,5 +1,6 @@
+import { GameState } from "@/common/meta";
 import { R180 } from "@/common/math";
-import { GameObjectName, GameState } from "@/common/meta";
+import { GameObjectName } from "@/common/debug";
 import { ShipParams } from "@/objects";
 import {
   Effect,

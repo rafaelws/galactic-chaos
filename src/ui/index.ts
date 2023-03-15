@@ -4,8 +4,9 @@ import { setup } from "@/main/loop";
 import { AudioEvent, AudioManager } from "@/common";
 import { assets, preloadAudio } from "@/common/asset";
 import { readInput } from "./readInput";
-
-const pauseTimeout = 350;
+import { throttle } from "@/common/util";
+import { hide, show } from "./util";
+import { Options } from "./options";
 
 const loop = setup();
 let audioManager: AudioManager | null = null;
@@ -27,13 +28,8 @@ const elements: { [index: string]: string } = {
   loading: "loading",
 };
 
-function changeDisplay(elId: string, visible = true): void {
-  document.getElementById(elId)!.style.display = visible ? "block" : "none";
-}
-const show = (elId: string) => changeDisplay(elId, true);
-const hide = (elId: string) => changeDisplay(elId, false);
-
 function hideAll() {
+  Options.close();
   for (const el in elements) {
     hide(elements[el]);
   }
@@ -60,6 +56,7 @@ function pause(ev: globalThis.Event) {
   });
 
   show(elements.pauseMenu);
+  Options.open();
 
   // this timeout is required due to the gamepad
   // being waaaaay to fast (and caused a pause loop)
@@ -72,10 +69,12 @@ function pause(ev: globalThis.Event) {
           trigger(GameEvent.pause, false);
           trigger(AudioEvent.resume);
           hide(elements.pauseMenu);
+          Options.close();
         },
       },
+      ...Options.actions,
     ]);
-  }, pauseTimeout);
+  }, 350);
 }
 
 function gameOver() {
@@ -122,11 +121,18 @@ function setupAudio() {
 }
 
 export async function mainMenu() {
-  // await setupAudio();
+  await setupAudio();
+
   hide(elements.loading);
+
   trigger(AudioEvent.mainStream, {
     filePath: assets.audio.menu.main,
   });
-  readInput([{ action: "START", fn: start }]);
+
+  readInput([
+    { action: "START", fn: start },
+    { action: "SELECT", fn: throttle(Options.toggle), destroy: false },
+    ...Options.actions,
+  ]);
   show(elements.mainMenu);
 }

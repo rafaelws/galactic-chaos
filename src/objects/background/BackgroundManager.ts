@@ -12,6 +12,10 @@ export class BackgroundManager implements Drawable {
     return true;
   }
 
+  public set density(amount: number) {
+    this.howManyParticles = amount;
+  }
+
   private genColor() {
     // between cyan and magenta
     const h = randInRange(180, 300);

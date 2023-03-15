@@ -1,5 +1,6 @@
+import { Coordinate, GameState } from "@/common/meta";
+import { GameObjectName } from "@/common/debug";
 import { Clock } from "@/common";
-import { Coordinate, GameObjectName, GameState } from "@/common/meta";
 import { Effect, GameObject } from "../shared";
 import { PlayerItemParams } from "./PlayerItemParams";
 

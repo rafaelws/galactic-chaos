@@ -1,5 +1,4 @@
 import { DebugParams } from "./debug";
-export * from "./debug";
 
 export interface Boundaries {
   width: number;
