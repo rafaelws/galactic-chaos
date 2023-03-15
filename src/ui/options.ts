@@ -110,7 +110,7 @@ export namespace Options {
     });
   }
 
-  function open() {
+  export function open() {
     isOptionsOpen = true;
     init(Config.all());
     currentFieldIx = 0;
@@ -124,6 +124,10 @@ export namespace Options {
     fadeOut(elQuery);
   }
 
+  export function toggle() {
+    isOptionsOpen ? close() : open();
+  }
+
   export const actions: TriggerOnInput[] = [
     { action: "D_UP", destroy: false, fn: throttle(up, 150) },
     { action: "L_UP", destroy: false, fn: throttle(up, 150) },
@@ -135,8 +139,4 @@ export namespace Options {
     { action: "D_RIGHT", destroy: false, fn: throttle(right, 25) },
     { action: "L_RIGHT", destroy: false, fn: throttle(right, 25) },
   ];
-
-  export function toggle() {
-    isOptionsOpen ? close() : open();
-  }
 }

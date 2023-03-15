@@ -101,7 +101,7 @@ export class AudioManager implements Destroyable {
     this.currentTrackPlayDate = Date.now();
     this.lastEvent = ev;
 
-    // this.setEnabled(this.enabled);
+    this.setEnabled(this.enabled);
   }
 
   private async pause(ev: MainstreamEvent) {
@@ -110,6 +110,8 @@ export class AudioManager implements Destroyable {
 
     await this.prepareTrack(ev);
     this.currentTrack?.start();
+
+    this.setEnabled(this.enabled);
   }
 
   private async resume() {

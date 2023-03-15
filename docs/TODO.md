@@ -1,8 +1,5 @@
 # TODO
 
-- [ ] fade-in/fade-out menus and hud
-- [ ] ui configuration on pause
-- [ ] ui configuration on game start
 - [ ] fix Boss movement transition
 - [ ] level design
 
@@ -53,6 +50,8 @@
     - [ ] pause, (re)start
     - [ ] ui "tick"
   - [ ] gameplay sfx (collision, projectile, item)
+- [ ] fade-in/out menus
+- [ ] fade-in/out hud
 
 # DONE
 
@@ -142,4 +141,8 @@
     - [x] main menu (loop)
     - [x] pause (loop)
 
-- [x] configuration (audio, bg density)
+- [x] configuration
+  - [x] settings for: enable audio, audio volume, background density
+  - [x] ui configuration on game start
+  - [x] ui configuration on pause (always open)
+  - [x] fade-in/out options

@@ -8,8 +8,6 @@ import { throttle } from "@/common/util";
 import { hide, show } from "./util";
 import { Options } from "./options";
 
-const pauseTimeout = 350;
-
 const loop = setup();
 let audioManager: AudioManager | null = null;
 
@@ -58,6 +56,7 @@ function pause(ev: globalThis.Event) {
   });
 
   show(elements.pauseMenu);
+  Options.open();
 
   // this timeout is required due to the gamepad
   // being waaaaay to fast (and caused a pause loop)
@@ -70,10 +69,12 @@ function pause(ev: globalThis.Event) {
           trigger(GameEvent.pause, false);
           trigger(AudioEvent.resume);
           hide(elements.pauseMenu);
+          Options.close();
         },
       },
+      ...Options.actions,
     ]);
-  }, pauseTimeout);
+  }, 350);
 }
 
 function gameOver() {
