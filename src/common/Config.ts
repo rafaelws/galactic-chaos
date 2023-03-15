@@ -20,7 +20,7 @@ export namespace Config {
 
   const defaults: Map = {
     Input: Input.KeyboardAndMouse,
-    BackgroundDensity: 2000,
+    BackgroundDensity: 1000,
     AudioEnabled: false,
     // On AudioManager, multiply this value by 0.1
     AudioGain: 8,

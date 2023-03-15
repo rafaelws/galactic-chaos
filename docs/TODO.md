@@ -1,10 +1,12 @@
 # TODO
 
-- [ ] ui: configurations (>enable audio, >audio volume [ost, effects], >bg density, choose input, credits?)
-- [ ] fix Boss movement transition
-- [ ] fix audio transitions
-- [ ] debug movement points (both bezier and linear)
 - [ ] level design
+- [ ] ui configuration on pause
+- [ ] ui configuration on game start
+- [x] ui: configurations (>enable audio, >audio volume [ost, effects], >bg density, choose input, credits?)
+- [ ] fix Boss movement transition
+- [ ] request fullscreen through controller
+
 - [ ] audio (ui sfx, gameplay sfx, game end song)
 
   - [x] loader
@@ -24,11 +26,13 @@
 - [ ] improvements
 
   - [ ] fadeOut menus on ui/index.ts
-  - [ ] make projectile and player movement smoother
+  - [ ] debug movement points (both bezier and linear)
   - [ ] test new throttle function @ pause (GameManager.ts and ui/index.ts)
+  - [ ] make projectile and player movement smoother
   - [ ] verify performance issues
   - [ ] gampead mechanics
   - [ ] replace player img
+  - [ ] fix audio transitions
   - [ ] consider using lerp for alpha and movement (star, explosion)
   - [ ] consider rewriting Input.ts with enum or const
   - [x] projectile appearance [performance concearn using filter]

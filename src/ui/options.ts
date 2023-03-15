@@ -6,8 +6,8 @@ import { $, hide, show } from "./util";
 export namespace Options {
   const elId = "options";
 
-  let currentFieldIx = 0;
   let isOptionsOpen = false;
+  let currentFieldIx = 0;
 
   type Operation = "-" | "+" | null;
 
@@ -70,13 +70,12 @@ export namespace Options {
   function uiToggle(operation: Operation, el: HTMLElement) {
     let value = el.dataset.value === "true" ? true : false;
 
-    if (operation !== null) value = operation === "+" ? true : false;
-
-    if (value) {
-      el.querySelector<HTMLElement>(".toggle")?.classList.add("active");
-    } else {
-      el.querySelector<HTMLElement>(".toggle")?.classList.remove("active");
+    if (operation !== null) {
+      value = operation === "+" ? true : false;
+      Config.set(el.dataset.key as Config.Key, value);
     }
+
+    el.querySelector<HTMLElement>(".toggle")?.classList.toggle("active");
   }
 
   function uiSlider(operation: Operation, el: HTMLElement) {
@@ -91,7 +90,7 @@ export namespace Options {
       if (value <= min) value = min;
       if (value >= max) value = max;
       Config.set(el.dataset.key as Config.Key, value);
-      el.dataset.value = "" + parseFloat("" + value);
+      el.dataset.value = "" + value;
     }
 
     // .handle is 20% wide
@@ -112,12 +111,14 @@ export namespace Options {
     init(Config.all());
     currentFieldIx = 0;
     makeCurrentActive();
+    // $(`#${elId}`)?.classList.toggle("fade-in fade-out");
     show(elId);
   }
 
   export function close() {
     isOptionsOpen = false;
     makeAllInactive();
+    // $(`#${elId}`)?.classList.toggle("fade-in fade-out");
     hide(elId);
   }
 
