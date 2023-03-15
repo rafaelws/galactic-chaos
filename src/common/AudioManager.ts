@@ -34,6 +34,7 @@ export class AudioManager implements Destroyable {
     this.ctx = new AudioContext();
     this.gainNode = this.ctx.createGain();
     this.setGain(Config.get(Config.Key.AudioGain));
+    this.setEnabled(Config.get(Config.Key.AudioEnabled));
   }
 
   private setupListeners() {
@@ -99,6 +100,8 @@ export class AudioManager implements Destroyable {
 
     this.currentTrackPlayDate = Date.now();
     this.lastEvent = ev;
+
+    // this.setEnabled(this.enabled);
   }
 
   private async pause(ev: MainstreamEvent) {
@@ -119,7 +122,7 @@ export class AudioManager implements Destroyable {
   }
 
   private setEnabled(enabled: boolean) {
-    if (enabled === this.enabled) return;
+    // if (enabled === this.enabled) return;
     this.enabled = enabled;
 
     if (enabled) {

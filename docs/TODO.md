@@ -1,33 +1,23 @@
 # TODO
 
-- [ ] level design
+- [ ] fade-in/fade-out menus and hud
 - [ ] ui configuration on pause
 - [ ] ui configuration on game start
-- [x] ui: configurations (>enable audio, >audio volume [ost, effects], >bg density, choose input, credits?)
 - [ ] fix Boss movement transition
-- [ ] request fullscreen through controller
+- [ ] level design
 
-- [ ] audio (ui sfx, gameplay sfx, game end song)
+# Known Issues
 
-  - [x] loader
-  - [x] manager
-  - [x] ost
-    - [ ] game end (short)
-    - [x] game over (short)
-    - [x] level song (short)
-    - [x] boss song (short)
-    - [x] main menu (loop)
-    - [x] pause (loop)
-  - [ ] ui sfx
-    - [ ] pause, (re)start
-    - [ ] ui "tick"
-  - [ ] gameplay sfx (collision, projectile, item)
+- Movement is instantiated once per object. If the world boundaries, frame time (monitor frequency) or object dimensions change, the movement will not behave as expected.
+- Dimensions are set once per object. If the world boundaries change (resize), the object's won't.
+
+# Backlog
 
 - [ ] improvements
 
-  - [ ] fadeOut menus on ui/index.ts
-  - [ ] debug movement points (both bezier and linear)
   - [ ] test new throttle function @ pause (GameManager.ts and ui/index.ts)
+  - [ ] debug movement points (both bezier and linear)
+  - [ ] request fullscreen through controller
   - [ ] make projectile and player movement smoother
   - [ ] verify performance issues
   - [ ] gampead mechanics
@@ -38,14 +28,6 @@
   - [x] projectile appearance [performance concearn using filter]
 
 - [ ] docs: consider using an interactive form to showcase game objects (see `dat.gui`)
-
-# Known Issues
-
-- Movement is instantiated once per object. If the world boundaries, frame time (monitor frequency) or object dimensions change, the movement will not behave as expected.
-- Dimensions are set once per object. If the world boundaries change (resize), the object's won't.
-
-# Backlog
-
 - [ ] player items
   - [ ] shield
   - [ ] special
@@ -64,6 +46,13 @@
 - [ ] improve player hitbox
 - [ ] Web Audio API - fadeIn/Out with ramp w/ gain methods are not widely supported
 - [ ] reactive background (using WebAudioAPI. verify browser support)
+- [ ] audio
+  - [ ] ost
+    - [ ] game end (short)
+  - [ ] ui sfx
+    - [ ] pause, (re)start
+    - [ ] ui "tick"
+  - [ ] gameplay sfx (collision, projectile, item)
 
 # DONE
 
@@ -141,3 +130,16 @@
   - [x] lerp, quadratic bezier, cubic bezier
 
 - [x] granular debug for game objects
+- [x] audio (ui sfx, gameplay sfx, game end song)
+
+  - [x] loader
+  - [x] manager
+  - [x] ost
+
+    - [x] game over (short)
+    - [x] level song (short)
+    - [x] boss song (short)
+    - [x] main menu (loop)
+    - [x] pause (loop)
+
+- [x] configuration (audio, bg density)

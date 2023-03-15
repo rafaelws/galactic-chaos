@@ -75,7 +75,11 @@ export namespace Options {
       Config.set(el.dataset.key as Config.Key, value);
     }
 
-    el.querySelector<HTMLElement>(".toggle")?.classList.toggle("active");
+    if (value) {
+      el.querySelector<HTMLElement>(".toggle")?.classList.add("active");
+    } else {
+      el.querySelector<HTMLElement>(".toggle")?.classList.remove("active");
+    }
   }
 
   function uiSlider(operation: Operation, el: HTMLElement) {
@@ -112,14 +116,20 @@ export namespace Options {
     currentFieldIx = 0;
     makeCurrentActive();
     // $(`#${elId}`)?.classList.toggle("fade-in fade-out");
-    show(elId);
+    // show(elId);
+    const $el = $(`#${elId}`);
+    $el?.classList.remove("fade-out");
+    $el?.classList.add("fade-in");
   }
 
   export function close() {
     isOptionsOpen = false;
     makeAllInactive();
     // $(`#${elId}`)?.classList.toggle("fade-in fade-out");
-    hide(elId);
+    // hide(elId);
+    const $el = $(`#${elId}`);
+    $el?.classList.remove("fade-in");
+    $el?.classList.add("fade-out");
   }
 
   export const actions: TriggerOnInput[] = [
