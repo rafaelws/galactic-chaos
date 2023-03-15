@@ -1,57 +1,52 @@
-# TODO
+# DOING
 
 - [ ] fix Boss movement transition
 - [ ] level design
 
 # Known Issues
 
-- Movement is instantiated once per object. If the world boundaries, frame time (monitor frequency) or object dimensions change, the movement will not behave as expected.
-- Dimensions are set once per object. If the world boundaries change (resize), the object's won't.
+- Screen resize: affects both overall dimensions and movement
+  - Movement is instantiated once per object. If the world boundaries, frame time (monitor frequency) or object dimensions change, the movement will not behave as expected.
+  - Dimensions are set once per object. if the world boundaries change (resize), the object's won't.
 
-# Backlog
+# TODO
+
+- bugs:
+
+  - [ ] handle screen resize on game objects (affects overall dimensions and movement)
+
+- features:
+
+  - [ ] player items
+    - [ ] shield
+    - [ ] special
+  - [ ] projectile
+    - [ ] {idea} deflect projectile on hit
+    - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
+    - [ ] {idea} projectile upgrades (size, amount, speed, rate)
+    - [ ] {idea} canon / beam struggle (time event)
+  - [ ] audio
+    - [ ] ost (game end)
+    - [ ] ui sfx (pause, re(start))
+    - [ ] gameplay sfx (collision, projectile, item)
+    - [ ] Web Audio API - fadeIn/Out with ramp w/ gain methods are not widely supported
+    - [ ] reactive background (using WebAudioAPI. verify browser support)
+  - [ ] overall status: time? score? enemies defeated? projectiles fired?
 
 - [ ] improvements
-
-  - [ ] test new throttle function @ pause (GameManager.ts and ui/index.ts)
   - [ ] debug movement points (both bezier and linear)
-  - [ ] request fullscreen through controller
-  - [ ] make projectile and player movement smoother
-  - [ ] verify performance issues
-  - [ ] gampead mechanics
+  - [ ] fade-in/out menus
+  - [ ] fade-in/out hud
   - [ ] replace player img
-  - [ ] fix audio transitions
+  - [ ] hitboxes
+  - [ ] gampead mechanics
+  - [ ] make projectile and player movement smoother
   - [ ] consider using lerp for alpha and movement (star, explosion)
+  - [ ] syntax sugar: enemy profiles (code)
   - [ ] consider rewriting Input.ts with enum or const
+  - [ ] request fullscreen through controller (config option)
+  - [ ] docs: consider using an interactive form to showcase/test game objects (see `dat.gui`)
   - [x] projectile appearance [performance concearn using filter]
-
-- [ ] docs: consider using an interactive form to showcase game objects (see `dat.gui`)
-- [ ] player items
-  - [ ] shield
-  - [ ] special
-- [ ] projectile
-  - [ ] {idea} deflect projectile on hit (that would be cool)
-  - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
-  - [ ] {idea} projectile upgrades (size, amount, speed, rate)
-- [ ] {bug} handle screen resize on game objects
-- [ ] {low} overall status: time? score? enemies killed? shots fired?` (use LevelManager)
-- [ ] {low}{idea} ship: add 2 movement patterns ship movement (using sin, cos)
-- [ ] {low}{idea} canon / beam struggle (time event)
-- [ ] {low}{idea} syntax sugar: enemy profiles
-- [ ] {research} look for similar games (reference)
-- [ ] {research} look for svg copyleft/cc0 assets
-- [ ] improve projectile hitbox
-- [ ] improve player hitbox
-- [ ] Web Audio API - fadeIn/Out with ramp w/ gain methods are not widely supported
-- [ ] reactive background (using WebAudioAPI. verify browser support)
-- [ ] audio
-  - [ ] ost
-    - [ ] game end (short)
-  - [ ] ui sfx
-    - [ ] pause, (re)start
-    - [ ] ui "tick"
-  - [ ] gameplay sfx (collision, projectile, item)
-- [ ] fade-in/out menus
-- [ ] fade-in/out hud
 
 # DONE
 
