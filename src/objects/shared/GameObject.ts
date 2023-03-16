@@ -4,8 +4,6 @@ import {
   Boundaries,
   Coordinate,
   Drawable,
-  DebugParams,
-  GameObjectName,
   GameState,
   HitBox,
 } from "@/common/meta";
@@ -14,6 +12,7 @@ import { GameEvent } from "./GameEvent";
 import { Effect } from "./Effect";
 import { GameObjectParams } from "./GameObjectParams";
 import { toDeg } from "@/common/math";
+import { DebugParams, GameObjectName } from "@/common/debug";
 
 export abstract class GameObject implements Drawable {
   private points: Coordinate[] = [];

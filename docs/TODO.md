@@ -34,7 +34,6 @@
   - [ ] overall status: time? score? enemies defeated? projectiles fired?
 
 - [ ] improvements
-  - [ ] debug movement points (both bezier and linear)
   - [ ] fade-in/out menus
   - [ ] fade-in/out hud
   - [ ] replace player img
