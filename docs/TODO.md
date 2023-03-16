@@ -1,7 +1,8 @@
 # DOING
 
-- [ ] fix Boss movement transition
 - [ ] level design
+- [ ] debounce start/select (where?)
+- [ ] boss defeated event?
 
 # Known Issues
 
@@ -136,7 +137,10 @@
     - [x] pause (loop)
 
 - [x] configuration
+
   - [x] settings for: enable audio, audio volume, background density
   - [x] ui configuration on game start
   - [x] ui configuration on pause (always open)
   - [x] fade-in/out options
+
+- [x] fix Boss movement transition (with alpha)

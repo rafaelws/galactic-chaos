@@ -1,5 +1,5 @@
 import { GameState } from "@/common/meta";
-import { R180 } from "@/common/math";
+import { lerp, R180 } from "@/common/math";
 import { trigger } from "@/common/events";
 import { iterate } from "@/common/util";
 import { GameObjectName } from "@/common/debug";
@@ -24,6 +24,9 @@ export class Boss extends GameObject {
   private currentPhase = -1;
   private phasesLength: number;
 
+  private alpha = 1;
+  private alphaTime = 0;
+
   constructor(private params: BossParams) {
     super(params);
     this.maxHp = params.hp || 30;
@@ -44,9 +47,12 @@ export class Boss extends GameObject {
   private nextPhase() {
     if (++this.currentPhase < this.phasesLength) {
       const { impact, fire, spawnables } = this.phase;
-      this.movement = null;
       this.impact = new Impact(impact);
       this.fire = new Fire(fire);
+
+      this.movement = null;
+      this.alphaTime = 0;
+      this.alpha = 0.999;
 
       if (!!spawnables) iterate(spawnables, (s) => trigger(GameEvent.spawn, s));
     } else {
@@ -76,6 +82,18 @@ export class Boss extends GameObject {
 
     if (this.phase.nextPhaseCondition(this.phaseParams)) this.nextPhase();
 
+    if (this.alpha < 1) {
+      this.alphaTime += state.delta * 0.001 + 0.05;
+      this.alpha = lerp.pc01(1, 0, this.alphaTime);
+
+      if (this.alphaTime >= 1) {
+        this.alphaTime = 0;
+        this.alpha = 1;
+      } else {
+        return;
+      }
+    }
+
     if (this.movement === null) {
       this.movement = new Movement(
         state.delta,
@@ -86,9 +104,14 @@ export class Boss extends GameObject {
           repeatable: true,
         }
       );
+      this.position = { x: NaN, y: NaN };
     }
 
-    if (!this.hasPosition) this.position = this.movement.startPosition();
+    if (!this.hasPosition) {
+      this.position = this.movement.startPosition();
+      return;
+    }
+
     if (!this.isReady) return;
 
     this.impact.update(state.delta);
@@ -102,6 +125,7 @@ export class Boss extends GameObject {
     c.save();
     c.translate(this.x, this.y);
     c.rotate(this.rotation - R180);
+    if (this.alpha < 1) c.globalAlpha = this.alpha;
     c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
     c.restore();
     this.drawDebug(c, GameObjectName.Boss);

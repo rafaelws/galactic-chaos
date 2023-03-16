@@ -117,13 +117,10 @@ export const coordinate = {
   },
 
   /**
-   * Multiplies x and y by the `f` factor
-   * @param c - the coordinate
-   * @param f - the factor
-   * @returns the coordinate multiplied by the factor
+   * Multiplies x and y by `n`
    */
-  mtpf(c: Coordinate, f: number) {
-    return { x: c.x * f, y: c.y * f };
+  mtpn(c: Coordinate, n: number) {
+    return { x: c.x * n, y: c.y * n };
   },
 
   /**

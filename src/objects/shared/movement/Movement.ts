@@ -112,7 +112,7 @@ export class Movement {
     return { x: target.x * this.world.width, y: target.y * this.world.height };
   }
 
-  private factor() {
+  private t() {
     this.deltaSum += this.delta;
     return this.deltaSum * 0.0001 * (this.current?.speed || 1);
   }
@@ -129,17 +129,17 @@ export class Movement {
   }
 
   private cubicBezier(t: number) {
-    const { sum, mtpf, si } = coordinate;
+    const { sum, mtpn, si } = coordinate;
     const { p0, p1, p2, p3 } = this.pointCache;
 
     if (this.cubicCache === null) {
-      const p0m3 = mtpf(p0, 3);
-      const p1m3 = mtpf(p1, 3);
-      const p2m3 = mtpf(p2, 3);
+      const p0m3 = mtpn(p0, 3);
+      const p1m3 = mtpn(p1, 3);
+      const p2m3 = mtpn(p2, 3);
 
       this.cubicCache = {
         a: sum(si(p0m3), p1m3),
-        b: sum(p0m3, mtpf(p1, -6), p2m3),
+        b: sum(p0m3, mtpn(p1, -6), p2m3),
         c: sum(si(p0), p1m3, si(p2m3), p3),
       };
     }
@@ -147,14 +147,14 @@ export class Movement {
     const quad = t * t;
     return sum(
       p0,
-      mtpf(this.cubicCache.a, t),
-      mtpf(this.cubicCache.b, quad),
-      mtpf(this.cubicCache.c, quad * t)
+      mtpn(this.cubicCache.a, t),
+      mtpn(this.cubicCache.b, quad),
+      mtpn(this.cubicCache.c, quad * t)
     );
   }
 
   public update(): Coordinate {
-    const t = this.factor();
+    const t = this.t();
     let c: Coordinate = zeroCoordinate;
 
     switch (this.current?.nature) {
