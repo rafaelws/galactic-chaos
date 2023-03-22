@@ -1,10 +1,10 @@
 # DOING
 
 - [ ] level design
+- [ ] audio not working properly after refac
 - [ ] debounce start/select (where?)
-- [ ] fix options disappearing at the wrong time on start
 - [ ] boss defeated event?
-- [ ] refac
+- [x] fix options disappearing at the wrong time on start
 
 # Known Issues
 

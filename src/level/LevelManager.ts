@@ -7,8 +7,8 @@ import { ControlState } from "@/common/controls";
 import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
 import { BackgroundManager, GameEvent, GameObject, Player } from "@/objects";
 
-import { Level } from "./Level";
 import { CollisionManager } from "./CollisionManager";
+import { Level } from "./Level";
 import { FirstLevel } from "./levels";
 
 export class LevelManager implements Destroyable {
@@ -18,7 +18,7 @@ export class LevelManager implements Destroyable {
 
   private gameObjects: GameObject[] = [];
   private objectsToSpawn: GameObject[] = [];
-  private readonly levels: Level[] = [FirstLevel()];
+  private readonly levels: Level[] = [new FirstLevel()];
 
   private loaded = false;
   private loading = false;

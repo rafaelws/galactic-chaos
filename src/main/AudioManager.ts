@@ -1,7 +1,9 @@
 import { Config } from "@/common";
 import { assets, getAudio } from "@/common/asset";
+import { readEvent, set } from "@/common/events";
 
 export namespace AudioManager {
+  console.log("rodando");
   interface AudioRequestEvent {
     assetPath: string;
     loop?: boolean;
@@ -19,6 +21,15 @@ export namespace AudioManager {
 
   setGain(Config.get(Config.Key.AudioGain));
   setEnabled(Config.get(Config.Key.AudioEnabled));
+
+  set({
+    [Config.Key.AudioGain]: (ev: globalThis.Event) => {
+      setGain(readEvent<number>(ev));
+    },
+    [Config.Key.AudioEnabled]: (ev: globalThis.Event) => {
+      setEnabled(readEvent<boolean>(ev));
+    },
+  });
 
   async function createTrack(buffer: ArrayBuffer) {
     const track = ctx.createBufferSource();

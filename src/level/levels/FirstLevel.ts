@@ -11,7 +11,7 @@ export class FirstLevel implements Level {
   // 20 (change of pace)
   // 30 (intensity)
   // 42 (+intensity)
-  // 50 (climax)
+  // 50 (climax) [reduce song]
   // 54 (calm)
   // 40 sec to end
   private stages: LevelStage[] = [
@@ -33,7 +33,7 @@ export class FirstLevel implements Level {
   private songLength = 94 * 1000;
   private songStarted = false;
 
-  public init() {
+  constructor() {
     this.nextStage();
   }
 
@@ -44,7 +44,7 @@ export class FirstLevel implements Level {
     let p1 = c(rir(0, 1), 1);
 
     let speed = rir(0.1, 0.5);
-    console.log({ speed });
+    // console.log({ speed });
 
     // if (p0.y > 0.5) p1.y = 0;
     if (p0.y > 0) p0.x = riir(0, 2);

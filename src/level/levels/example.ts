@@ -4,14 +4,6 @@ import { PlayerItem, Rock, Ship } from "@/objects";
 import { EffectType, FirePrecision, FluentMovement } from "@/objects/shared";
 import { AudioManager } from "@/main/AudioManager";
 
-// music map:
-// 20 (change of pace),
-// 30 (intensity),
-// 42 (intensity),
-// 50 (apex),
-// 54 (calm)
-// 40 sec to end
-
 const shipLinear = new FluentMovement()
   .linear(c(0, 0.15), c(1, 0.15))
   .linear(c(1, 0.15), c(0, 0.15), 2)

@@ -111,6 +111,8 @@ export namespace Options {
   }
 
   export function open() {
+    if (isOptionsOpen === true) return;
+
     isOptionsOpen = true;
     init(Config.all());
     currentFieldIx = 0;
@@ -119,6 +121,8 @@ export namespace Options {
   }
 
   export function close() {
+    if (isOptionsOpen === false) return;
+
     isOptionsOpen = false;
     makeAllInactive();
     fadeOut(elQuery);

@@ -14,5 +14,4 @@ export interface Level {
   images?: string[];
   audios?: string[];
   update(state: GameState): GameObject[];
-  init(): void;
 }
