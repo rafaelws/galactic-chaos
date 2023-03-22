@@ -1,6 +1,6 @@
+// FIXME
 import { c } from "@/common/meta";
 import { assets, getImage } from "@/common/asset";
-import { trigger } from "@/common/events";
 import { rir } from "@/common/math";
 import { Boss, BossPhase, PlayerItem, Rock, Ship } from "@/objects";
 import {
@@ -9,7 +9,7 @@ import {
   ImpactParams,
   FluentMovement,
 } from "@/objects/shared";
-import { AudioEvent } from "@/common";
+import { AudioManager } from "@/main/AudioManager";
 
 function secondPhaseRocks(): Rock[] {
   let rocks = [];
@@ -154,9 +154,7 @@ function phases(): BossPhase[] {
 }
 
 function startSong() {
-  trigger(AudioEvent.mainStream, {
-    filePath: assets.audio.levels[0].boss,
-  });
+  AudioManager.play(assets.audio.levels[0].boss);
 }
 
 export function secondStep() {

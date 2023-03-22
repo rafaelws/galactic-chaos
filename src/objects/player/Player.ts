@@ -94,11 +94,15 @@ export class Player extends GameObject {
   }
 
   public handleEffect(effect: Effect) {
-    if (effect.type === EffectType.heal) {
-      const hp = this.hp + effect.amount;
-      this.hp = hp >= this.maxHp ? this.maxHp : hp;
-    } else if (effect.type === EffectType.projectile) {
-      this.hpLoss(effect.amount);
+    switch (effect.type) {
+      case EffectType.heal:
+        const hp = this.hp + effect.amount;
+        this.hp = hp >= this.maxHp ? this.maxHp : hp;
+        break;
+      case EffectType.impact:
+      case EffectType.projectile:
+        this.hpLoss(effect.amount);
+        break;
     }
     trigger(GameEvent.playerHp, { maxHp: this.maxHp, hp: this.hp });
 
@@ -117,14 +121,29 @@ export class Player extends GameObject {
     // TODO modulate velocity
     const velocity = rate * state.delta * 0.5;
 
-    // prettier-ignore
     switch (action) {
-      case "L_UP": this.y -= velocity; break;
-      case "L_DOWN": this.y += velocity; break;
-      case "L_LEFT": this.x -= velocity; break;
-      case "L_RIGHT": this.x += velocity; break;
-      case "ROTATE": this.setRotation(velocity, control.coordinate); break;
-      case "RB": this.fire(); break;
+      case "L_UP":
+      case "D_UP":
+        this.y -= velocity;
+        break;
+      case "L_DOWN":
+      case "D_DOWN":
+        this.y += velocity;
+        break;
+      case "L_LEFT":
+      case "D_LEFT":
+        this.x -= velocity;
+        break;
+      case "L_RIGHT":
+      case "D_RIGHT":
+        this.x += velocity;
+        break;
+      case "ROTATE":
+        this.setRotation(velocity, control.coordinate);
+        break;
+      case "RB":
+        this.fire();
+        break;
     }
 
     // stay inbounds

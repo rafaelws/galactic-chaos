@@ -1,8 +1,8 @@
-import { AudioEvent } from "@/common";
 import { assets, getImage } from "@/common/asset";
 import { trigger } from "@/common/events";
 import { riir, rir } from "@/common/math";
-import { c } from "@/common/meta";
+import { c, GameState } from "@/common/meta";
+import { AudioManager } from "@/main/AudioManager";
 import { GameObject, Rock } from "@/objects";
 import { FluentMovement, GameEvent } from "@/objects/shared";
 import { Level, LevelStage } from "../Level";
@@ -33,7 +33,7 @@ export class FirstLevel implements Level {
   private songLength = 94 * 1000;
   private songStarted = false;
 
-  constructor() {
+  public init() {
     this.nextStage();
   }
 
@@ -62,9 +62,7 @@ export class FirstLevel implements Level {
 
   private startSong() {
     if (this.songStarted) return;
-    trigger(AudioEvent.mainStream, {
-      filePath: assets.audio.levels[0].theme,
-    });
+    AudioManager.play(assets.audio.levels[0].theme);
     this.songStarted = true;
   }
 
@@ -76,7 +74,7 @@ export class FirstLevel implements Level {
     }
   }
 
-  public update(delta: number): GameObject[] {
+  public update({ delta }: GameState): GameObject[] {
     this.startSong();
 
     this.timePast += delta;

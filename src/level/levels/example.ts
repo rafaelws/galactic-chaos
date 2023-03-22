@@ -2,8 +2,7 @@ import { assets, getImage } from "@/common/asset";
 import { c } from "@/common/meta";
 import { PlayerItem, Rock, Ship } from "@/objects";
 import { EffectType, FirePrecision, FluentMovement } from "@/objects/shared";
-import { trigger } from "@/common/events";
-import { AudioEvent } from "@/common";
+import { AudioManager } from "@/main/AudioManager";
 
 // music map:
 // 20 (change of pace),
@@ -66,9 +65,7 @@ export function firstStep() {
 }
 
 export function _firstStep() {
-  trigger(AudioEvent.mainStream, {
-    filePath: assets.audio.levels[0].theme,
-  });
+  AudioManager.play(assets.audio.levels[0].theme);
 
   const quadraticRock = new Rock({
     img: getImage(assets.img.rock.brown[4]),

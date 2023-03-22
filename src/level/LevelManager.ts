@@ -1,40 +1,40 @@
 import { Boundaries, Destroyable, GameState } from "@/common/meta";
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
+import { Config } from "@/common";
+import { NoDebug } from "@/common/debug";
 import { iterate } from "@/common/util";
 import { ControlState } from "@/common/controls";
-import { NoDebug } from "@/common/debug";
 import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
 import { BackgroundManager, GameEvent, GameObject, Player } from "@/objects";
 
 import { Level } from "./Level";
-import { firstLevel } from "./1";
 import { CollisionManager } from "./CollisionManager";
-import { Config } from "@/common";
+import { FirstLevel } from "./levels";
 
 export class LevelManager implements Destroyable {
+  private finalLevelIx = -1;
+  private currentLevelIx = -1;
+  private level: Level | null = null;
+
+  private gameObjects: GameObject[] = [];
+  private objectsToSpawn: GameObject[] = [];
+  private readonly levels: Level[] = [FirstLevel()];
+
   private loaded = false;
   private loading = false;
-
-  private currentLevel = -1;
-  private finalLevel = -1;
-
-  private currentStep = -1;
-  private finalStep = -1;
+  private listeners: ListenerMap;
 
   private player?: Player;
   private background?: BackgroundManager;
   private collision?: CollisionManager;
-  private gameObjects: GameObject[] = [];
-  private prependables: GameObject[] = [];
-
-  private listeners: ListenerMap;
-
-  private readonly levels: Level[] = [firstLevel];
 
   constructor() {
     this.listeners = {
       [GameEvent.spawn]: (ev: globalThis.Event) => {
-        this.prependables.push(readEvent<GameObject>(ev));
+        this.objectsToSpawn.push(readEvent<GameObject>(ev));
+      },
+      [GameEvent.nextLevel]: (_: globalThis.Event) => {
+        this.level = this.nextLevel();
       },
       [Config.Key.BackgroundDensity]: (ev: globalThis.Event) => {
         if (this.background) this.background.density = readEvent<number>(ev);
@@ -42,12 +42,8 @@ export class LevelManager implements Destroyable {
     };
     set(this.listeners);
 
-    this.finalLevel = this.levels.length;
-    this.nextLevel();
-  }
-
-  private get level() {
-    return this.levels[this.currentLevel];
+    this.finalLevelIx = this.levels.length;
+    this.level = this.nextLevel();
   }
 
   public destroy(): void {
@@ -55,21 +51,13 @@ export class LevelManager implements Destroyable {
   }
 
   private nextLevel() {
-    if (++this.currentLevel < this.finalLevel) {
+    if (++this.currentLevelIx < this.finalLevelIx) {
       this.loaded = false;
       this.loading = false;
-      this.currentStep = -1;
-      this.finalStep = this.level.steps.length;
+      return this.levels[this.currentLevelIx];
     } else {
       trigger(GameEvent.gameEnd);
-    }
-  }
-
-  private nexStep(): void {
-    if (++this.currentStep < this.finalStep) {
-      this.gameObjects = this.level.steps[this.currentStep]();
-    } else {
-      this.nextLevel();
+      return null;
     }
   }
 
@@ -78,12 +66,14 @@ export class LevelManager implements Destroyable {
     this.loading = true;
     // TODO trigger loading=true
 
-    const { images, audios } = this.level;
+    if (!!this.level) {
+      const { images, audios } = this.level;
 
-    await Promise.all([
-      ...preloadAudio(audios || []),
-      ...preloadImages(images || []),
-    ]);
+      await Promise.all([
+        ...preloadAudio(audios || []),
+        ...preloadImages(images || []),
+      ]);
+    }
 
     this.loaded = true;
     this.loading = false;
@@ -130,10 +120,16 @@ export class LevelManager implements Destroyable {
 
       const state = { ...playerState, player: this.player.hitbox };
 
-      // verify performance impacts
-      if (this.prependables.length > 0) {
-        this.gameObjects = this.prependables.concat(this.gameObjects);
-        this.prependables = [];
+      const newObjects = this.level?.update(state) || [];
+
+      if (this.objectsToSpawn.length > 0) {
+        this.gameObjects = this.objectsToSpawn.concat(
+          newObjects,
+          this.gameObjects
+        );
+        this.objectsToSpawn = [];
+      } else {
+        this.gameObjects = newObjects.concat(this.gameObjects);
       }
 
       // update/rendering order: background, player/gameObjects, collisions
@@ -161,9 +157,6 @@ export class LevelManager implements Destroyable {
 
     this.player?.draw(c);
     iterate(this.gameObjects, (gameObject) => gameObject.draw(c));
-
     this.collision?.draw(c);
-
-    if (this.gameObjects.length == 0) this.nexStep();
   }
 }

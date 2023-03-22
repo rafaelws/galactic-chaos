@@ -1,5 +1,7 @@
 import { Coordinate, HitBox } from "./meta";
 
+// refac using namespace
+
 const RAD = Math.PI / 180;
 const DEG = 180 / Math.PI;
 

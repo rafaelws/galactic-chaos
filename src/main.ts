@@ -1,4 +1,4 @@
 import "./css/main.css";
-import { mainMenu } from "./ui";
+import { UI } from "./ui";
 
-document.addEventListener("DOMContentLoaded", mainMenu);
+document.addEventListener("DOMContentLoaded", UI.mainMenu);
