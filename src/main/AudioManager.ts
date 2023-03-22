@@ -92,11 +92,11 @@ export namespace AudioManager {
     gainNode.gain.value = gain;
   }
 
-  export function setEnabled(enabled: boolean) {
+  export function setEnabled(_enabled: boolean) {
     // if (enabled === enabled) return;
-    enabled = enabled;
+    enabled = _enabled;
 
-    if (enabled) {
+    if (_enabled) {
       if (ctx.state === "suspended") ctx.resume();
     } else {
       if (ctx.state === "running") ctx.suspend();
