@@ -4,24 +4,23 @@ import { Config } from "@/common";
 import { NoDebug } from "@/common/debug";
 import { iterate } from "@/common/util";
 import { ControlState } from "@/common/controls";
-import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
+import { assets, getImage } from "@/common/asset";
 import { BackgroundManager, GameEvent, GameObject, Player } from "@/objects";
 
 import { CollisionManager } from "./CollisionManager";
-import { Level } from "./Level";
-import { FirstLevel } from "./levels";
+import { firstLevel } from "./levels";
+
+type LevelFn = () => Promise<GameObject[]>;
 
 export class LevelManager implements Destroyable {
+  private loading = false;
   private finalLevelIx = -1;
   private currentLevelIx = -1;
-  private level: Level | null = null;
 
   private gameObjects: GameObject[] = [];
   private objectsToSpawn: GameObject[] = [];
-  private readonly levels: Level[] = [new FirstLevel()];
+  private readonly levels: LevelFn[] = [firstLevel];
 
-  private loaded = false;
-  private loading = false;
   private listeners: ListenerMap;
 
   private player?: Player;
@@ -33,9 +32,6 @@ export class LevelManager implements Destroyable {
       [GameEvent.spawn]: (ev: globalThis.Event) => {
         this.objectsToSpawn.push(readEvent<GameObject>(ev));
       },
-      [GameEvent.nextLevel]: (_: globalThis.Event) => {
-        this.level = this.nextLevel();
-      },
       [Config.Key.BackgroundDensity]: (ev: globalThis.Event) => {
         if (this.background) this.background.density = readEvent<number>(ev);
       },
@@ -43,7 +39,7 @@ export class LevelManager implements Destroyable {
     set(this.listeners);
 
     this.finalLevelIx = this.levels.length;
-    this.level = this.nextLevel();
+    this.nextLevel();
   }
 
   public destroy(): void {
@@ -52,32 +48,19 @@ export class LevelManager implements Destroyable {
 
   private nextLevel() {
     if (++this.currentLevelIx < this.finalLevelIx) {
-      this.loaded = false;
-      this.loading = false;
-      return this.levels[this.currentLevelIx];
+      this.loading = true;
+
+      this.levels[this.currentLevelIx]()
+        .then((objects) => {
+          this.gameObjects = this.gameObjects.concat(objects);
+        })
+        .catch((err) => console.error("could not load assets", err))
+        .finally(() => {
+          this.loading = false;
+        });
     } else {
       trigger(GameEvent.gameEnd);
-      return null;
     }
-  }
-
-  private async load(): Promise<void> {
-    if (this.loading || this.loaded) return;
-    this.loading = true;
-    // TODO trigger loading=true
-
-    if (!!this.level) {
-      const { images, audios } = this.level;
-
-      await Promise.all([
-        ...preloadAudio(audios || []),
-        ...preloadImages(images || []),
-      ]);
-    }
-
-    this.loaded = true;
-    this.loading = false;
-    // TODO trigger loading=false
   }
 
   public update(
@@ -87,12 +70,6 @@ export class LevelManager implements Destroyable {
     debug = NoDebug
   ): void {
     if (this.loading) return;
-
-    if (!this.loaded) {
-      this.load();
-      return;
-    }
-
     if (!this.player) {
       this.player = new Player({
         img: getImage(assets.img.player.self),
@@ -120,16 +97,9 @@ export class LevelManager implements Destroyable {
 
       const state = { ...playerState, player: this.player.hitbox };
 
-      const newObjects = this.level?.update(state) || [];
-
       if (this.objectsToSpawn.length > 0) {
-        this.gameObjects = this.objectsToSpawn.concat(
-          newObjects,
-          this.gameObjects
-        );
+        this.gameObjects = this.objectsToSpawn.concat(this.gameObjects);
         this.objectsToSpawn = [];
-      } else {
-        this.gameObjects = newObjects.concat(this.gameObjects);
       }
 
       // update/rendering order: background, player/gameObjects, collisions
@@ -150,13 +120,14 @@ export class LevelManager implements Destroyable {
   }
 
   public draw(c: CanvasRenderingContext2D): void {
-    if (this.loading || !this.loaded) return;
-
+    if (this.loading) return;
     // update/rendering order: background, player/gameObjects, collisions
     this.background?.draw(c);
 
     this.player?.draw(c);
     iterate(this.gameObjects, (gameObject) => gameObject.draw(c));
     this.collision?.draw(c);
+
+    if (this.gameObjects.length == 0) this.nextLevel();
   }
 }
