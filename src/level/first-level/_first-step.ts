@@ -5,6 +5,14 @@ import { EffectType, FirePrecision, FluentMovement } from "@/objects/shared";
 import { trigger } from "@/common/events";
 import { AudioEvent } from "@/common";
 
+// music map:
+// 20 (change of pace),
+// 30 (intensity),
+// 42 (intensity),
+// 50 (apex),
+// 54 (calm)
+// 40 sec to end
+
 const shipLinear = new FluentMovement()
   .linear(c(0, 0.15), c(1, 0.15))
   .linear(c(1, 0.15), c(0, 0.15), 2)
@@ -42,21 +50,22 @@ const crossScreenlinear = new FluentMovement()
   .repeatable()
   .get();
 
-// export function firstStep() {
-//   return [
-//     new PlayerItem({
-//       img: getImage(assets.img.player.items.heal),
-//       timeout: 100 * 1000,
-//       position: { x: 500, y: 500 },
-//       effect: {
-//         type: EffectType.heal,
-//         amount: 5,
-//       },
-//     }),
-//   ];
-// }
-
 export function firstStep() {
+  return [
+    new PlayerItem({
+      img: getImage(assets.img.player.items.heal),
+      // timeout: 100 * 1000,
+      timeout: 1,
+      position: { x: 500, y: 500 },
+      effect: {
+        type: EffectType.heal,
+        amount: 5,
+      },
+    }),
+  ];
+}
+
+export function _firstStep() {
   trigger(AudioEvent.mainStream, {
     filePath: assets.audio.levels[0].theme,
   });

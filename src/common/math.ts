@@ -14,10 +14,18 @@ export function toDeg(rad: number) {
 }
 
 /**
+ * Random number In Range
  * Returns a random number between min (inclusive) and max (exclusive)
  */
-export function randInRange(min: number, max: number) {
+export function rir(min: number, max: number) {
   return Math.random() * (max - min) + min;
+}
+
+/**
+ * Random Integer In Range
+ */
+export function riir(min: number, max: number) {
+  return Math.floor(rir(min, max));
 }
 
 /**

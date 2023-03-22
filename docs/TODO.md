@@ -2,7 +2,9 @@
 
 - [ ] level design
 - [ ] debounce start/select (where?)
+- [ ] fix options disappearing at the wrong time on start
 - [ ] boss defeated event?
+- [ ] refac
 
 # Known Issues
 
@@ -14,7 +16,7 @@
 
 - bugs:
 
-  - [ ] handle screen resize on game objects (affects overall dimensions and movement)
+  - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
 
 - features:
 

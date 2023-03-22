@@ -1,6 +1,6 @@
 import { Clock } from "@/common";
 import { trigger } from "@/common/events";
-import { atan2, R180, randInRange, toRad } from "@/common/math";
+import { atan2, R180, rir, toRad } from "@/common/math";
 import { Concrete, Coordinate, HitBox } from "@/common/meta";
 import { GameEvent, Projectile } from "@/objects";
 import { FireParams, FirePrecision } from "./FireParams";
@@ -27,7 +27,7 @@ export class Fire {
     if (this.fire.precision === FirePrecision.Accurate) {
       angle = rotation;
     } else if (this.fire.precision === FirePrecision.Loose) {
-      angle = rotation + randInRange(-0.25, 0.25);
+      angle = rotation + rir(-0.25, 0.25);
     } else {
       // SIMPLE
       angle = this.fire.angle;

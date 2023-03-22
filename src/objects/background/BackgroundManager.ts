@@ -1,4 +1,4 @@
-import { randInRange } from "@/common/math";
+import { rir } from "@/common/math";
 import { Drawable, GameState } from "@/common/meta";
 import { iterate } from "@/common/util";
 import { Star } from "./Star";
@@ -18,9 +18,9 @@ export class BackgroundManager implements Drawable {
 
   private genColor() {
     // between cyan and magenta
-    const h = randInRange(180, 300);
-    const s = randInRange(50, 100);
-    const l = randInRange(50, 100);
+    const h = rir(180, 300);
+    const s = rir(50, 100);
+    const l = rir(50, 100);
     return `hsl(${h}, ${s}%, ${l}%)`;
   }
 
@@ -33,12 +33,12 @@ export class BackgroundManager implements Drawable {
         new Star({
           color: this.genColor(),
           position: {
-            x: randInRange(0, state.worldBoundaries.width),
-            y: started ? 0 : randInRange(0, state.worldBoundaries.height),
+            x: rir(0, state.worldBoundaries.width),
+            y: started ? 0 : rir(0, state.worldBoundaries.height),
           },
-          radius: randInRange(0.15, 0.85),
-          speed: randInRange(0.1, 5),
-          glowSpeed: randInRange(1000, 2000),
+          radius: rir(0.15, 0.85),
+          speed: rir(0.1, 5),
+          glowSpeed: rir(1000, 2000),
         })
       );
     }

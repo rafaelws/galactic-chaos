@@ -1,7 +1,7 @@
 import { c } from "@/common/meta";
 import { assets, getImage } from "@/common/asset";
 import { trigger } from "@/common/events";
-import { randInRange } from "@/common/math";
+import { rir } from "@/common/math";
 import { Boss, BossPhase, PlayerItem, Rock, Ship } from "@/objects";
 import {
   EffectType,
@@ -14,13 +14,13 @@ import { AudioEvent } from "@/common";
 function secondPhaseRocks(): Rock[] {
   let rocks = [];
   for (let i = 1; i <= 18; i++) {
-    const whichRock = Math.floor(randInRange(5, 10));
+    const whichRock = Math.floor(rir(5, 10));
     const img = getImage(assets.img.rock.brown[whichRock]);
     const rockCommon = {
       impact: { collisionTimeout: 1000 },
       spawnTimeout: (i <= 9 ? 1 : 2) * 5000,
       img,
-      rotationSpeed: randInRange(-5, 5),
+      rotationSpeed: rir(-5, 5),
     };
 
     rocks.push(
@@ -28,21 +28,21 @@ function secondPhaseRocks(): Rock[] {
       new Rock({
         ...rockCommon,
         movement: new FluentMovement()
-          .linear(c(randInRange(0, 1), 0), c(randInRange(0, 1), 1))
+          .linear(c(rir(0, 1), 0), c(rir(0, 1), 1))
           .get(),
       }),
       // right to left
       new Rock({
         ...rockCommon,
         movement: new FluentMovement()
-          .linear(c(1, randInRange(0, 1)), c(0, randInRange(0, 1)))
+          .linear(c(1, rir(0, 1)), c(0, rir(0, 1)))
           .get(),
       }),
       // left to right
       new Rock({
         ...rockCommon,
         movement: new FluentMovement()
-          .linear(c(0, randInRange(0, 1)), c(1, randInRange(0, 1)))
+          .linear(c(0, rir(0, 1)), c(1, rir(0, 1)))
           .get(),
       })
     );
@@ -153,14 +153,19 @@ function phases(): BossPhase[] {
   return [firstPhase, secondPhase, thirdPhase];
 }
 
-export function secondStep() {
+function startSong() {
   trigger(AudioEvent.mainStream, {
     filePath: assets.audio.levels[0].boss,
   });
+}
+
+export function secondStep() {
+  const songLength = 94;
+  startSong();
 
   return [
     new Boss({
-      hp: 30,
+      hp: 3,
       phases: phases(),
       img: getImage(assets.img.ship.level1[2]),
     }),
