@@ -4,8 +4,6 @@ import { Store } from "./Store";
 export namespace Config {
   const storageKey = "configuration";
 
-  export type Map = { [ix in Key]: any };
-
   export enum Input {
     KeyboardAndMouse = "KM",
     Joystick = "GP",
@@ -17,6 +15,8 @@ export namespace Config {
     AudioEnabled = "AudioEnabled",
     AudioGain = "AudioGain",
   }
+
+  export type Map = { [ix in Key]: any };
 
   const defaults: Map = {
     Input: Input.KeyboardAndMouse,

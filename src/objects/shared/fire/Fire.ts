@@ -1,7 +1,7 @@
 import { Clock } from "@/common";
 import { trigger } from "@/common/events";
 import { atan2, R180, rir, toRad } from "@/common/math";
-import { Concrete, Coordinate, HitBox } from "@/common/meta";
+import { Concrete, Point, HitBox } from "@/common/meta";
 import { GameEvent, Projectile } from "@/objects";
 import { FireParams, FirePrecision } from "./FireParams";
 
@@ -21,7 +21,7 @@ export class Fire {
     this.fireClock = new Clock(this.fire.rate, true);
   }
 
-  private shoot(center: Coordinate, rotation: number): void {
+  private shoot(center: Point, rotation: number): void {
     let angle = 0;
 
     if (this.fire.precision === FirePrecision.Accurate) {
@@ -44,7 +44,7 @@ export class Fire {
     );
   }
 
-  private getRotation(from: Coordinate, player: Coordinate): number {
+  private getRotation(from: Point, player: Point): number {
     if (this.fire.rate === 0) return R180;
 
     return this.fire.precision === "SIMPLE"
@@ -56,7 +56,7 @@ export class Fire {
    * @param center gameObject.hitbox
    * @returns rotation
    */
-  public update(delta: number, player: HitBox, center: Coordinate): number {
+  public update(delta: number, player: HitBox, center: Point): number {
     const rotation = this.getRotation(center, player);
 
     if (this.fire.rate === 0) return rotation;

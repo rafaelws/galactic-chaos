@@ -1,6 +1,4 @@
-import { Coordinate, HitBox } from "./meta";
-
-// refac using namespace
+import { Point, HitBox } from "./meta";
 
 const RAD = Math.PI / 180;
 const DEG = 180 / Math.PI;
@@ -36,7 +34,7 @@ export function riir(min: number, max: number) {
  * `{x: this.x + this.cx, y: this.y + this.cy }`
  * @returns angle in radians
  */
-export function atan2(from: Coordinate, to: Coordinate) {
+export function atan2(from: Point, to: Point) {
   return Math.atan2(from.x - to.x, from.y - to.y);
 }
 
@@ -68,26 +66,32 @@ export const lerp = {
   p(a: number, b: number, t: number) {
     return (1 - t) * a + t * b;
   },
+
   // imprecise, unclamped
   i(a: number, b: number, t: number) {
     return a + t * (b - a);
   },
+
   // precise, clamp01
   pc01(a: number, b: number, t: number) {
     return this.p(a, b, clamp01(t));
   },
+
   // imprecise, clamp01
   ic01(a: number, b: number, t: number) {
     return this.i(a, b, clamp01(t));
   },
+
   // precise, clamped
   pc(a: number, b: number, t: number, min: number, max: number) {
     return this.p(a, b, clamp(t, min, max));
   },
+
   // imprecise, clamped
   ic(a: number, b: number, t: number, min: number, max: number) {
     return this.i(a, b, clamp(t, min, max));
   },
+
   // shapes of `t`
   tShaper: {
     easeInOutSine(t: number) {
@@ -99,11 +103,11 @@ export const lerp = {
   },
 };
 
-export const coordinate = {
+export const point = {
   /**
    * precise, clamp01
    */
-  lerp(start: Coordinate, end: Coordinate, t: number): Coordinate {
+  lerp(start: Point, end: Point, t: number): Point {
     return {
       x: lerp.pc01(start.x, end.x, t),
       y: lerp.pc01(start.y, end.y, t),
@@ -111,9 +115,9 @@ export const coordinate = {
   },
 
   /**
-   * sum n coordinates
+   * sum n points
    */
-  sum(...coords: Coordinate[]) {
+  sum(...coords: Point[]) {
     let x = 0;
     let y = 0;
 
@@ -129,14 +133,14 @@ export const coordinate = {
   /**
    * Multiplies x and y by `n`
    */
-  mtpn(c: Coordinate, n: number) {
+  mtpn(c: Point, n: number) {
     return { x: c.x * n, y: c.y * n };
   },
 
   /**
-   * coordinate signal inversion
+   * signal inversion
    */
-  si(c: Coordinate) {
+  si(c: Point) {
     return { x: -c.x, y: -c.y };
   },
 };

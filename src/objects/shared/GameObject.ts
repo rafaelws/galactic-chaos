@@ -1,12 +1,6 @@
 import { Clock } from "@/common";
 import { trigger } from "@/common/events";
-import {
-  Boundaries,
-  Coordinate,
-  Drawable,
-  GameState,
-  HitBox,
-} from "@/common/meta";
+import { Boundaries, Point, Drawable, GameState, HitBox } from "@/common/meta";
 import { iterate } from "@/common/util";
 import { GameEvent } from "./GameEvent";
 import { Effect } from "./Effect";
@@ -15,7 +9,7 @@ import { toDeg } from "@/common/math";
 import { DebugParams, GameObjectName } from "@/common/debug";
 
 export abstract class GameObject implements Drawable {
-  private points: Coordinate[] = [];
+  private points: Point[] = [];
 
   // status
   protected hp: number;
@@ -98,11 +92,11 @@ export abstract class GameObject implements Drawable {
     return !(isNaN(this.x) && isNaN(this.y));
   }
 
-  protected get position(): Coordinate {
+  protected get position(): Point {
     return { x: this.x, y: this.y };
   }
 
-  protected set position({ x, y }: Coordinate) {
+  protected set position({ x, y }: Point) {
     this.x = x;
     this.y = y;
   }
@@ -118,7 +112,7 @@ export abstract class GameObject implements Drawable {
   protected isOutbounds(
     world: Boundaries,
     { width, height }: Boundaries = this.doubledDimensions,
-    { x, y }: Coordinate = this.position
+    { x, y }: Point = this.position
   ): boolean {
     return (
       x + width < 0 ||

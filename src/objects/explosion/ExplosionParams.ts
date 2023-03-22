@@ -1,8 +1,8 @@
-import { Coordinate } from "@/common/meta";
+import { Point } from "@/common/meta";
 import { ExplosionProfileName } from "./profiles";
 
 export interface ExplosionParams {
-  epicenter: Coordinate;
+  epicenter: Point;
   howManyParticles?: number;
   profile: ExplosionProfileName;
 }

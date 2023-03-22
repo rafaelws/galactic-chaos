@@ -1,33 +1,33 @@
-import { coordinate } from "@/common/math";
-import { Boundaries, Concrete, Coordinate } from "@/common/meta";
+import { point } from "@/common/math";
+import { Boundaries, Concrete, Point } from "@/common/meta";
 import { MovementNature, MovementParams, MovementStep } from "./MovementParams";
 
-const zeroCoordinate = { x: 0, y: 0 } as const;
-const zeroCoordinatePoints = {
-  p0: zeroCoordinate,
-  p1: zeroCoordinate,
-  p2: zeroCoordinate,
-  p3: zeroCoordinate,
+const zeroPoint = { x: 0, y: 0 } as const;
+const zeroedPoints = {
+  p0: zeroPoint,
+  p1: zeroPoint,
+  p2: zeroPoint,
+  p3: zeroPoint,
 };
 
 interface PointCache {
-  p0: Coordinate;
-  p1: Coordinate;
-  p2: Coordinate;
-  p3: Coordinate;
+  p0: Point;
+  p1: Point;
+  p2: Point;
+  p3: Point;
 }
 
 type CubicBezierCoefficientCache = {
-  a: Coordinate;
-  b: Coordinate;
-  c: Coordinate;
+  a: Point;
+  b: Point;
+  c: Point;
 };
 
 export class Movement {
   private readonly stepDefaults: Concrete<MovementStep> = {
     nature: MovementNature.Linear,
     speed: 1,
-    ...zeroCoordinatePoints,
+    ...zeroedPoints,
   };
 
   private steps: MovementStep[];
@@ -36,7 +36,7 @@ export class Movement {
   private current: Concrete<MovementStep> | null = null;
   private deltaSum: number = 0;
 
-  private pointCache: PointCache = zeroCoordinatePoints;
+  private pointCache: PointCache = zeroedPoints;
   private cubicCache: CubicBezierCoefficientCache | null = null;
 
   private repeatable: boolean;
@@ -93,7 +93,7 @@ export class Movement {
     }
   }
 
-  public offset(relative: Coordinate, absolute: Coordinate) {
+  public offset(relative: Point, absolute: Point) {
     const { width, height } = this.object;
     let x = absolute.x;
     let y = absolute.y;
@@ -104,11 +104,11 @@ export class Movement {
     return { x, y };
   }
 
-  public startPosition(): Coordinate {
+  public startPosition(): Point {
     return this.pointCache.p0;
   }
 
-  private worldPosition(target: Coordinate = zeroCoordinate) {
+  private worldPosition(target: Point = zeroPoint) {
     return { x: target.x * this.world.width, y: target.y * this.world.height };
   }
 
@@ -118,18 +118,18 @@ export class Movement {
   }
 
   private linear(t: number) {
-    return coordinate.lerp(this.pointCache.p0, this.pointCache.p1, t);
+    return point.lerp(this.pointCache.p0, this.pointCache.p1, t);
   }
 
   private quadraticBezier(t: number) {
     const { p0, p1, p2 } = this.pointCache;
-    const q0 = coordinate.lerp(p0, p1, t);
-    const q1 = coordinate.lerp(p1, p2, t);
-    return coordinate.lerp(q0, q1, t);
+    const q0 = point.lerp(p0, p1, t);
+    const q1 = point.lerp(p1, p2, t);
+    return point.lerp(q0, q1, t);
   }
 
   private cubicBezier(t: number) {
-    const { sum, mtpn, si } = coordinate;
+    const { sum, mtpn, si } = point;
     const { p0, p1, p2, p3 } = this.pointCache;
 
     if (this.cubicCache === null) {
@@ -153,9 +153,9 @@ export class Movement {
     );
   }
 
-  public update(): Coordinate {
+  public update(): Point {
     const t = this.t();
-    let c: Coordinate = zeroCoordinate;
+    let c: Point = zeroPoint;
 
     switch (this.current?.nature) {
       case MovementNature.Linear:

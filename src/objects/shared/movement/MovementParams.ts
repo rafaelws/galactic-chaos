@@ -1,6 +1,4 @@
-import { Coordinate } from "@/common/meta";
-
-// TODO ParabolaMovement?
+import { Point } from "@/common/meta";
 
 export enum MovementNature {
   Linear = "l",
@@ -15,10 +13,10 @@ export enum MovementNature {
  */
 export interface MovementStep {
   nature: MovementNature;
-  p0: Coordinate;
-  p1: Coordinate;
-  p2?: Coordinate;
-  p3?: Coordinate;
+  p0: Point;
+  p1: Point;
+  p2?: Point;
+  p3?: Point;
   speed?: number;
 }
 

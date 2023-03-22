@@ -1,4 +1,4 @@
-import { Coordinate } from "@/common/meta";
+import { Point } from "@/common/meta";
 import { Effect } from "../shared";
 
 export interface PlayerItemParams {
@@ -13,7 +13,7 @@ export interface PlayerItemParams {
    *
    * @default { x: 0, y: 0 }
    */
-  position?: Coordinate;
+  position?: Point;
 
   /**
    * How much time does it take to disappear

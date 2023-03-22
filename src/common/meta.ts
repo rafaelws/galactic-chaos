@@ -5,12 +5,12 @@ export interface Boundaries {
   height: number;
 }
 
-export interface Coordinate {
+export interface Point {
   x: number;
   y: number;
 }
 
-export function c(x: number, y: number): Coordinate {
+export function p(x: number, y: number): Point {
   return { x, y };
 }
 

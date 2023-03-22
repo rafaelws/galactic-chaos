@@ -3,7 +3,6 @@ import { assets, getAudio } from "@/common/asset";
 import { readEvent, set } from "@/common/events";
 
 export namespace AudioManager {
-  console.log("rodando");
   interface AudioRequestEvent {
     assetPath: string;
     loop?: boolean;

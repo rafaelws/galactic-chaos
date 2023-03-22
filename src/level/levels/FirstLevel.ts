@@ -1,7 +1,7 @@
 import { assets, getImage } from "@/common/asset";
 import { trigger } from "@/common/events";
 import { riir, rir } from "@/common/math";
-import { c, GameState } from "@/common/meta";
+import { p, GameState } from "@/common/meta";
 import { AudioManager } from "@/main/AudioManager";
 import { GameObject, Rock } from "@/objects";
 import { FluentMovement, GameEvent } from "@/objects/shared";
@@ -40,8 +40,8 @@ export class FirstLevel implements Level {
   private createRock() {
     const which = riir(0, assets.img.rock.brown.length - 5);
 
-    let p0 = c(rir(0, 1), Math.max(rir(-1, 0.5), 0));
-    let p1 = c(rir(0, 1), 1);
+    let p0 = p(rir(0, 1), Math.max(rir(-1, 0.5), 0));
+    let p1 = p(rir(0, 1), 1);
 
     let speed = rir(0.1, 0.5);
     // console.log({ speed });

@@ -1,8 +1,8 @@
-import { Coordinate } from "@/common/meta";
+import { Point } from "@/common/meta";
 
 export interface StarParams {
   color: string;
-  position: Coordinate;
+  position: Point;
   radius: number;
   speed: number;
   glowSpeed: number;

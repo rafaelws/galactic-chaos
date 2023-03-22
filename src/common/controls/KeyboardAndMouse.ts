@@ -51,7 +51,7 @@ export class KeyboardAndMouse implements InputHandler {
     if (type == "mousemove") {
       this.state["ROTATE"] = {
         active: true,
-        coordinate: { x: ev.clientX, y: ev.clientY },
+        point: { x: ev.clientX, y: ev.clientY },
       };
     } else {
       // TODO should it be just RB or other 'key(s)'?

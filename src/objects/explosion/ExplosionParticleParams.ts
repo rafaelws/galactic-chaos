@@ -1,7 +1,7 @@
-import { Boundaries, Coordinate } from "@/common/meta";
+import { Boundaries, Point } from "@/common/meta";
 
 export interface ExplosionParticleParams {
-  epicenter: Coordinate;
+  epicenter: Point;
   angle: number;
   color: string;
   boundaries: Boundaries;

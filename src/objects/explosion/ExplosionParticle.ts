@@ -1,5 +1,5 @@
 import { Clock } from "@/common";
-import { Coordinate, Drawable, GameState } from "@/common/meta";
+import { Point, Drawable, GameState } from "@/common/meta";
 import { ExplosionParticleParams } from "./ExplosionParticleParams";
 
 export class ExplosionParticle implements Drawable {
@@ -7,7 +7,7 @@ export class ExplosionParticle implements Drawable {
   private y: number;
   private cx: number;
   private cy: number;
-  private direction: Coordinate;
+  private direction: Point;
   private alpha: number = 1;
   private alphaClock: Clock;
   private active = true;

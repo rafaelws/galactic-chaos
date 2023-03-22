@@ -1,5 +1,5 @@
 // FIXME
-import { c } from "@/common/meta";
+import { p } from "@/common/meta";
 import { assets, getImage } from "@/common/asset";
 import { rir } from "@/common/math";
 import { Boss, BossPhase, PlayerItem, Rock, Ship } from "@/objects";
@@ -28,21 +28,21 @@ function secondPhaseRocks(): Rock[] {
       new Rock({
         ...rockCommon,
         movement: new FluentMovement()
-          .linear(c(rir(0, 1), 0), c(rir(0, 1), 1))
+          .linear(p(rir(0, 1), 0), p(rir(0, 1), 1))
           .get(),
       }),
       // right to left
       new Rock({
         ...rockCommon,
         movement: new FluentMovement()
-          .linear(c(1, rir(0, 1)), c(0, rir(0, 1)))
+          .linear(p(1, rir(0, 1)), p(0, rir(0, 1)))
           .get(),
       }),
       // left to right
       new Rock({
         ...rockCommon,
         movement: new FluentMovement()
-          .linear(c(0, rir(0, 1)), c(1, rir(0, 1)))
+          .linear(p(0, rir(0, 1)), p(1, rir(0, 1)))
           .get(),
       })
     );
@@ -67,27 +67,27 @@ function finalPhaseShips(): Ship[] {
     new Ship({
       ...shipCommon,
       img: getImage(assets.img.ship.level1[0]),
-      movement: new FluentMovement().linear(c(1, 0.1), c(0, 0.1)).get(),
+      movement: new FluentMovement().linear(p(1, 0.1), p(0, 0.1)).get(),
       spawnables: [newItem()],
     }),
     new Ship({
       ...shipCommon,
       img: getImage(assets.img.ship.level1[0]),
-      movement: new FluentMovement().linear(c(0, 0.1), c(1, 0.1)).get(),
+      movement: new FluentMovement().linear(p(0, 0.1), p(1, 0.1)).get(),
       spawnables: [newItem()],
     }),
     new Ship({
       ...shipCommon,
       spawnTimeout: 3000,
       img: getImage(assets.img.ship.level1[1]),
-      movement: new FluentMovement().linear(c(1, 0.3), c(0, 0.3)).get(),
+      movement: new FluentMovement().linear(p(1, 0.3), p(0, 0.3)).get(),
       spawnables: [newItem()],
     }),
     new Ship({
       ...shipCommon,
       spawnTimeout: 3000,
       img: getImage(assets.img.ship.level1[1]),
-      movement: new FluentMovement().linear(c(0, 0.3), c(1, 0.3)).get(),
+      movement: new FluentMovement().linear(p(0, 0.3), p(1, 0.3)).get(),
       spawnables: [newItem()],
     }),
   ];
@@ -108,9 +108,9 @@ function phases(): BossPhase[] {
       rate: 50,
     },
     movement: new FluentMovement()
-      .quadraticBezier(c(0, 0), c(0.5, 1), c(1, 0))
-      .linear(c(1, 0), c(0, 0.5))
-      .linear(c(0, 0.5), c(1, 1))
+      .quadraticBezier(p(0, 0), p(0.5, 1), p(1, 0))
+      .linear(p(1, 0), p(0, 0.5))
+      .linear(p(0, 0.5), p(1, 1))
       // .quadraticBezier(c(1, 0), c(0.5, 0.3), c(0, 1))
       // .linear(c(0, 1), c(1, 0.6))
       .get(),
@@ -125,8 +125,8 @@ function phases(): BossPhase[] {
       precision: FirePrecision.Loose,
     },
     movement: new FluentMovement()
-      .cubicBezier(c(0, 0), c(0.5, 0.35), c(0.35, 0.5), c(0, 1), 2)
-      .cubicBezier(c(1, 0), c(0.35, 0.5), c(0.5, 0.35), c(0, 0), 2)
+      .cubicBezier(p(0, 0), p(0.5, 0.35), p(0.35, 0.5), p(0, 1), 2)
+      .cubicBezier(p(1, 0), p(0.35, 0.5), p(0.5, 0.35), p(0, 0), 2)
       .repeatable()
       .get(),
     spawnables: secondPhaseRocks(),
@@ -141,11 +141,11 @@ function phases(): BossPhase[] {
       precision: FirePrecision.Accurate,
     },
     movement: new FluentMovement()
-      .linear(c(0, 0.2), c(1, 0.2), 3)
-      .linear(c(1, 0.35), c(0, 0.35), 3)
-      .linear(c(1, 0.5), c(0, 0.5), 3)
-      .linear(c(0, 0.65), c(1, 0.65), 3)
-      .linear(c(0, 0.8), c(1, 0.8), 3)
+      .linear(p(0, 0.2), p(1, 0.2), 3)
+      .linear(p(1, 0.35), p(0, 0.35), 3)
+      .linear(p(1, 0.5), p(0, 0.5), 3)
+      .linear(p(0, 0.65), p(1, 0.65), 3)
+      .linear(p(0, 0.8), p(1, 0.8), 3)
       .get(),
     spawnables: finalPhaseShips(),
   };

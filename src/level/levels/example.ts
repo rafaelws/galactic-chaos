@@ -1,18 +1,18 @@
 import { assets, getImage } from "@/common/asset";
-import { c } from "@/common/meta";
+import { p } from "@/common/meta";
 import { PlayerItem, Rock, Ship } from "@/objects";
 import { EffectType, FirePrecision, FluentMovement } from "@/objects/shared";
 import { AudioManager } from "@/main/AudioManager";
 
 const shipLinear = new FluentMovement()
-  .linear(c(0, 0.15), c(1, 0.15))
-  .linear(c(1, 0.15), c(0, 0.15), 2)
+  .linear(p(0, 0.15), p(1, 0.15))
+  .linear(p(1, 0.15), p(0, 0.15), 2)
   .repeatable()
   .get();
 
 const cubic = new FluentMovement()
   .repeatable()
-  .cubicBezier(c(1, 0), c(0, 1), c(1, 1), c(0, 0))
+  .cubicBezier(p(1, 0), p(0, 1), p(1, 1), p(0, 0))
   // p0: { x: 0, y: 0 },
   // p1: { x: 1, y: 1 },
   // p2: { x: 0, y: 1 },
@@ -22,7 +22,7 @@ const cubic = new FluentMovement()
   // p1: { x: 0.3, y: 0.4 },
   // p2: { x: 0, y: 0.7 },
   // p3: { x: 0.4, y: 0.3 },
-  .cubicBezier(c(0, 0), c(1, 1), c(0, 1), c(0, 1))
+  .cubicBezier(p(0, 0), p(1, 1), p(0, 1), p(0, 1))
   // p0: { x: 0.4, y: 0.3 },
   // p1: { x: 0.5, y: 0.7 },
   // p2: { x: 0, y: 0.2 },
@@ -31,13 +31,13 @@ const cubic = new FluentMovement()
   .get();
 
 const leftQuadratic = new FluentMovement()
-  .quadraticBezier(c(0, 0.15), c(0.5, 0.5), c(1, 0.15), 5)
+  .quadraticBezier(p(0, 0.15), p(0.5, 0.5), p(1, 0.15), 5)
   .repeatable()
   .get();
 
 const crossScreenlinear = new FluentMovement()
-  .linear(c(0, 0), c(1, 1))
-  .linear(c(1, 1), c(0, 0))
+  .linear(p(0, 0), p(1, 1))
+  .linear(p(1, 1), p(0, 0))
   .repeatable()
   .get();
 

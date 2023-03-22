@@ -1,4 +1,4 @@
-import { Boundaries, Coordinate, GameState, HitBox } from "@/common/meta";
+import { Boundaries, Point, GameState, HitBox } from "@/common/meta";
 import { GameObjectName } from "@/common/debug";
 import { Effect, EffectType, GameObject } from "../shared";
 import { ProjectileParams } from "./ProjectileParams";
@@ -10,7 +10,7 @@ export enum ProjectileColor {
 
 export class Projectile extends GameObject {
   private color: string;
-  private direction: Coordinate = { x: 0, y: 0 };
+  private direction: Point = { x: 0, y: 0 };
 
   constructor(private readonly params: ProjectileParams) {
     super(params);
@@ -32,7 +32,7 @@ export class Projectile extends GameObject {
     };
   }
 
-  protected startPoint(_: Boundaries): Coordinate {
+  protected startPoint(_: Boundaries): Point {
     // TODO rethink dimensions
     const width = 3.5;
     const height = 50;

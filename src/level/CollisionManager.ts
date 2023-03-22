@@ -1,5 +1,5 @@
 import { hasCollided } from "@/common/math";
-import { Coordinate, Drawable, GameState } from "@/common/meta";
+import { Point, Drawable, GameState } from "@/common/meta";
 import { iterate } from "@/common/util";
 import {
   Explosion,
@@ -19,7 +19,7 @@ export class CollisionManager implements Drawable {
     return true;
   }
 
-  private addExplosion(where: Coordinate, profile: ExplosionProfileName) {
+  private addExplosion(where: Point, profile: ExplosionProfileName) {
     this.drawables.push(new Explosion({ epicenter: where, profile }));
   }
 

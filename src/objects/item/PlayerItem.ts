@@ -1,4 +1,4 @@
-import { Coordinate, GameState } from "@/common/meta";
+import { Point, GameState } from "@/common/meta";
 import { GameObjectName } from "@/common/debug";
 import { Clock } from "@/common";
 import { Effect, GameObject } from "../shared";
@@ -28,7 +28,7 @@ export class PlayerItem extends GameObject {
     this.y = params.position?.y || 0;
   }
 
-  public setPosition(position: Coordinate) {
+  public setPosition(position: Point) {
     this.x = position.x;
     this.y = position.y;
   }

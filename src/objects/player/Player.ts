@@ -1,4 +1,4 @@
-import { Boundaries, Coordinate, GameState } from "@/common/meta";
+import { Boundaries, Point, GameState } from "@/common/meta";
 import { atan2, toRad } from "@/common/math";
 import { iterate } from "@/common/util";
 import { GameObjectName } from "@/common/debug";
@@ -51,14 +51,14 @@ export class Player extends GameObject {
     return this.projectiles;
   }
 
-  protected startPosition(worldBoundaries: Boundaries): Coordinate {
+  protected startPosition(worldBoundaries: Boundaries): Point {
     return {
       x: worldBoundaries.width * 0.5, // centered
       y: worldBoundaries.height * 0.95 - this.cy, // 5% above bottom
     };
   }
 
-  private setRotation(velocity: number, to?: Coordinate) {
+  private setRotation(velocity: number, to?: Point) {
     if (to) {
       // mouse: rotates from the center of the player
       this.rotation = -atan2(this.hitbox, to);
@@ -139,7 +139,7 @@ export class Player extends GameObject {
         this.x += velocity;
         break;
       case "ROTATE":
-        this.setRotation(velocity, control.coordinate);
+        this.setRotation(velocity, control.point);
         break;
       case "RB":
         this.fire();

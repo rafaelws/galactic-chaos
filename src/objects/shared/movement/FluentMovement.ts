@@ -1,4 +1,4 @@
-import { Coordinate } from "@/common/meta";
+import { Point } from "@/common/meta";
 import { MovementNature, MovementParams } from "./MovementParams";
 
 export class FluentMovement {
@@ -6,7 +6,7 @@ export class FluentMovement {
     steps: [],
   };
 
-  public linear(p0: Coordinate, p1: Coordinate, speed?: number) {
+  public linear(p0: Point, p1: Point, speed?: number) {
     this.params.steps.push({
       nature: MovementNature.Linear,
       p0: p0,
@@ -16,12 +16,7 @@ export class FluentMovement {
     return this;
   }
 
-  public quadraticBezier(
-    p0: Coordinate,
-    p1: Coordinate,
-    p2: Coordinate,
-    speed?: number
-  ) {
+  public quadraticBezier(p0: Point, p1: Point, p2: Point, speed?: number) {
     this.params.steps.push({
       nature: MovementNature.QuadraticBezier,
       p0,
@@ -33,10 +28,10 @@ export class FluentMovement {
   }
 
   public cubicBezier(
-    p0: Coordinate,
-    p1: Coordinate,
-    p2: Coordinate,
-    p3: Coordinate,
+    p0: Point,
+    p1: Point,
+    p2: Point,
+    p3: Point,
     speed?: number
   ) {
     this.params.steps.push({
