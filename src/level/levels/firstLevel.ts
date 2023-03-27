@@ -1,9 +1,48 @@
 import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
-import { riir, rir } from "@/common/math";
 import { p } from "@/common/meta";
 import { AudioManager } from "@/main/AudioManager";
-import { GameObject, healItem, Rock, Ship } from "@/objects";
-import { cubicBezier, linear, quadraticBezier } from "@/objects/shared";
+import { GameObject, healItem, Rock } from "@/objects";
+import { linear } from "@/objects/shared";
+
+function firstWave(rocks: typeof assets.img.rock.brown) {
+  return [
+    new Rock({
+      spawnTimeout: 3.7 * 1000,
+      img: getImage(rocks[9]),
+      movement: linear(p(0.15, 0), p(0.85, 1)),
+    }),
+
+    new Rock({
+      spawnTimeout: 4.9 * 1000,
+      img: getImage(rocks[8]),
+      movement: linear(p(0.5, 0), p(0.5, 1)),
+    }),
+
+    new Rock({
+      spawnTimeout: 5.4 * 1000,
+      img: getImage(rocks[7]),
+      movement: linear(p(0.85, 0), p(0.15, 1)),
+    }),
+
+    new Rock({
+      spawnTimeout: 6.5 * 1000,
+      img: getImage(rocks[8]),
+      movement: linear(p(1, 0.65), p(0, 1)),
+    }),
+
+    new Rock({
+      spawnTimeout: 7.7 * 1000,
+      img: getImage(rocks[9]),
+      movement: linear(p(0, 0.15), p(1, 0.8)),
+    }),
+
+    new Rock({
+      spawnTimeout: 8.7 * 1000,
+      img: getImage(rocks[6]),
+      movement: linear(p(1, 0.68), p(0, 0.2)),
+    }),
+  ];
+}
 
 export async function firstLevel(): Promise<GameObject[]> {
   const themeSong = assets.audio.levels[0].theme;
@@ -29,16 +68,14 @@ export async function firstLevel(): Promise<GameObject[]> {
   // 30=intensity
   // 42=+intensity
   // 50=finish
-  let time = 3.75 * 1000;
-  const firstStep = 20 * 1000;
-  const secondStep = 30 * 1000;
-  const thirdStep = 60 * 1000;
 
   return [
+    ...firstWave(rocks),
+
     new Rock({
-      spawnTimeout: thirdStep,
+      spawnTimeout: 50 * 1000,
       img: getImage(rocks[2]),
-      movement: linear(p(0, 0), p(1, 1), 2).get(),
+      movement: linear(p(0, 0), p(1, 1), 2),
       spawnables: [healItem(3)],
     }),
   ];
