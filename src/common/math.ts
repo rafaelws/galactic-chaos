@@ -31,6 +31,10 @@ export function riir(min: number, max: number) {
   return Math.floor(rir(min, max));
 }
 
+export function dice() {
+  return rir(0, 2) > 1;
+}
+
 /**
  * `x` and `y` for both `from` and `to` are advised to be the center of the object
  *
