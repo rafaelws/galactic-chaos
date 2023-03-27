@@ -1,4 +1,9 @@
-import { GameObjectParams, ImpactParams, MovementParams } from "../shared";
+import {
+  FluentMovement,
+  GameObjectParams,
+  ImpactParams,
+  MovementParams,
+} from "../shared";
 
 export interface RockParams extends GameObjectParams {
   img: HTMLImageElement;
@@ -12,6 +17,6 @@ export interface RockParams extends GameObjectParams {
    */
   rotationSpeed?: number;
 
-  movement: MovementParams;
+  movement: MovementParams | FluentMovement;
   impact?: ImpactParams;
 }

@@ -1,6 +1,29 @@
 import { Point } from "@/common/meta";
 import { MovementNature, MovementParams } from "./MovementParams";
 
+export function linear(p0: Point, p1: Point, speed?: number) {
+  return new FluentMovement().linear(p0, p1, speed);
+}
+
+export function quadraticBezier(
+  p0: Point,
+  p1: Point,
+  p2: Point,
+  speed?: number
+) {
+  return new FluentMovement().quadraticBezier(p0, p1, p2, speed);
+}
+
+export function cubicBezier(
+  p0: Point,
+  p1: Point,
+  p2: Point,
+  p3: Point,
+  speed?: number
+) {
+  return new FluentMovement().cubicBezier(p0, p1, p2, p3, speed);
+}
+
 export class FluentMovement {
   private params: MovementParams = {
     steps: [],

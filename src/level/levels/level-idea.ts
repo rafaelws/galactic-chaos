@@ -185,5 +185,85 @@ export class _FirstLevel implements Level {
     assets.img.ship.level1[1],
   ];
 }
+
+for (let i = 0; i <= 50; i++) {
+    const dice = riir(0, 2) >= 1;
+
+    if (i <= 25) {
+      objects.push(
+        new Rock({
+          spawnTimeout: rir(time, firstStep),
+          rotationSpeed: rir(-3, 2),
+          img: getImage(rocks[riir(4, 10)]),
+          movement: linear(p(rir(0, 1), 0), p(rir(0, 1), 1), riir(0.5, 1)),
+        })
+      );
+
+      objects.push(
+        new Rock({
+          spawnTimeout: rir(time, secondStep),
+          rotationSpeed: rir(-3, 2),
+          img: getImage(rocks[riir(5, 10)]),
+          movement: linear(
+            p(dice ? 1 : 0, rir(0, 1)),
+            p(dice ? 0 : 1, rir(0, 1)),
+            rir(0.5, 1)
+          ),
+        })
+      );
+    }
+
+    objects.push(
+      new Rock({
+        spawnTimeout: rir(firstStep, secondStep),
+        rotationSpeed: rir(-5, 6),
+        img: getImage(rocks[riir(0, 7)]),
+        movement: linear(
+          p(dice ? 1 : 0, rir(0, 1)),
+          p(dice ? 0 : 1, rir(0, 1)),
+          rir(0.7, 3)
+        ),
+      })
+    );
+
+    objects.push(
+      new Rock({
+        spawnTimeout: rir(firstStep, secondStep),
+        rotationSpeed: rir(-5, 6),
+        img: getImage(rocks[riir(0, 7)]),
+        movement: linear(
+          p(rir(0, 1), dice ? 1 : 0),
+          p(rir(0, 1), dice ? 0 : 1),
+          rir(0.7, 3)
+        ),
+      })
+    );
+
+    if (i % 2 === 0) {
+      objects.push(
+        new Ship({
+          spawnTimeout: rir(secondStep, thirdStep),
+          img: getImage(ships[0]),
+          movement: linear(),
+        })
+      );
+    } else if (i % 3 === 0) {
+      objects.push(
+        new Ship({
+          spawnTimeout: rir(secondStep, thirdStep),
+          img: getImage(ships[1]),
+          movement: quadraticBezier(),
+        })
+      );
+    } else if (i % 5 === 0) {
+      objects.push(
+        new Ship({
+          spawnTimeout: rir(secondStep, thirdStep),
+          img: getImage(ships[1]),
+          movement: cubicBezier(),
+        })
+      );
+    }
+  }
 */
 export const foo = 0;

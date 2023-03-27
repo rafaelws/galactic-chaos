@@ -1,5 +1,6 @@
 import {
   FireParams,
+  FluentMovement,
   GameObject,
   GameObjectParams,
   ImpactParams,
@@ -16,7 +17,7 @@ export type BossNextPhaseFn = {
 };
 
 export type BossPhase = {
-  movement: MovementParams;
+  movement: MovementParams | FluentMovement;
   fire?: FireParams;
   impact?: ImpactParams;
   spawnables?: GameObject[];

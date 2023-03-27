@@ -1,5 +1,6 @@
 import { point } from "@/common/math";
 import { Boundaries, Concrete, Point } from "@/common/meta";
+import { FluentMovement } from "./FluentMovement";
 import { MovementNature, MovementParams, MovementStep } from "./MovementParams";
 
 const zeroPoint = { x: 0, y: 0 } as const;
@@ -46,8 +47,10 @@ export class Movement {
     private readonly delta: number,
     private readonly world: Boundaries,
     private readonly object: Boundaries,
-    params: MovementParams
+    params: MovementParams | FluentMovement
   ) {
+    params = params instanceof FluentMovement ? params.get() : params;
+
     this.steps = params.steps;
     this.repeatable = params?.repeatable || false;
     this.step();

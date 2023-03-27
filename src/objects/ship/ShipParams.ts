@@ -1,5 +1,6 @@
 import {
   FireParams,
+  FluentMovement,
   GameObjectParams,
   ImpactParams,
   MovementParams,
@@ -8,7 +9,7 @@ import {
 export interface ShipParams extends GameObjectParams {
   img: HTMLImageElement;
 
-  movement: MovementParams;
+  movement: MovementParams | FluentMovement;
   impact?: ImpactParams;
   fire?: FireParams;
 }

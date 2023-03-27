@@ -99,10 +99,8 @@ export class Boss extends GameObject {
         state.delta,
         state.worldBoundaries,
         this.dimensions,
-        {
-          ...this.phase.movement,
-          repeatable: true,
-        }
+        // TODO should be always repeatable?
+        this.phase.movement
       );
       this.position = { x: NaN, y: NaN };
     }
