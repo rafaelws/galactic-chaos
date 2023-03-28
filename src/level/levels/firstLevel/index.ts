@@ -17,18 +17,8 @@ export type FirstLevelShips = typeof ships;
 export async function firstLevel(): Promise<GameObject[]> {
   const themeSong = assets.audio.levels[0].theme;
 
-  const images = [
-    ...rocks,
-    ...ships,
-    assets.img.player.self,
-    assets.img.player.items.heal,
-    assets.img.player.damage[0],
-    assets.img.player.damage[1],
-    assets.img.player.damage[2],
-  ];
-
-  await Promise.all(preloadAudio([themeSong]));
-  await Promise.all(preloadImages(images));
+  await Promise.all(preloadAudio(themeSong));
+  await Promise.all(preloadImages(...rocks, ...ships, ...assets.common.img));
 
   AudioManager.play(themeSong);
   // nothing until 3.8

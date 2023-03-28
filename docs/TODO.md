@@ -1,8 +1,11 @@
 # DOING
 
-- [ ] level design
 - [ ] debounce start/select (where?)
-- [ ] boss defeated event?
+- [ ][bug] objects with spawnTimeout can be destroyed by player (on the edges of the screen)
+- [ ][bug] audio: track overlap when actions are triggered too close to each other
+- [ ] standards: all enum properties are CAPS or camelCase? using enum vs const
+- [x] level design: first boss
+- [x] level design: level 1/first level
 - [x] audio not working properly after refac
 - [x] fix options disappearing at the wrong time on start
 

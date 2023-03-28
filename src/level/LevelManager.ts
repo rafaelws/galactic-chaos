@@ -8,7 +8,7 @@ import { assets, getImage } from "@/common/asset";
 import { BackgroundManager, GameEvent, GameObject, Player } from "@/objects";
 
 import { CollisionManager } from "./CollisionManager";
-import { firstLevel } from "./levels";
+import { firstLevel, firstBoss } from "./levels";
 
 type LevelFn = () => Promise<GameObject[]>;
 
@@ -19,7 +19,7 @@ export class LevelManager implements Destroyable {
 
   private gameObjects: GameObject[] = [];
   private objectsToSpawn: GameObject[] = [];
-  private readonly levels: LevelFn[] = [firstLevel];
+  private readonly levels: LevelFn[] = [firstLevel, firstBoss];
 
   private listeners: ListenerMap;
 

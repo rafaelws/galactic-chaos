@@ -6,4 +6,7 @@ import { audio } from "./audioDescriptor";
 export const assets = {
   img,
   audio,
+  common: {
+    img: [img.player.self, img.player.items.heal, ...img.player.damage],
+  },
 } as const;

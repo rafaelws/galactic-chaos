@@ -26,6 +26,6 @@ async function loadAudioToCache(filePath: string) {
   return audioCache[filePath];
 }
 
-export function preloadAudio(filePaths: string[]) {
+export function preloadAudio(...filePaths: string[]) {
   return filePaths.map(loadAudioToCache);
 }

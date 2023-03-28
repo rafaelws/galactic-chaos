@@ -107,11 +107,11 @@ export namespace UI {
 
   export async function mainMenu() {
     await Promise.all(
-      preloadAudio([
+      preloadAudio(
         assets.audio.menu.main,
         assets.audio.menu.pause,
-        assets.audio.menu.gameOver,
-      ])
+        assets.audio.menu.gameOver
+      )
     );
     hide(elements.loading);
     AudioManager.play(assets.audio.menu.main);

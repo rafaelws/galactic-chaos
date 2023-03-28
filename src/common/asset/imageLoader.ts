@@ -22,6 +22,6 @@ function loadImage(path: string): Promise<HTMLImageElement> {
   });
 }
 
-export function preloadImages(paths: string[]): Promise<HTMLImageElement>[] {
+export function preloadImages(...paths: string[]): Promise<HTMLImageElement>[] {
   return paths.map(loadImage);
 }
