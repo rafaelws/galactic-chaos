@@ -17,9 +17,7 @@ export namespace Options {
 
   function makeAllInactive() {
     const all = fields();
-    for (let i = 0; i < all.length; i++) {
-      all[i].classList.remove("active");
-    }
+    all.forEach((el) => el.classList.remove("active"));
     return all.length;
   }
 

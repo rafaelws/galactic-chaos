@@ -8,6 +8,7 @@
 // TODO throttle function
 
 import { ControlAction, ControlState, ControlStateData, InputHandler } from ".";
+import { iterate } from "../util";
 
 const indexedButtons = [
   "A",
@@ -44,12 +45,12 @@ function query(gamepad: Gamepad): ControlState {
 
   const { buttons, axes } = gamepad;
 
-  for (let i = 0; i < indexedButtons.length; ++i) {
-    setState(state, indexedButtons[i], {
+  iterate(indexedButtons, (button, i) =>
+    setState(state, button, {
       active: isActive(buttons[i]),
       rate: buttons[i].value,
-    });
-  }
+    })
+  );
 
   const [lh, lv, rh, rv] = axes;
 

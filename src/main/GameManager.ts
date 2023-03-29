@@ -1,4 +1,5 @@
 import { Destroyable } from "@/common/meta";
+import { iterate } from "@/common/util";
 import { set, unset, ListenerMap, readEvent } from "@/common/events";
 import { KeyboardAndMouse, InputHandler, Joystick } from "@/common/controls";
 import { NoDebug } from "@/common/debug";
@@ -40,7 +41,7 @@ export class GameManager implements Destroyable {
 
   public destroy() {
     unset(this.listeners);
-    for (let target of this.destroyables) target.destroy();
+    iterate(this.destroyables, (target) => target.destroy());
   }
 
   private checkPreferredInput() {
