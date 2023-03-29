@@ -55,7 +55,7 @@ export class Projectile extends GameObject {
 
   public effect(): Effect {
     return {
-      type: EffectType.projectile,
+      type: EffectType.Projectile,
       amount: this.params.power,
     };
   }

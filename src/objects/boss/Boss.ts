@@ -33,7 +33,7 @@ export class Boss extends GameObject {
     this.phasesLength = params.phases.length;
     this.setDimensions(this.params.img);
     this.nextPhase();
-    trigger(GameEvent.bossHp, { maxHp: this.maxHp, hp: this.hp });
+    trigger(GameEvent.BossHp, { maxHp: this.maxHp, hp: this.hp });
   }
 
   private get phase() {
@@ -54,7 +54,7 @@ export class Boss extends GameObject {
       this.alphaTime = 0;
       this.alpha = 0.999;
 
-      if (!!spawnables) iterate(spawnables, (s) => trigger(GameEvent.spawn, s));
+      if (!!spawnables) iterate(spawnables, (s) => trigger(GameEvent.Spawn, s));
     } else {
       this.active = false;
     }
@@ -62,17 +62,17 @@ export class Boss extends GameObject {
 
   public handleEffect(effect: Effect): void {
     const { type, amount } = effect;
-    if (type === EffectType.impact) {
+    if (type === EffectType.Impact) {
       this.hpLoss(amount - this.impact.resistence);
-    } else if (type === EffectType.projectile) {
+    } else if (type === EffectType.Projectile) {
       this.hpLoss(amount);
     }
-    trigger(GameEvent.bossHp, { maxHp: this.maxHp, hp: this.hp });
+    trigger(GameEvent.BossHp, { maxHp: this.maxHp, hp: this.hp });
   }
 
   public effect(): Effect {
     return {
-      type: EffectType.impact,
+      type: EffectType.Impact,
       amount: this.impact.onImpact(),
     };
   }

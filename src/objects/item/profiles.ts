@@ -9,7 +9,7 @@ export function healItem(amount = 1, params?: Partial<PlayerItemParams>) {
     img: getImage(assets.img.player.items.heal),
     effect: {
       amount,
-      type: EffectType.heal,
+      type: EffectType.Heal,
     },
   });
 }

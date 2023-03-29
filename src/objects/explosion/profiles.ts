@@ -14,11 +14,11 @@ export function inferExplosionProfile(
   effectType: EffectType
 ): ExplosionProfileName {
   switch (effectType) {
-    case EffectType.heal:
+    case EffectType.Heal:
       return ExplosionProfileName.playerHeal;
-    case EffectType.impact:
+    case EffectType.Impact:
       return ExplosionProfileName.playerImpact;
-    case EffectType.projectile:
+    case EffectType.Projectile:
       return ExplosionProfileName.enemyProjectileImpact;
   }
 }

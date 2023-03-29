@@ -29,7 +29,7 @@ export class LevelManager implements Destroyable {
 
   constructor() {
     this.listeners = {
-      [GameEvent.spawn]: (ev: globalThis.Event) => {
+      [GameEvent.Spawn]: (ev: globalThis.Event) => {
         this.objectsToSpawn.push(readEvent<GameObject>(ev));
       },
       [Config.Key.BackgroundDensity]: (ev: globalThis.Event) => {
@@ -59,7 +59,7 @@ export class LevelManager implements Destroyable {
           this.loading = false;
         });
     } else {
-      trigger(GameEvent.gameEnd);
+      trigger(GameEvent.GameEnd);
     }
   }
 

@@ -40,7 +40,7 @@ export class Player extends GameObject {
       { hp: this.maxHp * 0.75, img: params.damageStages[0] },
     ];
 
-    trigger(GameEvent.playerHp, { maxHp: this.maxHp, hp: this.hp });
+    trigger(GameEvent.PlayerHp, { maxHp: this.maxHp, hp: this.hp });
   }
 
   public set controlState(controls: ControlState) {
@@ -88,26 +88,26 @@ export class Player extends GameObject {
 
   public effect(): Effect {
     return {
-      type: EffectType.impact,
+      type: EffectType.Impact,
       amount: this.power,
     };
   }
 
   public handleEffect(effect: Effect) {
     switch (effect.type) {
-      case EffectType.heal:
+      case EffectType.Heal:
         const hp = this.hp + effect.amount;
         this.hp = hp >= this.maxHp ? this.maxHp : hp;
         break;
-      case EffectType.impact:
-      case EffectType.projectile:
+      case EffectType.Impact:
+      case EffectType.Projectile:
         this.hpLoss(effect.amount);
         break;
     }
-    trigger(GameEvent.playerHp, { maxHp: this.maxHp, hp: this.hp });
+    trigger(GameEvent.PlayerHp, { maxHp: this.maxHp, hp: this.hp });
 
     if (this.hp <= 0)
-      trigger(GameEvent.gameOver, { maxHp: this.maxHp, hp: this.hp });
+      trigger(GameEvent.GameOver, { maxHp: this.maxHp, hp: this.hp });
   }
 
   private act(

@@ -27,16 +27,16 @@ export class Ship extends GameObject {
 
   public handleEffect(effect: Effect): void {
     const { type, amount } = effect;
-    if (type === EffectType.impact) {
+    if (type === EffectType.Impact) {
       this.hpLoss(amount - this.impact.resistence);
-    } else if (type === EffectType.projectile) {
+    } else if (type === EffectType.Projectile) {
       this.hpLoss(amount);
     }
   }
 
   public effect(): Effect {
     return {
-      type: EffectType.impact,
+      type: EffectType.Impact,
       amount: this.impact.onImpact(),
     };
   }

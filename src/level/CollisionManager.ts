@@ -47,13 +47,13 @@ export class CollisionManager implements Drawable {
       if (p.isActive && hasCollided(p.hitbox, gameObject.hitbox)) {
         const { type } = gameObject.effect();
 
-        if (type === EffectType.impact || type === EffectType.projectile) {
+        if (type === EffectType.Impact || type === EffectType.Projectile) {
           gameObject.handleEffect(p.effect());
           p.handleEffect(p.effect());
 
           this.addExplosion(
             gameObject.hitbox,
-            type === EffectType.projectile
+            type === EffectType.Projectile
               ? ExplosionProfileName.projectileImpact
               : ExplosionProfileName.playerProjectileImpact
           );

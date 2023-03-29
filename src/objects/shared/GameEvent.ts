@@ -4,12 +4,12 @@ export interface HpEventData {
 }
 
 export enum GameEvent {
-  pause = "pause",
-  quit = "quit",
-  gameOver = "gameOver",
-  spawn = "spawn",
-  playerHp = "playerHp",
-  bossHp = "bossHp",
-  gameEnd = "gameEnd",
-  nextLevel = "nextLevel",
+  Pause = "pause",
+  Quit = "Quit",
+  GameOver = "GameOver",
+  Spawn = "Spawn",
+  PlayerHp = "PlayerHp",
+  BossHp = "BossHp",
+  GameEnd = "GameEnd",
+  NextLevel = "NextLevel",
 }

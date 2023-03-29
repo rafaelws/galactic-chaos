@@ -39,8 +39,8 @@ export function hud() {
   }
 
   const listeners: ListenerMap = {
-    [GameEvent.playerHp]: onPlayerHp,
-    [GameEvent.bossHp]: onBossHp,
+    [GameEvent.PlayerHp]: onPlayerHp,
+    [GameEvent.BossHp]: onBossHp,
   };
 
   set(listeners);

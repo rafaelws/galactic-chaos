@@ -70,7 +70,7 @@ export abstract class GameObject implements Drawable {
     if (this.spawnables.length === 0) return;
     iterate(this.spawnables, (spawnable) => {
       spawnable.position = this.position;
-      trigger(GameEvent.spawn, spawnable);
+      trigger(GameEvent.Spawn, spawnable);
     });
   }
 

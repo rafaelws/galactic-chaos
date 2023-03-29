@@ -1,9 +1,9 @@
 import { Point } from "@/common/meta";
 
 export enum MovementNature {
-  Linear = "l",
-  QuadraticBezier = "qb",
-  CubicBezier = "cb",
+  Linear = "Linear",
+  QuadraticBezier = "QuadraticBezier",
+  CubicBezier = "CubicBezier",
 }
 
 /**

@@ -34,7 +34,7 @@ export class Fire {
     }
 
     trigger(
-      GameEvent.spawn,
+      GameEvent.Spawn,
       new Projectile({
         enemy: true,
         angle,

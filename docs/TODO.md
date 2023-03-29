@@ -1,7 +1,8 @@
 # DOING
 
-- [ ] review/set standards: all enum properties are CAPS or camelCase? using enum vs const, namespace vs raw module...
 - [ ] unit test (jest)
+- [ ] {bug} small stutter on level change
+- [x] standardization: enums
 - [x] debounce start/select
 - [x] {bug} audio: track overlap when actions are triggered too close to each other
 - [x] {bug} objects with spawnTimeout can be destroyed by player (on the edges of the screen)

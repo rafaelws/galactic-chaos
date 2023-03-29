@@ -1,7 +1,7 @@
 export enum EffectType {
-  heal = "HEAL",
-  impact = "IMPACT",
-  projectile = "PROJECTILE",
+  Heal = "Heal",
+  Impact = "Impact",
+  Projectile = "Projectile",
 }
 
 export type Effect = {

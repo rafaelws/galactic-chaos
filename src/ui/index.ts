@@ -17,10 +17,10 @@ export namespace UI {
   let pauseInput: Destroyable | null = null;
 
   const listeners: ListenerMap = {
-    [GameEvent.quit]: quit,
-    [GameEvent.pause]: pause,
-    [GameEvent.gameOver]: gameOver,
-    [GameEvent.gameEnd]: gameEnd,
+    [GameEvent.Quit]: quit,
+    [GameEvent.Pause]: pause,
+    [GameEvent.GameOver]: gameOver,
+    [GameEvent.GameEnd]: gameEnd,
   };
 
   const elements: { [index: string]: string } = {
@@ -66,7 +66,7 @@ export namespace UI {
       {
         action: "START",
         fn: () => {
-          trigger(GameEvent.pause, false);
+          trigger(GameEvent.Pause, false);
 
           AudioManager.resume();
 
@@ -84,7 +84,7 @@ export namespace UI {
       pauseInput = readInput([
         {
           action: "START",
-          fn: debounce(() => trigger(GameEvent.pause, true), debounceTime),
+          fn: debounce(() => trigger(GameEvent.Pause, true), debounceTime),
         },
       ]);
     }, 500);
