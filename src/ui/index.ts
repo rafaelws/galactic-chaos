@@ -53,7 +53,6 @@ export namespace UI {
 
   function pause(ev: globalThis.Event) {
     const paused = readEvent<boolean>(ev);
-    console.log({ paused });
     if (!paused) return;
 
     AudioManager.pause();

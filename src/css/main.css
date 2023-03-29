@@ -49,39 +49,57 @@ canvas {
 
 .menu {
   display: none;
-  background-color: rgba(0, 0, 0, 0.75);
-  position: absolute;
-  inset: 0;
   z-index: 2;
-  text-align: right;
-  line-height: 1.1;
+  background-color: rgba(0, 0, 0, 0.75);
   animation: fade-in 1s;
+
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
 }
 
-.menu .hint-text,
+.menu p {
+  text-align: center;
+}
+
 .menu .main-text {
-  position: absolute;
-  right: 1rem;
+  font-size: 6rem;
+  animation: text-glow 2s infinite;
 }
 
 .menu .hint-text {
-  font-size: 1rem;
-  top: 1rem;
+  font-size: 1.5rem;
+  line-height: 1.2;
 }
 
-.menu .main-text {
+#pause-menu {
+  inset: 0;
+  transform: none;
+}
+
+#pause-menu .hint-text,
+#pause-menu .main-text {
+  position: absolute;
+  right: 1rem;
+  text-align: right;
+}
+
+#pause-menu .hint-text {
+  font-size: 1rem;
+  top: 1.5rem;
+  line-height: 1.1;
+}
+
+#pause-menu .main-text {
   font-size: 4rem;
   bottom: 0.5rem;
-  animation: text-glow 2s infinite;
 }
 
 #game-over-menu,
 #game-end-menu {
   animation: fade-in 2s;
-}
-
-#pause-menu .hint-text {
-  top: 1.5rem;
 }
 
 #options {
