@@ -122,11 +122,15 @@ export abstract class GameObject implements Drawable {
     );
   }
 
+  protected get canSpawn(): boolean {
+    return !this.spawnClock.pending;
+  }
+
   /**
    * Returns true if x and y are NOT NaN and the spawnClock has finished
    */
   protected get isReady(): boolean {
-    return this.hasPosition && !this.spawnClock.pending;
+    return this.hasPosition && this.canSpawn;
   }
 
   public get isActive(): boolean {

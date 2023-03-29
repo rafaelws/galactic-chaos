@@ -1,9 +1,9 @@
 # DOING
 
 - [ ] debounce start/select (where?)
-- [ ][bug] objects with spawnTimeout can be destroyed by player (on the edges of the screen)
-- [ ][bug] audio: track overlap when actions are triggered too close to each other
+- [ ] {bug} audio: track overlap when actions are triggered too close to each other
 - [ ] standards: all enum properties are CAPS or camelCase? using enum vs const
+- [x] {bug} objects with spawnTimeout can be destroyed by player (on the edges of the screen)
 - [x] level design: first boss
 - [x] level design: level 1/first level
 - [x] audio not working properly after refac

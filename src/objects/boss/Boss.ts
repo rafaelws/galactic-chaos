@@ -79,6 +79,7 @@ export class Boss extends GameObject {
 
   public update(state: GameState): void {
     super.update(state);
+    if (!this.canSpawn) return;
 
     if (this.phase.nextPhaseCondition(this.phaseParams)) this.nextPhase();
 
@@ -113,7 +114,6 @@ export class Boss extends GameObject {
     if (!this.isReady) return;
 
     this.impact.update(state.delta);
-
     this.rotation = this.fire.update(state.delta, state.player, this.hitbox);
     this.position = this.movement.update();
   }

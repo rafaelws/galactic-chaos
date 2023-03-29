@@ -43,6 +43,7 @@ export class Ship extends GameObject {
 
   public update(state: GameState): void {
     super.update(state);
+    if (!this.canSpawn) return;
 
     if (this.movement === null)
       this.movement = new Movement(
@@ -53,7 +54,6 @@ export class Ship extends GameObject {
       );
 
     if (!this.hasPosition) this.position = this.movement.startPosition();
-    if (!this.isReady) return;
 
     this.impact.update(state.delta);
 

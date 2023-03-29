@@ -35,6 +35,8 @@ export class Rock extends GameObject {
 
   public update(state: GameState): void {
     super.update(state);
+    if (!this.canSpawn) return;
+
     if (this.movement === null) {
       this.movement = new Movement(
         state.delta,
@@ -45,7 +47,6 @@ export class Rock extends GameObject {
     }
 
     if (!this.hasPosition) this.position = this.movement.startPosition();
-    if (!this.isReady) return;
 
     this.impact.update(state.delta);
 
