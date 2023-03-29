@@ -2,7 +2,8 @@
 
 - [ ] debounce start/select (where?)
 - [ ] {bug} audio: track overlap when actions are triggered too close to each other
-- [ ] standards: all enum properties are CAPS or camelCase? using enum vs const
+- [ ] review/set standards: all enum properties are CAPS or camelCase? using enum vs const, namespace vs raw module...
+- [ ] unit test (jest)
 - [x] {bug} objects with spawnTimeout can be destroyed by player (on the edges of the screen)
 - [x] level design: first boss
 - [x] level design: level 1/first level
