@@ -1,23 +1,13 @@
 import { Destroyable } from "@/common/meta";
-import { set, unset, trigger, ListenerMap, readEvent } from "@/common/events";
+import { set, unset, ListenerMap, readEvent } from "@/common/events";
 import { KeyboardAndMouse, InputHandler, Joystick } from "@/common/controls";
-import { DebugParams, debugProfiles, NoDebug } from "@/common/debug";
+import { NoDebug } from "@/common/debug";
 import { LevelManager } from "@/level";
-import { GameEvent } from "@/objects";
-import { Clock, Config } from "@/common";
-
+import { Config } from "@/common";
 import { hud } from "@/ui/hud";
 import { CanvasManager } from "./CanvasManager";
 
 const debug = NoDebug;
-// const debug: DebugParams = {
-// entities: [...debugProfiles.Enemies],
-// entities: [...debugProfiles.Boss],
-// global: false,
-// hitboxes: false,
-// statusText: false,
-// trajectory: true,
-// };
 
 export class GameManager implements Destroyable {
   private cm: CanvasManager;
@@ -25,21 +15,14 @@ export class GameManager implements Destroyable {
   private ih: InputHandler = new KeyboardAndMouse();
   private preferredInput = Config.Input.KeyboardAndMouse;
 
-  private paused = false;
-  private pauseClock: Clock;
-  private startingPauseTime = 2000;
-  private pauseTime = 350;
-
   private listeners: ListenerMap = {};
   private destroyables: Destroyable[] = [];
+
+  private paused = false;
 
   constructor() {
     this.cm = new CanvasManager();
     this.lm = new LevelManager();
-
-    // targetTime will change after the first interaction
-    // required because the gamepad updates waaaay too fast.
-    this.pauseClock = new Clock(this.startingPauseTime);
 
     this.checkPreferredInput();
 
@@ -75,19 +58,6 @@ export class GameManager implements Destroyable {
 
   private update(delta: number) {
     const controls = this.ih.getState();
-
-    // TODO improve pause throttling
-    if (!this.pauseClock.pending && controls.START?.active) {
-      if (this.pauseClock.targetTime === this.startingPauseTime) {
-        this.pauseClock.targetTime = this.pauseTime;
-      }
-
-      trigger(GameEvent.pause, true);
-      this.pauseClock.reset();
-      return;
-    }
-    this.pauseClock.increment(delta);
-
     this.lm.update(delta, this.cm.getBoundaries(), controls, debug);
   }
 

@@ -1,15 +1,20 @@
-import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
-import { GameEvent } from "@/objects";
+import debounce from "lodash.debounce";
 import { setup } from "@/main/loop";
+import { Destroyable } from "@/common/meta";
+import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
 import { assets, preloadAudio } from "@/common/asset";
-import { readInput } from "./readInput";
 import { throttle } from "@/common/util";
-import { hide, show } from "./util";
-import { Options } from "./options";
 import { AudioManager } from "@/main/AudioManager";
+import { GameEvent } from "@/objects";
+import { Options } from "./options";
+import { readInput } from "./readInput";
+import { hide, show } from "./util";
 
 export namespace UI {
   const loop = setup();
+
+  const debounceTime = 150;
+  let pauseInput: Destroyable | null = null;
 
   const listeners: ListenerMap = {
     [GameEvent.quit]: quit,
@@ -48,6 +53,7 @@ export namespace UI {
 
   function pause(ev: globalThis.Event) {
     const paused = readEvent<boolean>(ev);
+    console.log({ paused });
     if (!paused) return;
 
     AudioManager.pause();
@@ -55,46 +61,56 @@ export namespace UI {
     show(elements.pauseMenu);
     Options.open();
 
-    // FIXME
-    // this timeout is required due to the gamepad
-    // being waaaaay to fast (and caused a pause loop)
+    readInput([
+      { action: "SELECT", fn: quit },
+      {
+        action: "START",
+        fn: () => {
+          trigger(GameEvent.pause, false);
+
+          AudioManager.resume();
+
+          hide(elements.pauseMenu);
+          Options.close();
+          hookPause();
+        },
+      },
+      ...Options.actions,
+    ]);
+  }
+
+  function hookPause() {
     setTimeout(() => {
-      readInput([
-        { action: "SELECT", fn: quit },
+      pauseInput = readInput([
         {
           action: "START",
-          fn: () => {
-            trigger(GameEvent.pause, false);
-
-            AudioManager.resume();
-
-            hide(elements.pauseMenu);
-            Options.close();
-          },
+          fn: debounce(() => trigger(GameEvent.pause, true), debounceTime),
         },
-        ...Options.actions,
       ]);
-    }, 350);
+    }, 500);
   }
 
   function gameOver() {
+    pauseInput?.destroy();
     AudioManager.play(assets.audio.menu.gameOver, true);
 
     hideAll();
     loop.destroy();
     readInput([
-      { action: "START", fn: start },
-      { action: "SELECT", fn: quit },
+      { action: "START", fn: debounce(start, debounceTime) },
+      { action: "SELECT", fn: debounce(quit, debounceTime) },
     ]);
     show(elements.gameOverMenu);
   }
 
   function gameEnd() {
+    pauseInput?.destroy();
+
     hideAll();
     loop.destroy();
     readInput([
-      { action: "START", fn: start },
-      { action: "SELECT", fn: quit },
+      { action: "START", fn: debounce(start, debounceTime) },
+      { action: "SELECT", fn: debounce(quit, debounceTime) },
     ]);
     show(elements.gameEndMenu);
   }
@@ -103,6 +119,7 @@ export namespace UI {
     reset();
     set(listeners);
     loop.start();
+    hookPause();
   }
 
   export async function mainMenu() {
@@ -117,8 +134,8 @@ export namespace UI {
     AudioManager.play(assets.audio.menu.main);
 
     readInput([
-      { action: "START", fn: start },
-      { action: "SELECT", fn: throttle(Options.toggle), destroy: false },
+      { action: "START", fn: debounce(start, debounceTime) },
+      { action: "SELECT", fn: throttle(Options.toggle), destroyOnHit: false },
       ...Options.actions,
     ]);
     show(elements.mainMenu);

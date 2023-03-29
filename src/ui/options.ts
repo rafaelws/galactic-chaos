@@ -133,14 +133,14 @@ export namespace Options {
   }
 
   export const actions: TriggerOnInput[] = [
-    { action: "D_UP", destroy: false, fn: throttle(up, 150) },
-    { action: "L_UP", destroy: false, fn: throttle(up, 150) },
-    { action: "L_DOWN", destroy: false, fn: throttle(down, 150) },
-    { action: "D_DOWN", destroy: false, fn: throttle(down, 150) },
+    { action: "D_UP", destroyOnHit: false, fn: throttle(up, 150) },
+    { action: "L_UP", destroyOnHit: false, fn: throttle(up, 150) },
+    { action: "L_DOWN", destroyOnHit: false, fn: throttle(down, 150) },
+    { action: "D_DOWN", destroyOnHit: false, fn: throttle(down, 150) },
 
-    { action: "D_LEFT", destroy: false, fn: throttle(left, 25) },
-    { action: "L_LEFT", destroy: false, fn: throttle(left, 25) },
-    { action: "D_RIGHT", destroy: false, fn: throttle(right, 25) },
-    { action: "L_RIGHT", destroy: false, fn: throttle(right, 25) },
+    { action: "D_LEFT", destroyOnHit: false, fn: throttle(left, 25) },
+    { action: "L_LEFT", destroyOnHit: false, fn: throttle(left, 25) },
+    { action: "D_RIGHT", destroyOnHit: false, fn: throttle(right, 25) },
+    { action: "L_RIGHT", destroyOnHit: false, fn: throttle(right, 25) },
   ];
 }

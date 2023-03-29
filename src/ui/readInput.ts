@@ -5,36 +5,43 @@ import {
   Joystick,
   KeyboardAndMouse,
 } from "@/common/controls";
+import { Destroyable } from "@/common/meta";
 
 export type TriggerOnInput = {
-  destroy?: boolean;
   action: ControlAction;
   fn: () => void;
+  destroyOnHit?: boolean;
 };
 
-export function readInput(inputs: TriggerOnInput[]) {
+export function readInput(inputs: TriggerOnInput[]): Destroyable {
   const intervalTime = 50; // works better for gamepad
   const km: InputHandler = new KeyboardAndMouse();
   const gp: InputHandler = new Joystick();
 
+  function destroy() {
+    km.destroy();
+    gp.destroy();
+    clearInterval(interval);
+  }
+
   const interval = setInterval(() => {
-    inputs.forEach(({ action, fn, destroy = true }) => {
+    inputs.forEach(({ action, fn, destroyOnHit = true }) => {
       const joystickHit = gp.getState()[action]?.active;
       const keyboardHit = km.getState()[action]?.active;
       const hit = joystickHit || keyboardHit;
 
       if (hit) {
-        if (destroy) {
+        if (destroyOnHit) {
           Config.set(
             Config.Key.Input,
             joystickHit ? Config.Input.Joystick : Config.Input.KeyboardAndMouse
           );
-          km.destroy();
-          gp.destroy();
-          clearInterval(interval);
+          destroy();
         }
         fn();
       }
     });
   }, intervalTime);
+
+  return { destroy };
 }
