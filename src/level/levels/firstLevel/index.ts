@@ -15,12 +15,19 @@ export type BrownRocks = typeof assets.img.rock.brown;
 export type FirstLevelShips = typeof ships;
 
 export async function firstLevel(): Promise<GameObject[]> {
-  const themeSong = assets.audio.levels[0].theme;
+  const { theme, boss } = assets.audio.levels[0];
 
-  await Promise.all(preloadAudio(themeSong));
-  await Promise.all(preloadImages(...rocks, ...ships, ...assets.common.img));
+  await Promise.all(preloadAudio(theme, boss));
+  await Promise.all(
+    preloadImages(
+      ...assets.common.img,
+      ...rocks,
+      ...ships,
+      assets.img.ship.level1[2]
+    )
+  );
 
-  AudioManager.play(themeSong);
+  AudioManager.play(theme);
   // nothing until 3.8
   // 20=change of pace
   // 30=intensity

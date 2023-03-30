@@ -1,5 +1,5 @@
-import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
 import { p } from "@/common/meta";
+import { assets, getImage } from "@/common/asset";
 import { AudioManager } from "@/main/AudioManager";
 import { Boss, GameObject, healItem, Ship } from "@/objects";
 import { linear, quadraticBezier } from "@/objects/shared";
@@ -8,15 +8,8 @@ import { secondPhase } from "./secondPhase";
 import { thirdPhase } from "./thirdPhase";
 
 export async function firstBoss(): Promise<GameObject[]> {
+  AudioManager.play(assets.audio.levels[0].boss);
   const ships = assets.img.ship.level1;
-  const themeSong = assets.audio.levels[0].boss;
-
-  await Promise.all(preloadAudio(themeSong));
-  await Promise.all(
-    preloadImages(...assets.common.img, ...ships, ...assets.img.rock.brown)
-  );
-
-  AudioManager.play(themeSong);
 
   const boss = new Boss({
     spawnTimeout: 16.99 * 1000,

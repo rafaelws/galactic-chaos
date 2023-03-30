@@ -1,7 +1,8 @@
 # DOING
 
 - [ ] unit test (jest)
-- [ ] {bug} small stutter on level change
+- [ ] boss defeated event - triggers next level
+- [x] {bug} small stutter on level change (all assets are being loaded on firstLevel)
 - [x] standardization: enums
 - [x] debounce start/select
 - [x] {bug} audio: track overlap when actions are triggered too close to each other
@@ -25,6 +26,7 @@
 
 - features:
 
+  - [ ] create a loading screen between levels (while the assets are being loaded)
   - [ ] player items
     - [ ] shield
     - [ ] special
@@ -42,8 +44,8 @@
   - [ ] overall status: time? score? enemies defeated? projectiles fired?
 
 - [ ] improvements
-  - [ ] fade-in/out menus
-  - [ ] fade-in/out hud
+  - [x] fade-in/out menus
+  - [x] fade-in/out hud
   - [ ] replace player img
   - [ ] hitboxes
   - [ ] gampead mechanics

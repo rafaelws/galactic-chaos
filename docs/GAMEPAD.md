@@ -1,5 +1,5 @@
 ```
-Gamepad Cheatsheet:
+Gamepad:
 
 left analog stick
 
