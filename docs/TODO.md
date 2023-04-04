@@ -1,7 +1,11 @@
 # DOING
 
-- [ ] unit test (jest)
-- [ ] boss defeated event - triggers next level
+- [ ] game end song
+- [ ] README
+- [ ] POST_MORTEM
+- [ ] credits
+- [x] boss defeated event - triggers next level
+- [x] unit test (jest)
 - [x] {bug} small stutter on level change (all assets are being loaded on firstLevel)
 - [x] standardization: enums
 - [x] debounce start/select
@@ -56,6 +60,12 @@
   - [ ] request fullscreen through controller (config option)
   - [ ] docs: consider using an interactive form to showcase/test game objects (see `dat.gui`)
   - [x] projectile appearance [performance concearn using filter]
+  - [ ] Gamepad:
+    - [ ] PreferredInput: gamepad or keyboard/mouse (choose gamepad index?)
+    - [ ] Configuration: controller stick drift (left and right)
+    - [ ] if gamepad unplugged/disconnect:
+      - A) look for another avaliable gamepad (if none, do A) or
+      - B) go back to keyboard/mouse
 
 # DONE
 

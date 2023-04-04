@@ -21,7 +21,7 @@ export class Explosion implements Drawable {
   }
 
   private createParticles() {
-    const { x, y } = this.params.epicenter;
+    const { x, y } = this.params.center;
     const angleStep = 360 / this.howManyParticles;
     let degAngle = -angleStep;
 
@@ -32,7 +32,7 @@ export class Explosion implements Drawable {
         new ExplosionParticle({
           ...this.profile,
           angle: toRad(degAngle),
-          epicenter: { x, y },
+          center: { x, y },
         })
       );
     }

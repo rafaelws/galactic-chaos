@@ -20,7 +20,7 @@ export class CollisionManager implements Drawable {
   }
 
   private addExplosion(where: Point, profile: ExplosionProfileName) {
-    this.drawables.push(new Explosion({ epicenter: where, profile }));
+    this.drawables.push(new Explosion({ center: where, profile }));
   }
 
   public check(gameObject: GameObject): void {

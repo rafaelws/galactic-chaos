@@ -1,3 +1,4 @@
+import { Destroyable } from "@/common/meta";
 import { Config } from "@/common";
 import {
   ControlAction,
@@ -5,7 +6,6 @@ import {
   Joystick,
   KeyboardAndMouse,
 } from "@/common/controls";
-import { Destroyable } from "@/common/meta";
 
 export type TriggerOnInput = {
   action: ControlAction;

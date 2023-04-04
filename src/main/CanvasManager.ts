@@ -24,11 +24,10 @@ export class CanvasManager implements Destroyable {
   }
 
   public clear() {
-    // context.setTransform(1, 0, 0, 1, 0, 0);
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    // context.setTransform(1, 0, 0, 1, 0, 0);
     // TODO think about this "motion blur" effect
     // this.context.fillStyle = "rgba(0,0,0,0.3)";
-    // this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
   public getBoundaries(): Boundaries {

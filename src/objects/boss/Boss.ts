@@ -68,6 +68,8 @@ export class Boss extends GameObject {
       this.hpLoss(amount);
     }
     trigger(GameEvent.BossHp, { maxHp: this.maxHp, hp: this.hp });
+
+    if (this.hp <= 0) trigger(GameEvent.BossDefeated);
   }
 
   public effect(): Effect {

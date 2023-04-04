@@ -32,6 +32,9 @@ export class LevelManager implements Destroyable {
       [GameEvent.Spawn]: (ev: globalThis.Event) => {
         this.objectsToSpawn.push(readEvent<GameObject>(ev));
       },
+      [GameEvent.BossDefeated]: (_: globalThis.Event) => {
+        this.nextLevel();
+      },
       [Config.Key.BackgroundDensity]: (ev: globalThis.Event) => {
         if (this.background) this.background.density = readEvent<number>(ev);
       },

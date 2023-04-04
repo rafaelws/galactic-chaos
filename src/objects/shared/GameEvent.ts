@@ -12,4 +12,5 @@ export enum GameEvent {
   BossHp = "BossHp",
   GameEnd = "GameEnd",
   NextLevel = "NextLevel",
+  BossDefeated = "BossDefeated",
 }

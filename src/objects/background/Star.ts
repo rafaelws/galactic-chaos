@@ -11,7 +11,6 @@ export class Star implements Drawable {
   private height: number;
 
   private alpha = 0.5;
-  // private startAlpha = 0.5;
   private endAlpha = 0.5;
   private alphaClock: Clock;
 

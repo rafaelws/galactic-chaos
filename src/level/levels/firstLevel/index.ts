@@ -1,5 +1,5 @@
-import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
 import { p } from "@/common/meta";
+import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
 import { AudioManager } from "@/main/AudioManager";
 import { GameObject, healItem, Rock } from "@/objects";
 import { linear } from "@/objects/shared";
@@ -28,11 +28,6 @@ export async function firstLevel(): Promise<GameObject[]> {
   );
 
   AudioManager.play(theme);
-  // nothing until 3.8
-  // 20=change of pace
-  // 30=intensity
-  // 42=+intensity
-  // 50=finish
 
   return [
     ...firstWave(rocks),

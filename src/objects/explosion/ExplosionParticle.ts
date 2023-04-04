@@ -13,8 +13,8 @@ export class ExplosionParticle implements Drawable {
   private active = true;
 
   constructor(private params: ExplosionParticleParams) {
-    this.x = params.epicenter.x;
-    this.y = params.epicenter.y;
+    this.x = params.center.x;
+    this.y = params.center.y;
     this.cx = params.boundaries.width * 0.5;
     this.cy = params.boundaries.height * 0.5;
 
