@@ -55,7 +55,7 @@ export class LevelManager implements Destroyable {
 
       this.levels[this.currentLevelIx]()
         .then((objects) => {
-          this.gameObjects = this.gameObjects.concat(objects);
+          this.gameObjects.push(...objects);
         })
         .catch((err) => console.error("could not load assets", err))
         .finally(() => {
@@ -101,7 +101,7 @@ export class LevelManager implements Destroyable {
       const state = { ...playerState, player: this.player.hitbox };
 
       if (this.objectsToSpawn.length > 0) {
-        this.gameObjects = this.objectsToSpawn.concat(this.gameObjects);
+        this.gameObjects.push(...this.objectsToSpawn);
         this.objectsToSpawn = [];
       }
 

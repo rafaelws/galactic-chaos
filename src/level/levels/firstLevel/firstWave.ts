@@ -19,7 +19,7 @@ export function firstWave(rocks: BrownRocks) {
     }),
 
     new Rock({
-      spawnTimeout: 6.45 * 1000,
+      spawnTimeout: 6.65 * 1000,
       img: getImage(rocks[8]),
       movement: linear(p(1, 0.65), p(0, 1)),
     }),

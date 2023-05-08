@@ -27,24 +27,11 @@ export class Star implements Drawable {
   }
 
   public update(state: GameState) {
+    // FIXME
     const delta = state.delta * 0.03;
-    /*
-    const accelerate =
-      state.player.y > state.worldBoundaries.height * 0.75
-        ? 0.5
-        : state.player.y > state.worldBoundaries.height * 0.4
-        ? 10
-        : 50;
-
-    if (accelerate !== this.acceleration) {
-      this.acceleration = lerp(this.acceleration, accelerate, delta);
-    }
-    */
-
     this.y += delta * this.params.speed; // * this.acceleration
     this.active = this.y - this.height < state.worldBoundaries.height;
 
-    // FIXME
     if (this.alphaClock.pending) {
       this.alphaClock.increment(state.delta);
     } else {

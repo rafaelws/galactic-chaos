@@ -14,6 +14,7 @@ export class Projectile extends GameObject {
 
   constructor(private readonly params: ProjectileParams) {
     super(params);
+    this.rotation = params.angle;
     this.direction.x = Math.sin(-params.angle);
     this.direction.y = Math.cos(-params.angle);
     this.color = params.color
@@ -79,7 +80,7 @@ export class Projectile extends GameObject {
     if (!this.active || !this.isReady) return;
     c.save();
     c.translate(this.x, this.y);
-    c.rotate(this.params.angle);
+    c.rotate(this.rotation);
     c.fillStyle = this.color;
     c.fillRect(-this.cx, -this.cy, this.width, this.height);
     c.restore();

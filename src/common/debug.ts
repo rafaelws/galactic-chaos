@@ -20,7 +20,7 @@ export const debugProfiles = {
     GameObjectName.Rock,
   ],
   Boss: [GameObjectName.Boss, GameObjectName.EnemyProjectile],
-  Enemies: [
+  AllEnemies: [
     GameObjectName.Ship,
     GameObjectName.EnemyProjectile,
     GameObjectName.Rock,
