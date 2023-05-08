@@ -1,64 +1,38 @@
-# DOING
-
-- [ ] README
-- [x] reposition global debug to bottom right
-- [x] Tests -> vitest
-- [x] Release post
-- [x] credits
-- [x] boss defeated event - triggers next level
-- [x] {bug} small stutter on level change (all assets are being loaded on firstLevel)
-- [x] debounce start/select
-- [x] {bug} audio: track overlap when actions are triggered too close to each other
-- [x] {bug} objects with spawnTimeout can be destroyed by player (on the edges of the screen)
-- [x] level design: first boss
-- [x] level design: level 1/first level
-- [x] audio not working properly after refac
-- [x] fix options disappearing at the wrong time on start
-
 # TODO
-
-- bugs:
-
-  - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
-
-- features:
-
-  - [ ] create a loading screen between levels (while the assets are being loaded)
-  - [ ] player items
-    - [ ] shield
-    - [ ] special
-  - [ ] projectile
-    - [ ] {idea} deflect projectile on hit
-    - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
-    - [ ] {idea} projectile upgrades (size, amount, speed, rate)
-    - [ ] {idea} canon / beam struggle (time event)
-  - [ ] audio
-    - [ ] ost (game end)
-    - [ ] ui sfx (pause, re(start))
-    - [ ] gameplay sfx (collision, projectile, item)
-    - [ ] Web Audio API - fadeIn/Out with ramp w/ gain methods are not widely supported
-    - [ ] reactive background (using WebAudioAPI. verify browser support)
-  - [ ] overall status: time? score? enemies defeated? projectiles fired?
-
-- [ ] improvements
-  - [x] fade-in/out menus
-  - [x] fade-in/out hud
-  - [ ] replace player img
-  - [ ] hitboxes
-  - [ ] gampead mechanics
-  - [ ] make projectile and player movement smoother
-  - [ ] consider using lerp for alpha and movement (star, explosion)
-  - [ ] syntax sugar: enemy profiles (code)
-  - [ ] consider rewriting Input.ts with enum or const
-  - [ ] request fullscreen through controller (config option)
-  - [ ] docs: consider using an interactive form to showcase/test game objects (see `dat.gui`)
-  - [x] projectile appearance [performance concearn using filter]
-  - [ ] Gamepad:
-    - [ ] PreferredInput: gamepad or keyboard/mouse (choose gamepad index?)
-    - [ ] Configuration: controller stick drift (left and right)
-    - [ ] if gamepad unplugged/disconnect:
-      - A) look for another avaliable gamepad (if none, do A) or
-      - B) go back to keyboard/mouse
+- [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
+- [ ] create a loading screen between levels (while the assets are being loaded)
+- [ ] player items
+  - [ ] shield
+  - [ ] special
+- [ ] projectile
+  - [ ] {idea} deflect projectile on hit
+  - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
+  - [ ] {idea} projectile upgrades (size, amount, speed, rate)
+  - [ ] {idea} canon / beam struggle (time event)
+- [ ] audio
+  - [ ] ost (game end)
+  - [ ] ui sfx (pause, re(start))
+  - [ ] gameplay sfx (collision, projectile, item)
+  - [ ] reactive background (using WebAudioAPI; verify browser support)
+  - [ ] fadeIn/Out with Web Audio API (gain ramp methods are not widely supported)
+- [ ] overall status: time? score? enemies defeated? projectiles fired?
+- [ ] docs: consider using an interactive form to showcase/test game objects (see `dat.gui`)
+- [ ] make projectile and player movement smoother
+- [ ] use lerp for alpha and movement (Star, ExplosionParticle)
+- [ ] better hitboxes
+- [ ] better gampead mechanics
+- [ ] syntax sugar: enemy profiles (code)
+- [ ] request fullscreen (+config option)
+- [x] projectile appearance [performance concearn using filter]
+- [x] fade-in/out menus
+- [x] fade-in/out hud
+- [ ] use sprites (review canvas performance and load time)
+- [ ] Gamepad:
+  - [ ] PreferredInput: gamepad or keyboard/mouse (choose gamepad index?)
+  - [ ] Configuration: controller stick drift (left and right)
+  - [ ] if gamepad unplugged/disconnect:
+    - A) look for another avaliable gamepad (if none, do A) or
+    - B) go back to keyboard/mouse
 
 # DONE
 
@@ -77,7 +51,6 @@
   - [x] ship
   - [x] bosses
 - [x] mechanics
-
   - [x] game objects collision
     - [x] enemies[] collision > player (event)
     - [x] enemy projectiles[] collision > player (event)
@@ -99,7 +72,7 @@
 - [x] refac1 (maintainability iteration)
 
   - [x] clock utility
-  - [x] can a class called GameObject be created to simplify some stuff?
+  - [x] can a class be created to simplify some stuff (GameObject)?
   - [x] can some types/interfaces be shared?
   - [x] {refac} ship (with GameObject and Clock)
   - [x] {refac} rock (with GameObject and Clock)
@@ -116,16 +89,17 @@
   - [x] {bug} if a Ship is destroyed, its projectiles vanish (solved by previous item)
   - [x] {bug} fix level manager step function
 
-- misc
+---
 
   - [x] {improvement} projectile appearance
   - [x] {bug|improve} gamepad (make it work interchangeably with keyboard/mouse)
     - [x] solution: on ANY menu, the game is notified of the preferred input
   - [x] {improvement} circle collision calculation (without sqrt)
 
+
 - [x] New Movement Implementation
 
-  - [x] "fluent" way to create movement params
+  - [x] FluentMovement
   - [x] Boss
   - [x] fix movement end
   - [x] multiple steps
@@ -156,3 +130,9 @@
   - [x] fade-in/out options
 
 - [x] fix Boss movement transition (with alpha)
+- [x] level design: first boss
+- [x] level design: level 1/first level
+- [x] debounce start/select
+- [x] {bug} small stutter on level change (all assets are being loaded on firstLevel)
+- [x] {bug} audio: track overlap when actions are triggered too close to each other
+- [x] {bug} objects with spawnTimeout can be destroyed by player (on the edges of the screen)
