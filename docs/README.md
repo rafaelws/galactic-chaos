@@ -1,5 +1,6 @@
 # Galactic Chaos
-![banner](./banner.gif)
+
+!["banner"](./banner.gif "banner")
 
 A spaceship shooter game. 
 
@@ -125,6 +126,7 @@ An "on-screen-debug" feature was implemented. There are options to show hitboxes
 - Screen resize: affects both overall dimensions and movement
   - Movement is instantiated once per object. If the world boundaries, frame time (monitor frequency) or object dimensions change, moving objects will not behave as expected.
   - Dimensions are set once per object. If the world boundaries change, rendered objects won't resize.
+- Gamepad disconnected (the game stops responding)
 - Not supported
   - Smartphones/tablets/smaller devices
   - Browsers that do not support JS modules (most browsers, as of the publishing of this project, support this feature)
