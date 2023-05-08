@@ -1,13 +1,12 @@
 # DOING
 
-- [ ] game end song
-- [ ] README
-- [ ] POST_MORTEM
-- [ ] credits
+- [ ] reposition global debug to bottom right
+- [x] Tests -> vitest
+- [x] README
+- [x] Release post
+- [x] credits
 - [x] boss defeated event - triggers next level
-- [x] unit test (jest)
 - [x] {bug} small stutter on level change (all assets are being loaded on firstLevel)
-- [x] standardization: enums
 - [x] debounce start/select
 - [x] {bug} audio: track overlap when actions are triggered too close to each other
 - [x] {bug} objects with spawnTimeout can be destroyed by player (on the edges of the screen)
@@ -15,12 +14,6 @@
 - [x] level design: level 1/first level
 - [x] audio not working properly after refac
 - [x] fix options disappearing at the wrong time on start
-
-# Known Issues
-
-- Screen resize: affects both overall dimensions and movement
-  - Movement is instantiated once per object. If the world boundaries, frame time (monitor frequency) or object dimensions change, the movement will not behave as expected.
-  - Dimensions are set once per object. if the world boundaries change (resize), the object's won't.
 
 # TODO
 

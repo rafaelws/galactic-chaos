@@ -33,6 +33,7 @@ describe("Clock", () => {
 
   it("should change target time", () => {
     const clock = new Clock(100);
+
     clock.increment(100);
     expect(clock.pending).toBe(false);
 
@@ -40,8 +41,11 @@ describe("Clock", () => {
     clock.targetTime = 500;
     clock.increment(100);
     expect(clock.pending).toBe(true);
+  });
 
-    clock.increment(100);
+  it('should reset and change target time', () => {
+    const clock = new Clock(500);
+    clock.increment(200);
     expect(clock.pending).toBe(true);
 
     clock.reset();
@@ -65,5 +69,5 @@ describe("Clock", () => {
 
     clock.increment(51);
     expect(clock.pending).toBe(false);
-  });
+  })
 });
