@@ -47,6 +47,10 @@ canvas {
   animation: fade-in 1s;
 }
 
+#gh-link {
+  animation: fade-in 1s;
+}
+
 .menu {
   display: none;
   z-index: 2;
@@ -74,6 +78,10 @@ canvas {
   line-height: 1.2;
 }
 
+.menu .hint-text:first-child {
+  margin-top: 0.5rem;
+}
+
 #pause-menu {
   inset: 0;
   transform: none;
@@ -90,6 +98,7 @@ canvas {
   font-size: 1rem;
   top: 1.5rem;
   line-height: 1.1;
+  margin-top: 0;
 }
 
 #pause-menu .main-text {

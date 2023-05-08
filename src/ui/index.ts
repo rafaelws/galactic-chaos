@@ -31,6 +31,7 @@ export namespace UI {
     gameOverMenu: "game-over-menu",
     gameEndMenu: "game-end-menu",
     loading: "loading",
+    ghLink: "gh-link",
   };
 
   function hideAll() {
@@ -130,6 +131,7 @@ export namespace UI {
       )
     );
     hide(elements.loading);
+    show(elements.ghLink);
     AudioManager.play(assets.audio.menu.main);
 
     readInput([
