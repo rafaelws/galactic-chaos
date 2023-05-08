@@ -2,13 +2,15 @@ import { Destroyable } from "@/common/meta";
 import { iterate } from "@/common/util";
 import { set, unset, ListenerMap, readEvent } from "@/common/events";
 import { KeyboardAndMouse, InputHandler, Joystick } from "@/common/controls";
-import { NoDebug } from "@/common/debug";
+import { DebugParams, NoDebug } from "@/common/debug";
 import { LevelManager } from "@/level";
 import { Config } from "@/common";
 import { hud } from "@/ui/hud";
 import { CanvasManager } from "./CanvasManager";
 
-const debug = NoDebug;
+const debug: DebugParams = {
+  ...NoDebug,
+};
 
 export class GameManager implements Destroyable {
   private cm: CanvasManager;
@@ -86,6 +88,8 @@ export class GameManager implements Destroyable {
     c.fillStyle = "white";
     c.strokeStyle = "white";
     c.font = `${16}px sans-serif`;
-    c.fillText(lines.join(", "), 5, 16);
+
+    const text = lines.join(", ");
+    c.fillText(text, width - c.measureText(text).width - 5, height - 5);
   }
 }

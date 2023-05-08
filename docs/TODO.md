@@ -1,8 +1,8 @@
 # DOING
 
-- [ ] reposition global debug to bottom right
+- [ ] README
+- [x] reposition global debug to bottom right
 - [x] Tests -> vitest
-- [x] README
 - [x] Release post
 - [x] credits
 - [x] boss defeated event - triggers next level
