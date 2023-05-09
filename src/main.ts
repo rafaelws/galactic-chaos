@@ -1,7 +1,4 @@
-// import './style.css'
-// document.querySelector<HTMLDivElement>("#app");
-import "./index.css";
+import "./css/main.css";
+import { UI } from "./ui";
 
-import { start } from "./main/loop";
-
-start();
+document.addEventListener("DOMContentLoaded", UI.mainMenu);

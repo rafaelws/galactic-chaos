@@ -1,13 +1,17 @@
-import { ControlState } from "./controls";
+import { DebugParams } from "./debug";
 
 export interface Boundaries {
   width: number;
   height: number;
 }
 
-export interface Coordinate {
+export interface Point {
   x: number;
   y: number;
+}
+
+export function p(x: number, y: number): Point {
+  return { x, y };
 }
 
 export interface HitBox {
@@ -16,25 +20,23 @@ export interface HitBox {
   radius: number;
 }
 
-export interface PlayerStatus {
-  position: Coordinate;
-  boundaries: Boundaries;
-  hitbox: HitBox;
-  rotation: number;
-}
-
 export interface GameState {
-  worldBoundaries: Boundaries;
-  delta: number;
-  debug: boolean;
-  // playerStatus: PlayerStatus;
-}
-
-export interface Drawable {
-  update(state: GameState, controls: ControlState): void;
-  draw(c: CanvasRenderingContext2D, state: GameState): void;
+  get debug(): DebugParams;
+  get delta(): number;
+  get worldBoundaries(): Boundaries;
+  get player(): HitBox;
 }
 
 export interface Destroyable {
   destroy(): void;
+}
+
+export type Concrete<T> = {
+  [Property in keyof T]-?: T[Property];
+};
+
+export interface Drawable {
+  update(state: GameState): void;
+  draw(c: CanvasRenderingContext2D): void;
+  get isActive(): boolean;
 }

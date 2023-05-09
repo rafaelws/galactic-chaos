@@ -1,142 +1,203 @@
+import { Boundaries, Point, GameState } from "@/common/meta";
+import { atan2, toRad } from "@/common/math";
+import { iterate } from "@/common/util";
+import { GameObjectName } from "@/common/debug";
 import {
-  toDeg,
-  Boundaries,
-  Coordinate,
-  GameState,
-  HitBox,
-  PlayerStatus,
   ControlState,
   ControlStateData,
   ControlAction,
-  Drawable,
-} from "@/common";
+} from "@/common/controls";
+import { Clock } from "@/common";
+import { Projectile } from "@/objects";
+import { Effect, EffectType, GameEvent, GameObject } from "../shared";
+import { PlayerParams } from "./PlayerParams";
+import { trigger } from "@/common/events";
 
-import { draw } from "./drawer";
-import { ProjectileManager } from "../projectile/ProjectileManager";
+export class Player extends GameObject {
+  private maxHp = 10;
 
-export class Player implements Drawable {
-  private x: number = NaN;
-  private y: number = NaN;
-  private width: number = 0;
-  private height: number = 0;
-  private rotationAngle: number = 0;
-  private projectileManager: ProjectileManager;
+  private power = 1;
+  private fireTimeout = 300; //ms
+  private fireClock: Clock;
 
-  constructor() {
-    this.projectileManager = new ProjectileManager();
+  private controls: ControlState = {};
+  private projectiles: Projectile[] = [];
+
+  private damageLayers: {
+    hp: number;
+    img: HTMLImageElement;
+  }[];
+
+  constructor(private readonly params: PlayerParams) {
+    super(params);
+    this.hp = params.hp || this.maxHp;
+    this.setDimensions(params.img);
+    this.fireClock = new Clock(this.fireTimeout, true);
+
+    this.damageLayers = [
+      { hp: this.maxHp * 0.25, img: params.damageStages[2] },
+      { hp: this.maxHp * 0.5, img: params.damageStages[1] },
+      { hp: this.maxHp * 0.75, img: params.damageStages[0] },
+    ];
+
+    trigger(GameEvent.PlayerHp, { maxHp: this.maxHp, hp: this.hp });
   }
 
-  private getMiddle(): Coordinate {
+  public set controlState(controls: ControlState) {
+    this.controls = controls;
+  }
+
+  public get ownProjectiles() {
+    return this.projectiles;
+  }
+
+  protected startPosition(worldBoundaries: Boundaries): Point {
     return {
-      x: this.x + this.width * 0.5,
-      y: this.y + this.height * 0.5,
+      x: worldBoundaries.width * 0.5, // centered
+      y: worldBoundaries.height * 0.95 - this.cy, // 5% above bottom
     };
   }
 
-  private setRotation(velocity: number, to?: Coordinate) {
+  private setRotation(velocity: number, to?: Point) {
     if (to) {
       // mouse: rotates from the center of the player
-      const from = this.getMiddle();
-      this.rotationAngle = -Math.atan2(from.x - to.x, from.y - to.y);
+      this.rotation = -atan2(this.hitbox, to);
     } else {
       // -1 <= velocity <= 1
+      // TODO implement rotationSpeed for the gamepad?
       // 0.01745 =~ Math.PI / 180
       // 0.25 = 25% of the intended velocity
       // this.rotationAngle += 0.01745 * velocity * 0.25;
-      this.rotationAngle = this.rotationAngle + toDeg(velocity) * 0.25;
+      this.rotation += toRad(velocity);
     }
+  }
+
+  private fire() {
+    if (this.fireClock.pending) return;
+    this.fireClock.reset();
+
+    this.projectiles.push(
+      new Projectile({
+        enemy: false,
+        power: this.power,
+        angle: this.rotation,
+        start: this.hitbox,
+      })
+    );
+  }
+
+  public effect(): Effect {
+    return {
+      type: EffectType.Impact,
+      amount: this.power,
+    };
+  }
+
+  public handleEffect(effect: Effect) {
+    switch (effect.type) {
+      case EffectType.Heal:
+        const hp = this.hp + effect.amount;
+        this.hp = hp >= this.maxHp ? this.maxHp : hp;
+        break;
+      case EffectType.Impact:
+      case EffectType.Projectile:
+        this.hpLoss(effect.amount);
+        break;
+    }
+    trigger(GameEvent.PlayerHp, { maxHp: this.maxHp, hp: this.hp });
+
+    if (this.hp <= 0)
+      trigger(GameEvent.GameOver, { maxHp: this.maxHp, hp: this.hp });
   }
 
   private act(
-    gameState: GameState,
+    state: GameState,
     action: ControlAction,
-    controlState: ControlStateData
+    control: ControlStateData
   ) {
-    const { active, rate = 1, coordinate } = controlState;
+    if (!control.active) return;
 
-    if (!active) return;
+    const rate = control.rate || 1;
+    // TODO modulate velocity
+    const velocity = rate * state.delta * 0.5;
 
-    const {
-      worldBoundaries: { width, height },
-      delta,
-    } = gameState;
-
-    const velocity = rate * delta * 0.5;
-
-    // prettier-ignore
     switch (action) {
-      case "L_UP": this.y -= velocity; break;
-      case "L_DOWN": this.y += velocity; break;
-      case "L_LEFT": this.x -= velocity; break;
-      case "L_RIGHT": this.x += velocity; break;
-      case "ROTATE": this.setRotation(velocity, coordinate); break;
-      case "RB": 
-        this.projectileManager.launch(
-          this.getMiddle(),
-          this.rotationAngle,
-          gameState.worldBoundaries
-        );
+      case "L_UP":
+      case "D_UP":
+        this.y -= velocity;
+        break;
+      case "L_DOWN":
+      case "D_DOWN":
+        this.y += velocity;
+        break;
+      case "L_LEFT":
+      case "D_LEFT":
+        this.x -= velocity;
+        break;
+      case "L_RIGHT":
+      case "D_RIGHT":
+        this.x += velocity;
+        break;
+      case "ROTATE":
+        this.setRotation(velocity, control.point);
+        break;
+      case "RB":
+        this.fire();
         break;
     }
 
-    // TODO treat boundaries as a complete arc/circle
-    // for boundaries: Math.max(height, width) = circunference diameter
-    // for collisions: ?
-    // 2. Out of Bounds
-    if (this.y < 0) this.y = 0;
-    if (this.y + this.height > height) this.y = height - this.height;
-    if (this.x < 0) this.x = 0;
-    if (this.x + this.width > width) this.x = width - this.width;
+    // stay inbounds
+    if (this.y < this.cy) this.y = this.cy;
+    if (this.y - this.cy + this.height > state.worldBoundaries.height)
+      this.y = state.worldBoundaries.height - this.height + this.cy;
+    if (this.x < this.cx) this.x = this.cx;
+    if (this.x - this.cx + this.width > state.worldBoundaries.width)
+      this.x = state.worldBoundaries.width - this.width + this.cx;
   }
 
-  private getHitBox(): HitBox {
-    return {
-      // since height == width
-      radius: this.height * 0.2,
-      x: this.x + this.width * 0.5,
-      y: this.y + this.height * 0.5,
-    };
+  public update(state: GameState): void {
+    super.update(state);
+
+    if (!this.hasPosition)
+      this.position = this.startPosition(state.worldBoundaries);
+
+    this.fireClock.increment(state.delta);
+
+    const keys = Object.keys(this.controls) as ControlAction[];
+    iterate(keys, (action) => {
+      this.act(state, action, this.controls[action]!);
+    });
+
+    // TODO compare iterate vs filter vs raw for with index
+    let actives: Projectile[] = [];
+    iterate(this.projectiles, (p) => {
+      p.update(state);
+      if (p.isActive) actives.push(p);
+    });
+    this.projectiles = actives;
   }
 
-  public getStatus(): PlayerStatus {
-    const { x, y, width, height } = this;
-    return {
-      boundaries: {
-        width,
-        height,
-      },
-      position: {
-        x,
-        y,
-      },
-      hitbox: this.getHitBox(),
-      rotation: this.rotationAngle,
-    };
-  }
-
-  public update(state: GameState, controls: ControlState): void {
-    if (!state.worldBoundaries) return;
-
-    // TODO update width/height
-    const { width, height } = state.worldBoundaries;
-    this.width = height * 0.2;
-    this.height = this.width;
-
-    // TODO
-    if (isNaN(this.x) && isNaN(this.y)) {
-      this.x = width * 0.5 - this.width * 0.5; // centered
-      this.y = height * 0.95 - this.height; // 5% above ground
+  private drawDamageLayer(c: CanvasRenderingContext2D): void {
+    for (let i = 0; i < this.damageLayers.length; i++) {
+      const { img, hp } = this.damageLayers[i];
+      if (this.hp <= hp) {
+        c.drawImage(img, -this.cx, -this.cy, this.width, this.height);
+        break;
+      }
     }
-
-    let action: ControlAction;
-    for (action in controls) {
-      this.act(state, action, controls[action]!);
-    }
-    this.projectileManager.update(state, controls);
   }
 
-  public draw(c: CanvasRenderingContext2D, state: GameState): void {
-    draw(this.getStatus(), c, state);
-    this.projectileManager.draw(c, state);
+  public draw(c: CanvasRenderingContext2D): void {
+    if (!this.isReady) return;
+    iterate(this.projectiles, (p) => p.draw(c));
+
+    c.save();
+    c.translate(this.x, this.y);
+    c.rotate(this.rotation);
+    c.drawImage(this.params.img, -this.cx, -this.cy, this.width, this.height);
+    this.drawDamageLayer(c);
+    c.restore();
+
+    this.drawDebug(c, GameObjectName.Player);
   }
 }

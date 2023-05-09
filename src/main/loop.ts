@@ -1,29 +1,31 @@
-import { off, on } from "@/common/events";
-import { Manager } from "./Manager";
+import { GameManager } from "./GameManager";
 
-export function start() {
-  let lts = 0;
-  let delta = 0;
-  let raf: number | undefined;
+export function setup() {
+  let raf: number | null;
+  let manager: GameManager | null;
 
-  const manager = new Manager();
+  return {
+    start() {
+      let lts = 0;
+      let delta = 0;
+      manager = new GameManager();
 
-  function loop(ts: DOMHighResTimeStamp) {
-    delta = ts - lts;
-    lts = ts;
+      function loop(ts: DOMHighResTimeStamp) {
+        delta = ts - lts;
+        lts = ts;
 
-    if (delta > 0) manager.nextFrame(delta);
+        if (delta > 0) manager?.nextFrame(delta);
 
-    raf = requestAnimationFrame(loop);
-  }
+        raf = requestAnimationFrame(loop);
+      }
 
-  loop(0);
-
-  function quit() {
-    off("quit", quit);
-    if (raf) cancelAnimationFrame(raf);
-    manager.destroy();
-  }
-
-  on("quit", quit);
+      loop(0);
+    },
+    destroy() {
+      if (raf) cancelAnimationFrame(raf);
+      manager?.destroy();
+      raf = null;
+      manager = null;
+    },
+  };
 }

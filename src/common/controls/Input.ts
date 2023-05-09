@@ -1,4 +1,4 @@
-import { Coordinate, Destroyable } from "@/common";
+import { Point, Destroyable } from "@/common/meta";
 
 export type ControlState = {
   [type in ControlAction]?: ControlStateData;
@@ -7,7 +7,7 @@ export type ControlState = {
 export type ControlStateData = {
   active: boolean;
   rate?: number;
-  coordinate?: Coordinate;
+  point?: Point;
 };
 
 export interface InputHandler extends Destroyable {

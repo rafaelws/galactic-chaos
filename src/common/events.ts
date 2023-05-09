@@ -14,7 +14,9 @@ export function off(eventName: string, listener: Listener) {
 
 export function trigger(eventName: string, eventDetailData?: any) {
   return window.dispatchEvent(
-    new CustomEvent(eventName, { detail: eventDetailData || null })
+    new globalThis.CustomEvent(eventName, {
+      detail: eventDetailData,
+    })
   );
 }
 
@@ -32,4 +34,8 @@ export function unset(...listeners: ListenerMap[]) {
       off(alias, map[alias]);
     }
   }
+}
+
+export function readEvent<T>(ev: globalThis.Event): T {
+  return (ev as globalThis.CustomEvent).detail as T;
 }

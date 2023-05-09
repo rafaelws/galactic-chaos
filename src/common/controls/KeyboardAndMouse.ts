@@ -1,4 +1,4 @@
-import { ListenerMap, set, unset } from "@/common";
+import { ListenerMap, set, unset } from "@/common/events";
 import { ControlAction, ControlState, InputHandler } from ".";
 
 type ActionMap = { [key: string]: ControlAction };
@@ -12,7 +12,8 @@ const keyboardMap: ActionMap = {
   arrowdown: "L_DOWN",
   arrowleft: "L_LEFT",
   arrowright: "L_RIGHT",
-  backspace: "START",
+  enter: "START",
+  q: "SELECT",
 };
 
 export class KeyboardAndMouse implements InputHandler {
@@ -50,7 +51,7 @@ export class KeyboardAndMouse implements InputHandler {
     if (type == "mousemove") {
       this.state["ROTATE"] = {
         active: true,
-        coordinate: { x: ev.clientX, y: ev.clientY },
+        point: { x: ev.clientX, y: ev.clientY },
       };
     } else {
       // TODO should it be just RB or other 'key(s)'?

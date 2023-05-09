@@ -1,4 +1,6 @@
-import { Destroyable, Boundaries, ListenerMap, unset, set } from "@/common";
+import debounce from "lodash.debounce";
+import { Destroyable, Boundaries } from "@/common/meta";
+import { ListenerMap, unset, set } from "@/common/events";
 
 export class CanvasManager implements Destroyable {
   public canvas: HTMLCanvasElement;
@@ -9,9 +11,8 @@ export class CanvasManager implements Destroyable {
     this.canvas = document.createElement("canvas");
     document.body.appendChild(this.canvas);
 
-    const resize = this.resize.bind(this);
-    this.listeners = { resize };
-    resize();
+    this.listeners = { resize: debounce(this.resize.bind(this)) };
+    this.resize();
 
     set(this.listeners);
     this.context = this.canvas.getContext("2d")!;
@@ -23,13 +24,14 @@ export class CanvasManager implements Destroyable {
   }
 
   public clear() {
-    // context.setTransform(1, 0, 0, 1, 0, 0);
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    // context.setTransform(1, 0, 0, 1, 0, 0);
+    // TODO think about this "motion blur" effect
+    // this.context.fillStyle = "rgba(0,0,0,0.3)";
   }
 
   public getBoundaries(): Boundaries {
-    const { width, height } = this.canvas;
-    return { width, height };
+    return { width: this.canvas.width, height: this.canvas.height };
   }
 
   public destroy() {
