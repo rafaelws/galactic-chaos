@@ -101,7 +101,8 @@ export class LevelManager implements Destroyable {
       const state = { ...playerState, player: this.player.hitbox };
 
       if (this.objectsToSpawn.length > 0) {
-        this.gameObjects.push(...this.objectsToSpawn);
+        this.objectsToSpawn.push(...this.gameObjects);
+        this.gameObjects = this.objectsToSpawn;
         this.objectsToSpawn = [];
       }
 
