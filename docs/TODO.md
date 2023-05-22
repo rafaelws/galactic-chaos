@@ -1,3 +1,10 @@
+# DOING
+ - [ ] disable arrows for player navigation
+ - [ ] update inner game event system (use internal pub/sub solution over window event listener)
+ - [ ] remake README banner (max 8 frames, 5sec)
+ - [ ] update menus (use q to pause/unpause)
+ - [ ] communicate player of controls
+
 # TODO
 - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
 - [ ] create a loading screen between levels (while the assets are being loaded)
