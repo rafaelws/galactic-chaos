@@ -13,14 +13,13 @@
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.7",
-    "gh-pages": "^5.0.0",
     "npm-run-all": "^4.1.5",
     "typescript": "^4.9.4",
     "vite": "^4.0.0",
-    "vitest": "^0.31.0"
+    "vitest": "^0.31.0",
+    "vite-tsconfig-paths": "^4.0.3"
   },
   "dependencies": {
-    "lodash.debounce": "^4.0.8",
-    "vite-tsconfig-paths": "^4.0.3"
+    "lodash.debounce": "^4.0.8"
   }
 }

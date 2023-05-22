@@ -4,7 +4,7 @@
 
 A spaceship shooter game. 
 
-[Play here.](https://rafaelws.github.io/galactic-chaos/)
+[Play here.](https://galactic-chaos.netlify.app)
 
 # Getting started
 
@@ -123,10 +123,11 @@ An "on-screen-debug" feature was implemented. There are options to show hitboxes
 
 # Known Issues
 
-- (While using the gamepad) The player stops responding if the gamepad is disconnected.
+- (While using the gamepad) The game stops responding if the gamepad is disconnected.
 - Screen resize: affects both overall dimensions and movement
   - Movement is instantiated once per object. If the world boundaries, frame time (monitor frequency) or object dimensions change, moving objects will not behave as expected.
   - Dimensions are set once per object. If the world boundaries change, rendered objects won't resize.
-- Not supported
+- Not supported (devices)
   - Smartphones/tablets/smaller devices
-  - Browsers that do not support JS modules (most browsers, as of the publishing of this project, support this feature)
+  - Browsers that do not support JS modules (as of the publishing of this project, [most browsers support this feature](https://caniuse.com/es6-module))
+- Rarely, audio tracks can overlap each other (especially while exiting menus)
