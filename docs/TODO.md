@@ -1,9 +1,14 @@
 # DOING
- - [ ] disable arrows for player navigation
  - [ ] update inner game event system (use internal pub/sub solution over window event listener)
+ - [ ] disable arrows for player navigation
  - [ ] remake README banner (max 8 frames, 5sec)
  - [ ] update menus (use q to pause/unpause)
- - [ ] communicate player of controls
+ - [ ] communicate player of controls (menus)
+ - [ ] trigger "loading state" while a level is loading
+ - [ ] every level should load ALL the assets it will use (level-independent asset loading)
+ - [ ] automate asset loading
+ - [ ] audio overlap bug
+ - [ ] compression/gzip (https://github.com/vbenjs/vite-plugin-compression/blob/main/packages/playground/basic/vite.config.ts)
 
 # TODO
 - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)

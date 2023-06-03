@@ -9,7 +9,8 @@
     "build": "vite build",
     "vite:preview": "vite preview",
     "preview": "run-s build vite:preview",
-    "test": "vitest run --dir test"
+    "test": "vitest run --dir test",
+    "test:watch": "vitest --dir test"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.7",
