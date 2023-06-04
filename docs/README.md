@@ -36,8 +36,6 @@ Web game that uses (Web) APIs such as [Canvas](https://developer.mozilla.org/en-
 
 ## Structure
 
-The entire project uses a single HTML file where the HUD and menus reside. Some CSS and SVG were set inline to avoid abrupt rendering changes, especially on the first visit (sudden background color changes, for example).
-
 The entry point is [`src/main.ts`](../src/main.ts). It waits for the [`DOMContentLoaded` event](https://developer.mozilla.org/en-US/docs/Web/API/Window/DOMContentLoaded_event) to show the main menu.
 
 When the player starts the game, a loop is created using [`requestAnimationFrame()`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
@@ -48,13 +46,13 @@ Next, the [LevelManager](../src/level/LevelManager.ts) handles level loading, ga
 
 A `Level` is simply an async function that returns an array of [GameObjects](../src/objects/shared/GameObject.ts).
 
+There is a single [HTML file](../index.html) where the HUD and menus are located. To prevent abrupt rendering changes, especially on the first visit, certain CSS and SVG elements were set inline. This approach helps avoid sudden background color changes, for example.
+
 ## Input
 
-The game supports keyboard/mouse and [gamepad](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API). A common interface ([InputHandler](../src/common/controls/Input.ts)) was created to consolidate the behavior, regardless of its source.
+The game supports input from both keyboard/mouse and [gamepad](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API). To consolidate the behavior regardless of the input source, a common interface ([InputHandler](../src/common/controls/Input.ts)) was created.
 
-Menus support both input sources at the same time. The player can **swap** between input sources while on `pause menu`. If the player is using keyboard/mouse, connects a gamepad, and press Start to resume, the game will now respond to the gamepad (and vice versa). 
-
-Most menu functions are debounced to avoid triggering the same action multiple times.
+The menus support simultaneous input from both keyboard/mouse and gamepad sources. While on the pause menu, the player can **swap** between input sources. For example, if the player is using keyboard/mouse and connects a gamepad, they can press the Start button to resume the game, and from that point on, the game will respond to the gamepad input (and vice versa).
 
 ## Audio
 
