@@ -67,9 +67,6 @@ export class Boss extends GameObject {
       this.hpLoss(amount);
     }
     events.game.bossHp({ maxHp: this.maxHp, hp: this.hp });
-
-    // TODO move it to the level manager
-    if (this.hp <= 0) events.game.bossDefeated();
   }
 
   public effect(): Effect {

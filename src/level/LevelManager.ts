@@ -32,8 +32,14 @@ export class LevelManager implements Destroyable {
       events.game.onSpawn(gameObject => {
         this.objectsToSpawn.push(gameObject);
       }),
-      events.game.onBossDefeated(() => this.nextLevel()),
+      events.game.onPlayerHp(ev => {
+        if (ev.hp <= 0) events.game.over();
+      }),
+      events.game.onBossHp(ev => {
+        if (ev.hp <= 0) this.nextLevel();
+      }),
       events.config.onBackgroundDensity((density: number) => {
+        console.log({ density });
         if (this.background) this.background.density = density;
       })
     ];

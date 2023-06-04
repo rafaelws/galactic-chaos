@@ -23,10 +23,6 @@ enum GameEvent {
   Quit = "Quit",
   GameOver = "GameOver",
   GameEnd = "GameEnd",
-  // TODO the below events are either 
-  // not being used or being used inappropriately
-  NextLevel = "NextLevel",
-  BossDefeated = "BossDefeated",
 }
 
 const game = {
@@ -78,20 +74,6 @@ const game = {
   onEnd(sub: EmptyFn) {
     return pubSub.sub(GameEvent.GameEnd, sub);
   },
-
-  nextLevel() {
-    pubSub.pub(GameEvent.NextLevel);
-  },
-  onNextLevel(sub: EmptyFn) {
-    return pubSub.sub(GameEvent.NextLevel, sub);
-  },
-
-  bossDefeated() {
-    pubSub.pub(GameEvent.BossDefeated);
-  },
-  onBossDefeated(sub: EmptyFn) {
-    return pubSub.sub(GameEvent.BossDefeated, sub);
-  }
 };
 
 const audio = {
@@ -119,7 +101,7 @@ const audio = {
 
 const config = {
   onBackgroundDensity(sub: (density: number) => void) {
-    return pubSub.sub(ConfigKey.Input, sub);
+    return pubSub.sub(ConfigKey.BackgroundDensity, sub);
   },
   onInput(sub: (inputType: ConfigInputType) => void) {
     return pubSub.sub(ConfigKey.Input, sub);
