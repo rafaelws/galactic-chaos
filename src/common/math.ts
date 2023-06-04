@@ -36,7 +36,8 @@ export function dice() {
 }
 
 /**
- * `x` and `y` for both `from` and `to` are advised to be the center of the object
+ * `x` and `y` for both `from` and `to` are advised 
+ * to be the center of the object
  *
  * `{x: this.x + this.cx, y: this.y + this.cy }`
  * @returns angle in radians

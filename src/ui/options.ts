@@ -1,9 +1,9 @@
-import { Config } from "@/common";
+import { Config, ConfigKey, ConfigMap } from "@/common";
 import { throttle } from "@/common/util";
 import { TriggerOnInput } from "./readInput";
 import { $, fadeIn, fadeOut } from "./util";
 
-export namespace Options {
+export function Options() {
   const elQuery = "#options";
 
   let isOptionsOpen = false;
@@ -70,7 +70,7 @@ export namespace Options {
 
     if (operation !== null) {
       value = operation === "+" ? true : false;
-      Config.set(el.dataset.key as Config.Key, value);
+      Config.set(el.dataset.key as ConfigKey, value);
     }
 
     if (value) {
@@ -91,7 +91,7 @@ export namespace Options {
 
       if (value <= min) value = min;
       if (value >= max) value = max;
-      Config.set(el.dataset.key as Config.Key, value);
+      Config.set(el.dataset.key as ConfigKey, value);
       el.dataset.value = "" + value;
     }
 
@@ -101,14 +101,14 @@ export namespace Options {
       normalized + "%";
   }
 
-  function init(config: Config.Map) {
+  function init(config: ConfigMap) {
     fields<HTMLElement>().forEach((el) => {
-      el.dataset.value = config[el.dataset.key as Config.Key];
+      el.dataset.value = config[el.dataset.key as ConfigKey];
       action(null, el);
     });
   }
 
-  export function open() {
+  function open() {
     if (isOptionsOpen === true) return;
 
     isOptionsOpen = true;
@@ -118,7 +118,7 @@ export namespace Options {
     fadeIn(elQuery);
   }
 
-  export function close() {
+  function close() {
     if (isOptionsOpen === false) return;
 
     isOptionsOpen = false;
@@ -126,11 +126,11 @@ export namespace Options {
     fadeOut(elQuery);
   }
 
-  export function toggle() {
+  function toggle() {
     isOptionsOpen ? close() : open();
   }
 
-  export const actions: TriggerOnInput[] = [
+  const actions: TriggerOnInput[] = [
     { action: "D_UP", destroyOnHit: false, fn: throttle(up, 150) },
     { action: "L_UP", destroyOnHit: false, fn: throttle(up, 150) },
     { action: "L_DOWN", destroyOnHit: false, fn: throttle(down, 150) },
@@ -141,4 +141,11 @@ export namespace Options {
     { action: "D_RIGHT", destroyOnHit: false, fn: throttle(right, 25) },
     { action: "L_RIGHT", destroyOnHit: false, fn: throttle(right, 25) },
   ];
+
+  return {
+    open,
+    close,
+    toggle,
+    actions,
+  };
 }

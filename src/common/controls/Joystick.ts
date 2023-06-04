@@ -94,9 +94,13 @@ function query(gamepad: Gamepad): ControlState {
 
 export class Joystick implements InputHandler {
   public getState(): ControlState {
+    // TODO store the gamepad index instead of calling .find every state query
     const gamepad = navigator.getGamepads().find((pad) => !!pad);
+    // TODO notify when gamepad gets disconnected
     return gamepad ? query(gamepad) : {};
   }
 
-  public destroy() {}
+  public destroy() {
+    // not needed
+  }
 }

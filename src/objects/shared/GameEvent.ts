@@ -11,7 +11,8 @@ export enum GameEvent {
   PlayerHp = "PlayerHp",
   BossHp = "BossHp",
   GameEnd = "GameEnd",
-  // TODO the below events are either not being used or being used inappropriately
+  // TODO the below events are either not 
+  // being used or being used inappropriately
   NextLevel = "NextLevel",
   BossDefeated = "BossDefeated",
 }

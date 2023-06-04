@@ -9,12 +9,12 @@ export function iterate<T>(
   }
 }
 
-export function throttle(fn: Function, time = 200) {
+export function throttle(fn: (...args: any) => void, time = 200) {
   let lastCallTime = Date.now() + time;
-  return () => {
+  return (...args: any) => {
     const now = Date.now();
     if (now - lastCallTime >= time) {
-      fn(arguments);
+      fn(args);
       lastCallTime = now;
     }
   };

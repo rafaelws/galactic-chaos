@@ -4,14 +4,17 @@ import { Destroyable } from "@/common/meta";
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
 import { assets, preloadAudio } from "@/common/asset";
 import { throttle } from "@/common/util";
-import { AudioManager } from "@/main/AudioManager";
+import { AudioEvent } from "@/main/AudioManager";
 import { GameEvent } from "@/objects";
 import { Options } from "./options";
 import { readInput } from "./readInput";
 import { hide, show } from "./util";
 
-export namespace UI {
+export function UI() {
+  // TODO await refactor + fixes
+  // AudioManager();
   const loop = setup();
+  const options = Options();
 
   const debounceTime = 150;
   let pauseInput: Destroyable | null = null;
@@ -35,7 +38,7 @@ export namespace UI {
   };
 
   function hideAll() {
-    Options.close();
+    options.close();
     for (const el in elements) {
       hide(elements[el]);
     }
@@ -56,10 +59,10 @@ export namespace UI {
     const paused = readEvent<boolean>(ev);
     if (!paused) return;
 
-    AudioManager.pause();
+    trigger(AudioEvent.Pause);
 
     show(elements.pauseMenu);
-    Options.open();
+    options.open();
 
     readInput([
       { action: "SELECT", fn: quit },
@@ -67,15 +70,14 @@ export namespace UI {
         action: "START",
         fn: () => {
           trigger(GameEvent.Pause, false);
-
-          AudioManager.resume();
+          trigger(AudioEvent.Resume);
 
           hide(elements.pauseMenu);
-          Options.close();
+          options.close();
           hookPause();
         },
       },
-      ...Options.actions,
+      ...options.actions,
     ]);
   }
 
@@ -92,7 +94,10 @@ export namespace UI {
 
   function gameOver() {
     pauseInput?.destroy();
-    AudioManager.play(assets.audio.menu.gameOver, true);
+    trigger(AudioEvent.Play, {
+      assetPath: assets.audio.menu.gameOver,
+      loop: true,
+    });
 
     hideAll();
     loop.destroy();
@@ -122,7 +127,7 @@ export namespace UI {
     hookPause();
   }
 
-  export async function mainMenu() {
+  async function mainMenu() {
     await Promise.all(
       preloadAudio(
         assets.audio.menu.main,
@@ -132,13 +137,15 @@ export namespace UI {
     );
     hide(elements.loading);
     show(elements.ghLink);
-    AudioManager.play(assets.audio.menu.main);
+    trigger(AudioEvent.Play, { assetPath: assets.audio.menu.main });
 
     readInput([
       { action: "START", fn: debounce(start, debounceTime) },
-      { action: "SELECT", fn: throttle(Options.toggle), destroyOnHit: false },
-      ...Options.actions,
+      { action: "SELECT", fn: throttle(options.toggle), destroyOnHit: false },
+      ...options.actions,
     ]);
     show(elements.mainMenu);
   }
+
+  return { mainMenu };
 }

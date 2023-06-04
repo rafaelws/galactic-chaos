@@ -1,6 +1,6 @@
 import { Boundaries, Destroyable, GameState } from "@/common/meta";
 import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
-import { Config } from "@/common";
+import { Config, ConfigKey } from "@/common";
 import { NoDebug } from "@/common/debug";
 import { iterate } from "@/common/util";
 import { ControlState } from "@/common/controls";
@@ -35,7 +35,7 @@ export class LevelManager implements Destroyable {
       [GameEvent.BossDefeated]: (_: globalThis.Event) => {
         this.nextLevel();
       },
-      [Config.Key.BackgroundDensity]: (ev: globalThis.Event) => {
+      [ConfigKey.BackgroundDensity]: (ev: globalThis.Event) => {
         if (this.background) this.background.density = readEvent<number>(ev);
       },
     };
@@ -85,7 +85,7 @@ export class LevelManager implements Destroyable {
       if (!this.collision) this.collision = new CollisionManager(this.player);
       if (!this.background)
         this.background = new BackgroundManager(
-          Config.get(Config.Key.BackgroundDensity)
+          Config.get(ConfigKey.BackgroundDensity)
         );
     } else {
       // most operations are order dependent

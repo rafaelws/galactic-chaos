@@ -1,4 +1,5 @@
 import "./css/main.css";
 import { UI } from "./ui";
 
-document.addEventListener("DOMContentLoaded", UI.mainMenu);
+const ui = UI();
+document.addEventListener("DOMContentLoaded", ui.mainMenu);

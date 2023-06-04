@@ -1,13 +1,20 @@
-import { Config } from "@/common";
+import { Config, ConfigKey } from "@/common";
 import { assets, getAudio } from "@/common/asset";
-import { readEvent, set } from "@/common/events";
+import { readEvent, set, unset } from "@/common/events";
+import { Destroyable } from "@/common/meta";
 
-export namespace AudioManager {
-  interface AudioRequestEvent {
-    assetPath: string;
-    loop?: boolean;
-  }
+export enum AudioEvent {
+  Play = "Play",
+  Pause = "Pause",
+  Resume = "Resume",
+}
 
+interface AudioRequestEvent {
+  assetPath: string;
+  loop?: boolean;
+}
+
+export function AudioManager(): Destroyable {
   const ctx: AudioContext = new AudioContext();
   const gainNode: GainNode = ctx.createGain();
 
@@ -18,17 +25,23 @@ export namespace AudioManager {
 
   let enabled = false;
 
-  setGain(Config.get(Config.Key.AudioGain));
-  setEnabled(Config.get(Config.Key.AudioEnabled));
+  setGain(Config.get(ConfigKey.AudioGain));
+  setEnabled(Config.get(ConfigKey.AudioEnabled));
 
-  set({
-    [Config.Key.AudioGain]: (ev: globalThis.Event) => {
+  const listeners = {
+    [AudioEvent.Play]: (ev: globalThis.Event) =>
+      play(readEvent<AudioRequestEvent>(ev)),
+    [AudioEvent.Pause]: () => pause(),
+    [AudioEvent.Resume]: () => resume(),
+    [ConfigKey.AudioGain]: (ev: globalThis.Event) => {
       setGain(readEvent<number>(ev));
     },
-    [Config.Key.AudioEnabled]: (ev: globalThis.Event) => {
+    [ConfigKey.AudioEnabled]: (ev: globalThis.Event) => {
       setEnabled(readEvent<boolean>(ev));
     },
-  });
+  };
+
+  set(listeners);
 
   async function createTrack(buffer: ArrayBuffer) {
     const track = ctx.createBufferSource();
@@ -57,7 +70,9 @@ export namespace AudioManager {
     }
   }
 
-  export async function play(assetPath: string, loop?: boolean) {
+  async function play(ev: AudioRequestEvent) {
+    const { assetPath, loop } = ev;
+
     if (lastEvent?.assetPath !== assetPath) {
       currentTrackTimePast = 0;
     }
@@ -71,7 +86,7 @@ export namespace AudioManager {
     setEnabled(enabled);
   }
 
-  export async function pause(
+  async function pause(
     assetPath = assets.audio.menu.pause,
     loop = true
   ) {
@@ -83,16 +98,16 @@ export namespace AudioManager {
     setEnabled(enabled);
   }
 
-  export async function resume() {
-    if (lastEvent) play(lastEvent.assetPath, lastEvent.loop);
+  async function resume() {
+    if (lastEvent) play(lastEvent);
   }
 
-  export function setGain(amount: number) {
+  function setGain(amount: number) {
     const gain = amount * 0.1;
     gainNode.gain.value = gain;
   }
 
-  export function setEnabled(_enabled: boolean) {
+  function setEnabled(_enabled: boolean) {
     // if (enabled === enabled) return;
     enabled = _enabled;
 
@@ -102,4 +117,10 @@ export namespace AudioManager {
       if (ctx.state === "running") ctx.suspend();
     }
   }
+
+  return {
+    destroy() {
+      unset(listeners);
+    }
+  };
 }

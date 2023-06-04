@@ -4,7 +4,7 @@ import { set, unset, ListenerMap, readEvent } from "@/common/events";
 import { KeyboardAndMouse, InputHandler, Joystick } from "@/common/controls";
 import { DebugParams, NoDebug } from "@/common/debug";
 import { LevelManager } from "@/level";
-import { Config } from "@/common";
+import { Config, ConfigInputType, ConfigKey } from "@/common";
 import { hud } from "@/ui/hud";
 import { CanvasManager } from "./CanvasManager";
 
@@ -16,7 +16,7 @@ export class GameManager implements Destroyable {
   private cm: CanvasManager;
   private lm: LevelManager;
   private ih: InputHandler = new KeyboardAndMouse();
-  private preferredInput = Config.Input.KeyboardAndMouse;
+  private preferredInput = ConfigInputType.KeyboardAndMouse;
 
   private listeners: ListenerMap = {};
   private destroyables: Destroyable[] = [];
@@ -47,12 +47,12 @@ export class GameManager implements Destroyable {
   }
 
   private checkPreferredInput() {
-    const preferredInput = Config.get<Config.Input>(Config.Key.Input);
+    const preferredInput = Config.get<ConfigInputType>(ConfigKey.Input);
 
     if (preferredInput !== this.preferredInput) {
       this.ih.destroy();
       this.ih =
-        preferredInput === Config.Input.Joystick
+        preferredInput === ConfigInputType.Joystick
           ? new Joystick()
           : new KeyboardAndMouse();
       this.preferredInput = preferredInput;
