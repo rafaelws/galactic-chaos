@@ -26,10 +26,10 @@ enum GameEvent {
 }
 
 const game = {
-  pause(isPaused: boolean) {
-    pubSub.pub(GameEvent.Pause, isPaused);
+  pause(paused: boolean) {
+    pubSub.pub(GameEvent.Pause, paused);
   },
-  onPause(sub: (isPaused: boolean) => void) {
+  onPause(sub: (paused: boolean) => void) {
     return pubSub.sub(GameEvent.Pause, sub);
   },
 

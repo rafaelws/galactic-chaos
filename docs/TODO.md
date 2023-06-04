@@ -6,7 +6,7 @@ Events
  - [x] update inner game event system (replace browser event system with internal pub/sub solution)
 
  Menus - Controls
- - [ ] {bug} player moves during pause
+ - [x] {bug} player moves during pause
  - [ ] communicate player of controls (use the footer)
  - [ ] update menus (use q to pause/unpause)
  - [ ] disable arrows everywhere
