@@ -8,13 +8,13 @@ export namespace AudioManager {
     loop?: boolean;
   }
 
-  let ctx: AudioContext = new AudioContext();
-  let gainNode: GainNode = ctx.createGain();
+  const ctx: AudioContext = new AudioContext();
+  const gainNode: GainNode = ctx.createGain();
 
   let lastEvent: AudioRequestEvent | null = null;
   let currentTrack: AudioBufferSourceNode | null = null;
-  let currentTrackPlayDate: number = 0;
-  let currentTrackTimePast: number = 0;
+  let currentTrackPlayDate = 0;
+  let currentTrackTimePast = 0;
 
   let enabled = false;
 
@@ -40,7 +40,7 @@ export namespace AudioManager {
   async function prepareTrack(ev: AudioRequestEvent) {
     const { assetPath, loop = false } = ev;
 
-    if (!!currentTrack) {
+    if (currentTrack) {
       currentTrack.stop();
       currentTrack = null;
     }
@@ -84,7 +84,7 @@ export namespace AudioManager {
   }
 
   export async function resume() {
-    if (!!lastEvent) play(lastEvent.assetPath, lastEvent.loop);
+    if (lastEvent) play(lastEvent.assetPath, lastEvent.loop);
   }
 
   export function setGain(amount: number) {

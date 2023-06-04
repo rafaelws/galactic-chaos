@@ -63,7 +63,7 @@ export class CollisionManager implements Drawable {
   }
 
   public update(state: GameState): void {
-    let actives: Drawable[] = [];
+    const actives: Drawable[] = [];
     iterate(this.drawables, (d) => {
       d.update(state);
       if (d.isActive) actives.push(d);

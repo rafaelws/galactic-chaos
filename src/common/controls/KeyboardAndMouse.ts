@@ -55,7 +55,7 @@ export class KeyboardAndMouse implements InputHandler {
       };
     } else {
       // TODO should it be just RB or other 'key(s)'?
-      let active = type == "mousedown" && ev.button === 0;
+      const active = type == "mousedown" && ev.button === 0;
       this.state["RB"] = { active };
     }
   }

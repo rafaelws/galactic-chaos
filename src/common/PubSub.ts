@@ -21,8 +21,8 @@ export class PubSub {
     const topics = this.topics.get(topic);
     if (!topics) return;
 
-    for (let [, listener] of topics) {
-      setTimeout(() => listener(message), 0)
+    for (const [, listener] of topics) {
+      setTimeout(() => listener(message), 0);
     }
   }
 
@@ -44,7 +44,7 @@ export class PubSub {
   public register(subscribers: Subscribers) {
     const unsubs: UnsubFn[] = [];
 
-    for (let topic in subscribers)
+    for (const topic in subscribers)
       unsubs.push(this.sub(topic, subscribers[topic]));
 
     return () => unsubs.map(unsub => unsub());

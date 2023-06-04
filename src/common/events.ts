@@ -21,16 +21,16 @@ export function trigger(eventName: string, eventDetailData?: any) {
 }
 
 export function set(...listeners: ListenerMap[]) {
-  for (let map of listeners) {
-    for (let alias in map) {
+  for (const map of listeners) {
+    for (const alias in map) {
       on(alias, map[alias]);
     }
   }
 }
 
 export function unset(...listeners: ListenerMap[]) {
-  for (let map of listeners) {
-    for (let alias in map) {
+  for (const map of listeners) {
+    for (const alias in map) {
       off(alias, map[alias]);
     }
   }

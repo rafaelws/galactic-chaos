@@ -1,6 +1,6 @@
 type ImageCache = { [path: string]: HTMLImageElement };
 
-let imageCache: ImageCache = {};
+const imageCache: ImageCache = {};
 
 export function getImage(path: string) {
   return imageCache[path];
@@ -9,7 +9,7 @@ export function getImage(path: string) {
 function loadImage(path: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const cached = getImage(path);
-    if (!!cached) return resolve(cached);
+    if (cached) return resolve(cached);
 
     const image = new Image();
 

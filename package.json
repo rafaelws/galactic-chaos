@@ -11,7 +11,8 @@
     "preview": "run-s build vite:preview",
     "test": "vitest run --dir test",
     "test:watch": "vitest --dir test",
-    "lint": "eslint src --ext .ts --fix"
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.7",

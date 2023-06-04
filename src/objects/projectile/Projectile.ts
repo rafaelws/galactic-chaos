@@ -20,8 +20,8 @@ export class Projectile extends GameObject {
     this.color = params.color
       ? params.color
       : params.enemy
-      ? ProjectileColor.enemy
-      : ProjectileColor.player;
+        ? ProjectileColor.enemy
+        : ProjectileColor.player;
   }
 
   public get hitbox(): HitBox {

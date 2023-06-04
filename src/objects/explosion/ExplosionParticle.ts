@@ -8,7 +8,7 @@ export class ExplosionParticle implements Drawable {
   private cx: number;
   private cy: number;
   private direction: Point;
-  private alpha: number = 1;
+  private alpha = 1;
   private alphaClock: Clock;
   private active = true;
 

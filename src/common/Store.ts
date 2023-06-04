@@ -16,6 +16,6 @@ export namespace Store {
    */
   export function get(key: string) {
     const value = window.localStorage.getItem(`${localStorageKey}${key}`);
-    if (!!value) return JSON.parse(value);
+    if (value) return JSON.parse(value);
   }
 }

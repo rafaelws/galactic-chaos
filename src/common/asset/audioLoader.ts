@@ -1,6 +1,6 @@
 type AudioCache = { [path: string]: ArrayBuffer };
 
-let audioCache: AudioCache = {};
+const audioCache: AudioCache = {};
 
 export function getAudio(filePath: string) {
   return audioCache[filePath];
@@ -19,7 +19,7 @@ async function getBuffer(filePath: string) {
 
 async function loadAudioToCache(filePath: string) {
   const exists = audioCache[filePath];
-  if (!!exists) return exists;
+  if (exists) return exists;
 
   // audioCache[filePath] = createAudio(buffer);
   audioCache[filePath] = await getBuffer(filePath);

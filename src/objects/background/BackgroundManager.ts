@@ -45,7 +45,7 @@ export class BackgroundManager implements Drawable {
   }
 
   public update(state: GameState) {
-    let actives: Star[] = [];
+    const actives: Star[] = [];
     iterate(this.stars, (star) => {
       star.update(state);
       if (star.isActive) actives.push(star);

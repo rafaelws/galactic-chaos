@@ -23,7 +23,7 @@ const indexedButtons = [
 
 function query(gamepad: Gamepad): ControlState {
   const drift = 0.1;
-  let state: ControlState = {};
+  const state: ControlState = {};
 
   const setState = (key: string, data: ControlStateData) => {
     state[key as ControlAction] = data;

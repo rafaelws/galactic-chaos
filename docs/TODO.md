@@ -1,4 +1,5 @@
 # DOING
+ - [ ] eslint
  - [ ] update inner game event system (use internal pub/sub solution over window event listener)
  - [ ] disable arrows for player navigation
  - [ ] remake README banner (max 8 frames, 5sec)

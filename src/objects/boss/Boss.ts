@@ -54,7 +54,7 @@ export class Boss extends GameObject {
       this.alphaTime = 0;
       this.alpha = 0.999;
 
-      if (!!spawnables) iterate(spawnables, (s) => trigger(GameEvent.Spawn, s));
+      if (spawnables) iterate(spawnables, (s) => trigger(GameEvent.Spawn, s));
     } else {
       this.active = false;
     }
