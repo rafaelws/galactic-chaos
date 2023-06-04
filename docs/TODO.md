@@ -1,12 +1,9 @@
 # DOING
 
- - [x] {bug} audio overlap (try to make this event type sync)
- - [x] disable arrows everywhere (wasd only)
- - [x] update menus to use q to pause/unpause (q=START, e=SELECT)
+ - [ ] {bug} audio overlap (reincident)
  - [ ] communicate player of controls (use menus)
  - [ ] remake README banner (max 8 frames, 5sec)
  - [ ] [compression/gzip](https://github.com/vbenjs/vite-plugin-compression/blob/main/packages/playground/basic/vite.config.ts)
- - [ ] Joystick class fixes
 
  Asset Loading
  - [ ] every level should load ALL the assets it will use (level-independent asset loading)
@@ -157,3 +154,7 @@
 - [x] eslint
 - [x] listen to player and boss hp on LevelManager (remove from Player and Boss)
 - [x] {bug} (event) bg density not updating
+- [x] {bug} Joystick disconnected
+- [x] disable arrows everywhere (wasd only)
+- [x] update menus to use q to pause/unpause (q=START, e=SELECT)
+ 

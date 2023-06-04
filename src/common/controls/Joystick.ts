@@ -1,5 +1,6 @@
 import { iterate } from "../util";
 import { ControlAction, ControlState, ControlStateData, InputHandler } from ".";
+import { Config, ConfigInputType, ConfigKey } from "../Config";
 
 const indexedButtons = [
   "A",
@@ -93,14 +94,34 @@ function query(gamepad: Gamepad): ControlState {
 }
 
 export class Joystick implements InputHandler {
+  private index = -1;
+
+  private search(pads: (Gamepad | null)[]) {
+    for (let i = 0; i < pads.length; i++) {
+      if (pads[i]) {
+        this.index = i;
+        break;
+      }
+    }
+  }
+
   public getState(): ControlState {
-    // TODO store the gamepad index instead of calling .find every state query
-    const gamepad = navigator.getGamepads().find((pad) => !!pad);
-    // TODO notify when gamepad gets disconnected
-    return gamepad ? query(gamepad) : {};
+    let gamepad: Gamepad | null = null;
+    const pads = navigator.getGamepads();
+
+    if (this.index === -1) this.search(pads);
+    gamepad = pads[this.index];
+
+    if (gamepad) {
+      return query(gamepad);
+    } else {
+      this.index = -1;
+      Config.set(ConfigKey.Input, ConfigInputType.KeyboardAndMouse);
+      return {};
+    }
   }
 
   public destroy() {
-    // not needed
+    this.index = -1;
   }
 }

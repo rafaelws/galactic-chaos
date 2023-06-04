@@ -33,7 +33,10 @@ export class GameManager implements Destroyable {
       events.game.onPause(paused => {
         if (!paused) this.checkPreferredInput();
         this.paused = paused;
-      })
+      }),
+      events.config.onInput(() => {
+        this.checkPreferredInput();
+      }),
     ];
     // TODO test input handler destroyable after switch
     this.destroyables = [hud(), this.ih, this.cm, this.lm];
