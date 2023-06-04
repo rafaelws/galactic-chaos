@@ -27,9 +27,11 @@ Events
 # TODO
 - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
 - [ ] create a loading screen between levels (while the assets are being loaded)
-- [ ] player items
-  - [ ] shield
-  - [ ] special
+- [ ] player 
+  - [ ] radar
+  - items
+    - [ ] shield
+    - [ ] special
 - [ ] projectile
   - [ ] {idea} deflect projectile on hit
   - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
@@ -42,7 +44,6 @@ Events
   - [ ] reactive background (using WebAudioAPI; verify browser support)
   - [ ] fadeIn/Out with Web Audio API (gain ramp methods are not widely supported)
 - [ ] overall status: time? score? enemies defeated? projectiles fired?
-- [ ] docs: consider using an interactive form to showcase/test game objects (see `dat.gui`)
 - [ ] make projectile and player movement smoother
 - [ ] use lerp for alpha and movement (Star, ExplosionParticle)
 - [ ] better hitboxes
@@ -53,6 +54,8 @@ Events
 - [x] fade-in/out menus
 - [x] fade-in/out hud
 - [ ] use sprites (review canvas performance and load time)
+- [ ] (UI) tooling: consider using an interactive form to showcase/test game objects (see `dat.gui`)
+- [ ] (UI) tooling: level designer
 - [ ] Gamepad:
   - [ ] PreferredInput: gamepad or keyboard/mouse (choose gamepad index?)
   - [ ] Configuration: controller stick drift (left and right)
