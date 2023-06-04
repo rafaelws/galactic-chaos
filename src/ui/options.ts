@@ -136,10 +136,10 @@ export function Options() {
     { action: "L_DOWN", destroyOnHit: false, fn: throttle(down, 150) },
     { action: "D_DOWN", destroyOnHit: false, fn: throttle(down, 150) },
 
-    { action: "D_LEFT", destroyOnHit: false, fn: throttle(left, 25) },
-    { action: "L_LEFT", destroyOnHit: false, fn: throttle(left, 25) },
-    { action: "D_RIGHT", destroyOnHit: false, fn: throttle(right, 25) },
-    { action: "L_RIGHT", destroyOnHit: false, fn: throttle(right, 25) },
+    { action: "D_LEFT", destroyOnHit: false, fn: throttle(left, 20) },
+    { action: "L_LEFT", destroyOnHit: false, fn: throttle(left, 20) },
+    { action: "D_RIGHT", destroyOnHit: false, fn: throttle(right, 20) },
+    { action: "L_RIGHT", destroyOnHit: false, fn: throttle(right, 20) },
   ];
 
   return {

@@ -1,37 +1,25 @@
 # DOING
 
- - [x] eslint
-
-Events
- - [x] update inner game event system (replace browser event system with internal pub/sub solution)
-
- Menus - Controls
- - [x] {bug} player moves during pause
- - [ ] communicate player of controls (use the footer)
- - [ ] update menus (use q to pause/unpause)
- - [ ] disable arrows everywhere
  - [ ] {bug} audio overlap (try to make this event type sync)
- 
- Level - Assets - Events
+ - [x] disable arrows everywhere (wasd only)
+ - [x] update menus to use q to pause/unpause (q=START, e=SELECT)
+ - [ ] communicate player of controls (use menus)
+ - [ ] remake README banner (max 8 frames, 5sec)
+ - [ ] [compression/gzip](https://github.com/vbenjs/vite-plugin-compression/blob/main/packages/playground/basic/vite.config.ts)
+ - [ ] Joystick class fixes
+
+ Asset Loading
  - [ ] every level should load ALL the assets it will use (level-independent asset loading)
  - [ ] trigger "loading state" while a level is loading
- - [ ] automate asset loading
- - [x] listen to player and boss hp on LevelManager (remove from Player and Boss)
- - [x] {bug} bg density not updating
- 
- Misc
- - [ ] remake README banner (max 8 frames, 5sec)
- - [ ] Joystick class fixes
- - [ ] [compression/gzip](https://github.com/vbenjs/vite-plugin-compression/blob/main/packages/playground/basic/vite.config.ts)
+ - [ ] *automate asset loading
 
 # TODO
 - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
 - [ ] create a loading screen between levels (while the assets are being loaded)
 - [ ] player 
   - [ ] radar
-  - items
-    - [ ] shield
-    - [ ] special
+  - [ ] shield (item)
+  - [ ] special (item)
 - [ ] projectile
   - [ ] {idea} deflect projectile on hit
   - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
@@ -165,3 +153,7 @@ Events
 - [x] {bug} small stutter on level change (all assets are being loaded on firstLevel)
 - [x] {bug} audio: track overlap when actions are triggered too close to each other
 - [x] {bug} objects with spawnTimeout can be destroyed by player (on the edges of the screen)
+- [x] update inner game event system (replace browser event system with internal pub/sub solution)
+- [x] eslint
+- [x] listen to player and boss hp on LevelManager (remove from Player and Boss)
+- [x] {bug} (event) bg density not updating
