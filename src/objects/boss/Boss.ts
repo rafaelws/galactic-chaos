@@ -1,18 +1,17 @@
 import { GameState } from "@/common/meta";
 import { lerp, R180 } from "@/common/math";
-import { trigger } from "@/common/events";
 import { iterate } from "@/common/util";
 import { GameObjectName } from "@/common/debug";
 import {
   Effect,
   EffectType,
   Fire,
-  GameEvent,
   GameObject,
   Impact,
   Movement,
 } from "../shared";
 import { BossParams } from "./BossParams";
+import { events } from "@/common/events";
 
 export class Boss extends GameObject {
   private maxHp: number;
@@ -33,7 +32,7 @@ export class Boss extends GameObject {
     this.phasesLength = params.phases.length;
     this.setDimensions(this.params.img);
     this.nextPhase();
-    trigger(GameEvent.BossHp, { maxHp: this.maxHp, hp: this.hp });
+    events.game.bossHp({ maxHp: this.maxHp, hp: this.hp });
   }
 
   private get phase() {
@@ -54,7 +53,7 @@ export class Boss extends GameObject {
       this.alphaTime = 0;
       this.alpha = 0.999;
 
-      if (spawnables) iterate(spawnables, (s) => trigger(GameEvent.Spawn, s));
+      if (spawnables) iterate(spawnables, (s) => events.game.spawn(s));
     } else {
       this.active = false;
     }
@@ -67,9 +66,10 @@ export class Boss extends GameObject {
     } else if (type === EffectType.Projectile) {
       this.hpLoss(amount);
     }
-    trigger(GameEvent.BossHp, { maxHp: this.maxHp, hp: this.hp });
+    events.game.bossHp({ maxHp: this.maxHp, hp: this.hp });
 
-    if (this.hp <= 0) trigger(GameEvent.BossDefeated);
+    // TODO move it to the level manager
+    if (this.hp <= 0) events.game.bossDefeated();
   }
 
   public effect(): Effect {

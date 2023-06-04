@@ -1,5 +1,5 @@
-import { trigger } from "./events";
 import { Store } from "./Store";
+import { pub } from "./events";
 
 export enum ConfigInputType {
   KeyboardAndMouse = "KM",
@@ -45,6 +45,6 @@ export class Config {
     config[key] = value;
 
     Store.set(storageKey, config);
-    trigger(key, value);
+    pub(key, value);
   }
 }

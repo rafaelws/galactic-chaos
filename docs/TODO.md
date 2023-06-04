@@ -3,7 +3,8 @@
  - [x] eslint
 
 Events
- - [ ] update inner game event system (replace browser event system with internal pub/sub solution)
+ - [x] update inner game event system (replace browser event system with internal pub/sub solution)
+ - [ ] {bug} settings not updating (e.g, bg density)
 
  Menus - Controls
  - [ ] {bug} player moves during pause
@@ -16,6 +17,7 @@ Events
  - [ ] every level should load ALL the assets it will use (level-independent asset loading)
  - [ ] trigger "loading state" while a level is loading
  - [ ] automate asset loading
+ - [ ] listen to player and boss hp on LevelManager (remove from Player and Boss)
  
  Misc
  - [ ] remake README banner (max 8 frames, 5sec)

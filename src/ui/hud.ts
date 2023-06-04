@@ -1,13 +1,12 @@
-import { ListenerMap, readEvent, set, unset } from "@/common/events";
-import { GameEvent, HpEventData } from "@/objects";
+import { HpEvent, events } from "@/common/events";
 
 export function hud() {
-  function calculatePercent({ hp, maxHp }: HpEventData) {
+  function calculatePercent({ hp, maxHp }: HpEvent) {
     return hp > 0 && maxHp > 0 ? (hp / maxHp) * 100 : 0;
   }
 
-  function onPlayerHp(ev: globalThis.Event) {
-    const percent = calculatePercent(readEvent<HpEventData>(ev));
+  function onPlayerHp(ev: HpEvent) {
+    const percent = calculatePercent(ev);
     const containerEl = document.getElementById("player-hp")!;
     const hpEl = containerEl.querySelector<HTMLDivElement>(".hp")!;
 
@@ -24,8 +23,8 @@ export function hud() {
     hpEl.style.width = `${percent}%`;
   }
 
-  function onBossHp(ev: globalThis.Event) {
-    const percent = calculatePercent(readEvent<HpEventData>(ev));
+  function onBossHp(ev: HpEvent) {
+    const percent = calculatePercent(ev);
     const containerEl = document.getElementById("boss-hp")!;
     if (percent <= 0) {
       containerEl.style.display = "none";
@@ -38,16 +37,14 @@ export function hud() {
     hpEl.style.width = `${percent}%`;
   }
 
-  const listeners: ListenerMap = {
-    [GameEvent.PlayerHp]: onPlayerHp,
-    [GameEvent.BossHp]: onBossHp,
-  };
-
-  set(listeners);
+  const subscribers = [
+    events.game.onPlayerHp(onPlayerHp),
+    events.game.onBossHp(onBossHp),
+  ];
 
   return {
     destroy() {
-      unset(listeners);
+      subscribers.forEach(unsub => unsub());
     },
   };
 }

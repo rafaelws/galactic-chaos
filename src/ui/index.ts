@@ -1,14 +1,13 @@
 import debounce from "lodash.debounce";
 import { setup } from "@/main/loop";
 import { Destroyable } from "@/common/meta";
-import { ListenerMap, readEvent, set, trigger, unset } from "@/common/events";
+import { events } from "@/common/events";
 import { assets, preloadAudio } from "@/common/asset";
 import { throttle } from "@/common/util";
-import { AudioEvent } from "@/main/AudioManager";
-import { GameEvent } from "@/objects";
 import { Options } from "./options";
 import { readInput } from "./readInput";
 import { hide, show } from "./util";
+import { UnsubFn } from "@/common";
 
 export function UI() {
   // TODO await refactor + fixes
@@ -19,12 +18,7 @@ export function UI() {
   const debounceTime = 150;
   let pauseInput: Destroyable | null = null;
 
-  const listeners: ListenerMap = {
-    [GameEvent.Quit]: quit,
-    [GameEvent.Pause]: pause,
-    [GameEvent.GameOver]: gameOver,
-    [GameEvent.GameEnd]: gameEnd,
-  };
+  let subscribers: UnsubFn[] = [];
 
   const elements: { [index: string]: string } = {
     playerHp: "player-hp",
@@ -37,6 +31,20 @@ export function UI() {
     ghLink: "gh-link",
   };
 
+  function subscribe() {
+    subscribers = [
+      events.game.onQuit(quit),
+      events.game.onPause(pause),
+      events.game.onOver(gameOver),
+      events.game.onEnd(gameEnd),
+    ];
+  }
+
+  function unsubscribe() {
+    subscribers.forEach(unsub => unsub());
+    subscribers = [];
+  }
+
   function hideAll() {
     options.close();
     for (const el in elements) {
@@ -45,7 +53,7 @@ export function UI() {
   }
 
   function reset() {
-    unset(listeners);
+    unsubscribe();
     loop.destroy();
     hideAll();
   }
@@ -55,11 +63,10 @@ export function UI() {
     mainMenu();
   }
 
-  function pause(ev: globalThis.Event) {
-    const paused = readEvent<boolean>(ev);
+  function pause(paused: boolean) {
     if (!paused) return;
 
-    trigger(AudioEvent.Pause);
+    events.audio.pause();
 
     show(elements.pauseMenu);
     options.open();
@@ -69,8 +76,8 @@ export function UI() {
       {
         action: "START",
         fn: () => {
-          trigger(GameEvent.Pause, false);
-          trigger(AudioEvent.Resume);
+          events.game.pause(false);
+          events.audio.resume();
 
           hide(elements.pauseMenu);
           options.close();
@@ -86,7 +93,7 @@ export function UI() {
       pauseInput = readInput([
         {
           action: "START",
-          fn: debounce(() => trigger(GameEvent.Pause, true), debounceTime),
+          fn: debounce(() => events.game.pause(true), debounceTime),
         },
       ]);
     }, 500);
@@ -94,7 +101,7 @@ export function UI() {
 
   function gameOver() {
     pauseInput?.destroy();
-    trigger(AudioEvent.Play, {
+    events.audio.play({
       assetPath: assets.audio.menu.gameOver,
       loop: true,
     });
@@ -122,7 +129,7 @@ export function UI() {
 
   function start() {
     reset();
-    set(listeners);
+    subscribe();
     loop.start();
     hookPause();
   }
@@ -137,7 +144,8 @@ export function UI() {
     );
     hide(elements.loading);
     show(elements.ghLink);
-    trigger(AudioEvent.Play, { assetPath: assets.audio.menu.main });
+
+    events.audio.play({ assetPath: assets.audio.menu.main });
 
     readInput([
       { action: "START", fn: debounce(start, debounceTime) },

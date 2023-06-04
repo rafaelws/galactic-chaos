@@ -9,9 +9,9 @@ import {
 } from "@/common/controls";
 import { Clock } from "@/common";
 import { Projectile } from "@/objects";
-import { Effect, EffectType, GameEvent, GameObject } from "../shared";
+import { Effect, EffectType, GameObject } from "../shared";
 import { PlayerParams } from "./PlayerParams";
-import { trigger } from "@/common/events";
+import { events } from "@/common/events";
 
 export class Player extends GameObject {
   private maxHp = 10;
@@ -40,7 +40,7 @@ export class Player extends GameObject {
       { hp: this.maxHp * 0.75, img: params.damageStages[0] },
     ];
 
-    trigger(GameEvent.PlayerHp, { maxHp: this.maxHp, hp: this.hp });
+    events.game.playerHp({ maxHp: this.maxHp, hp: this.hp });
   }
 
   public set controlState(controls: ControlState) {
@@ -101,11 +101,10 @@ export class Player extends GameObject {
       || effect.type === EffectType.Projectile) {
       this.hpLoss(effect.amount);
     }
-    trigger(GameEvent.PlayerHp, { maxHp: this.maxHp, hp: this.hp });
+    events.game.playerHp({ maxHp: this.maxHp, hp: this.hp });
 
-    // TODO listen to PlayerHp on LevelManager?
-    if (this.hp <= 0)
-      trigger(GameEvent.GameOver, { maxHp: this.maxHp, hp: this.hp });
+    // TODO move it to the level manager
+    if (this.hp <= 0) events.game.over();
   }
 
   private act(

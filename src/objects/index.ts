@@ -12,7 +12,6 @@ export * from "./item/profiles";
 export * from "./boss/Boss";
 export * from "./boss/BossParams";
 export * from "./shared/GameObject";
-export * from "./shared/GameEvent";
 export * from "./background/BackgroundManager";
 export * from "./explosion/Explosion";
 export * from "./explosion/profiles";

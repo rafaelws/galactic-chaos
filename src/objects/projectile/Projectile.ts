@@ -33,7 +33,7 @@ export class Projectile extends GameObject {
     };
   }
 
-  protected startPoint(boundaries: Boundaries): Point {
+  protected startPoint(_: Boundaries): Point {
     // TODO rethink dimensions
     const width = 3.5;
     const height = 50;

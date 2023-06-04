@@ -1,16 +1,14 @@
-type Subscribers = {
-  [topic: string]: Listener;
+export type Subscribers = {
+  [topic: string]: SubFn;
 }
-
-type Listener = (data?: any) => void;
-
-type UnsubFn = () => void;
+export type UnsubFn = () => void;
+export type SubFn = (data?: any) => void;
 
 export class PubSub {
-  private topics: Map<string, Map<string, Listener>>;
+  private topics: Map<string, Map<string, SubFn>>;
 
   constructor() {
-    this.topics = new Map<string, Map<string, Listener>>();
+    this.topics = new Map<string, Map<string, SubFn>>();
   }
 
   private genToken(): string {
@@ -21,20 +19,20 @@ export class PubSub {
     const topics = this.topics.get(topic);
     if (!topics) return;
 
-    for (const [, listener] of topics) {
+    topics.forEach(listener => {
       setTimeout(() => listener(message), 0);
-    }
+    });
   }
 
   private unsub(topic: string, token: string) {
     this.topics.get(topic)?.delete(token);
   }
 
-  public sub(topic: string, listener: Listener) {
+  public sub(topic: string, listener: SubFn) {
     const token = this.genToken();
 
     if (this.topics.get(topic) === undefined)
-      this.topics.set(topic, new Map<string, Listener>());
+      this.topics.set(topic, new Map<string, SubFn>());
 
     this.topics.get(topic)?.set(token, listener);
 
