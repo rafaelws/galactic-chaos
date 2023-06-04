@@ -1,8 +1,8 @@
 import { Clock } from "@/common";
-import { trigger } from "@/common/events";
+import { events } from "@/common/events";
 import { atan2, R180, rir, toRad } from "@/common/math";
 import { Concrete, Point, HitBox } from "@/common/meta";
-import { GameEvent, Projectile } from "@/objects";
+import { Projectile } from "@/objects";
 import { FireParams, FirePrecision } from "./FireParams";
 
 export class Fire {
@@ -33,8 +33,7 @@ export class Fire {
       angle = this.fire.angle;
     }
 
-    trigger(
-      GameEvent.Spawn,
+    events.game.spawn(
       new Projectile({
         enemy: true,
         angle,

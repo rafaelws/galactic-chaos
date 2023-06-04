@@ -4,7 +4,7 @@ import { Drawable, GameState } from "@/common/meta";
 import { StarParams } from "./StarParams";
 
 export class Star implements Drawable {
-  private active: boolean = true;
+  private active = true;
 
   private x: number;
   private y: number;

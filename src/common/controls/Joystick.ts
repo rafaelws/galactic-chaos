@@ -23,7 +23,7 @@ const indexedButtons = [
 
 function query(gamepad: Gamepad): ControlState {
   const drift = 0.1;
-  let state: ControlState = {};
+  const state: ControlState = {};
 
   const setState = (key: string, data: ControlStateData) => {
     state[key as ControlAction] = data;
@@ -94,9 +94,13 @@ function query(gamepad: Gamepad): ControlState {
 
 export class Joystick implements InputHandler {
   public getState(): ControlState {
+    // TODO store the gamepad index instead of calling .find every state query
     const gamepad = navigator.getGamepads().find((pad) => !!pad);
+    // TODO notify when gamepad gets disconnected
     return gamepad ? query(gamepad) : {};
   }
 
-  public destroy() {}
+  public destroy() {
+    // not needed
+  }
 }

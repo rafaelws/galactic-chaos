@@ -6,7 +6,7 @@ import { dice, riir, rir } from "@/common/math";
 import { BrownRocks } from ".";
 
 export function thirdWave(rocks: BrownRocks) {
-  let objects = [];
+  const objects = [];
   const timeRange = [20 * 1000, 25 * 1000];
 
   for (let i = 0; i < 25; i++) {

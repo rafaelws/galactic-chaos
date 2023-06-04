@@ -1,9 +1,28 @@
 # DOING
- - [ ] disable arrows for player navigation
- - [ ] update inner game event system (use internal pub/sub solution over window event listener)
- - [ ] remake README banner (max 8 frames, 5sec)
+
+ - [x] eslint
+
+Events
+ - [x] update inner game event system (replace browser event system with internal pub/sub solution)
+ - [ ] {bug} settings not updating (e.g, bg density)
+
+ Menus - Controls
+ - [ ] {bug} player moves during pause
+ - [ ] communicate player of controls (use the footer)
  - [ ] update menus (use q to pause/unpause)
- - [ ] communicate player of controls
+ - [ ] disable arrows everywhere
+ - [ ] {bug} audio overlap (try to make this event type sync)
+ 
+ Level - Assets
+ - [ ] every level should load ALL the assets it will use (level-independent asset loading)
+ - [ ] trigger "loading state" while a level is loading
+ - [ ] automate asset loading
+ - [ ] listen to player and boss hp on LevelManager (remove from Player and Boss)
+ 
+ Misc
+ - [ ] remake README banner (max 8 frames, 5sec)
+ - [ ] Joystick class fixes
+ - [ ] [compression/gzip](https://github.com/vbenjs/vite-plugin-compression/blob/main/packages/playground/basic/vite.config.ts)
 
 # TODO
 - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)

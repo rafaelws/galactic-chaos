@@ -1,4 +1,4 @@
-import { ListenerMap, set, unset } from "@/common/events";
+import { ListenerMap, set, unset } from "@/common/dom-events";
 import { ControlAction, ControlState, InputHandler } from ".";
 
 type ActionMap = { [key: string]: ControlAction };
@@ -55,7 +55,7 @@ export class KeyboardAndMouse implements InputHandler {
       };
     } else {
       // TODO should it be just RB or other 'key(s)'?
-      let active = type == "mousedown" && ev.button === 0;
+      const active = type == "mousedown" && ev.button === 0;
       this.state["RB"] = { active };
     }
   }

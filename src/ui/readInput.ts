@@ -1,5 +1,5 @@
 import { Destroyable } from "@/common/meta";
-import { Config } from "@/common";
+import { Config, ConfigInputType, ConfigKey } from "@/common";
 import {
   ControlAction,
   InputHandler,
@@ -33,8 +33,10 @@ export function readInput(inputs: TriggerOnInput[]): Destroyable {
       if (hit) {
         if (destroyOnHit) {
           Config.set(
-            Config.Key.Input,
-            joystickHit ? Config.Input.Joystick : Config.Input.KeyboardAndMouse
+            ConfigKey.Input,
+            joystickHit ?
+              ConfigInputType.Joystick :
+              ConfigInputType.KeyboardAndMouse
           );
           destroy();
         }

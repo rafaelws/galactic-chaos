@@ -39,7 +39,7 @@ export class Explosion implements Drawable {
   }
 
   public update(state: GameState): void {
-    let actives: ExplosionParticle[] = [];
+    const actives: ExplosionParticle[] = [];
     iterate(this.particles, (p) => {
       p.update(state);
       if (p.isActive) actives.push(p);

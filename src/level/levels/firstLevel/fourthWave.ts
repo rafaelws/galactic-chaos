@@ -9,7 +9,7 @@ const time = 30 * 1000;
 const beatTime = 0.999 * 1000;
 
 function arcShips(shipPath: string, offset = 0, fromLeft = true, amount = 4) {
-  let objects = [];
+  const objects = [];
   const overallTime = 12 * 1000 + time + offset;
 
   const fire = {
@@ -25,7 +25,7 @@ function arcShips(shipPath: string, offset = 0, fromLeft = true, amount = 4) {
   );
 
   for (let i = 0; i < amount; i++) {
-    let params: ShipParams = {
+    const params: ShipParams = {
       spawnTimeout: overallTime + i * 1000,
       movement,
       fire,

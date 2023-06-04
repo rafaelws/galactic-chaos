@@ -1,34 +1,40 @@
-import { Config } from "@/common";
+import { Config, ConfigKey } from "@/common";
 import { assets, getAudio } from "@/common/asset";
-import { readEvent, set } from "@/common/events";
+import { events } from "@/common/events";
+import { Destroyable } from "@/common/meta";
 
-export namespace AudioManager {
-  interface AudioRequestEvent {
-    assetPath: string;
-    loop?: boolean;
-  }
+export enum AudioEvent {
+  Play = "Play",
+  Pause = "Pause",
+  Resume = "Resume",
+}
 
-  let ctx: AudioContext = new AudioContext();
-  let gainNode: GainNode = ctx.createGain();
+export interface PlayRequestEvent {
+  assetPath: string;
+  loop?: boolean;
+}
 
-  let lastEvent: AudioRequestEvent | null = null;
+export function AudioManager(): Destroyable {
+  const ctx: AudioContext = new AudioContext();
+  const gainNode: GainNode = ctx.createGain();
+
+  let lastEvent: PlayRequestEvent | null = null;
   let currentTrack: AudioBufferSourceNode | null = null;
-  let currentTrackPlayDate: number = 0;
-  let currentTrackTimePast: number = 0;
+  let currentTrackPlayDate = 0;
+  let currentTrackTimePast = 0;
 
   let enabled = false;
 
-  setGain(Config.get(Config.Key.AudioGain));
-  setEnabled(Config.get(Config.Key.AudioEnabled));
+  setGain(Config.get(ConfigKey.AudioGain));
+  setEnabled(Config.get(ConfigKey.AudioEnabled));
 
-  set({
-    [Config.Key.AudioGain]: (ev: globalThis.Event) => {
-      setGain(readEvent<number>(ev));
-    },
-    [Config.Key.AudioEnabled]: (ev: globalThis.Event) => {
-      setEnabled(readEvent<boolean>(ev));
-    },
-  });
+  const subscribers = [
+    events.audio.onPlay(ev => play(ev)),
+    events.audio.onPause(() => pause()),
+    events.audio.onResume(() => resume()),
+    events.config.onAudioEnabled(isEnabled => setEnabled(isEnabled)),
+    events.config.onAudioGain(gain => setGain(gain)),
+  ];
 
   async function createTrack(buffer: ArrayBuffer) {
     const track = ctx.createBufferSource();
@@ -37,10 +43,10 @@ export namespace AudioManager {
     return track;
   }
 
-  async function prepareTrack(ev: AudioRequestEvent) {
+  async function prepareTrack(ev: PlayRequestEvent) {
     const { assetPath, loop = false } = ev;
 
-    if (!!currentTrack) {
+    if (currentTrack) {
       currentTrack.stop();
       currentTrack = null;
     }
@@ -57,7 +63,9 @@ export namespace AudioManager {
     }
   }
 
-  export async function play(assetPath: string, loop?: boolean) {
+  async function play(ev: PlayRequestEvent) {
+    const { assetPath, loop } = ev;
+
     if (lastEvent?.assetPath !== assetPath) {
       currentTrackTimePast = 0;
     }
@@ -71,7 +79,7 @@ export namespace AudioManager {
     setEnabled(enabled);
   }
 
-  export async function pause(
+  async function pause(
     assetPath = assets.audio.menu.pause,
     loop = true
   ) {
@@ -83,16 +91,16 @@ export namespace AudioManager {
     setEnabled(enabled);
   }
 
-  export async function resume() {
-    if (!!lastEvent) play(lastEvent.assetPath, lastEvent.loop);
+  async function resume() {
+    if (lastEvent) play(lastEvent);
   }
 
-  export function setGain(amount: number) {
+  function setGain(amount: number) {
     const gain = amount * 0.1;
     gainNode.gain.value = gain;
   }
 
-  export function setEnabled(_enabled: boolean) {
+  function setEnabled(_enabled: boolean) {
     // if (enabled === enabled) return;
     enabled = _enabled;
 
@@ -102,4 +110,10 @@ export namespace AudioManager {
       if (ctx.state === "running") ctx.suspend();
     }
   }
+
+  return {
+    destroy() {
+      subscribers.forEach(unsub => unsub());
+    }
+  };
 }

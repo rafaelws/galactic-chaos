@@ -35,7 +35,7 @@ export class Movement {
   private stepIndex = -1;
 
   private current: Concrete<MovementStep> | null = null;
-  private deltaSum: number = 0;
+  private deltaSum = 0;
 
   private pointCache: PointCache = zeroedPoints;
   private cubicCache: CubicBezierCoefficientCache | null = null;
@@ -71,7 +71,7 @@ export class Movement {
     }
 
     const current = this.steps[this.stepIndex];
-    if (!!current) {
+    if (current) {
       this.current = {
         ...this.stepDefaults,
         ...this.steps[this.stepIndex],

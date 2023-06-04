@@ -5,7 +5,7 @@ import { BossPhase, healItem, Rock } from "@/objects";
 import { cubicBezier, FirePrecision, linear } from "@/objects/shared";
 
 function spawnRocks(): Rock[] {
-  let rocks = [];
+  const rocks = [];
   for (let i = 0; i < 10; i++) {
     const timeOffset = (i < 5 ? 0 : 10) * 1000;
     const impact = { collisionTimeout: 1000 };

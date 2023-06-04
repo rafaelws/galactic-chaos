@@ -9,9 +9,9 @@ import {
 } from "@/common/controls";
 import { Clock } from "@/common";
 import { Projectile } from "@/objects";
-import { Effect, EffectType, GameEvent, GameObject } from "../shared";
+import { Effect, EffectType, GameObject } from "../shared";
 import { PlayerParams } from "./PlayerParams";
-import { trigger } from "@/common/events";
+import { events } from "@/common/events";
 
 export class Player extends GameObject {
   private maxHp = 10;
@@ -40,7 +40,7 @@ export class Player extends GameObject {
       { hp: this.maxHp * 0.75, img: params.damageStages[0] },
     ];
 
-    trigger(GameEvent.PlayerHp, { maxHp: this.maxHp, hp: this.hp });
+    events.game.playerHp({ maxHp: this.maxHp, hp: this.hp });
   }
 
   public set controlState(controls: ControlState) {
@@ -94,20 +94,17 @@ export class Player extends GameObject {
   }
 
   public handleEffect(effect: Effect) {
-    switch (effect.type) {
-      case EffectType.Heal:
-        const hp = this.hp + effect.amount;
-        this.hp = hp >= this.maxHp ? this.maxHp : hp;
-        break;
-      case EffectType.Impact:
-      case EffectType.Projectile:
-        this.hpLoss(effect.amount);
-        break;
+    if (effect.type === EffectType.Heal) {
+      const hp = this.hp + effect.amount;
+      this.hp = hp >= this.maxHp ? this.maxHp : hp;
+    } else if (effect.type === EffectType.Impact
+      || effect.type === EffectType.Projectile) {
+      this.hpLoss(effect.amount);
     }
-    trigger(GameEvent.PlayerHp, { maxHp: this.maxHp, hp: this.hp });
+    events.game.playerHp({ maxHp: this.maxHp, hp: this.hp });
 
-    if (this.hp <= 0)
-      trigger(GameEvent.GameOver, { maxHp: this.maxHp, hp: this.hp });
+    // TODO move it to the level manager
+    if (this.hp <= 0) events.game.over();
   }
 
   private act(
@@ -169,7 +166,7 @@ export class Player extends GameObject {
     });
 
     // TODO compare iterate vs filter vs raw for with index
-    let actives: Projectile[] = [];
+    const actives: Projectile[] = [];
     iterate(this.projectiles, (p) => {
       p.update(state);
       if (p.isActive) actives.push(p);

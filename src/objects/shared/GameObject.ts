@@ -1,8 +1,7 @@
 import { Clock } from "@/common";
-import { trigger } from "@/common/events";
+import { events } from "@/common/events";
 import { Boundaries, Point, Drawable, GameState, HitBox } from "@/common/meta";
 import { iterate } from "@/common/util";
-import { GameEvent } from "./GameEvent";
 import { Effect } from "./Effect";
 import { GameObjectParams } from "./GameObjectParams";
 import { toDeg } from "@/common/math";
@@ -70,7 +69,7 @@ export abstract class GameObject implements Drawable {
     if (this.spawnables.length === 0) return;
     iterate(this.spawnables, (spawnable) => {
       spawnable.position = this.position;
-      trigger(GameEvent.Spawn, spawnable);
+      events.game.spawn(spawnable);
     });
   }
 
