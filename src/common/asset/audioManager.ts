@@ -1,24 +1,19 @@
-import { Config, ConfigKey } from "@/common";
-import { assets, getAudio } from "@/common/asset";
 import { events } from "@/common/events";
-import { Destroyable } from "@/common/meta";
+import { Config, ConfigKey } from "../Config";
+import { assets, getAudio } from ".";
 
-export enum AudioEvent {
-  Play = "Play",
-  Pause = "Pause",
-  Resume = "Resume",
-}
+export const audioManager = AudioManager();
 
-export interface PlayRequestEvent {
+type PlayRequest = {
   assetPath: string;
   loop?: boolean;
 }
 
-export function AudioManager(): Destroyable {
+function AudioManager() {
   const ctx: AudioContext = new AudioContext();
   const gainNode: GainNode = ctx.createGain();
 
-  let lastEvent: PlayRequestEvent | null = null;
+  let lastEvent: PlayRequest | null = null;
   let currentTrack: AudioBufferSourceNode | null = null;
   let currentTrackPlayDate = 0;
   let currentTrackTimePast = 0;
@@ -28,13 +23,8 @@ export function AudioManager(): Destroyable {
   setGain(Config.get(ConfigKey.AudioGain));
   setEnabled(Config.get(ConfigKey.AudioEnabled));
 
-  const subscribers = [
-    events.audio.onPlay(ev => play(ev)),
-    events.audio.onPause(() => pause()),
-    events.audio.onResume(() => resume()),
-    events.config.onAudioEnabled(isEnabled => setEnabled(isEnabled)),
-    events.config.onAudioGain(gain => setGain(gain)),
-  ];
+  events.config.onAudioEnabled(isEnabled => setEnabled(isEnabled));
+  events.config.onAudioGain(gain => setGain(gain));
 
   async function createTrack(buffer: ArrayBuffer) {
     const track = ctx.createBufferSource();
@@ -43,7 +33,7 @@ export function AudioManager(): Destroyable {
     return track;
   }
 
-  async function prepareTrack(ev: PlayRequestEvent) {
+  async function prepareTrack(ev: PlayRequest) {
     const { assetPath, loop = false } = ev;
 
     if (currentTrack) {
@@ -63,7 +53,7 @@ export function AudioManager(): Destroyable {
     }
   }
 
-  async function play(ev: PlayRequestEvent) {
+  async function play(ev: PlayRequest) {
     const { assetPath, loop } = ev;
 
     if (lastEvent?.assetPath !== assetPath) {
@@ -111,9 +101,5 @@ export function AudioManager(): Destroyable {
     }
   }
 
-  return {
-    destroy() {
-      subscribers.forEach(unsub => unsub());
-    }
-  };
+  return { play, pause, resume };
 }

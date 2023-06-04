@@ -1,6 +1,6 @@
 # DOING
 
- - [ ] {bug} audio overlap (try to make this event type sync)
+ - [x] {bug} audio overlap (try to make this event type sync)
  - [x] disable arrows everywhere (wasd only)
  - [x] update menus to use q to pause/unpause (q=START, e=SELECT)
  - [ ] communicate player of controls (use menus)

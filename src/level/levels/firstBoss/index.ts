@@ -1,14 +1,13 @@
 import { p } from "@/common/meta";
-import { assets, getImage } from "@/common/asset";
+import { assets, getImage, audioManager } from "@/common/asset";
 import { Boss, GameObject, healItem, Ship } from "@/objects";
 import { linear, quadraticBezier } from "@/objects/shared";
 import { firstPhase } from "./firstPhase";
 import { secondPhase } from "./secondPhase";
 import { thirdPhase } from "./thirdPhase";
-import { events } from "@/common/events";
 
 export async function firstBoss(): Promise<GameObject[]> {
-  events.audio.play({ assetPath: assets.audio.levels[0].boss });
+  await audioManager.play({ assetPath: assets.audio.levels[0].boss });
   const ships = assets.img.ship.level1;
 
   const boss = new Boss({

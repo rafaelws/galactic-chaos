@@ -1,12 +1,17 @@
 import { p } from "@/common/meta";
-import { assets, getImage, preloadAudio, preloadImages } from "@/common/asset";
+import {
+  assets,
+  audioManager,
+  getImage,
+  preloadAudio,
+  preloadImages,
+} from "@/common/asset";
 import { GameObject, healItem, Rock } from "@/objects";
 import { linear } from "@/objects/shared";
 import { firstWave } from "./firstWave";
 import { fourthWave } from "./fourthWave";
 import { secondWave } from "./secondWave";
 import { thirdWave } from "./thirdWave";
-import { events } from "@/common/events";
 
 const rocks = assets.img.rock.brown;
 const ships = assets.img.ship.level1.slice(0, 2);
@@ -27,7 +32,7 @@ export async function firstLevel(): Promise<GameObject[]> {
     )
   );
 
-  events.audio.play({ assetPath: theme });
+  await audioManager.play({ assetPath: theme });
 
   return [
     ...firstWave(rocks),

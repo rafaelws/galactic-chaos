@@ -1,17 +1,15 @@
 import debounce from "lodash.debounce";
 import { setup } from "@/main/loop";
 import { Destroyable } from "@/common/meta";
+import { UnsubFn } from "@/common";
 import { events } from "@/common/events";
-import { assets, preloadAudio } from "@/common/asset";
+import { assets, preloadAudio, audioManager } from "@/common/asset";
 import { throttle } from "@/common/util";
 import { Options } from "./options";
 import { readInput } from "./readInput";
 import { hide, show } from "./util";
-import { UnsubFn } from "@/common";
 
 export function UI() {
-  // TODO await refactor + fixes
-  // AudioManager();
   const loop = setup();
   const options = Options();
 
@@ -32,6 +30,7 @@ export function UI() {
   };
 
   function subscribe() {
+    if (subscribers.length > 0) unsubscribe();
     subscribers = [
       events.game.onQuit(quit),
       events.game.onPause(pause),
@@ -63,10 +62,10 @@ export function UI() {
     mainMenu();
   }
 
-  function pause(paused: boolean) {
+  async function pause(paused: boolean) {
     if (!paused) return;
 
-    events.audio.pause();
+    await audioManager.pause();
 
     show(elements.pauseMenu);
     options.open();
@@ -75,9 +74,9 @@ export function UI() {
       { action: "SELECT", fn: quit },
       {
         action: "START",
-        fn: () => {
+        fn: async () => {
           events.game.pause(false);
-          events.audio.resume();
+          await audioManager.resume();
 
           hide(elements.pauseMenu);
           options.close();
@@ -99,9 +98,9 @@ export function UI() {
     }, 500);
   }
 
-  function gameOver() {
+  async function gameOver() {
     pauseInput?.destroy();
-    events.audio.play({
+    await audioManager.play({
       assetPath: assets.audio.menu.gameOver,
       loop: true,
     });
@@ -145,7 +144,7 @@ export function UI() {
     hide(elements.loading);
     show(elements.ghLink);
 
-    events.audio.play({ assetPath: assets.audio.menu.main });
+    await audioManager.play({ assetPath: assets.audio.menu.main });
 
     readInput([
       { action: "START", fn: debounce(start, debounceTime) },

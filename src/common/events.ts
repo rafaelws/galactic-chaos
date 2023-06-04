@@ -1,7 +1,6 @@
-import { PubSub, SubFn } from "./PubSub";
+import { PubSub } from "./PubSub";
 import { ConfigInputType, ConfigKey } from "./Config";
 import { GameObject } from "@/objects";
-import { AudioEvent, PlayRequestEvent } from "@/main/AudioManager";
 
 const pubSub = new PubSub();
 type EmptyFn = () => void;
@@ -76,29 +75,6 @@ const game = {
   },
 };
 
-const audio = {
-  play(ev: PlayRequestEvent) {
-    pubSub.pub(AudioEvent.Play, ev);
-  },
-  onPlay(sub: (ev: PlayRequestEvent) => void) {
-    return pubSub.sub(AudioEvent.Play, sub);
-  },
-
-  pause() {
-    pubSub.pub(AudioEvent.Pause);
-  },
-  onPause(sub: SubFn) {
-    return pubSub.sub(AudioEvent.Pause, sub);
-  },
-
-  resume() {
-    pubSub.pub(AudioEvent.Resume);
-  },
-  onResume(sub: SubFn) {
-    return pubSub.sub(AudioEvent.Resume, sub);
-  }
-};
-
 const config = {
   onBackgroundDensity(sub: (density: number) => void) {
     return pubSub.sub(ConfigKey.BackgroundDensity, sub);
@@ -117,5 +93,4 @@ const config = {
 export const events = {
   game,
   config,
-  audio,
 };
