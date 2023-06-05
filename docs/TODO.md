@@ -1,6 +1,6 @@
 # DOING
 
- - [ ] {bug} audio overlap (reincident)
+ - [x] *{bug} audio overlap (reincident)
  - [ ] communicate player of controls (use menus)
  - [ ] remake README banner (max 8 frames, 5sec)
  - [ ] [compression/gzip](https://github.com/vbenjs/vite-plugin-compression/blob/main/packages/playground/basic/vite.config.ts)

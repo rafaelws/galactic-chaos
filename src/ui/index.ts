@@ -62,10 +62,10 @@ export function UI() {
     mainMenu();
   }
 
-  async function pause(paused: boolean) {
+  function pause(paused: boolean) {
     if (!paused) return;
 
-    await audioManager.pause();
+    audioManager.pause();
 
     show(elements.pauseMenu);
     options.open();
@@ -74,9 +74,9 @@ export function UI() {
       { action: "SELECT", fn: quit },
       {
         action: "START",
-        fn: async () => {
+        fn: () => {
           events.game.pause(false);
-          await audioManager.resume();
+          audioManager.resume();
 
           hide(elements.pauseMenu);
           options.close();
@@ -98,9 +98,9 @@ export function UI() {
     }, 500);
   }
 
-  async function gameOver() {
+  function gameOver() {
     pauseInput?.destroy();
-    await audioManager.play({
+    audioManager.play({
       assetPath: assets.audio.menu.gameOver,
       loop: true,
     });
@@ -144,7 +144,7 @@ export function UI() {
     hide(elements.loading);
     show(elements.ghLink);
 
-    await audioManager.play({ assetPath: assets.audio.menu.main });
+    audioManager.play({ assetPath: assets.audio.menu.main });
 
     readInput([
       { action: "START", fn: debounce(start, debounceTime) },

@@ -3,10 +3,11 @@ import { ConfigInputType, ConfigKey } from "./Config";
 import { GameObject } from "@/objects";
 
 const pubSub = new PubSub();
-type EmptyFn = () => void;
 export const pub = pubSub.pub.bind(pubSub);
 export const sub = pubSub.sub.bind(pubSub);
 export const register = pubSub.register.bind(pubSub);
+
+type EmptyFn = () => void;
 
 export interface HpEvent {
   maxHp: number;

@@ -4,7 +4,7 @@ import { assets, getAudio } from ".";
 
 export const audioManager = AudioManager();
 
-type PlayRequest = {
+type AudioPlayRequest = {
   assetPath: string;
   loop?: boolean;
 }
@@ -13,7 +13,7 @@ function AudioManager() {
   const ctx: AudioContext = new AudioContext();
   const gainNode: GainNode = ctx.createGain();
 
-  let lastEvent: PlayRequest | null = null;
+  let lastEvent: AudioPlayRequest | null = null;
   let currentTrack: AudioBufferSourceNode | null = null;
   let currentTrackPlayDate = 0;
   let currentTrackTimePast = 0;
@@ -33,7 +33,7 @@ function AudioManager() {
     return track;
   }
 
-  async function prepareTrack(ev: PlayRequest) {
+  async function prepareTrack(ev: AudioPlayRequest) {
     const { assetPath, loop = false } = ev;
 
     if (currentTrack) {
@@ -53,7 +53,7 @@ function AudioManager() {
     }
   }
 
-  async function play(ev: PlayRequest) {
+  async function play(ev: AudioPlayRequest) {
     const { assetPath, loop } = ev;
 
     if (lastEvent?.assetPath !== assetPath) {
@@ -82,7 +82,8 @@ function AudioManager() {
   }
 
   async function resume() {
-    if (lastEvent) play(lastEvent);
+    if (!lastEvent) return;
+    await play(lastEvent);
   }
 
   function setGain(amount: number) {
@@ -90,11 +91,11 @@ function AudioManager() {
     gainNode.gain.value = gain;
   }
 
-  function setEnabled(_enabled: boolean) {
+  function setEnabled(isEnabled: boolean) {
     // if (enabled === enabled) return;
-    enabled = _enabled;
+    enabled = isEnabled;
 
-    if (_enabled) {
+    if (isEnabled) {
       if (ctx.state === "suspended") ctx.resume();
     } else {
       if (ctx.state === "running") ctx.suspend();

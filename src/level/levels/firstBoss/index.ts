@@ -1,5 +1,5 @@
 import { p } from "@/common/meta";
-import { assets, getImage, audioManager } from "@/common/asset";
+import { assets, audioManager, getImage } from "@/common/asset";
 import { Boss, GameObject, healItem, Ship } from "@/objects";
 import { linear, quadraticBezier } from "@/objects/shared";
 import { firstPhase } from "./firstPhase";
