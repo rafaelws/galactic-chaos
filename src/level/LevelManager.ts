@@ -39,7 +39,6 @@ export class LevelManager implements Destroyable {
         if (ev.hp <= 0) this.nextLevel();
       }),
       events.config.onBackgroundDensity((density: number) => {
-        console.log({ density });
         if (this.background) this.background.density = density;
       })
     ];

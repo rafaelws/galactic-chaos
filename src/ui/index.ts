@@ -51,20 +51,22 @@ export function UI() {
     }
   }
 
-  function reset() {
+  function clear() {
+    pauseInput?.destroy();
     unsubscribe();
     loop.destroy();
     hideAll();
   }
 
   function quit() {
-    reset();
+    clear();
     mainMenu();
   }
 
   function pause(paused: boolean) {
     if (!paused) return;
 
+    pauseInput?.destroy();
     audioManager.pause();
 
     show(elements.pauseMenu);
@@ -89,24 +91,19 @@ export function UI() {
 
   function hookPause() {
     setTimeout(() => {
-      pauseInput = readInput([
-        {
-          action: "START",
-          fn: debounce(() => events.game.pause(true), debounceTime),
-        },
-      ]);
+      pauseInput = readInput([{
+        action: "START",
+        fn: debounce(() => events.game.pause(true), debounceTime),
+      }]);
     }, 500);
   }
 
   function gameOver() {
-    pauseInput?.destroy();
+    clear();
     audioManager.play({
       assetPath: assets.audio.menu.gameOver,
       loop: true,
     });
-
-    hideAll();
-    loop.destroy();
     readInput([
       { action: "START", fn: debounce(start, debounceTime) },
       { action: "SELECT", fn: debounce(quit, debounceTime) },
@@ -115,10 +112,7 @@ export function UI() {
   }
 
   function gameEnd() {
-    pauseInput?.destroy();
-
-    hideAll();
-    loop.destroy();
+    clear();
     readInput([
       { action: "START", fn: debounce(start, debounceTime) },
       { action: "SELECT", fn: debounce(quit, debounceTime) },
@@ -127,7 +121,7 @@ export function UI() {
   }
 
   function start() {
-    reset();
+    clear();
     subscribe();
     loop.start();
     hookPause();
@@ -141,17 +135,15 @@ export function UI() {
         assets.audio.menu.gameOver
       )
     );
-    hide(elements.loading);
-    show(elements.ghLink);
-
     audioManager.play({ assetPath: assets.audio.menu.main });
-
     readInput([
       { action: "START", fn: debounce(start, debounceTime) },
       { action: "SELECT", fn: throttle(options.toggle), destroyOnHit: false },
       ...options.actions,
     ]);
+    hide(elements.loading);
     show(elements.mainMenu);
+    show(elements.ghLink);
   }
 
   return { mainMenu };
