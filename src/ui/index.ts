@@ -36,6 +36,7 @@ export function UI() {
       events.game.onPause(pause),
       events.game.onOver(gameOver),
       events.game.onEnd(gameEnd),
+      events.game.onLoading(loading),
     ];
   }
 
@@ -61,6 +62,11 @@ export function UI() {
   function quit() {
     clear();
     mainMenu();
+  }
+
+  function loading(isLoading: boolean) {
+    if (isLoading) show(elements.loading);
+    else hide(elements.loading);
   }
 
   function pause(paused: boolean) {

@@ -1,14 +1,35 @@
 import { p } from "@/common/meta";
-import { assets, audioManager, getImage } from "@/common/asset";
+import {
+  assets,
+  audioManager,
+  getImage,
+  preloadAudio,
+  preloadImages
+} from "@/common/asset";
 import { Boss, GameObject, healItem, Ship } from "@/objects";
 import { linear, quadraticBezier } from "@/objects/shared";
+import { events } from "@/common/events";
 import { firstPhase } from "./firstPhase";
 import { secondPhase } from "./secondPhase";
 import { thirdPhase } from "./thirdPhase";
 
 export async function firstBoss(): Promise<GameObject[]> {
-  await audioManager.play({ assetPath: assets.audio.levels[0].boss });
   const ships = assets.img.ship.level1;
+  const theme = assets.audio.levels[0].boss;
+
+  events.game.loading(true);
+
+  await Promise.all([
+    ...preloadImages(
+      ...ships,
+      ...assets.common.img,
+      ...assets.img.rock.brown,
+    ),
+    ...preloadAudio(theme),
+  ]);
+  await audioManager.play({ assetPath: theme });
+
+  events.game.loading(false);
 
   const boss = new Boss({
     spawnTimeout: 16.99 * 1000,
@@ -16,6 +37,7 @@ export async function firstBoss(): Promise<GameObject[]> {
     phases: [firstPhase(), secondPhase(), thirdPhase()],
     img: getImage(ships[2]),
   });
+
   return [
     boss,
     new Ship({

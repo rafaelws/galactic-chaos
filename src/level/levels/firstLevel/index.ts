@@ -6,6 +6,7 @@ import {
   preloadAudio,
   preloadImages,
 } from "@/common/asset";
+import { events } from "@/common/events";
 import { GameObject, healItem, Rock } from "@/objects";
 import { linear } from "@/objects/shared";
 import { firstWave } from "./firstWave";
@@ -20,19 +21,21 @@ export type BrownRocks = typeof assets.img.rock.brown;
 export type FirstLevelShips = typeof ships;
 
 export async function firstLevel(): Promise<GameObject[]> {
-  const { theme, boss } = assets.audio.levels[0];
+  const { theme } = assets.audio.levels[0];
 
-  await Promise.all(preloadAudio(theme, boss));
-  await Promise.all(
-    preloadImages(
+  events.game.loading(true);
+
+  await Promise.all([
+    ...preloadImages(
       ...assets.common.img,
       ...rocks,
       ...ships,
-      assets.img.ship.level1[2]
-    )
-  );
-
+    ),
+    ...preloadAudio(theme),
+  ]);
   await audioManager.play({ assetPath: theme });
+
+  events.game.loading(false);
 
   return [
     ...firstWave(rocks),

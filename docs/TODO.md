@@ -1,11 +1,6 @@
 # DOING
 
- Asset Loading
- - [x] every level should load ALL the assets it will use (level-independent asset loading)
- - [ ] trigger "loading state" while a level is loading
-
 Misc
- - [x] pub on PubSub made async
  - [ ] remake README banner (max 8 frames, 5sec)
  - [ ] communicate player of controls (use menus)
  - [ ] radar
@@ -158,3 +153,6 @@ Misc
 - [x] disable arrows everywhere (wasd only)
 - [x] update menus to use q to pause/unpause (q=START, e=SELECT)
 - [x] *{bug} audio overlap (reincident)
+- [x] (Asset Loading) every level should load ALL the assets it will use (level-independent asset loading)
+- [x] (Asset Loading) trigger "loading state" while a level is loading
+- [x] pub on PubSub made async

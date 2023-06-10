@@ -19,6 +19,7 @@ enum GameEvent {
   Spawn = "Spawn",
   PlayerHp = "PlayerHp",
   BossHp = "BossHp",
+  Loading = "Loading",
   // no param events:
   Quit = "Quit",
   GameOver = "GameOver",
@@ -74,6 +75,13 @@ const game = {
   onEnd(sub: EmptyFn) {
     return pubSub.sub(GameEvent.GameEnd, sub);
   },
+
+  loading(isLoading: boolean) {
+    pubSub.pub(GameEvent.Loading, isLoading);
+  },
+  onLoading(sub: (isLoading: boolean) => void) {
+    return pubSub.sub(GameEvent.Loading, sub);
+  }
 };
 
 const config = {
