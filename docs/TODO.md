@@ -1,14 +1,14 @@
 # DOING
 
- - [x] *{bug} audio overlap (reincident)
- - [ ] communicate player of controls (use menus)
- - [ ] remake README banner (max 8 frames, 5sec)
- - [ ] [compression/gzip](https://github.com/vbenjs/vite-plugin-compression/blob/main/packages/playground/basic/vite.config.ts)
-
  Asset Loading
- - [ ] every level should load ALL the assets it will use (level-independent asset loading)
+ - [x] every level should load ALL the assets it will use (level-independent asset loading)
  - [ ] trigger "loading state" while a level is loading
- - [ ] *automate asset loading
+
+Misc
+ - [x] pub on PubSub made async
+ - [ ] remake README banner (max 8 frames, 5sec)
+ - [ ] communicate player of controls (use menus)
+ - [ ] radar
 
 # TODO
 - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
@@ -157,4 +157,4 @@
 - [x] {bug} Joystick disconnected
 - [x] disable arrows everywhere (wasd only)
 - [x] update menus to use q to pause/unpause (q=START, e=SELECT)
- 
+- [x] *{bug} audio overlap (reincident)

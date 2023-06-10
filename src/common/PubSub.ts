@@ -20,8 +20,8 @@ export class PubSub {
     if (!topics) return;
 
     topics.forEach(listener => {
-      // setTimeout(() => listener(message), 0);
-      listener(message);
+      setTimeout(() => listener(message), 0);
+      // listener(message);
     });
   }
 

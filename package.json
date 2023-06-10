@@ -13,8 +13,8 @@
     "test:watch": "vitest --dir test",
     "eslint": "eslint src --ext .ts",
     "eslint:fix": "eslint src --ext .ts --fix",
-    "tslint": "tsc --noEmit",
-    "lint": "run-p tslint eslint"
+    "tscheck": "tsc --noEmit",
+    "lint": "run-s tscheck eslint"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.7",
