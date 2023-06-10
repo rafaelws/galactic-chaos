@@ -1,7 +1,6 @@
 # DOING
 
 Misc
- - [ ] remake README banner (max 8 frames, 5sec)
  - [ ] communicate player of controls (use menus)
  - [ ] radar
 
