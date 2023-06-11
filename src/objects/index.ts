@@ -15,3 +15,4 @@ export * from "./shared/GameObject";
 export * from "./background/BackgroundManager";
 export * from "./explosion/Explosion";
 export * from "./explosion/profiles";
+export * from "./Radar";

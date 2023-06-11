@@ -125,9 +125,6 @@ export abstract class GameObject implements Drawable {
     return !this.spawnClock.pending;
   }
 
-  /**
-   * Returns true if x and y are NOT NaN and the spawnClock has finished
-   */
   protected get isReady(): boolean {
     return this.hasPosition && this.canSpawn;
   }
@@ -138,6 +135,10 @@ export abstract class GameObject implements Drawable {
 
   public get hitbox(): HitBox {
     return { radius: this.cy, x: this.x, y: this.y };
+  }
+
+  public get isShowing() {
+    return this.isActive && this.isReady;
   }
 
   protected drawDebug(c: CanvasRenderingContext2D, name: GameObjectName): void {
@@ -154,7 +155,6 @@ export abstract class GameObject implements Drawable {
       const deg = Math.floor(toDeg(this.rotation));
       c.fillStyle = "white";
       c.font = `${16}px sans-serif`;
-      // c.textAlign = "center";
       c.fillText(`[${_x}, ${_y}] ${deg}°`, _x, _y);
     }
 

@@ -1,8 +1,9 @@
 # DOING
 
 Misc
+ - [x] radar
  - [ ] communicate player of controls (use menus)
- - [ ] radar
+ - [ ] polish gameEnd (song?)
 
 # TODO
 - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)

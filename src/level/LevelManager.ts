@@ -4,7 +4,7 @@ import { NoDebug } from "@/common/debug";
 import { iterate } from "@/common/util";
 import { ControlState } from "@/common/controls";
 import { assets, getImage } from "@/common/asset";
-import { BackgroundManager, GameObject, Player } from "@/objects";
+import { BackgroundManager, GameObject, Player, Radar } from "@/objects";
 
 import { CollisionManager } from "./CollisionManager";
 import { firstLevel, firstBoss } from "./levels";
@@ -26,6 +26,7 @@ export class LevelManager implements Destroyable {
   private player?: Player;
   private background?: BackgroundManager;
   private collision?: CollisionManager;
+  private radar?: Radar;
 
   constructor() {
     this.subscribers = [
@@ -54,6 +55,7 @@ export class LevelManager implements Destroyable {
   private nextLevel() {
     if (++this.currentLevelIx < this.finalLevelIx) {
       this.loading = true;
+      events.game.loading(this.loading);
 
       this.levels[this.currentLevelIx]()
         .then((objects) => {
@@ -62,6 +64,7 @@ export class LevelManager implements Destroyable {
         .catch((err) => console.error("could not load assets", err))
         .finally(() => {
           this.loading = false;
+          events.game.loading(this.loading);
         });
     } else {
       events.game.end();
@@ -89,8 +92,8 @@ export class LevelManager implements Destroyable {
         this.background = new BackgroundManager(
           Config.get(ConfigKey.BackgroundDensity)
         );
+      if (!this.radar) this.radar = new Radar();
     } else {
-      // most operations are order dependent
       const playerState: GameState = {
         debug,
         delta,
@@ -102,14 +105,13 @@ export class LevelManager implements Destroyable {
 
       const state = { ...playerState, player: this.player.hitbox };
 
+      this.background?.update(state);
+
       if (this.objectsToSpawn.length > 0) {
         this.objectsToSpawn.push(...this.gameObjects);
         this.gameObjects = this.objectsToSpawn;
         this.objectsToSpawn = [];
       }
-
-      // update/rendering order: background, player/gameObjects, collisions
-      this.background?.update(state);
 
       const actives: GameObject[] = [];
       iterate(this.gameObjects, (gameObject) => {
@@ -122,17 +124,23 @@ export class LevelManager implements Destroyable {
       this.gameObjects = actives;
 
       this.collision?.update(state);
+
+      this.radar?.update(
+        actives.filter(active => active.isShowing),
+        state.worldBoundaries
+      );
     }
   }
 
   public draw(c: CanvasRenderingContext2D): void {
     if (this.loading) return;
-    // update/rendering order: background, player/gameObjects, collisions
     this.background?.draw(c);
-
     this.player?.draw(c);
+
     iterate(this.gameObjects, (gameObject) => gameObject.draw(c));
+
     this.collision?.draw(c);
+    this.radar?.draw(c);
 
     if (this.gameObjects.length == 0) this.nextLevel();
   }
