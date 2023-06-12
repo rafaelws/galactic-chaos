@@ -8,7 +8,6 @@ import {
 } from "@/common/asset";
 import { Boss, GameObject, healItem, Ship } from "@/objects";
 import { linear, quadraticBezier } from "@/objects/shared";
-import { events } from "@/common/events";
 import { firstPhase } from "./firstPhase";
 import { secondPhase } from "./secondPhase";
 import { thirdPhase } from "./thirdPhase";
@@ -16,8 +15,6 @@ import { thirdPhase } from "./thirdPhase";
 export async function firstBoss(): Promise<GameObject[]> {
   const ships = assets.img.ship.level1;
   const theme = assets.audio.levels[0].boss;
-
-  events.game.loading(true);
 
   await Promise.all([
     ...preloadImages(
@@ -28,8 +25,6 @@ export async function firstBoss(): Promise<GameObject[]> {
     ...preloadAudio(theme),
   ]);
   await audioManager.play({ assetPath: theme });
-
-  events.game.loading(false);
 
   const boss = new Boss({
     spawnTimeout: 16.99 * 1000,

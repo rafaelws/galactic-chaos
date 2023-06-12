@@ -43,7 +43,7 @@ describe("Clock", () => {
     expect(clock.pending).toBe(true);
   });
 
-  it('should reset and change target time', () => {
+  it("should reset and change target time", () => {
     const clock = new Clock(500);
     clock.increment(200);
     expect(clock.pending).toBe(true);
@@ -69,5 +69,5 @@ describe("Clock", () => {
 
     clock.increment(51);
     expect(clock.pending).toBe(false);
-  })
+  });
 });

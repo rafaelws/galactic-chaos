@@ -1,8 +1,8 @@
 # DOING
 
-Misc
+ - [ ] tooling
  - [ ] communicate player of controls (use menus)
- - [ ] radar
+ - [ ] polish gameEnd (song?)
 
 # TODO
 - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
@@ -155,3 +155,4 @@ Misc
 - [x] (Asset Loading) every level should load ALL the assets it will use (level-independent asset loading)
 - [x] (Asset Loading) trigger "loading state" while a level is loading
 - [x] pub on PubSub made async
+- [x] radar
