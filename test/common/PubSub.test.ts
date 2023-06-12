@@ -1,8 +1,8 @@
 import { PubSub } from "@/common/PubSub";
 
-describe('PubSub', () => {
-  it('should sub and pub', () => {
-    const topic = 'foo';
+describe("PubSub", () => {
+  it("should sub and pub", () => {
+    const topic = "foo";
     const ps = new PubSub();
 
     const sub = (n: number) => expect(n).toBe(1);
@@ -11,8 +11,8 @@ describe('PubSub', () => {
     ps.pub(topic, 1);
   });
 
-  it('should unsub', () => {
-    const topic = 'foo';
+  it("should unsub", () => {
+    const topic = "foo";
     const ps = new PubSub();
 
     const sub = (n: number) => expect(n).toBe(2);
@@ -24,9 +24,9 @@ describe('PubSub', () => {
     ps.pub(topic, 3);
   });
 
-  it('should register and unregister', () => {
-    const topic1 = 'foo';
-    const topic2 = 'bar';
+  it("should register and unregister", () => {
+    const topic1 = "foo";
+    const topic2 = "bar";
 
     const sub = (n: number) => expect(n > 0).toBe(true);
 
@@ -35,7 +35,7 @@ describe('PubSub', () => {
     const unregister = ps.register({
       [topic1]: sub,
       [topic2]: sub,
-    })
+    });
 
     ps.pub(topic1, 1);
     ps.pub(topic2, 2);
@@ -67,4 +67,4 @@ describe('PubSub', () => {
   //   pub(topic1, -1);
   //   pub(topic2, -2);
   // });
-})
+});

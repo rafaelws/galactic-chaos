@@ -1,7 +1,6 @@
 # DOING
 
-Misc
- - [x] radar
+ - [ ] tooling
  - [ ] communicate player of controls (use menus)
  - [ ] polish gameEnd (song?)
 
@@ -156,3 +155,4 @@ Misc
 - [x] (Asset Loading) every level should load ALL the assets it will use (level-independent asset loading)
 - [x] (Asset Loading) trigger "loading state" while a level is loading
 - [x] pub on PubSub made async
+- [x] radar
