@@ -1,8 +1,8 @@
 # DOING
-
- - [ ] tooling
+ - [ ] tooling (level designer / previewer)
  - [ ] communicate player of controls (use menus)
  - [ ] polish gameEnd (song?)
+ - [ ] changelog, versioning (semver), ci (husky, lint-staged, commit message)
 
 # TODO
 - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
