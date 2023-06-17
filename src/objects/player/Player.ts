@@ -97,8 +97,10 @@ export class Player extends GameObject {
     if (effect.type === EffectType.Heal) {
       const hp = this.hp + effect.amount;
       this.hp = hp >= this.maxHp ? this.maxHp : hp;
-    } else if (effect.type === EffectType.Impact
-      || effect.type === EffectType.Projectile) {
+    } else if (
+      effect.type === EffectType.Impact ||
+      effect.type === EffectType.Projectile
+    ) {
       this.hpLoss(effect.amount);
     }
     events.game.playerHp({ maxHp: this.maxHp, hp: this.hp });

@@ -6,12 +6,21 @@ export function linear(p0: Point, p1: Point, speed?: number) {
 }
 
 export function quadraticBezier(
-  p0: Point, p1: Point, p2: Point, speed?: number) {
+  p0: Point,
+  p1: Point,
+  p2: Point,
+  speed?: number
+) {
   return new FluentMovement().quadraticBezier(p0, p1, p2, speed);
 }
 
 export function cubicBezier(
-  p0: Point, p1: Point, p2: Point, p3: Point, speed?: number) {
+  p0: Point,
+  p1: Point,
+  p2: Point,
+  p3: Point,
+  speed?: number
+) {
   return new FluentMovement().cubicBezier(p0, p1, p2, p3, speed);
 }
 
@@ -22,22 +31,39 @@ export class FluentMovement {
 
   public linear(p0: Point, p1: Point, speed?: number) {
     this.params.steps.push({
-      nature: MovementNature.Linear, p0: p0, p1: p1, speed
+      nature: MovementNature.Linear,
+      p0: p0,
+      p1: p1,
+      speed,
     });
     return this;
   }
 
   public quadraticBezier(p0: Point, p1: Point, p2: Point, speed?: number) {
     this.params.steps.push({
-      nature: MovementNature.QuadraticBezier, p0, p1, p2, speed
+      nature: MovementNature.QuadraticBezier,
+      p0,
+      p1,
+      p2,
+      speed,
     });
     return this;
   }
 
   public cubicBezier(
-    p0: Point, p1: Point, p2: Point, p3: Point, speed?: number) {
+    p0: Point,
+    p1: Point,
+    p2: Point,
+    p3: Point,
+    speed?: number
+  ) {
     this.params.steps.push({
-      nature: MovementNature.CubicBezier, p0, p1, p2, p3, speed
+      nature: MovementNature.CubicBezier,
+      p0,
+      p1,
+      p2,
+      p3,
+      speed,
     });
     return this;
   }

@@ -4,7 +4,7 @@ import {
   audioManager,
   getImage,
   preloadAudio,
-  preloadImages
+  preloadImages,
 } from "@/common/asset";
 import { Boss, GameObject, healItem, Ship } from "@/objects";
 import { linear, quadraticBezier } from "@/objects/shared";
@@ -17,11 +17,7 @@ export async function firstBoss(): Promise<GameObject[]> {
   const theme = assets.audio.levels[0].boss;
 
   await Promise.all([
-    ...preloadImages(
-      ...ships,
-      ...assets.common.img,
-      ...assets.img.rock.brown,
-    ),
+    ...preloadImages(...ships, ...assets.common.img, ...assets.img.rock.brown),
     ...preloadAudio(theme),
   ]);
   await audioManager.play({ assetPath: theme });

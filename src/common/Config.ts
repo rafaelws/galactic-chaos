@@ -26,7 +26,6 @@ const defaults: ConfigMap = {
 } as const;
 
 export class Config {
-
   public static all() {
     return {
       ...defaults,

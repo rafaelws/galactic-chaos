@@ -17,11 +17,14 @@ export class Projectile extends GameObject {
     this.rotation = params.angle;
     this.direction.x = Math.sin(-params.angle);
     this.direction.y = Math.cos(-params.angle);
-    this.color = params.color
-      ? params.color
-      : params.enemy
+
+    if (params.color) {
+      this.color = params.color;
+    } else {
+      this.color = params.enemy
         ? ProjectileColor.enemy
         : ProjectileColor.player;
+    }
   }
 
   public get hitbox(): HitBox {

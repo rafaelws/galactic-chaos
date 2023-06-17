@@ -23,11 +23,7 @@ export async function firstLevel(): Promise<GameObject[]> {
   const { theme } = assets.audio.levels[0];
 
   await Promise.all([
-    ...preloadImages(
-      ...assets.common.img,
-      ...rocks,
-      ...ships,
-    ),
+    ...preloadImages(...assets.common.img, ...rocks, ...ships),
     ...preloadAudio(theme),
   ]);
   await audioManager.play({ assetPath: theme });

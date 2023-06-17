@@ -30,7 +30,7 @@ export class GameManager implements Destroyable {
     this.checkPreferredInput();
 
     this.subscribers = [
-      events.game.onPause(paused => {
+      events.game.onPause((paused) => {
         if (!paused) this.checkPreferredInput();
         this.paused = paused;
       }),
@@ -43,8 +43,8 @@ export class GameManager implements Destroyable {
   }
 
   public destroy() {
-    iterate(this.subscribers, unsub => unsub());
-    iterate(this.destroyables, target => target.destroy());
+    iterate(this.subscribers, (unsub) => unsub());
+    iterate(this.destroyables, (target) => target.destroy());
   }
 
   private checkPreferredInput() {

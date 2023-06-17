@@ -41,7 +41,7 @@ export function UI() {
   }
 
   function unsubscribe() {
-    subscribers.forEach(unsub => unsub());
+    subscribers.forEach((unsub) => unsub());
     subscribers = [];
   }
 
@@ -97,10 +97,12 @@ export function UI() {
 
   function hookPause() {
     setTimeout(() => {
-      pauseInput = readInput([{
-        action: "START",
-        fn: debounce(() => events.game.pause(true), debounceTime),
-      }]);
+      pauseInput = readInput([
+        {
+          action: "START",
+          fn: debounce(() => events.game.pause(true), debounceTime),
+        },
+      ]);
     }, 500);
   }
 

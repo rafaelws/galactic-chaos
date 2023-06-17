@@ -30,18 +30,18 @@ export class LevelManager implements Destroyable {
 
   constructor() {
     this.subscribers = [
-      events.game.onSpawn(gameObject => {
+      events.game.onSpawn((gameObject) => {
         this.objectsToSpawn.push(gameObject);
       }),
-      events.game.onPlayerHp(ev => {
+      events.game.onPlayerHp((ev) => {
         if (ev.hp <= 0) events.game.over();
       }),
-      events.game.onBossHp(ev => {
+      events.game.onBossHp((ev) => {
         if (ev.hp <= 0) this.nextLevel();
       }),
       events.config.onBackgroundDensity((density: number) => {
         if (this.background) this.background.density = density;
-      })
+      }),
     ];
 
     this.finalLevelIx = this.levels.length;
@@ -49,7 +49,7 @@ export class LevelManager implements Destroyable {
   }
 
   public destroy(): void {
-    this.subscribers.forEach(unsub => unsub());
+    this.subscribers.forEach((unsub) => unsub());
   }
 
   private nextLevel() {
@@ -126,7 +126,7 @@ export class LevelManager implements Destroyable {
       this.collision?.update(state);
 
       this.radar?.update(
-        actives.filter(active => active.isShowing),
+        actives.filter((active) => active.isShowing),
         state.worldBoundaries
       );
     }

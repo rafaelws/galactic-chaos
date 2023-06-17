@@ -1,6 +1,6 @@
 export type Subscribers = {
   [topic: string]: SubFn;
-}
+};
 export type UnsubFn = () => void;
 export type SubFn = (data?: any) => void;
 
@@ -19,7 +19,7 @@ export class PubSub {
     const topics = this.topics.get(topic);
     if (!topics) return;
 
-    topics.forEach(listener => {
+    topics.forEach((listener) => {
       setTimeout(() => listener(message), 0);
       // listener(message);
     });
@@ -46,6 +46,6 @@ export class PubSub {
     for (const topic in subscribers)
       unsubs.push(this.sub(topic, subscribers[topic]));
 
-    return () => unsubs.map(unsub => unsub());
+    return () => unsubs.map((unsub) => unsub());
   }
 }

@@ -34,9 +34,9 @@ export function readInput(inputs: TriggerOnInput[]): Destroyable {
         if (destroyOnHit) {
           Config.set(
             ConfigKey.Input,
-            joystickHit ?
-              ConfigInputType.Joystick :
-              ConfigInputType.KeyboardAndMouse
+            joystickHit
+              ? ConfigInputType.Joystick
+              : ConfigInputType.KeyboardAndMouse
           );
           destroy();
         }
