@@ -42,6 +42,9 @@ export class LevelManager implements Destroyable {
       events.config.onBackgroundDensity((density: number) => {
         if (this.background) this.background.density = density;
       }),
+      events.game.onLoading((loading) => {
+        this.loading = loading;
+      }),
     ];
 
     this.finalLevelIx = this.levels.length;
@@ -53,22 +56,55 @@ export class LevelManager implements Destroyable {
   }
 
   private nextLevel() {
-    if (++this.currentLevelIx < this.finalLevelIx) {
-      this.loading = true;
-      events.game.loading(this.loading);
-
-      this.levels[this.currentLevelIx]()
-        .then((objects) => {
-          this.gameObjects.push(...objects);
-        })
-        .catch((err) => console.error("could not load assets", err))
-        .finally(() => {
-          this.loading = false;
-          events.game.loading(this.loading);
-        });
-    } else {
-      events.game.end();
+    if (++this.currentLevelIx >= this.finalLevelIx) {
+      return events.game.end();
     }
+    events.game.loading(true);
+    this.levels[this.currentLevelIx]()
+      .then((objects) => this.gameObjects.push(...objects))
+      // TODO improve error handling
+      .catch((err) => console.error("could not load assets", err))
+      .finally(() => events.game.loading(false));
+  }
+
+  private initialize() {
+    this.player = new Player({
+      img: getImage(assets.img.player.self),
+      damageStages: assets.img.player.damage.map(getImage),
+    });
+
+    this.radar = new Radar();
+    this.collision = new CollisionManager(this.player);
+    this.background = new BackgroundManager(
+      Config.get(ConfigKey.BackgroundDensity)
+    );
+  }
+
+  private addSpawning() {
+    if (this.objectsToSpawn.length === 0) return;
+    this.objectsToSpawn.push(...this.gameObjects);
+    this.gameObjects = this.objectsToSpawn;
+    this.objectsToSpawn = [];
+  }
+
+  private updateAll(state: GameState) {
+    this.background?.update(state);
+
+    const actives: GameObject[] = [];
+    iterate(this.gameObjects, (gameObject) => {
+      gameObject.update(state);
+      if (!gameObject.isActive) return;
+
+      this.collision?.check(gameObject);
+      actives.push(gameObject);
+    });
+    this.gameObjects = actives;
+
+    this.collision?.update(state);
+    this.radar?.update(
+      actives.filter((active) => active.isShowing),
+      state.worldBoundaries
+    );
   }
 
   public update(
@@ -78,58 +114,21 @@ export class LevelManager implements Destroyable {
     debug = NoDebug
   ): void {
     if (this.loading) return;
-    if (!this.player) {
-      this.player = new Player({
-        img: getImage(assets.img.player.self),
-        damageStages: [
-          getImage(assets.img.player.damage[0]),
-          getImage(assets.img.player.damage[1]),
-          getImage(assets.img.player.damage[2]),
-        ],
-      });
-      if (!this.collision) this.collision = new CollisionManager(this.player);
-      if (!this.background)
-        this.background = new BackgroundManager(
-          Config.get(ConfigKey.BackgroundDensity)
-        );
-      if (!this.radar) this.radar = new Radar();
-    } else {
-      const playerState: GameState = {
-        debug,
-        delta,
-        worldBoundaries,
-        player: { x: 0, y: 0, radius: 0 },
-      };
-      this.player.controlState = controlState;
-      this.player.update(playerState);
+    if (!this.player) return this.initialize();
 
-      const state = { ...playerState, player: this.player.hitbox };
+    const state: GameState = {
+      debug,
+      delta,
+      worldBoundaries,
+      player: { x: 0, y: 0, radius: 0 },
+    };
+    this.player.controlState = controlState;
+    this.player.update(state);
 
-      this.background?.update(state);
+    state.player = this.player.hitbox;
 
-      if (this.objectsToSpawn.length > 0) {
-        this.objectsToSpawn.push(...this.gameObjects);
-        this.gameObjects = this.objectsToSpawn;
-        this.objectsToSpawn = [];
-      }
-
-      const actives: GameObject[] = [];
-      iterate(this.gameObjects, (gameObject) => {
-        gameObject.update(state);
-        if (gameObject.isActive) {
-          this.collision?.check(gameObject);
-          actives.push(gameObject);
-        }
-      });
-      this.gameObjects = actives;
-
-      this.collision?.update(state);
-
-      this.radar?.update(
-        actives.filter((active) => active.isShowing),
-        state.worldBoundaries
-      );
-    }
+    this.addSpawning();
+    this.updateAll(state);
   }
 
   public draw(c: CanvasRenderingContext2D): void {

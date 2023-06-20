@@ -24,7 +24,7 @@ export interface GameState {
   get debug(): DebugParams;
   get delta(): number;
   get worldBoundaries(): Boundaries;
-  get player(): HitBox;
+  player: HitBox;
 }
 
 export interface Destroyable {
