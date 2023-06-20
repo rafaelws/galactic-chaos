@@ -5,11 +5,10 @@
  - [ ] level designer
 
 ## Tools & Processes
- - [ ] commit message
- - [ ] changelog
- - [ ] commit messages
+ - [x] husky, lint-staged
+ - [x] commit messages (cz, commitlint)
  - [ ] versioning (semver)
- - [ ] setup ci (husky, lint-staged)
+ - [ ] changelog
 
 ## Fixes/Improvements
  - [ ] communicate player of controls (use menus)
