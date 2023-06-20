@@ -1,6 +1,6 @@
 # Galactic Chaos
 
-!["banner"](./banner.gif "banner")
+!["banner"](./alt-banner.gif "banner")
 
 A spaceship shooter game. 
 
