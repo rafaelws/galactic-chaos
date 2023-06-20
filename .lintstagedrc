@@ -1,0 +1,6 @@
+{
+  "*.ts": [
+    "npm run eslint:fix",
+    "vitest related run --dir test --bail"
+  ]
+}

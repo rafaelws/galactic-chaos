@@ -1,6 +1,6 @@
 # Galactic Chaos
 
-!["banner"](./alt-banner.gif "banner")
+!["banner"](./banner.gif "banner")
 
 A spaceship shooter game. 
 
@@ -9,7 +9,7 @@ A spaceship shooter game.
 # Getting started
 
 ```bash
-# requires node (v18)
+# requires node (>=18)
 npm i # install dependencies
 npm run dev # run the development server (vite)
 

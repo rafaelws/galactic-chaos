@@ -44,7 +44,7 @@ export function hud() {
 
   return {
     destroy() {
-      subscribers.forEach(unsub => unsub());
+      subscribers.forEach((unsub) => unsub());
     },
   };
 }

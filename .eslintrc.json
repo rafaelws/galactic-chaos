@@ -5,7 +5,8 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -13,7 +14,8 @@
     "ecmaVersion": "latest"
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "prettier"
   ],
   "rules": {
     "indent": [
@@ -36,6 +38,12 @@
     "semi": [
       "error",
       "always"
-    ]
+    ],
+    "prettier/prettier": ["error", {
+      "printWidth": 80
+    }],
+    "arrow-body-style": "off",
+    "prefer-arrow-callback": "off",
+    "@typescript-eslint/no-non-null-assertion": "off"
   }
 }

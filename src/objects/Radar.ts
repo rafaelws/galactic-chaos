@@ -7,7 +7,7 @@ export class Radar {
   private factor = 0.1;
   private finalAngle = toRad(360);
 
-  private world: Boundaries = { width: NaN, height: NaN, };
+  private world: Boundaries = { width: NaN, height: NaN };
   private gameObjects: GameObject[] = [];
 
   public update(gameObjects: GameObject[], world: Boundaries): void {
@@ -40,15 +40,11 @@ export class Radar {
     c.stroke();
     c.closePath();
 
-    [0.333, 0.666].forEach(value => {
-      const p = point.lerp(
-        { x, y },
-        { x: mx, y: my },
-        value * 0.5
-      );
+    [0.333, 0.666].forEach((value) => {
+      const p = point.lerp({ x, y }, { x: mx, y: my }, value * 0.5);
       const b: Boundaries = {
         width: width - width * value,
-        height: height - height * value
+        height: height - height * value,
       };
       c.strokeRect(p.x, p.y, b.width, b.height);
     });
@@ -60,10 +56,12 @@ export class Radar {
     hitbox: HitBox
   ) {
     const radius = hitbox.radius * 0.5;
-    return hitbox.x - radius > x &&
+    return (
+      hitbox.x - radius > x &&
       hitbox.y - radius > y &&
       hitbox.x + radius < x + width &&
-      hitbox.y + radius < y + height;
+      hitbox.y + radius < y + height
+    );
   }
 
   private drawObjects(

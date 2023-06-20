@@ -7,7 +7,7 @@ export const audioManager = AudioManager();
 type AudioPlayRequest = {
   assetPath: string;
   loop?: boolean;
-}
+};
 
 function AudioManager() {
   const ctx: AudioContext = new AudioContext();
@@ -23,8 +23,8 @@ function AudioManager() {
   setGain(Config.get(ConfigKey.AudioGain));
   setEnabled(Config.get(ConfigKey.AudioEnabled));
 
-  events.config.onAudioEnabled(isEnabled => setEnabled(isEnabled));
-  events.config.onAudioGain(gain => setGain(gain));
+  events.config.onAudioEnabled((isEnabled) => setEnabled(isEnabled));
+  events.config.onAudioGain((gain) => setGain(gain));
 
   async function createTrack(buffer: ArrayBuffer) {
     const track = ctx.createBufferSource();
@@ -69,10 +69,7 @@ function AudioManager() {
     setEnabled(enabled);
   }
 
-  async function pause(
-    assetPath = assets.audio.menu.pause,
-    loop = true
-  ) {
+  async function pause(assetPath = assets.audio.menu.pause, loop = true) {
     currentTrackTimePast += (Date.now() - currentTrackPlayDate) * 0.001;
 
     await prepareTrack({ assetPath, loop });

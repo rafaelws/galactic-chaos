@@ -1,14 +1,31 @@
-# DOING
+# NEXT
 
- - [ ] tooling
+## Features
+ - [ ] live docs
+ - [ ] level designer
+
+## Tools & Processes
+ - [x] husky, lint-staged
+ - [x] commit messages (cz, commitlint)
+ - [ ] versioning (semver)
+ - [ ] changelog
+
+## Fixes/Improvements
  - [ ] communicate player of controls (use menus)
- - [ ] polish gameEnd (song?)
+ - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
+ - [ ] polish game end
+ - [ ] rewrite hud, menus as web components?
+
+## To Consider
+ - [ ] game assets: either simplify asset loading or change to a simplified neon line style (without external assets)
+ - [ ] change/simplify mechanics
+
+---
 
 # TODO
-- [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
-- [ ] create a loading screen between levels (while the assets are being loaded)
+- [x] create a loading screen between levels (while the assets are being loaded)
 - [ ] player 
-  - [ ] radar
+  - [x] radar
   - [ ] shield (item)
   - [ ] special (item)
 - [ ] projectile
@@ -33,7 +50,7 @@
 - [x] fade-in/out menus
 - [x] fade-in/out hud
 - [ ] use sprites (review canvas performance and load time)
-- [ ] (UI) tooling: consider using an interactive form to showcase/test game objects (see `dat.gui`)
+- [ ] (UI) tooling: consider using an interactive form to showcase/test game objects (see `dat.gui`, `lil-gui`)
 - [ ] (UI) tooling: level designer
 - [ ] Gamepad:
   - [ ] PreferredInput: gamepad or keyboard/mouse (choose gamepad index?)

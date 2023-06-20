@@ -81,7 +81,7 @@ const game = {
   },
   onLoading(sub: (isLoading: boolean) => void) {
     return pubSub.sub(GameEvent.Loading, sub);
-  }
+  },
 };
 
 const config = {
