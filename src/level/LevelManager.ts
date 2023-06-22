@@ -13,7 +13,7 @@ import { events } from "@/common/events";
 type LevelFn = () => Promise<GameObject[]>;
 
 export class LevelManager implements Destroyable {
-  private loading = false;
+  private _loading = false;
   private finalLevelIx = -1;
   private currentLevelIx = -1;
 
@@ -42,9 +42,6 @@ export class LevelManager implements Destroyable {
       events.config.onBackgroundDensity((density: number) => {
         if (this.background) this.background.density = density;
       }),
-      events.game.onLoading((loading) => {
-        this.loading = loading;
-      }),
     ];
 
     this.finalLevelIx = this.levels.length;
@@ -59,12 +56,15 @@ export class LevelManager implements Destroyable {
     if (++this.currentLevelIx >= this.finalLevelIx) {
       return events.game.end();
     }
-    events.game.loading(true);
+    this.loading = true;
+
     this.levels[this.currentLevelIx]()
       .then((objects) => this.gameObjects.push(...objects))
       // TODO improve error handling
       .catch((err) => console.error("could not load assets", err))
-      .finally(() => events.game.loading(false));
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
   private initialize() {
@@ -122,6 +122,7 @@ export class LevelManager implements Destroyable {
       worldBoundaries,
       player: { x: 0, y: 0, radius: 0 },
     };
+
     this.player.controlState = controlState;
     this.player.update(state);
 
@@ -142,5 +143,14 @@ export class LevelManager implements Destroyable {
     this.radar?.draw(c);
 
     if (this.gameObjects.length == 0) this.nextLevel();
+  }
+
+  private get loading() {
+    return this._loading;
+  }
+
+  private set loading(loading: boolean) {
+    events.game.loading(loading);
+    this._loading = loading;
   }
 }
