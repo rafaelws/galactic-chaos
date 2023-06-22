@@ -15,6 +15,7 @@
  - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
  - [ ] polish game end
  - [ ] rewrite hud and menus as web components?
+ - [ ] remove unecessary colors from sourcecode
 
 ## To Consider
  - [ ] game assets: either simplify asset loading or change to a simplified neon line style (without external assets)
