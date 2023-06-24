@@ -1,10 +1,78 @@
-// import GUI from "lil-gui";
+import "./index.css";
 
-// const gui = new GUI();
+import { throttle } from "@/core/util";
 
-// const configs = {
-//   foo: 0.5,
-// };
+import { $, $$, $on, getAssets, raf } from "./util";
 
-// gui.add(configs, "foo");
-export const refactoring = true;
+const assets = getAssets();
+
+const showStats = throttle((delta: number) => {
+  if (!delta) return;
+  $("#fps").textContent = (1000 / delta).toFixed(2);
+  $("#frameTime").textContent = delta.toFixed(3);
+});
+
+function buildAssetPicker($el: HTMLElement, entityType: string) {
+  $el.dataset.entity = entityType;
+  const $container = $el.querySelector(".container");
+
+  if ($container)
+    $container.innerHTML = assets[entityType]
+      .map((assetPath) => {
+        return `
+          <div class="wrap" data-path="${assetPath}">
+            <img class="asset" src=${assetPath}/>
+            <span class="description">${assetPath}</span>
+          </div>`;
+      })
+      .join("");
+}
+
+function render(delta: number) {
+  showStats(delta);
+}
+
+function setupEntitySelect() {
+  const $el = $<HTMLSelectElement>("#entityType");
+  $on("change", onEntityChange, $el);
+  onEntityChange.call($el);
+}
+
+function setupAssets() {
+  const $assets = $$(".asset-picker .wrap");
+  const fn = pickAsset($assets);
+  $assets.forEach(($el) => {
+    $on("click", fn, $el);
+  });
+  fn.call($assets[0]);
+}
+
+function pickAsset($assets: NodeListOf<HTMLElement>) {
+  return function (this: HTMLElement) {
+    const { path } = this.dataset || "";
+    if (!path) return;
+    // TODO do something with path
+    $assets.forEach(($el) => $el.classList.remove("active"));
+    this.classList.add("active");
+  };
+}
+
+function onEntityChange(this: HTMLSelectElement) {
+  const $assetPicker = $("#picker");
+  const entityType = $assetPicker.dataset.entity || "";
+
+  if (this.value === entityType) return;
+
+  buildAssetPicker($assetPicker, this.value);
+  $$(".ctrl.params").forEach(($el) => {
+    $el.style.display = $el.classList.contains(this.value) ? "block" : "none";
+  });
+  setupAssets();
+}
+
+function setup() {
+  setupEntitySelect();
+  raf(render);
+}
+
+document.addEventListener("DOMContentLoaded", setup);

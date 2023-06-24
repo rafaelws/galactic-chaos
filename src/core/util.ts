@@ -14,7 +14,7 @@ export function throttle(fn: (...args: any) => void, time = 200) {
   return (...args: any) => {
     const now = Date.now();
     if (now - lastCallTime >= time) {
-      fn(args);
+      fn(...args);
       lastCallTime = now;
     }
   };

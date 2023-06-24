@@ -12,7 +12,7 @@
     "test": "vitest run --dir test",
     "test:watch": "vitest --dir test",
     "test:staged": "vitest related --run --bail 1",
-    "eslint": "eslint src --ext .ts",
+    "eslint": "eslint src --ext .ts,.tsx --report-unused-disable-directives --max-warnings 10",
     "eslint:fix": "run-s eslint -- --fix",
     "tscheck": "tsc --noEmit",
     "lint": "run-s tscheck eslint",
@@ -42,7 +42,6 @@
     "vitest": "^0.31.0"
   },
   "dependencies": {
-    "lil-gui": "^0.18.2",
     "lodash.debounce": "^4.0.8"
   }
 }

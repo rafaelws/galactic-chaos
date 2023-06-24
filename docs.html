@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  </head>
-  <body>
-    >Docs
-    <script type="module" src="/src/docs/index.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live DOCS</title>
+</head>
+
+<body style="background-color: black;">
+  <!-- <canvas></canvas> -->
+
+  <div class="controls">
+    <div class="ctrl">
+      <span id="fps"></span> fps |
+      <span id="frameTime"></span> ms
+    </div>
+    <div class="ctrl">
+      <select id="entityType">
+        <option value="Rock">Rock</option>
+        <option value="Ship">Ship</option>
+      </select>
+    </div>
+    <div class="ctrl params Rock" style="display: none">
+      Rock Params
+    </div>
+    <div class="ctrl params Ship" style="display: none">
+      Ship Params
+    </div>
+  </div>
+  <div id="picker" class="asset-picker" data-entity="">
+    <div class="container"></div>
+  </div>
+  <script type="module" src="/src/docs/index.ts"></script>
+</body>
+
 </html>
