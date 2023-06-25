@@ -67,7 +67,7 @@ export class GameManager implements Destroyable {
 
   private update(delta: number) {
     const controls = this.ih.getState();
-    this.lm.update(delta, this.cm.getBoundaries(), controls, debug);
+    this.lm.update(delta, this.cm.boundaries, controls, debug);
   }
 
   private draw() {
@@ -85,7 +85,7 @@ export class GameManager implements Destroyable {
   private debug(delta: number) {
     if (!debug.global) return;
     const c = this.cm.context;
-    const { width, height } = this.cm.getBoundaries();
+    const { width, height } = this.cm.boundaries;
     const lines = [
       `${width}x${height}`,
       `${Math.floor(1000 / delta)}fps`,

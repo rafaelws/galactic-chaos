@@ -31,7 +31,7 @@ export class CanvasManager implements Destroyable {
     // this.context.fillStyle = "rgba(0,0,0,0.3)";
   }
 
-  public getBoundaries(): Boundaries {
+  public get boundaries(): Boundaries {
     return { width: this.canvas.width, height: this.canvas.height };
   }
 
