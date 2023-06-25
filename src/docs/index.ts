@@ -1,8 +1,9 @@
 import "./index.css";
 
+import { $, $$, $on, raf } from "@/core/dom-util";
 import { throttle } from "@/core/util";
 
-import { $, $$, $on, getAssets, raf } from "./util";
+import { getAssets } from "./util";
 
 const assets = getAssets();
 
@@ -14,18 +15,16 @@ const showStats = throttle((delta: number) => {
 
 function buildAssetPicker($el: HTMLElement, entityType: string) {
   $el.dataset.entity = entityType;
-  const $container = $el.querySelector(".container");
-
-  if ($container)
-    $container.innerHTML = assets[entityType]
-      .map((assetPath) => {
-        return `
-          <div class="wrap" data-path="${assetPath}">
-            <img class="asset" src=${assetPath}/>
-            <span class="description">${assetPath}</span>
-          </div>`;
-      })
-      .join("");
+  $(".container", $el).innerHTML = assets[entityType]
+    .map((assetPath) => {
+      return `
+        <div class="wrap" data-path="${assetPath}">
+          <img class="asset" src=${assetPath}/>
+          <span class="description">${assetPath}</span>
+        </div>
+      `;
+    })
+    .join("");
 }
 
 function render(delta: number) {
@@ -41,9 +40,7 @@ function setupEntitySelect() {
 function setupAssets() {
   const $assets = $$(".asset-picker .wrap");
   const fn = pickAsset($assets);
-  $assets.forEach(($el) => {
-    $on("click", fn, $el);
-  });
+  $assets.forEach(($el) => $on("click", fn, $el));
   fn.call($assets[0]);
 }
 

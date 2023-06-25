@@ -2,6 +2,7 @@ import debounce from "lodash.debounce";
 
 import { UnsubFn } from "@/core";
 import { assets, audioManager, preloadAudio } from "@/core/asset";
+import { hide, show } from "@/core/dom-util";
 import { events } from "@/core/events";
 import { Destroyable } from "@/core/meta";
 import { throttle } from "@/core/util";
@@ -9,7 +10,6 @@ import { setup } from "@/game/loop";
 
 import { Options } from "./options";
 import { readInput } from "./readInput";
-import { hide, show } from "./util";
 
 export function UI() {
   const loop = setup();

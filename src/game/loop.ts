@@ -1,30 +1,21 @@
+import { raf } from "@/core/dom-util";
+
 import { GameManager } from "./GameManager";
 
 export function setup() {
-  let raf: number | null;
-  let manager: GameManager | null;
+  let stop: (() => void) | null = null;
+  let manager: GameManager | null = null;
 
   return {
     start() {
-      let lts = 0;
-      let delta = 0;
       manager = new GameManager();
-
-      function loop(ts: DOMHighResTimeStamp) {
-        delta = ts - lts;
-        lts = ts;
-
-        if (delta > 0) manager?.nextFrame(delta);
-
-        raf = requestAnimationFrame(loop);
-      }
-
-      loop(0);
+      stop = raf((delta) => manager?.nextFrame(delta));
     },
     destroy() {
-      if (raf) cancelAnimationFrame(raf);
+      if (stop) stop();
       manager?.destroy();
-      raf = null;
+
+      stop = null;
       manager = null;
     },
   };

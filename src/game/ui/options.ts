@@ -1,8 +1,8 @@
 import { Config, ConfigKey, ConfigMap } from "@/core";
 import { throttle } from "@/core/util";
 
+import { $, $$, fadeIn, fadeOut } from "../../core/dom-util";
 import { TriggerOnInput } from "./readInput";
-import { $, fadeIn, fadeOut } from "./util";
 
 export function Options() {
   const elQuery = "#options";
@@ -12,9 +12,8 @@ export function Options() {
 
   type Operation = "-" | "+" | null;
 
-  function fields<T extends Element>() {
-    return document.querySelectorAll<T>(`${elQuery} .field`);
-  }
+  const fields = () => $$(`${elQuery} .field`);
+  const current = () => $(`${elQuery} .field[data-ix="${currentFieldIx}"]`);
 
   function makeAllInactive() {
     const all = fields();
@@ -22,12 +21,8 @@ export function Options() {
     return all.length;
   }
 
-  function current<T extends Element>() {
-    return $<T>(`${elQuery} .field[data-ix="${currentFieldIx}"]`);
-  }
-
   function makeCurrentActive() {
-    current()?.classList.add("active");
+    current().classList.add("active");
   }
 
   function up() {
@@ -46,16 +41,16 @@ export function Options() {
 
   function left() {
     if (!isOptionsOpen) return;
-    action("-", current<HTMLElement>());
+    action("-", current());
   }
 
   function right() {
     if (!isOptionsOpen) return;
-    action("+", current<HTMLElement>());
+    action("+", current());
   }
 
-  function action(operation: Operation, el: HTMLElement | null) {
-    if (!el?.dataset) return;
+  function action(operation: Operation, el: HTMLElement) {
+    if (!el.dataset) return;
     switch (el.dataset.type) {
       case "toggle":
         uiToggle(operation, el);
@@ -74,36 +69,32 @@ export function Options() {
       Config.set(el.dataset.key as ConfigKey, value);
     }
 
-    if (value) {
-      el.querySelector<HTMLElement>(".toggle")?.classList.add("active");
-    } else {
-      el.querySelector<HTMLElement>(".toggle")?.classList.remove("active");
-    }
+    if (value) $(".toggle").classList.add("active");
+    else $(".toggle").classList.remove("active");
   }
 
-  function uiSlider(operation: Operation, el: HTMLElement) {
-    let value = Number(el.dataset.value);
-    const max = Number(el.dataset.max);
+  function uiSlider(operation: Operation, $el: HTMLElement) {
+    let value = Number($el.dataset.value);
+    const max = Number($el.dataset.max);
 
     if (operation !== null) {
-      const step = Number(el.dataset.step);
-      const min = Number(el.dataset.min);
+      const step = Number($el.dataset.step);
+      const min = Number($el.dataset.min);
       value += operation === "+" ? step : -step;
 
       if (value <= min) value = min;
       if (value >= max) value = max;
-      Config.set(el.dataset.key as ConfigKey, value);
-      el.dataset.value = "" + value;
+      Config.set($el.dataset.key as ConfigKey, value);
+      $el.dataset.value = "" + value;
     }
 
     // .handle is 20% wide
     const normalized = (value / max) * 80;
-    el.querySelector<HTMLElement>(".handle")!.style.marginLeft =
-      normalized + "%";
+    $(".handle", $el).style.marginLeft = normalized + "%";
   }
 
   function init(config: ConfigMap) {
-    fields<HTMLElement>().forEach((el) => {
+    fields().forEach((el) => {
       el.dataset.value = config[el.dataset.key as ConfigKey];
       action(null, el);
     });
