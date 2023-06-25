@@ -1,6 +1,6 @@
 import debounce from "lodash.debounce";
 
-import { ListenerMap, set, unset } from "./dom-events";
+import { ListenerMap, set, unset } from "./dom";
 import { Boundaries, Destroyable } from "./meta";
 
 export class CanvasManager implements Destroyable {

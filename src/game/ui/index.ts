@@ -2,7 +2,7 @@ import debounce from "lodash.debounce";
 
 import { UnsubFn } from "@/core";
 import { assets, audioManager, preloadAudio } from "@/core/asset";
-import { hide, show } from "@/core/dom-util";
+import { hide, show } from "@/core/dom";
 import { events } from "@/core/events";
 import { Destroyable } from "@/core/meta";
 import { throttle } from "@/core/util";
@@ -21,14 +21,14 @@ export function UI() {
   let subscribers: UnsubFn[] = [];
 
   const elements: { [index: string]: string } = {
-    playerHp: "player-hp",
-    bossHp: "boss-hp",
-    pauseMenu: "pause-menu",
-    mainMenu: "main-menu",
-    gameOverMenu: "game-over-menu",
-    gameEndMenu: "game-end-menu",
-    loading: "loading",
-    ghLink: "gh-link",
+    playerHp: "#player-hp",
+    bossHp: "#boss-hp",
+    pauseMenu: "#pause-menu",
+    mainMenu: "#main-menu",
+    gameOverMenu: "#game-over-menu",
+    gameEndMenu: "#game-end-menu",
+    loading: "#loading",
+    ghLink: "#gh-link",
   };
 
   function subscribe() {

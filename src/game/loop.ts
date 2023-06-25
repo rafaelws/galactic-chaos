@@ -1,4 +1,4 @@
-import { raf } from "@/core/dom-util";
+import { raf } from "@/core/dom";
 
 import { GameManager } from "./GameManager";
 

@@ -1,5 +1,4 @@
-type Listener = (ev: globalThis.Event) => void;
-type StringMap = Record<string, string>;
+import { StringMap } from ".";
 
 export function $<T extends HTMLElement>(query: string, scope?: HTMLElement) {
   return (scope || document).querySelector<T>(query)!;
@@ -9,20 +8,8 @@ export function $$<T extends HTMLElement>(query: string, scope?: HTMLElement) {
   return (scope || document).querySelectorAll<T>(query)!;
 }
 
-export function $on(eventName: string, listener: Listener, el: HTMLElement) {
-  el.addEventListener(eventName, listener);
-}
-
-export function $off(eventName: string, listener: Listener, el: HTMLElement) {
-  el.removeEventListener(eventName, listener);
-}
-
-export function changeDisplay(id: string, visible = true): void {
-  $(`#${id}`).style.display = visible ? "block" : "none";
-}
-
-export const show = (elId: string) => changeDisplay(elId, true);
-export const hide = (elId: string) => changeDisplay(elId, false);
+export const show = (query: string) => ($(query).style.display = "block");
+export const hide = (query: string) => ($(query).style.display = "none");
 
 export const fadeIn = (query: string) => {
   const $el = $(query);
@@ -44,7 +31,7 @@ function translateCss(css: StringMap) {
   return style;
 }
 
-interface $El {
+interface El {
   className?: string[];
   children?: HTMLElement[] | string[];
   css?: StringMap;
@@ -53,26 +40,27 @@ interface $El {
   // TODO listeners
 }
 
-export function $el(tag: string, $el?: $El) {
-  const el = document.createElement(tag);
+export function el(tag: string, $el?: El) {
+  const nel = document.createElement(tag);
 
-  if (!$el) return el;
+  if (!$el) return nel;
 
   const { className, children, css, data, attributes } = $el;
-  if (className) el.classList.add(...className);
-  if (children) el.append(...children);
-  if (css) el.style.cssText = translateCss(css);
+  if (className) nel.classList.add(...className);
+  if (children) nel.append(...children);
+  if (css) nel.style.cssText = translateCss(css);
   if (data) {
     for (const key in data) {
-      el.dataset[key] = data[key];
+      nel.dataset[key] = data[key];
+      // nel.setAttribute(`data-${key}`, data[key]);
     }
   }
   if (attributes) {
     for (const attr in attributes) {
-      el.setAttribute(attr, attributes[attr]);
+      nel.setAttribute(attr, attributes[attr]);
     }
   }
-  return el;
+  return nel;
 }
 
 export function raf(cb: (delta: number) => void): () => void {
@@ -86,8 +74,6 @@ export function raf(cb: (delta: number) => void): () => void {
     if (delta > 0) cb(delta);
     handle = requestAnimationFrame(loop);
   }
-
   loop(0);
-
   return () => handle && cancelAnimationFrame(handle);
 }

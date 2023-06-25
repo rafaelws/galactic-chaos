@@ -1,7 +1,7 @@
 import { Config, ConfigKey, ConfigMap } from "@/core";
+import { $, $$, fadeIn, fadeOut } from "@/core/dom";
 import { throttle } from "@/core/util";
 
-import { $, $$, fadeIn, fadeOut } from "../../core/dom-util";
 import { TriggerOnInput } from "./readInput";
 
 export function Options() {

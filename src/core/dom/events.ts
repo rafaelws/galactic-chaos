@@ -1,13 +1,15 @@
-export type Listener = (ev: globalThis.Event) => void;
+import { Listener, ListenerMap } from ".";
 
-export type ListenerMap = Record<string, Listener>;
-
-export function on(eventName: string, listener: Listener) {
-  return window.addEventListener(eventName, listener);
+export function on(eventName: string, listener: Listener, scope?: HTMLElement) {
+  (scope || window).addEventListener(eventName, listener);
 }
 
-export function off(eventName: string, listener: Listener) {
-  return window.removeEventListener(eventName, listener);
+export function off(
+  eventName: string,
+  listener: Listener,
+  scope?: HTMLElement
+) {
+  (scope || window).removeEventListener(eventName, listener);
 }
 
 export function set(...listeners: ListenerMap[]) {

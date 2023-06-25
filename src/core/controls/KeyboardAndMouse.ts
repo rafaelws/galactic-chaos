@@ -1,4 +1,4 @@
-import { ListenerMap, set, unset } from "@/core/dom-events";
+import { ListenerMap, set, unset } from "@/core/dom";
 
 import { ControlAction, ControlState, InputHandler } from ".";
 

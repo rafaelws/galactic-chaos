@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background-color: black;">
 
 <head>
   <meta charset="UTF-8" />
@@ -7,7 +7,7 @@
   <title>Live DOCS</title>
 </head>
 
-<body style="background-color: black;">
+<body style="display: none;">
   <!-- <canvas></canvas> -->
 
   <div class="controls">
@@ -15,6 +15,12 @@
       <span id="fps"></span> fps |
       <span id="frameTime"></span> ms
     </div>
+    <!-- 
+    <div class="ctrl">
+      TODO phantom player x, y
+      TODO debug settings
+    </div> 
+    -->
     <div class="ctrl">
       <select id="entityType">
         <option value="Rock">Rock</option>
@@ -23,9 +29,32 @@
     </div>
     <div class="ctrl params Rock" style="display: none">
       Rock Params
+      <!-- 
+      Rotation angle (deg)
+
+      Movement (reusable)
+      *Impact (reusable) 
+      -->
     </div>
     <div class="ctrl params Ship" style="display: none">
       Ship Params
+
+      <!--
+      Movement (reusable => linear, quadraticBezier, cubicBezier, repeatable)
+      Fire (reusable)
+      *Impact (reusable)
+      -->
+    </div>
+    <div class="ctrl params Boss" style="display: none">
+      Boss Params
+      <!--
+      Phases[] (button to proceed phase)
+      - Movement (reusable) (button to next movement)
+      - Fire (reusable)
+      - *Impact (reusable)
+      - **Spawnables (difficult)
+      - **nextPhaseCondition (difficult)
+      -->
     </div>
   </div>
   <div id="picker" class="asset-picker" data-entity="">
