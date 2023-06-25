@@ -1,5 +1,7 @@
 import { StringMap } from ".";
 
+type StOrEl = HTMLElement | string;
+
 export function $<T extends HTMLElement>(query: string, scope?: HTMLElement) {
   return (scope || document).querySelector<T>(query)!;
 }
@@ -8,8 +10,13 @@ export function $$<T extends HTMLElement>(query: string, scope?: HTMLElement) {
   return (scope || document).querySelectorAll<T>(query)!;
 }
 
-export const show = (query: string) => ($(query).style.display = "block");
-export const hide = (query: string) => ($(query).style.display = "none");
+export const display = (target: StOrEl, visible = true) => {
+  const $el = typeof target === "string" ? $(target) : target;
+  $el.style.display = visible ? "block" : "none";
+};
+
+export const show = (target: StOrEl) => display(target);
+export const hide = (target: StOrEl) => display(target, false);
 
 export const fadeIn = (query: string) => {
   const $el = $(query);
@@ -76,4 +83,9 @@ export function raf(cb: (delta: number) => void): () => void {
   }
   loop(0);
   return () => handle && cancelAnimationFrame(handle);
+}
+
+export function cssVar(name: string, value?: string) {
+  if (value) document.documentElement.style.setProperty(name, value);
+  return getComputedStyle(document.documentElement).getPropertyValue(name);
 }

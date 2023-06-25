@@ -8,11 +8,9 @@
 </head>
 
 <body style="display: none;">
-  <!-- <canvas></canvas> -->
-
   <div class="controls">
     <div class="ctrl">
-      <span id="fps"></span> fps |
+      <span id="fps"></span> fps<br />
       <span id="frameTime"></span> ms
     </div>
     <!-- 
@@ -23,11 +21,12 @@
     -->
     <div class="ctrl">
       <select id="entityType">
-        <option value="Rock">Rock</option>
-        <option value="Ship">Ship</option>
+        <option value="rocks">Rock</option>
+        <option value="ships">Ship</option>
+        <option value="bosses">Boss</option>
       </select>
     </div>
-    <div class="ctrl params Rock" style="display: none">
+    <div class="ctrl params rocks" style="display: none">
       Rock Params
       <!-- 
       Rotation angle (deg)
@@ -36,7 +35,7 @@
       *Impact (reusable) 
       -->
     </div>
-    <div class="ctrl params Ship" style="display: none">
+    <div class="ctrl params ships" style="display: none">
       Ship Params
 
       <!--
@@ -45,7 +44,7 @@
       *Impact (reusable)
       -->
     </div>
-    <div class="ctrl params Boss" style="display: none">
+    <div class="ctrl params bosses" style="display: none">
       Boss Params
       <!--
       Phases[] (button to proceed phase)

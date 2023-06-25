@@ -1,7 +1,7 @@
 import { GameObject } from "@/core/objects";
 
-import { PubSub } from "./";
 import { ConfigInputType, ConfigKey } from "./Config";
+import { PubSub } from "./PubSub";
 
 const pubSub = new PubSub();
 export const pub = pubSub.pub.bind(pubSub);
