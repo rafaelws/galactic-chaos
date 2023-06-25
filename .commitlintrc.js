@@ -7,6 +7,7 @@ export default {
       2,
       "always",
       [
+        "chore",
         "wip",
         "feat",
         "fix",
@@ -14,7 +15,10 @@ export default {
         "style",
         "refac",
         "test",
-        "revert"
+        "revert",
+        "build",
+        "ci",
+        "perf",
       ]
     ]
   }
