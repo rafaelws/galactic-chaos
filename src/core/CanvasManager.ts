@@ -8,9 +8,13 @@ export class CanvasManager implements Destroyable {
   public context: CanvasRenderingContext2D;
   public listeners: ListenerMap = {};
 
-  constructor() {
-    this.canvas = document.createElement("canvas");
-    document.body.appendChild(this.canvas);
+  constructor(query?: string) {
+    if (query) {
+      this.canvas = document.querySelector<HTMLCanvasElement>(query)!;
+    } else {
+      this.canvas = document.createElement("canvas");
+      document.body.appendChild(this.canvas);
+    }
 
     this.listeners = { resize: debounce(this.resize.bind(this)) };
     this.resize();

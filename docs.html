@@ -4,62 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Live DOCS</title>
+  <title>galactic chaos - playground</title>
 </head>
 
 <body style="display: none;">
-  <div class="controls">
-    <div class="ctrl">
-      <span id="fps"></span> fps<br />
-      <span id="frameTime"></span> ms
-    </div>
-    <!-- 
-    <div class="ctrl">
-      TODO phantom player x, y
-      TODO debug settings
-    </div> 
-    -->
-    <div class="ctrl">
-      <select id="entityType">
-        <option value="rocks">Rock</option>
-        <option value="ships">Ship</option>
-        <option value="bosses">Boss</option>
-      </select>
-    </div>
-    <div class="ctrl params rocks" style="display: none">
-      Rock Params
-      <!-- 
-      Rotation angle (deg)
-
-      Movement (reusable)
-      *Impact (reusable) 
-      -->
-    </div>
-    <div class="ctrl params ships" style="display: none">
-      Ship Params
-
-      <!--
-      Movement (reusable => linear, quadraticBezier, cubicBezier, repeatable)
-      Fire (reusable)
-      *Impact (reusable)
-      -->
-    </div>
-    <div class="ctrl params bosses" style="display: none">
-      Boss Params
-      <!--
-      Phases[] (button to proceed phase)
-      - Movement (reusable) (button to next movement)
-      - Fire (reusable)
-      - *Impact (reusable)
-      - **Spawnables (difficult)
-      - **nextPhaseCondition (difficult)
-      -->
-    </div>
-  </div>
-  <div id="picker" class="asset-picker" data-entity="">
-    <div class="container"></div>
-  </div>
-  <script type="module" src="/src/docs/index.ts"></script>
+  <div id="root"></div>
+  <canvas id="playground"></canvas>
+  <script type="module" src="/src/docs/index.tsx"></script>
 </body>
 
 </html>

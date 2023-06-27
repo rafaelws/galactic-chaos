@@ -9,7 +9,7 @@ import { Effect } from "./Effect";
 import { GameObjectParams } from "./GameObjectParams";
 
 export abstract class GameObject implements Drawable {
-  private points: Point[] = [];
+  private breadcrumbs: Point[] = [];
 
   // status
   protected hp: number;
@@ -169,10 +169,10 @@ export abstract class GameObject implements Drawable {
     if (this.debug.trajectory) {
       c.fillStyle = "white";
 
-      if (this.points.length > 2000) this.points.splice(0, 500);
+      if (this.breadcrumbs.length > 2000) this.breadcrumbs.splice(0, 500);
 
-      this.points.push(this.position);
-      iterate(this.points, (p) => c.fillRect(p.x, p.y, 1, 1));
+      this.breadcrumbs.push(this.position);
+      iterate(this.breadcrumbs, (p) => c.fillRect(p.x, p.y, 1, 1));
     }
     c.restore();
   }

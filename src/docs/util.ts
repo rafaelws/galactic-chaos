@@ -1,6 +1,8 @@
 import { assets, preloadImages } from "@/core/asset";
 
-export type Assets = Record<string, HTMLImageElement[]>;
+export const assetTypes = ["Rock", "Ship", "Boss"] as const;
+export type AssetType = (typeof assetTypes)[number];
+export type Assets = Record<AssetType, HTMLImageElement[]>;
 
 export async function getAssets(): Promise<Assets> {
   const ships = [
@@ -29,8 +31,8 @@ export async function getAssets(): Promise<Assets> {
   );
 
   return {
-    ships: results.slice(0, ships.length),
-    rocks: results.slice(ships.length, ships.length + rocks.length),
-    bosses: results.slice(ships.length + rocks.length),
+    Ship: results.slice(0, ships.length),
+    Rock: results.slice(ships.length, ships.length + rocks.length),
+    Boss: results.slice(ships.length + rocks.length),
   };
 }
