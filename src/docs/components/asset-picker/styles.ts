@@ -1,7 +1,7 @@
 import { styled } from "@/docs/stiches.config";
 
 const height = 100;
-const time = "250ms";
+const time = "150ms";
 
 const AssetPreview = styled("div", {
   width: "100%",
@@ -12,16 +12,18 @@ const AssetPreview = styled("div", {
   marginTop: ".25rem",
   cursor: "pointer",
 
-  transition: "all",
+  transitionProperty: "height, padding",
   transitionDuration: time,
-  padding: 0,
-  height: 0,
-  maxHeight: 0,
+  "&.closed": {
+    padding: 0,
+    height: 0,
+    // maxHeight: 0,
+  },
   "&.open": {
     transitionDelay: time,
     padding: ".25rem",
-    maxHeight: height,
-    height: "auto",
+    // maxHeight: height,
+    height,
   },
   "&:hover": {
     backgroundColor: "$gray300",

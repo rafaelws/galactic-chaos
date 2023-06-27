@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { styles } from "./styles";
 
@@ -12,8 +12,11 @@ export function AssetPicker({ assets, onPick }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [current, setCurrent] = useState<HTMLImageElement>();
 
-  const previewOpen = !open && !!current;
+  useEffect(() => {
+    setCurrent(assets[0]);
+  }, [assets]);
 
+  const previewOpen = !open && !!current;
   const handleClick = () => setOpen(!open);
 
   function handlePick(img: HTMLImageElement) {
@@ -24,7 +27,7 @@ export function AssetPicker({ assets, onPick }: Props) {
 
   return (
     <>
-      <button onClick={handleClick}>Choose an Asset</button>
+      {/* <button onClick={handleClick}>Choose an Asset</button> */}
       <styles.AssetPreview
         onClick={handleClick}
         className={classNames({

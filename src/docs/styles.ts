@@ -9,15 +9,27 @@ const Controls = styled("div", {
   position: "absolute",
   top: ".5rem",
   right: ".5rem",
-  // padding: ".25rem",
   width: 200,
-  zIndex: 1,
-  borderRight: "1px solid black",
   borderRadius: 2.5,
+  zIndex: 1,
+});
+
+export const Title = styled("h3", {
+  fontFamily: "$mono",
+  fontSize: ".75rem",
+  width: "100%",
+  padding: ".25rem .5rem",
+  color: "$gray800",
+  backgroundColor: "$gray200",
+  borderLeft: "5px solid",
+  borderLeftColor: "$gray400",
+  "&:first-child": {
+    borderRadius: "2.5px 2.5px 0 0",
+  },
 });
 
 const Blade = styled("div", {
-  padding: ".25rem .25rem 0",
+  padding: ".5rem .25rem",
 
   "& select, & input, & button": {
     fontFamily: "$mono",
@@ -50,4 +62,4 @@ const Blade = styled("div", {
   },
 });
 
-export const styles = { Controls, Blade };
+export const styles = { Controls, Blade, Title };

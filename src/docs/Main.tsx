@@ -26,7 +26,7 @@ export function Main() {
   let entity: GameObject | null = null;
 
   const [img, setImg] = useState<HTMLImageElement>();
-  const [current, setCurrent] = useState<AssetType>(assetTypes[0]);
+  const [current, setCurrent] = useState<AssetType>();
   const [assets, setAssets] = useState<Assets>();
   const [stats, setStats] = useState<Stats>({
     fps: "0",
@@ -37,8 +37,10 @@ export function Main() {
     show(document.body);
     getAssets().then((results) => {
       setAssets(results);
+      setCurrent(assetTypes[0]);
     });
   }, []);
+
   useEffect(() => raf(loop), []);
 
   function loop(delta: number) {
@@ -100,9 +102,11 @@ export function Main() {
   return (
     <>
       <styles.Controls>
+        <styles.Title>Main</styles.Title>
         <styles.Blade>
           {stats.fps} fps | {stats.frameTime} ms
         </styles.Blade>
+        <styles.Title>Asset</styles.Title>
         <styles.Blade>
           <select value={current} onChange={handleEntityChange}>
             {assetTypes.map((type) => {
@@ -113,8 +117,6 @@ export function Main() {
               );
             })}
           </select>
-        </styles.Blade>
-        <styles.Blade>
           {current && assets && (
             <AssetPicker
               assets={assets[current]}
@@ -122,7 +124,8 @@ export function Main() {
             />
           )}
         </styles.Blade>
-        {img && <styles.Blade>{currentControl}</styles.Blade>}
+        <styles.Title>Parameters</styles.Title>
+        <styles.Blade>{currentControl}</styles.Blade>
       </styles.Controls>
     </>
   );
