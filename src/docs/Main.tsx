@@ -9,9 +9,9 @@ import { throttle } from "@/core/util";
 
 import {
   AssetPicker,
-  BossControls,
-  RockControls,
-  ShipControls,
+  BossParameters,
+  RockParameters,
+  ShipParameters,
 } from "./components";
 import { styles } from "./styles";
 import { Assets, AssetType, assetTypes, getAssets } from "./util";
@@ -90,16 +90,16 @@ export function Main() {
 
   let currentControl;
   if (current === "Boss") {
-    currentControl = <BossControls />;
+    currentControl = <BossParameters />;
   } else if (current === "Ship") {
-    currentControl = <ShipControls />;
+    currentControl = <ShipParameters />;
   } else {
-    currentControl = <RockControls />;
+    currentControl = <RockParameters />;
   }
 
   return (
     <>
-      <styles.Control>
+      <styles.Controls>
         <styles.Blade>
           {stats.fps} fps | {stats.frameTime} ms
         </styles.Blade>
@@ -123,7 +123,7 @@ export function Main() {
           )}
         </styles.Blade>
         {img && <styles.Blade>{currentControl}</styles.Blade>}
-      </styles.Control>
+      </styles.Controls>
     </>
   );
 }

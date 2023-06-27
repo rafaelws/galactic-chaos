@@ -1,15 +1,15 @@
 import { styled } from "./stiches.config";
 
-const Control = styled("div", {
+const Controls = styled("div", {
   fontSize: 11,
   fontFamily: "$mono",
   backgroundColor: "$gray100",
   color: "$gray600",
 
   position: "absolute",
-  top: "1rem",
-  right: "1rem",
-  padding: ".25rem",
+  top: ".5rem",
+  right: ".5rem",
+  // padding: ".25rem",
   width: 200,
   zIndex: 1,
   borderRight: "1px solid black",
@@ -50,4 +50,4 @@ const Blade = styled("div", {
   },
 });
 
-export const styles = { Control, Blade };
+export const styles = { Controls, Blade };

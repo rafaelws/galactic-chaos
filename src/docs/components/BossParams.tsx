@@ -6,6 +6,6 @@
 //   - **Spawnables (difficult)
 // - **nextPhaseCondition (difficult)
 
-export function BossControls() {
+export function BossParameters() {
   return <p>Boss Controls</p>;
 }

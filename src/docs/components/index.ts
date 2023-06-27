@@ -1,4 +1,4 @@
 export * from "./asset-picker";
-export * from "./BossControls";
-export * from "./RockControls";
-export * from "./ShipControls";
+export * from "./BossParams";
+export * from "./RockParams";
+export * from "./ShipParams";

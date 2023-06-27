@@ -3,6 +3,6 @@
 // Movement (reusable)
 // *Impact (reusable)
 
-export function RockControls() {
+export function RockParameters() {
   return <p>Rock Controls</p>;
 }

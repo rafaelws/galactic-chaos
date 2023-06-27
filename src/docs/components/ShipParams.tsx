@@ -5,6 +5,6 @@
 // Fire (reusable)
 // *Impact (reusable)
 
-export function ShipControls() {
-  return <p>Ship Controls</p>;
+export function ShipParameters() {
+  return <p>Ship Parameters</p>;
 }
