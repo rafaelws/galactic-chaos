@@ -1,16 +1,46 @@
 import { styled } from "@/docs/stiches.config";
 
 const height = 100;
+const time = "250ms";
+
+const AssetPreview = styled("div", {
+  width: "100%",
+  display: "flex",
+  justifyContent: "center",
+  borderRadius: 2.5,
+  backgroundColor: "$gray200",
+  marginTop: ".25rem",
+  cursor: "pointer",
+
+  transition: "all",
+  transitionDuration: time,
+  padding: 0,
+  height: 0,
+  maxHeight: 0,
+  "&.open": {
+    transitionDelay: time,
+    padding: ".25rem",
+    maxHeight: height,
+    height: "auto",
+  },
+  "&:hover": {
+    backgroundColor: "$gray300",
+  },
+});
 
 const AssetPicker = styled("div", {
   overflowY: "auto",
   overflowX: "hidden",
   borderRadius: 2.5,
   height: 0,
-  transition: "height 300ms",
-  // transitionDelay: "300ms",
+  transition: "height",
+  transitionDuration: time,
   "&.open": {
     height: height * 2.5,
+    transitionDelay: time,
+  },
+  [`${AssetPreview}.closed + &.open`]: {
+    transitionDelay: "0ms",
   },
 });
 
@@ -44,23 +74,6 @@ const Asset = styled("img", {
   objectFit: "scale-down",
   maxHeight: height,
   maxWidth: height,
-});
-
-const AssetPreview = styled("div", {
-  width: "100%",
-  display: "flex",
-  justifyContent: "center",
-  borderRadius: 2.5,
-  backgroundColor: "$gray200",
-  marginTop: ".25rem",
-  padding: ".25rem",
-  cursor: "pointer",
-  transition: "all 300ms",
-  transitionDelay: "300ms",
-  maxHeight: height,
-  "&.open": {
-    maxHeight: 0,
-  },
 });
 
 export const styles = { AssetPicker, Container, Wrap, Asset, AssetPreview };

@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { useState } from "react";
 
 import { styles } from "./styles";
@@ -11,10 +12,7 @@ export function AssetPicker({ assets, onPick }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [current, setCurrent] = useState<HTMLImageElement>();
 
-  const isOpenClass = open ? "open" : "";
-
-  const isActiveClass = (img: HTMLImageElement) =>
-    current?.src === img.src ? "active" : "";
+  const previewOpen = !open && !!current;
 
   const handleClick = () => setOpen(!open);
 
@@ -26,16 +24,22 @@ export function AssetPicker({ assets, onPick }: Props) {
 
   return (
     <>
-      <button onClick={handleClick}>Asset Picker</button>
-      <styles.AssetPreview onClick={handleClick} className={isOpenClass}>
+      <button onClick={handleClick}>Choose an Asset</button>
+      <styles.AssetPreview
+        onClick={handleClick}
+        className={classNames({
+          open: previewOpen,
+          closed: !previewOpen,
+        })}
+      >
         {current && <styles.Asset src={current.src} />}
       </styles.AssetPreview>
-      <styles.AssetPicker className={isOpenClass}>
+      <styles.AssetPicker className={classNames({ open })}>
         <styles.Container>
           {assets.map((img) => (
             <styles.Wrap
               key={img.src}
-              className={isActiveClass(img)}
+              className={classNames({ active: current?.src === img.src })}
               onClick={() => handlePick(img)}
             >
               <styles.Asset src={img.src} />
