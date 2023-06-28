@@ -29,6 +29,7 @@
     }
   },
   "rules": {
+    "no-console": "warn",
     "indent": [
       "error",
       2,

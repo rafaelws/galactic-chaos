@@ -18,8 +18,6 @@ import { Assets, EntityType, entityTypes, getAssets } from "./util";
 const { render, update } = setupRender();
 
 export function Main() {
-  console.log("foo");
-
   const [img, setImg] = useState<HTMLImageElement>();
   const [current, setCurrent] = useState<EntityType>();
   const [assets, setAssets] = useState<Assets>();
