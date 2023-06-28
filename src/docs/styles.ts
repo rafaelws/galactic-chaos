@@ -31,7 +31,7 @@ export const Title = styled("h3", {
 const Blade = styled("div", {
   padding: ".5rem .25rem",
 
-  "& select, & input, & button": {
+  "& select, & input[type=text], & button": {
     fontFamily: "$mono",
     width: "100%",
     padding: ".25rem",
@@ -59,6 +59,16 @@ const Blade = styled("div", {
   "& option:checked": {
     backgroundColor: "$gray400",
     color: "$gray900",
+  },
+  "& label": {
+    fontFamily: "$mono",
+    marginTop: ".25rem",
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    "&:first-child": {
+      marginTop: 0,
+    },
   },
 });
 

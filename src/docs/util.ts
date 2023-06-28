@@ -1,8 +1,8 @@
 import { assets, preloadImages } from "@/core/asset";
 
-export const assetTypes = ["Rock", "Ship", "Boss"] as const;
-export type AssetType = (typeof assetTypes)[number];
-export type Assets = Record<AssetType, HTMLImageElement[]>;
+export const entityTypes = ["Rock", "Ship", "Boss"] as const;
+export type EntityType = (typeof entityTypes)[number];
+export type Assets = Record<EntityType, HTMLImageElement[]>;
 
 export async function getAssets(): Promise<Assets> {
   const ships = [
