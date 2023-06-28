@@ -1,13 +1,11 @@
-import { styled } from "@/docs/stiches.config";
-
-const Container = styled("div", {
+const style = {
   display: "flex",
   justifyContent: "space-evenly",
-});
+};
 
 export function Stats() {
   return (
-    <Container>
+    <div style={style}>
       <span>
         <span id="fps">0</span> fps
       </span>
@@ -15,6 +13,6 @@ export function Stats() {
       <span>
         <span id="frameTime">0</span> ms
       </span>
-    </Container>
+    </div>
   );
 }

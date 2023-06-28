@@ -1,2 +1,3 @@
 export * from "./Debug";
-export * from "./stats";
+export * from "./showStats";
+export * from "./Stats";
