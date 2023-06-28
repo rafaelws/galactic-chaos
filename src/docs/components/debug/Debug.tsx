@@ -23,7 +23,7 @@ export function Debug({ update }: Props) {
     update({ debug: { [id]: checked } });
     setFields((old) => {
       old[id as FieldName].value = checked;
-      return old;
+      return { ...old };
     });
   }
 
