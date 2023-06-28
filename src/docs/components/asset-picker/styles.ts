@@ -61,7 +61,7 @@ const Wrap = styled("div", {
   padding: "0.25rem",
   minHeight: height,
   borderBottom: "1px solid",
-  borderColor: "$gray500",
+  borderColor: "$gray400",
 
   backgroundColor: "$gray200",
   "&:hover": {

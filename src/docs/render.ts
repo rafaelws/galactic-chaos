@@ -1,7 +1,7 @@
 import { CanvasManager } from "@/core";
 import { GameObject } from "@/core/objects";
 
-import { showStats } from "./components/stats";
+import { showStats } from "./components/debug";
 import { EntityType } from "./util";
 
 let debug = {
