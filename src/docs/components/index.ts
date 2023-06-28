@@ -3,3 +3,4 @@ export * from "./BossParams";
 export * from "./debug";
 export * from "./RockParams";
 export * from "./ShipParams";
+export * from "./stats";

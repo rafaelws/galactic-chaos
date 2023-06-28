@@ -1,6 +1,7 @@
 import { CanvasManager } from "@/core";
 import { GameObject } from "@/core/objects";
 
+import { showStats } from "./components/stats";
 import { EntityType } from "./util";
 
 let debug = {
@@ -44,6 +45,7 @@ export function setupRender(): SetupRenderFn {
   }
 
   function render(delta: number) {
+    showStats(delta);
     // console.log(delta);
     const state = {
       ...defaults,

@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 
 import { raf, show } from "@/core/dom";
-import { throttle } from "@/core/util";
 
 import {
   AssetPicker,
@@ -9,7 +8,6 @@ import {
   Debug,
   RockParameters,
   Stats,
-  StatsData,
 } from "./components";
 import { setupRender } from "./render";
 import { styles } from "./styles";
@@ -20,13 +18,11 @@ import { Assets, EntityType, entityTypes, getAssets } from "./util";
 const { render, update } = setupRender();
 
 export function Main() {
+  console.log("foo");
+
   const [img, setImg] = useState<HTMLImageElement>();
   const [current, setCurrent] = useState<EntityType>();
   const [assets, setAssets] = useState<Assets>();
-  const [stats, setStats] = useState<StatsData>({
-    fps: "0",
-    frameTime: "0",
-  });
 
   useEffect(() => {
     update({ img, assetType: current });
@@ -40,19 +36,7 @@ export function Main() {
     });
   }, []);
 
-  useEffect(() => raf(loop), []);
-
-  function loop(delta: number) {
-    showStats(delta);
-    render(delta);
-  }
-
-  const showStats = throttle((delta: number) =>
-    setStats({
-      fps: (1000 / delta).toFixed(0),
-      frameTime: delta.toFixed(1),
-    })
-  );
+  useEffect(() => raf(render), []);
 
   function handleEntityChange(ev: ChangeEvent<HTMLSelectElement>) {
     setImg(undefined);
@@ -77,7 +61,7 @@ export function Main() {
       <styles.Controls>
         <styles.Title>Main</styles.Title>
         <styles.Blade>
-          <Stats stats={stats} />
+          <Stats />
         </styles.Blade>
         <styles.Title>Debug</styles.Title>
         <styles.Blade>
