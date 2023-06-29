@@ -1,5 +1,7 @@
 import { ChangeEvent, useState } from "react";
 
+import { Label } from "@/docs/styles";
+
 import { UpdateFn } from "../../render";
 
 const fieldNames = ["hitboxes", "trajectory", "statusText"] as const;
@@ -30,7 +32,7 @@ export function Debug({ update }: Props) {
   return (
     <>
       {Object.entries(fields).map(([name, props]) => (
-        <label key={name} htmlFor={name}>
+        <Label key={name} htmlFor={name}>
           {props.label}
           <input
             id={name}
@@ -38,7 +40,7 @@ export function Debug({ update }: Props) {
             checked={props.value}
             onChange={handleChange}
           />
-        </label>
+        </Label>
       ))}
     </>
   );

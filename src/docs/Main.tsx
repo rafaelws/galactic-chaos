@@ -10,7 +10,7 @@ import {
   Stats,
 } from "./components";
 import { setupRender } from "./render";
-import { styles } from "./styles";
+import { Blade, Controls, Select, Title } from "./styles";
 import { Assets, EntityType, entityTypes, getAssets } from "./util";
 
 // TODO phantom player x, y
@@ -55,37 +55,32 @@ export function Main() {
   }
 
   return (
-    <>
-      <styles.Controls>
-        <styles.Title>Main</styles.Title>
-        <styles.Blade>
-          <Stats />
-        </styles.Blade>
-        <styles.Title>Debug</styles.Title>
-        <styles.Blade>
-          <Debug update={update} />
-        </styles.Blade>
-        <styles.Title>Asset</styles.Title>
-        <styles.Blade>
-          <select value={current} onChange={handleEntityChange}>
-            {entityTypes.map((type) => {
-              return (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              );
-            })}
-          </select>
-          {current && assets && (
-            <AssetPicker
-              assets={assets[current]}
-              onPick={(img) => setImg(img)}
-            />
-          )}
-        </styles.Blade>
-        <styles.Title>Parameters</styles.Title>
-        <styles.Blade>{parameters}</styles.Blade>
-      </styles.Controls>
-    </>
+    <Controls>
+      <Title>Main</Title>
+      <Blade>
+        <Stats />
+      </Blade>
+      <Title>Debug</Title>
+      <Blade>
+        <Debug update={update} />
+      </Blade>
+      <Title>Asset</Title>
+      <Blade>
+        <Select value={current} onChange={handleEntityChange}>
+          {entityTypes.map((type) => {
+            return (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            );
+          })}
+        </Select>
+        {current && assets && (
+          <AssetPicker assets={assets[current]} onPick={(img) => setImg(img)} />
+        )}
+      </Blade>
+      <Title>Parameters</Title>
+      <Blade>{parameters}</Blade>
+    </Controls>
   );
 }

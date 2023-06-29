@@ -1,6 +1,10 @@
+import { CSS } from "@stitches/react";
+
 import { styled } from "./stiches.config";
 
-const Controls = styled("div", {
+export const transitionDuration = "250ms";
+
+export const Controls = styled("div", {
   fontSize: 11,
   fontFamily: "$mono",
   backgroundColor: "$gray100",
@@ -28,28 +32,55 @@ export const Title = styled("h3", {
   },
 });
 
-const Blade = styled("div", {
+export const Blade = styled("div", {
   padding: ".5rem .25rem",
+});
 
-  "& select, & input[type=text], & button": {
-    fontFamily: "$mono",
-    width: "100%",
-    padding: ".25rem",
-    color: "$gray800",
-    backgroundColor: "$gray200",
-    border: "none",
-    borderRadius: 2.5,
-    outline: "none",
-  },
-  "& button": {
-    cursor: "pointer",
-    backgroundColor: "$gray700",
-    color: "$gray200",
-  },
-  "& button:hover": {
+const common: CSS = {
+  // fontFamily: "$mono",
+  width: "100%",
+  padding: ".25rem",
+  color: "$gray800",
+  backgroundColor: "$gray200",
+  border: "none",
+  borderRadius: 2.5,
+  outline: "none",
+  transitionProperty: "background-color",
+  transitionDuration,
+};
+
+export const Button = styled("button", {
+  ...common,
+  cursor: "pointer",
+  backgroundColor: "$gray700",
+  color: "$gray200",
+  "&:hover": {
     backgroundColor: "$gray900",
   },
-  "& select:hover, & input:hover": {
+});
+
+export const Label = styled("label", {
+  fontFamily: "$mono",
+  marginTop: ".25rem",
+  width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+  "&:first-child": {
+    marginTop: 0,
+  },
+});
+
+export const InputText = styled("input", {
+  ...common,
+  marginLeft: ".25rem",
+  "&:hover, &:focus": {
+    backgroundColor: "$gray300",
+  },
+});
+
+export const Select = styled("select", {
+  ...common,
+  "&:hover": {
     backgroundColor: "$gray300",
   },
   "& option": {
@@ -60,16 +91,4 @@ const Blade = styled("div", {
     backgroundColor: "$gray400",
     color: "$gray900",
   },
-  "& label": {
-    fontFamily: "$mono",
-    marginTop: ".25rem",
-    width: "100%",
-    display: "flex",
-    justifyContent: "space-between",
-    "&:first-child": {
-      marginTop: 0,
-    },
-  },
 });
-
-export const styles = { Controls, Blade, Title };

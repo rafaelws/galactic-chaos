@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 
-import { styles } from "./styles";
+import { Asset, AssetPreview, Container, Picker, Wrap } from "./styles";
 
 interface Props {
   assets: HTMLImageElement[];
@@ -27,29 +27,29 @@ export function AssetPicker({ assets, onPick }: Props) {
 
   return (
     <>
-      {/* <button onClick={handleClick}>Choose an Asset</button> */}
-      <styles.AssetPreview
+      {/* <Button onClick={handleClick}>Choose an Asset</Button> */}
+      <AssetPreview
         onClick={handleClick}
         className={classNames({
           open: previewOpen,
           closed: !previewOpen,
         })}
       >
-        {current && <styles.Asset src={current.src} />}
-      </styles.AssetPreview>
-      <styles.AssetPicker className={classNames({ open })}>
-        <styles.Container>
+        {current && <Asset src={current.src} />}
+      </AssetPreview>
+      <Picker className={classNames({ open })}>
+        <Container>
           {assets.map((img) => (
-            <styles.Wrap
+            <Wrap
               key={img.src}
               className={classNames({ active: current?.src === img.src })}
               onClick={() => handlePick(img)}
             >
-              <styles.Asset src={img.src} />
-            </styles.Wrap>
+              <Asset src={img.src} />
+            </Wrap>
           ))}
-        </styles.Container>
-      </styles.AssetPicker>
+        </Container>
+      </Picker>
     </>
   );
 }

@@ -1,9 +1,10 @@
 import { styled } from "@/docs/stiches.config";
+import { transitionDuration } from "@/docs/styles";
 
 const height = 100;
-const time = "150ms";
+const delay = "150ms";
 
-const AssetPreview = styled("div", {
+export const AssetPreview = styled("div", {
   width: "100%",
   display: "flex",
   justifyContent: "center",
@@ -12,17 +13,15 @@ const AssetPreview = styled("div", {
   marginTop: ".25rem",
   cursor: "pointer",
 
-  transitionProperty: "height, padding",
-  transitionDuration: time,
+  transition: `height ${delay}, background-color ${transitionDuration}`,
   "&.closed": {
     padding: 0,
     height: 0,
-    // maxHeight: 0,
   },
   "&.open": {
-    transitionDelay: time,
+    transition: `
+      height ${delay} ease ${delay}, background-color ${transitionDuration}`,
     padding: ".25rem",
-    // maxHeight: height,
     height,
   },
   "&:hover": {
@@ -30,29 +29,29 @@ const AssetPreview = styled("div", {
   },
 });
 
-const AssetPicker = styled("div", {
+export const Picker = styled("div", {
   overflowY: "auto",
   overflowX: "hidden",
   borderRadius: 2.5,
   height: 0,
   transition: "height",
-  transitionDuration: time,
+  transitionDuration: delay,
   "&.open": {
     height: height * 2.5,
-    transitionDelay: time,
+    transitionDelay: delay,
   },
   [`${AssetPreview}.closed + &.open`]: {
     transitionDelay: "0ms",
   },
 });
 
-const Container = styled("div", {
+export const Container = styled("div", {
   display: "flex",
   flexDirection: "column",
   width: "100%",
 });
 
-const Wrap = styled("div", {
+export const Wrap = styled("div", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -63,6 +62,7 @@ const Wrap = styled("div", {
   borderBottom: "1px solid",
   borderColor: "$gray400",
 
+  transition: `background-color ${transitionDuration}`,
   backgroundColor: "$gray200",
   "&:hover": {
     backgroundColor: "$gray300",
@@ -72,10 +72,8 @@ const Wrap = styled("div", {
   },
 });
 
-const Asset = styled("img", {
+export const Asset = styled("img", {
   objectFit: "scale-down",
   maxHeight: height,
   maxWidth: height,
 });
-
-export const styles = { AssetPicker, Container, Wrap, Asset, AssetPreview };
