@@ -37,7 +37,7 @@ export const Blade = styled("div", {
 });
 
 const common: CSS = {
-  // fontFamily: "$mono",
+  fontFamily: "$mono",
   width: "100%",
   padding: ".25rem",
   color: "$gray800",
