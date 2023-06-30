@@ -53,7 +53,6 @@ export const Container = styled("div", {
 
 export const Wrap = styled("div", {
   display: "flex",
-  flexDirection: "column",
   alignItems: "center",
   justifyContent: "space-evenly",
   cursor: "pointer",

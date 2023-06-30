@@ -1,3 +1,3 @@
-export * from "./boss";
-export * from "./rock";
-export * from "./ship";
+export * from "./boss/BossParams";
+export * from "./rock/RockParams";
+export * from "./ship/ShipParams";
