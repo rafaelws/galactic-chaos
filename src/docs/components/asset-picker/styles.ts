@@ -1,5 +1,5 @@
 import { styled } from "@/docs/stiches.config";
-import { transitionDuration } from "@/docs/styles";
+import { Button, transitionDuration } from "@/docs/styles";
 
 const height = 100;
 const delay = "150ms";
@@ -75,4 +75,16 @@ export const Asset = styled("img", {
   objectFit: "scale-down",
   maxHeight: height,
   maxWidth: height,
+});
+
+export const CloseButton = styled(Button, {
+  marginTop: ".25rem",
+  display: "none",
+  // height: 0,
+  // transition: "height",
+  // transitionDuration,
+  "&.open": {
+    display: "block",
+    // height: "auto",
+  },
 });

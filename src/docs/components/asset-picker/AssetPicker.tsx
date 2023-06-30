@@ -1,16 +1,20 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 
-import { Button } from "@/docs/styles";
-
-import { Asset, AssetPreview, Container, Picker, Wrap } from "./styles";
+import {
+  Asset,
+  AssetPreview,
+  CloseButton,
+  Container,
+  Picker,
+  Wrap,
+} from "./styles";
 
 interface Props {
   assets: HTMLImageElement[];
   onPick: (img: HTMLImageElement) => void;
 }
 
-// TODO use @radix-ui/react-scroll-area ?
 export function AssetPicker({ assets, onPick }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [current, setCurrent] = useState<HTMLImageElement>();
@@ -20,6 +24,8 @@ export function AssetPicker({ assets, onPick }: Props) {
   }, [assets]);
 
   const previewOpen = !open && !!current;
+  const openClassName = classNames({ open });
+
   const handleClick = () => setOpen(!open);
 
   function handlePick(img: HTMLImageElement) {
@@ -39,7 +45,7 @@ export function AssetPicker({ assets, onPick }: Props) {
       >
         {current && <Asset src={current.src} />}
       </AssetPreview>
-      <Picker className={classNames({ open })}>
+      <Picker className={openClassName}>
         <Container>
           {assets.map((img) => (
             <Wrap
@@ -52,12 +58,9 @@ export function AssetPicker({ assets, onPick }: Props) {
           ))}
         </Container>
       </Picker>
-      <Button
-        style={{ marginTop: ".25rem", display: open ? "block" : "none" }}
-        onClick={handleClick}
-      >
+      <CloseButton className={openClassName} onClick={handleClick}>
         Close
-      </Button>
+      </CloseButton>
     </>
   );
 }
