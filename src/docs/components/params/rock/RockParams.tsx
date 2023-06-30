@@ -2,7 +2,7 @@
 //   update: UpdateFn;
 // }
 
-import { Range } from "../../range";
+import { Slider } from "../..";
 
 export function RockParameters() {
   // const [state, setState] = useState<RockParams>();
@@ -14,7 +14,14 @@ export function RockParameters() {
 
   return (
     <div>
-      <Range label="Rotation" onValue={handleRotation} />
+      <Slider
+        value={0}
+        min={-360}
+        max={360}
+        step={1}
+        label="Rotation (deg)"
+        onValue={handleRotation}
+      />
     </div>
   );
 }

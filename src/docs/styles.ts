@@ -72,9 +72,14 @@ export const Label = styled("label", {
 
 export const InputText = styled("input", {
   ...common,
+  userSelect: "none",
   marginLeft: ".25rem",
   "&:hover, &:focus": {
     backgroundColor: "$gray300",
+  },
+  "&::selection": {
+    // color
+    backgroundColor: "transparent",
   },
 });
 
