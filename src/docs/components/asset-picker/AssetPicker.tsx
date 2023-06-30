@@ -1,6 +1,8 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 
+import { Button } from "@/docs/styles";
+
 import { Asset, AssetPreview, Container, Picker, Wrap } from "./styles";
 
 interface Props {
@@ -8,6 +10,7 @@ interface Props {
   onPick: (img: HTMLImageElement) => void;
 }
 
+// TODO use @radix-ui/react-scroll-area ?
 export function AssetPicker({ assets, onPick }: Props) {
   const [open, setOpen] = useState<boolean>(false);
   const [current, setCurrent] = useState<HTMLImageElement>();
@@ -27,7 +30,6 @@ export function AssetPicker({ assets, onPick }: Props) {
 
   return (
     <>
-      {/* <Button onClick={handleClick}>Choose an Asset</Button> */}
       <AssetPreview
         onClick={handleClick}
         className={classNames({
@@ -50,6 +52,12 @@ export function AssetPicker({ assets, onPick }: Props) {
           ))}
         </Container>
       </Picker>
+      <Button
+        style={{ marginTop: ".25rem", display: open ? "block" : "none" }}
+        onClick={handleClick}
+      >
+        Close
+      </Button>
     </>
   );
 }
