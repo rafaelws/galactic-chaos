@@ -2,6 +2,8 @@ import { CSS } from "@stitches/react";
 
 import { styled } from "./stiches.config";
 
+export const color = "$gray800";
+export const backgroundColor = "$gray200";
 export const transitionDuration = "250ms";
 
 export const Controls = styled("div", {
@@ -23,8 +25,8 @@ export const Title = styled("h3", {
   fontSize: ".75rem",
   width: "100%",
   padding: ".25rem .5rem",
-  color: "$gray800",
-  backgroundColor: "$gray200",
+  color,
+  backgroundColor,
   borderLeft: "5px solid",
   borderLeftColor: "$gray400",
   "&:first-child": {
@@ -36,47 +38,42 @@ export const Blade = styled("div", {
   padding: ".5rem .25rem",
 });
 
-const common: CSS = {
-  fontFamily: "$mono",
-  width: "100%",
-  padding: ".25rem",
-  color: "$gray800",
-  backgroundColor: "$gray200",
-  border: "none",
-  borderRadius: 2.5,
-  outline: "none",
-  transitionProperty: "background-color",
-  transitionDuration,
-};
-
-export const Button = styled("button", {
-  ...common,
-  cursor: "pointer",
-  backgroundColor: "$gray700",
-  color: "$gray200",
-  "&:hover": {
-    backgroundColor: "$gray900",
-  },
-});
-
 export const Label = styled("label", {
   fontFamily: "$mono",
   marginTop: ".25rem",
   width: "100%",
   display: "flex",
   justifyContent: "space-between",
+  alignItems: "center",
   "&:first-child": {
     marginTop: 0,
   },
 });
 
+export const inputColors: CSS = {
+  transitionProperty: "background-color",
+  transitionDuration,
+  color,
+  backgroundColor,
+  "&:hover, &:focus": {
+    backgroundColor: "$gray300",
+  },
+};
+
+const common: CSS = {
+  ...inputColors,
+  fontFamily: "$mono",
+  width: "100%",
+  padding: ".25rem",
+  border: "none",
+  borderRadius: 2.5,
+  outline: "none",
+};
+
 export const InputText = styled("input", {
   ...common,
   userSelect: "none",
   marginLeft: ".25rem",
-  "&:hover, &:focus": {
-    backgroundColor: "$gray300",
-  },
   "&::selection": {
     // color
     backgroundColor: "transparent",
@@ -85,9 +82,6 @@ export const InputText = styled("input", {
 
 export const Select = styled("select", {
   ...common,
-  "&:hover": {
-    backgroundColor: "$gray300",
-  },
   "& option": {
     fontFamily: "$mono",
     backgroundColor: "$gray200",
@@ -95,5 +89,15 @@ export const Select = styled("select", {
   "& option:checked": {
     backgroundColor: "$gray400",
     color: "$gray900",
+  },
+});
+
+export const Button = styled("button", {
+  ...common,
+  cursor: "pointer",
+  backgroundColor: "$gray700",
+  color: "$gray200",
+  "&:hover": {
+    backgroundColor: "$gray900",
   },
 });
