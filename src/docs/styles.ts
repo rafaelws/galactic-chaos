@@ -5,6 +5,7 @@ import { styled } from "./stiches.config";
 export const color = "$gray800";
 export const backgroundColor = "$gray200";
 export const transitionDuration = "250ms";
+export const backgroundTransition = `background-color ${transitionDuration}`;
 
 export const Controls = styled("div", {
   fontSize: 11,
