@@ -1,7 +1,7 @@
 import * as Slider from "@radix-ui/react-slider";
 
 import { styled } from "@/docs/stiches.config";
-import { InputText, transitionDuration } from "@/docs/styles";
+import { backgroundColor, InputText, transitionDuration } from "@/docs/styles";
 
 export const Container = styled("div", {
   display: "flex",
@@ -30,7 +30,7 @@ export const Track = styled(Slider.Track, {
   flexGrow: 1,
   position: "relative",
   height: 10,
-  backgroundColor: "$gray200",
+  backgroundColor,
   borderRadius: 1.5,
 });
 

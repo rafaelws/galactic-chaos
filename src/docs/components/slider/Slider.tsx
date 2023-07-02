@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import { Container, Input, Range, Root, Thumb, Track } from "./styles";
 
@@ -6,40 +6,50 @@ interface Props {
   label: string;
   onValue: (value: number) => void;
   value: number;
-  min?: number;
-  max?: number;
-  step?: number;
+  min: number;
+  max: number;
+  step: number;
 }
 
-export function Slider({ label, onValue, value, min, max, step }: Props) {
-  const [local, setLocal] = useState(value);
+export function Slider(props: Props) {
+  const [local, setLocal] = useState(props.value);
 
-  function handleChange(values: number[]) {
+  function handleInputChange(ev: ChangeEvent<HTMLInputElement>) {
+    setLocal(Number(ev.target.value));
+  }
+
+  function handleSliderChange(values: number[]) {
     setLocal(values[0]);
   }
 
-  function handleCommit(values: number[]) {
-    onValue(values[0]);
+  function handleSliderCommit(values: number[]) {
+    props.onValue(values[0]);
+  }
+
+  function reset() {
+    const data = [props.value];
+    handleSliderChange(data);
+    handleSliderCommit(data);
   }
 
   return (
     <>
       <Container>
-        {label}
-        <Input value={local} disabled />
+        {props.label}
+        <Input value={local} onChange={handleInputChange} />
       </Container>
       <Root
-        onValueCommit={handleCommit}
-        onValueChange={handleChange}
-        defaultValue={[value]}
-        min={min}
-        max={max}
-        step={step}
+        value={[local]}
+        onValueChange={handleSliderChange}
+        onValueCommit={handleSliderCommit}
+        min={props.min}
+        max={props.max}
+        step={props.step}
       >
         <Track>
           <Range />
         </Track>
-        <Thumb aria-label={label} />
+        <Thumb aria-label={props.label} onDoubleClick={reset} />
       </Root>
     </>
   );
