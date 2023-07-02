@@ -1,14 +1,8 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 
-import {
-  Asset,
-  AssetPreview,
-  CloseButton,
-  Container,
-  Picker,
-  Wrap,
-} from "./styles";
+import { Scrollable } from "..";
+import { Asset, CloseButton, Item, List, Preview } from "./styles";
 
 interface Props {
   assets: HTMLImageElement[];
@@ -36,7 +30,7 @@ export function AssetPicker({ assets, onPick }: Props) {
 
   return (
     <>
-      <AssetPreview
+      <Preview
         onClick={handleClick}
         className={classNames({
           open: previewOpen,
@@ -44,20 +38,20 @@ export function AssetPicker({ assets, onPick }: Props) {
         })}
       >
         {current && <Asset src={current.src} />}
-      </AssetPreview>
-      <Picker className={openClassName}>
-        <Container>
+      </Preview>
+      <List className={openClassName}>
+        <Scrollable>
           {assets.map((img) => (
-            <Wrap
+            <Item
               key={img.src}
               className={classNames({ active: current?.src === img.src })}
               onClick={() => handlePick(img)}
             >
               <Asset src={img.src} />
-            </Wrap>
+            </Item>
           ))}
-        </Container>
-      </Picker>
+        </Scrollable>
+      </List>
       <CloseButton className={openClassName} onClick={handleClick}>
         Close
       </CloseButton>

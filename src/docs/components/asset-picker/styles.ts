@@ -1,10 +1,26 @@
 import { styled } from "@/docs/stiches.config";
-import { Button, transitionDuration } from "@/docs/styles";
+import { Button, inputColors, transitionDuration } from "@/docs/styles";
 
 const height = 100;
 const delay = "150ms";
 
-export const AssetPreview = styled("div", {
+export const Item = styled("div", {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-evenly",
+  cursor: "pointer",
+  padding: "0.25rem",
+  minHeight: height,
+  borderBottom: "1px solid",
+  borderColor: "$gray400",
+
+  ...inputColors,
+  "&.active": {
+    backgroundColor: "$gray400",
+  },
+});
+
+export const Preview = styled("div", {
   width: "100%",
   display: "flex",
   justifyContent: "center",
@@ -29,9 +45,9 @@ export const AssetPreview = styled("div", {
   },
 });
 
-export const Picker = styled("div", {
-  overflowY: "auto",
-  overflowX: "hidden",
+export const List = styled("div", {
+  overflow: "hidden",
+  width: "100%",
   borderRadius: 2.5,
   height: 0,
   transition: "height",
@@ -40,34 +56,8 @@ export const Picker = styled("div", {
     height: height * 2.5,
     transitionDelay: delay,
   },
-  [`${AssetPreview}.closed + &.open`]: {
+  [`${Preview}.closed + &.open`]: {
     transitionDelay: "0ms",
-  },
-});
-
-export const Container = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  width: "100%",
-});
-
-export const Wrap = styled("div", {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-evenly",
-  cursor: "pointer",
-  padding: "0.25rem",
-  minHeight: height,
-  borderBottom: "1px solid",
-  borderColor: "$gray400",
-
-  transition: `background-color ${transitionDuration}`,
-  backgroundColor: "$gray200",
-  "&:hover": {
-    backgroundColor: "$gray300",
-  },
-  "&.active": {
-    backgroundColor: "$gray400",
   },
 });
 
