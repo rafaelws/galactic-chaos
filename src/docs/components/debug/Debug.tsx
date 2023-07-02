@@ -1,8 +1,7 @@
-import { ChangeEvent, useState } from "react";
-
-import { Label } from "@/docs/styles";
+import { useState } from "react";
 
 import { UpdateFn } from "../../render";
+import { Checkbox } from "..";
 
 const fieldNames = ["hitboxes", "trajectory", "statusText"] as const;
 type FieldName = (typeof fieldNames)[number];
@@ -20,8 +19,7 @@ export function Debug({ update }: Props) {
     statusText: { label: "Show status text", value: true },
   });
 
-  function handleChange(ev: ChangeEvent<HTMLInputElement>) {
-    const { id, checked } = ev.target;
+  function handleChange(id: string, checked: boolean) {
     update({ debug: { [id]: checked } });
     setFields((old) => {
       old[id as FieldName].value = checked;
@@ -32,15 +30,13 @@ export function Debug({ update }: Props) {
   return (
     <>
       {Object.entries(fields).map(([name, props]) => (
-        <Label key={name} htmlFor={name}>
-          {props.label}
-          <input
-            id={name}
-            type="checkbox"
-            checked={props.value}
-            onChange={handleChange}
-          />
-        </Label>
+        <Checkbox
+          key={name}
+          id={name}
+          label={props.label}
+          value={props.value}
+          onChange={(value) => handleChange(name, value)}
+        />
       ))}
     </>
   );
