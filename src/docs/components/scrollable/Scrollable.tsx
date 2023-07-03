@@ -1,7 +1,6 @@
 import { PropsWithChildren } from "react";
 
 import {
-  ScrollAreaCorner,
   ScrollAreaRoot,
   ScrollAreaScrollbar,
   ScrollAreaThumb,
@@ -15,12 +14,6 @@ export function Scrollable({ children }: PropsWithChildren) {
       <ScrollAreaScrollbar orientation="vertical">
         <ScrollAreaThumb />
       </ScrollAreaScrollbar>
-      {/* 
-      <ScrollAreaScrollbar orientation="horizontal">
-        <ScrollAreaThumb />
-      </ScrollAreaScrollbar> 
-      */}
-      <ScrollAreaCorner />
     </ScrollAreaRoot>
   );
 }

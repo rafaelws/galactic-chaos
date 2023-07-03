@@ -38,10 +38,11 @@ export function Main() {
 
   useEffect(() => raf(render), []);
 
-  function handleEntityChange(value: string) {
+  function handleEntityChange(value: EntityType) {
+    // TODO when empty, could close the scrollable@AssetPicker
     if (!value || value.trim() === "") return;
     setImg(undefined);
-    setCurrent(value as EntityType);
+    setCurrent(value);
   }
 
   let parameters;

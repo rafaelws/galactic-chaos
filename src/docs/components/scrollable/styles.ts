@@ -31,10 +31,6 @@ export const ScrollAreaScrollbar = styled(ScrollArea.Scrollbar, {
   opacity: 0.5,
   "&:hover": { backgroundColor: "$gray300" },
   "&[data-orientation=vertical]": { width: SCROLLBAR_SIZE },
-  // "&[data-orientation=horizontal]": {
-  //   flexDirection: "column",
-  //   height: SCROLLBAR_SIZE,
-  // },
 });
 
 export const ScrollAreaThumb = styled(ScrollArea.Thumb, {
@@ -45,7 +41,6 @@ export const ScrollAreaThumb = styled(ScrollArea.Thumb, {
     background: "$gray900",
   },
   borderRadius: 1.5,
-  // borderRadius: SCROLLBAR_SIZE,
   // increase target size for touch devices
   // https://www.w3.org/WAI/WCAG21/Understanding/target-size.html
   position: "relative",
@@ -60,8 +55,4 @@ export const ScrollAreaThumb = styled(ScrollArea.Thumb, {
     minWidth: 50,
     minHeight: 50,
   },
-});
-
-export const ScrollAreaCorner = styled(ScrollArea.Corner, {
-  // background: "red",
 });
