@@ -26,9 +26,10 @@ export const ScrollAreaScrollbar = styled(ScrollArea.Scrollbar, {
   // and zooming gestures on touch devices
   touchAction: "none",
   padding: 2,
-  // transition: backgroundTransition,
-  // backgroundColor: "$gray000",
-  // "&:hover": { backgroundColor: "$gray100" },
+  transition: backgroundTransition,
+  backgroundColor: "$gray200",
+  opacity: 0.5,
+  "&:hover": { backgroundColor: "$gray300" },
   "&[data-orientation=vertical]": { width: SCROLLBAR_SIZE },
   // "&[data-orientation=horizontal]": {
   //   flexDirection: "column",
@@ -62,5 +63,5 @@ export const ScrollAreaThumb = styled(ScrollArea.Thumb, {
 });
 
 export const ScrollAreaCorner = styled(ScrollArea.Corner, {
-  background: "red",
+  // background: "red",
 });
