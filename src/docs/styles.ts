@@ -61,7 +61,7 @@ export const inputColors: CSS = {
   },
 };
 
-const common: CSS = {
+export const common: CSS = {
   ...inputColors,
   fontFamily: "$mono",
   width: "100%",
