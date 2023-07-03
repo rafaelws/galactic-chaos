@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { raf, show } from "@/core/dom";
 
@@ -8,9 +8,11 @@ import {
   Debug,
   RockParameters,
   Stats,
+  Toggle,
+  ToggleItem,
 } from "./components";
 import { setupRender } from "./render";
-import { Blade, Controls, Select, Title } from "./styles";
+import { Blade, Controls, Title } from "./styles";
 import { Assets, EntityType, entityTypes, getAssets } from "./util";
 
 // TODO phantom player x, y
@@ -36,9 +38,10 @@ export function Main() {
 
   useEffect(() => raf(render), []);
 
-  function handleEntityChange(ev: ChangeEvent<HTMLSelectElement>) {
+  function handleEntityChange(value: string) {
+    if (!value || value.trim() === "") return;
     setImg(undefined);
-    setCurrent(ev.target.value as EntityType);
+    setCurrent(value as EntityType);
   }
 
   let parameters;
@@ -66,15 +69,19 @@ export function Main() {
       </Blade>
       <Title>Asset</Title>
       <Blade>
-        <Select value={current} onChange={handleEntityChange}>
+        <Toggle
+          type="single"
+          value={current}
+          onValueChange={handleEntityChange}
+        >
           {entityTypes.map((type) => {
             return (
-              <option key={type} value={type}>
+              <ToggleItem key={type} value={type}>
                 {type}
-              </option>
+              </ToggleItem>
             );
           })}
-        </Select>
+        </Toggle>
         {current && assets && (
           <AssetPicker assets={assets[current]} onPick={(img) => setImg(img)} />
         )}
