@@ -1,3 +1,26 @@
+# TODO (live-docs)
+
+Misc:
+- [ ] (big) refactor: go plain css (remove css-in-js)
+- [ ] consider removing some libs: radix components (toggleGroup[6kB], checkbox[4kB], slider*[6kB], scrollarea*[6kB]), classnames[18.8kB], stiches[>100kB?]
+- [ ] enable just rock and ship for now (boss for next iteration)
+
+Movement Component:
+- [ ] fix dragging to stay in bounds
+- [x] (svg) [wrapper]
+- [x] plot grid
+- [x] plot points
+- [x] plot lines between points (traced animated showing direction)
+- [x] Line Component 
+- [ ] toggle to change movement type: linear, quadratic, cubic
+- [ ] inputs to track x and y of each point
+- [ ] input to set movement speed
+- [ ] ability to snap to position (if there is a point set as 'current')
+- [ ] ability to add more 'steps'
+- [ ] ability to lock a point or step (so the user can't modify it)
+- [ ] ability to set predefined (center, center left, top left...) and random values
+- [ ] communicate the canvas (finish)
+
 # NEXT
 
 ## Features

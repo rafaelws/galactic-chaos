@@ -1,0 +1,51 @@
+.movement {
+  /* FIXME .25rem should be a bar at :root */
+  margin-top: .25rem;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--colors-gray600);
+}
+
+.movement .grid line {
+  stroke: var(--colors-gray200);
+}
+
+.movement .label {
+  font-size: 9px;
+  color: var(--colors-gray800);
+}
+
+.movement circle {
+  fill: var(--colors-gray600);
+}
+
+.movement circle.current {
+  fill: var(--colors-gray800);
+}
+
+.movement path {
+  fill: none;
+  stroke: var(--colors-gray900);
+  stroke-width: .5;
+}
+
+.movement path.main {
+  stroke-dasharray: 5;
+  /* TODO change animation speed given the movement velocity */
+  animation: dash 1s linear forwards infinite;
+}
+
+.movement path.handle {
+  /* TODO */
+  stroke: green;
+}
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 20;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}

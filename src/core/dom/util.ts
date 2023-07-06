@@ -2,16 +2,16 @@ import { StringMap } from ".";
 
 type StOrEl = HTMLElement | string;
 
-export function $<T extends HTMLElement>(query: string, scope?: HTMLElement) {
+export function $<T extends Element>(query: string, scope?: Element) {
   return (scope || document).querySelector<T>(query)!;
 }
 
-export function $$<T extends HTMLElement>(query: string, scope?: HTMLElement) {
+export function $$<T extends Element>(query: string, scope?: Element) {
   return (scope || document).querySelectorAll<T>(query)!;
 }
 
 export const display = (target: StOrEl, visible = true) => {
-  const $el = typeof target === "string" ? $(target) : target;
+  const $el = typeof target === "string" ? $<HTMLElement>(target) : target;
   $el.style.display = visible ? "block" : "none";
 };
 

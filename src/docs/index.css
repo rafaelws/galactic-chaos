@@ -1,8 +1,22 @@
+/* 
+:root {
+  --colors-gray100: #28292E;
+  --colors-gray200: #37383D;
+  --colors-gray300: #3E3F44;
+  --colors-gray400: #44454b;
+  --colors-gray500: #717379;
+  --colors-gray600: #797A80;
+  --colors-gray700: #909098;
+  --colors-gray800: #A3A4AC;
+  --colors-gray900: #A8A9B1;
+  --fonts-mono: 'Roboto Mono', 'Source Code Pro', Menlo, Courier, monospace;
+} 
+*/
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* font-family: sans-serif; */
 }
 
 body {
