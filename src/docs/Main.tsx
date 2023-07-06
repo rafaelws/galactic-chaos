@@ -4,16 +4,16 @@ import { raf, show } from "@/core/dom";
 
 import {
   AssetPicker,
-  BossParameters,
   Debug,
   RockParameters,
+  ShipParameters,
   Stats,
   Toggle,
   ToggleItem,
 } from "./components";
 import { setupRender } from "./render";
 import { Blade, Controls, Title } from "./styles";
-import { Assets, EntityType, entityTypes, getAssets } from "./util";
+import { Assets, EntityType, entityTypes, loadAssets } from "./util";
 
 // TODO phantom player x, y
 
@@ -30,7 +30,7 @@ export function Main() {
 
   useEffect(() => {
     show(document.body);
-    getAssets().then((results) => {
+    loadAssets().then((results) => {
       setAssets(results);
       setCurrent(entityTypes[0]);
     });
@@ -47,11 +47,11 @@ export function Main() {
 
   let parameters;
   switch (current) {
-    case "Boss":
-      parameters = <BossParameters />;
-      break;
+    // case "Boss":
+    //   parameters = <BossParameters />;
+    //   break;
     case "Ship":
-      parameters = <BossParameters />;
+      parameters = <ShipParameters />;
       break;
     case "Rock":
       parameters = <RockParameters />;

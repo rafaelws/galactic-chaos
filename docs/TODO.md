@@ -3,7 +3,7 @@
 Misc:
 - [ ] (big) refactor: go plain css (remove css-in-js)
 - [ ] consider removing some libs: radix components (toggleGroup[6kB], checkbox[4kB], slider*[6kB], scrollarea*[6kB]), classnames[18.8kB], stiches[>100kB?]
-- [ ] enable just rock and ship for now (boss for next iteration)
+- [x] enable just rock and ship for now (boss for next iteration)
 
 Movement Component:
 - [ ] fix dragging to stay in bounds
