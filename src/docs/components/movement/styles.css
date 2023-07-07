@@ -7,6 +7,7 @@
 }
 
 .movement .grid line {
+  stroke-width: 1;
   stroke: var(--colors-gray200);
 }
 
@@ -36,8 +37,7 @@
 }
 
 .movement path.handle {
-  /* TODO */
-  stroke: green;
+  stroke: var(--colors-gray700);
 }
 
 @keyframes dash {
