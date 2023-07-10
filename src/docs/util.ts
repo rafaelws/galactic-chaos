@@ -34,3 +34,10 @@ export async function loadAssets(): Promise<Assets> {
     // Boss: results.slice(ships.length + rocks.length),
   };
 }
+
+type ClassNames = Record<string, boolean>;
+export function classNames(map: ClassNames): string {
+  return Object.keys(map).reduce((accumulator: string, className: string) => {
+    return map[className] ? `${className} ${accumulator}` : "";
+  }, "");
+}

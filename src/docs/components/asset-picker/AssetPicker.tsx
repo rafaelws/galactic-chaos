@@ -1,5 +1,6 @@
-import classNames from "classnames";
 import { useEffect, useState } from "react";
+
+import { classNames } from "@/docs/util";
 
 import { Scrollable } from "..";
 import { Asset, CloseButton, Item, List, Preview } from "./styles";
