@@ -12,8 +12,9 @@ export function Options() {
 
   type Operation = "-" | "+" | null;
 
-  const fields = () => $$(`${elQuery} .field`);
-  const current = () => $(`${elQuery} .field[data-ix="${currentFieldIx}"]`);
+  const fields = () => $$<HTMLElement>(`${elQuery} .field`);
+  const current = () =>
+    $<HTMLElement>(`${elQuery} .field[data-ix="${currentFieldIx}"]`);
 
   function makeAllInactive() {
     const all = fields();
@@ -90,7 +91,7 @@ export function Options() {
 
     // .handle is 20% wide
     const normalized = (value / max) * 80;
-    $(".handle", $el).style.marginLeft = normalized + "%";
+    $<HTMLElement>(".handle", $el).style.marginLeft = normalized + "%";
   }
 
   function init(config: ConfigMap) {
