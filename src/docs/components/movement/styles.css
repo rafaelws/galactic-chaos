@@ -1,9 +1,33 @@
+.movement-container {
+  margin-top: .25rem;
+}
+
+.movement-container label {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 0;
+  padding: .25rem;
+}
+
+.movement-container label.current {
+  border-left: 4px solid var(--colors-gray400);
+}
+
+.movement-container input {
+  height: 1rem;
+  max-width: 3.5rem;
+  text-align: right;
+}
+
 .movement {
   /* FIXME .25rem should be a bar at :root */
   margin-top: .25rem;
   width: 100%;
   aspect-ratio: 1 / 1;
   border: 1px solid var(--colors-gray600);
+  cursor: crosshair;
 }
 
 .movement .grid line {
@@ -18,10 +42,13 @@
 
 .movement circle {
   fill: var(--colors-gray600);
+  cursor: move;
+  /* cursor: grab; */
 }
 
 .movement circle.current {
   fill: var(--colors-gray800);
+  /* cursor: grabbing; */
 }
 
 .movement path {
