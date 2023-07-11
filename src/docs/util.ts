@@ -37,7 +37,10 @@ export async function loadAssets(): Promise<Assets> {
 
 type ClassNames = Record<string, boolean>;
 export function classNames(map: ClassNames): string {
-  return Object.keys(map).reduce((accumulator: string, className: string) => {
-    return map[className] ? `${className} ${accumulator}` : "";
-  }, "");
+  let classNames = "";
+  const keys = Object.keys(map);
+  for (let i = 0; i < keys.length; i++) {
+    classNames += map[keys[i]] ? ` ${keys[i]}` : "";
+  }
+  return classNames;
 }
