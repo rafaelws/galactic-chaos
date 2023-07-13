@@ -27,6 +27,7 @@
   width: 100%;
   aspect-ratio: 1 / 1;
   border: 1px solid var(--colors-gray600);
+  /* TODO */
   cursor: crosshair;
 }
 

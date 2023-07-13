@@ -2,8 +2,10 @@ import "./styles.css";
 
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
+import { point } from "@/core/math";
 import { Point } from "@/core/meta";
 import { InputText, Label } from "@/docs/styles";
+import { classNames } from "@/docs/util";
 
 import { Toggle, ToggleItem } from "..";
 import { Grid } from "./Grid";
@@ -20,8 +22,8 @@ export function Movement() {
   const [bounds, setBounds] = useState<Bounds>();
 
   const [currentNature, setCurrentNature] = useState(natures[0]);
+  const [dragging, setDragging] = useState(false);
   const [pointIx, setPointIx] = useState<number>(-1);
-  const [dragging, setDragging] = useState<boolean>(false);
   const [points, setPoints] = useState<Point[]>([
     { x: 15, y: 75 },
     { x: 30, y: 25 },
@@ -43,7 +45,9 @@ export function Movement() {
   }, []);
 
   // FIXME treat out of bounds
-  function snapTo({ x, y }: Point) {
+  function moveTo({ x, y }: Point) {
+    if (!hasIndex() || !dragging) return;
+
     const svgRect = svg.current?.getBoundingClientRect();
     if (!svgRect) return { x: 0, y: 0 };
 
@@ -63,14 +67,12 @@ export function Movement() {
     if (el.tagName === "circle" && !isNaN(ix)) {
       setPointIx(ix);
       setDragging(true);
-    } else {
-      if (hasIndex()) snapTo({ x: ev.clientX, y: ev.clientY });
     }
   }
 
   function drag(ev: MouseEvent<SVGElement>) {
     ev.preventDefault();
-    if (hasIndex() && dragging) snapTo({ x: ev.clientX, y: ev.clientY });
+    moveTo({ x: ev.clientX, y: ev.clientY });
   }
 
   function dragEnd() {
@@ -78,33 +80,28 @@ export function Movement() {
     // TODO onUpdate(targetPoint) // transform: 0 <= x,y <= 1
   }
 
-  function createPoint(p0: Point, p1?: Point): Point {
-    // determine if the new points are in bounds
-    if (p1) return { x: p1.x - p0.x, y: p1.y + p0.y };
-    return { x: p0.x + p0.x * 0.25, y: p0.y + p0.y * 0.25 };
+  function createPoints(p0: Point, p1: Point, amount: 2 | 1 = 1): Point[] {
+    return amount === 1
+      ? [point.lerp(p0, p1, 0.5)]
+      : [point.lerp(p0, p1, 0.333), point.lerp(p0, p1, 0.666)];
   }
 
-  function handleNatureChange(nature: string) {
-    if (nature === currentNature) return;
+  function handleNatureChange(newNature: string) {
+    if (newNature === currentNature) return;
 
     const first = points[0];
     const last = points[points.length - 1];
 
-    const newPoints: Point[] = [];
+    const newPoints: Point[] = [first];
 
-    if (nature === natures[0]) {
-      newPoints.push(first, last);
-    } else if (nature === natures[1]) {
-      if (currentNature === natures[0])
-        newPoints.push(first, createPoint(first, last), last);
-      else newPoints.push(first, points[2] || points[1], last);
-    } else {
-      if (currentNature === natures[0])
-        newPoints.push(first, createPoint(first), createPoint(last), last);
-      else newPoints.push(first, points[1], createPoint(last), last);
+    if (newNature !== natures[0]) {
+      newPoints.push(
+        ...createPoints(first, last, newNature === natures[1] ? 1 : 2)
+      );
     }
+    newPoints.push(last);
     setPoints(newPoints);
-    setCurrentNature(nature);
+    setCurrentNature(newNature);
   }
 
   function handleInputChange(ix: number, axis: "x" | "y") {
@@ -116,7 +113,8 @@ export function Movement() {
     };
   }
 
-  const currentClassName = (ix: number) => (pointIx === ix ? "current" : "");
+  const currentClassName = (ix: number) =>
+    classNames({ current: pointIx === ix });
 
   return (
     <div className="movement-container">
