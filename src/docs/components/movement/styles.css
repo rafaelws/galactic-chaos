@@ -3,16 +3,14 @@
 }
 
 .movement-container label {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
   margin: 0;
-  padding: .25rem;
+  padding: .25rem 0;
 }
 
+/* TODO change styling */
 .movement-container label.current {
-  border-left: 4px solid var(--colors-gray400);
+  font-weight: bold;
+  /* border-left: 4px solid var(--colors-gray400); */
 }
 
 .movement-container input {
@@ -21,7 +19,7 @@
   text-align: right;
 }
 
-.movement {
+.movement-plot {
   /* FIXME .25rem should be a bar at :root */
   margin-top: .25rem;
   width: 100%;
@@ -31,40 +29,35 @@
   cursor: crosshair;
 }
 
-.movement .grid line {
+.movement-plot .grid line {
   stroke-width: 1;
   stroke: var(--colors-gray200);
 }
 
-.movement .label {
-  font-size: 9px;
-  color: var(--colors-gray800);
-}
-
-.movement circle {
+.movement-plot circle {
   fill: var(--colors-gray600);
   cursor: move;
   /* cursor: grab; */
 }
 
-.movement circle.current {
+.movement-plot circle.current {
   fill: var(--colors-gray800);
   /* cursor: grabbing; */
 }
 
-.movement path {
+.movement-plot path {
   fill: none;
   stroke: var(--colors-gray900);
   stroke-width: .5;
 }
 
-.movement path.main {
+.movement-plot path.main {
   stroke-dasharray: 5;
   /* TODO change animation speed given the movement velocity */
   animation: dash 1s linear forwards infinite;
 }
 
-.movement path.handle {
+.movement-plot path.handle {
   stroke: var(--colors-gray700);
 }
 

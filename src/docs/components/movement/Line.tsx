@@ -21,7 +21,6 @@ function Line({ points, type = "main" }: Props) {
 export function Lines({ points }: { points: Point[] }) {
   return (
     <g>
-      <Line points={points} />
       {/* TODO create handles for quadratic */}
       {points.length === 4 && (
         <>
@@ -29,6 +28,7 @@ export function Lines({ points }: { points: Point[] }) {
           <Line type="handle" points={points.slice(2)} />
         </>
       )}
+      <Line points={points} />
     </g>
   );
 }

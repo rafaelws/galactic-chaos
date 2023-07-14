@@ -37,6 +37,9 @@ export const Title = styled("h3", {
 
 export const Blade = styled("div", {
   padding: ".5rem .25rem",
+  "&:last-child": {
+    paddingBottom: 0,
+  },
 });
 
 export const Label = styled("label", {

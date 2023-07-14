@@ -6,19 +6,21 @@ Misc:
 - [x] enable just rock and ship for now (boss for next iteration)
 
 Movement Component:
-- [>] fix dragging to stay in bounds
+- [ ] use global event for dragging (window -> mousemove, mouseup)
+- [ ] sliders for x and y
+- [ ] ability to set predefined (center, center left, top left, .15, .25, .333, .5, .666, .75...) and random values (rir)
+- [x] fix dragging to stay in bounds
 - [x] (svg) [wrapper]
 - [x] plot grid
 - [x] plot points
 - [x] plot lines between points (traced animated showing direction)
 - [x] Line Component 
-- [>] toggle to change movement type: linear, quadratic, cubic (FIX point creation - stay inbounds)
-- [>] inputs to track x and y of each point (FIX styling)
+- [x] positions should be relative
+- [x] toggle to change movement type: linear, quadratic, cubic
+- [x] inputs to track x and y of each point
 - [ ] input to set movement speed
-- [x] ability to snap to position
-- [ ] ability to add more 'steps'
+- [ ] ability to add more `steps`
 - [ ] ability to lock a point or step (so the user can't modify it)
-- [ ] ability to set predefined (center, center left, top left...) and random values
 - [ ] communicate the canvas (finish)
 
 # NEXT

@@ -1,9 +1,9 @@
 import "./styles.css";
 
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 
 import { point } from "@/core/math";
-import { Point } from "@/core/meta";
+import { Boundaries, Point } from "@/core/meta";
 import { InputText, Label } from "@/docs/styles";
 import { classNames } from "@/docs/util";
 
@@ -11,50 +11,76 @@ import { Toggle, ToggleItem } from "..";
 import { Grid } from "./Grid";
 import { Lines } from "./Line";
 
-// interface Props { points: Point[]; } // 0 <= x,y <= 1
+// interface Props { params: MovementParams; }
 
-const natures = ["Linear", "Quadratic", "Cubic"];
-
-type Bounds = { min: Point; max: Point; rect: DOMRect };
+const natures = ["Linear", "Quadratic", "Cubic"] as const;
+type Nature = (typeof natures)[number];
 
 export function Movement() {
   const svg = useRef<SVGSVGElement>(null);
-  const [bounds, setBounds] = useState<Bounds>();
+  const circleRadius = useRef<number>(5);
+  const [boundaries, setBoundaries] = useState<Boundaries>({
+    width: 0,
+    height: 0,
+  });
 
-  const [currentNature, setCurrentNature] = useState(natures[0]);
-  const [dragging, setDragging] = useState(false);
+  const [currentNature, setCurrentNature] = useState<Nature>(natures[0]);
   const [pointIx, setPointIx] = useState<number>(-1);
+  const [dragging, setDragging] = useState(false);
+
   const [points, setPoints] = useState<Point[]>([
-    { x: 15, y: 75 },
-    { x: 30, y: 25 },
-    { x: 60, y: 25 },
-    { x: 115, y: 75 },
+    { x: 0, y: 0 },
+    { x: 1, y: 1 },
   ]);
 
-  const hasIndex = () => pointIx >= 0;
+  const toAbsolute = (
+    value: number,
+    boundary: number,
+    radius = circleRadius.current
+  ) => {
+    if (value === 0) return radius;
+    else if (value === 1) return boundary - radius * 1.5;
+    else return value * boundary;
+  };
+
+  const absolutePoints = points.map(({ x, y }) => ({
+    x: toAbsolute(x, boundaries.width),
+    y: toAbsolute(y, boundaries.height),
+  }));
 
   useEffect(() => {
-    if (!svg.current) return;
-    const rect = svg.current.getBoundingClientRect();
-    setBounds({
-      rect,
-      min: { x: rect.left, y: rect.top },
-      max: { x: rect.left + rect.width, y: rect.top + rect.height },
-    });
-    // TODO setPoints(transform(width)); // transform: 0 <= x,y <= 1
+    const rect = svg.current?.getBoundingClientRect();
+    if (rect) setBoundaries(rect);
   }, []);
 
-  // FIXME treat out of bounds
-  function moveTo({ x, y }: Point) {
-    if (!hasIndex() || !dragging) return;
+  function offset(
+    point: Point,
+    rect: DOMRect,
+    radius = circleRadius.current,
+    { width, height }: Boundaries = boundaries
+  ): Point {
+    const x = point.x - rect.left;
+    const y = point.y - rect.top;
+    const relative = { x, y };
 
-    const svgRect = svg.current?.getBoundingClientRect();
-    if (!svgRect) return { x: 0, y: 0 };
+    if (x - radius < 0) relative.x = 0;
+    else if (x + radius * 2 > width) relative.x = 1;
+    else relative.x /= width;
 
-    points[pointIx] = {
-      x: x - svgRect.left,
-      y: y - svgRect.top,
-    };
+    if (y - radius < 0) relative.y = 0;
+    else if (y + radius * 2 > height) relative.y = 1;
+    else relative.y /= height;
+
+    return relative;
+  }
+
+  function moveTo(point: Point) {
+    if (pointIx < 0 || !dragging) return { x: 0, y: 0 };
+
+    const rect = svg.current?.getBoundingClientRect();
+    if (!rect) return { x: 0, y: 0 };
+
+    points[pointIx] = offset(point, rect);
     setPoints([...points]);
   }
 
@@ -80,13 +106,13 @@ export function Movement() {
     // TODO onUpdate(targetPoint) // transform: 0 <= x,y <= 1
   }
 
-  function createPoints(p0: Point, p1: Point, amount: 2 | 1 = 1): Point[] {
+  function createPoints(p0: Point, p1: Point, amount: 2 | 1): Point[] {
     return amount === 1
       ? [point.lerp(p0, p1, 0.5)]
       : [point.lerp(p0, p1, 0.333), point.lerp(p0, p1, 0.666)];
   }
 
-  function handleNatureChange(newNature: string) {
+  function handleNatureChange(newNature: Nature) {
     if (newNature === currentNature) return;
 
     const first = points[0];
@@ -104,14 +130,19 @@ export function Movement() {
     setCurrentNature(newNature);
   }
 
-  function handleInputChange(ix: number, axis: "x" | "y") {
-    return (ev: ChangeEvent<HTMLInputElement>) => {
-      const value = Number(ev.target.value);
-      if (isNaN(value)) return;
-      points[ix][axis] = value;
-      setPoints([...points]);
-    };
-  }
+  // TODO disable?
+  // <input onChange={handleInputChange(ix, "y")}/>
+  // function handleInputChange(ix: number, axis: "x" | "y") {
+  //   return (ev: ChangeEvent<HTMLInputElement>) => {
+  //     // console.log(ev.target.value);
+  //     // const value = parseFloat(ev.target.value);
+  //     // console.log({ value });
+  //     // || value < 0 || value > 1
+  //     // if (isNaN(value)) return;
+  //     // points[ix][axis] = value;
+  //     // setPoints([...points]);
+  //   };
+  // }
 
   const currentClassName = (ix: number) =>
     classNames({ current: pointIx === ix });
@@ -130,21 +161,21 @@ export function Movement() {
         ))}
       </Toggle>
       <svg
-        className="movement"
+        className="movement-plot"
         ref={svg}
         onMouseDown={dragStart}
         onMouseUp={dragEnd}
         onMouseLeave={dragEnd}
         onMouseMove={drag}
       >
-        {bounds && <Grid width={bounds.rect.width} />}
-        <Lines points={points} />
-        {points.map((point, ix) => (
+        <Grid width={boundaries.width} />
+        <Lines points={absolutePoints} />
+        {absolutePoints.map((point, ix) => (
           <circle
             className={currentClassName(ix)}
             cx={point.x}
             cy={point.y}
-            r={5}
+            r={circleRadius.current}
             key={ix}
             data-ix={ix}
           />
@@ -152,10 +183,10 @@ export function Movement() {
       </svg>
       {points.map((point, ix) => (
         <Label key={`p${ix}`} className={currentClassName(ix)}>
-          <b>P{ix}</b> | x:
-          <InputText value={point.x} onChange={handleInputChange(ix, "x")} />
+          P{ix}| x:
+          <InputText value={point.x} />
           y:
-          <InputText value={point.y} onChange={handleInputChange(ix, "y")} />
+          <InputText value={point.y} />
         </Label>
       ))}
     </div>
