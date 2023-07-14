@@ -1,15 +1,14 @@
-import { point } from "@/core/math";
+import { mtpn, plerp, PZero, si, sum } from "@/core/math";
 import { Boundaries, Concrete, Point } from "@/core/meta";
 
 import { FluentMovement } from "./FluentMovement";
 import { MovementNature, MovementParams, MovementStep } from "./MovementParams";
 
-const zeroPoint = { x: 0, y: 0 } as const;
 const zeroedPoints = {
-  p0: zeroPoint,
-  p1: zeroPoint,
-  p2: zeroPoint,
-  p3: zeroPoint,
+  p0: PZero,
+  p1: PZero,
+  p2: PZero,
+  p3: PZero,
 };
 
 interface PointCache {
@@ -112,7 +111,7 @@ export class Movement {
     return this.pointCache.p0;
   }
 
-  private worldPosition(target: Point = zeroPoint) {
+  private worldPosition(target: Point = PZero) {
     return { x: target.x * this.world.width, y: target.y * this.world.height };
   }
 
@@ -122,18 +121,17 @@ export class Movement {
   }
 
   private linear(t: number) {
-    return point.lerp(this.pointCache.p0, this.pointCache.p1, t);
+    return plerp(this.pointCache.p0, this.pointCache.p1, t);
   }
 
   private quadraticBezier(t: number) {
     const { p0, p1, p2 } = this.pointCache;
-    const q0 = point.lerp(p0, p1, t);
-    const q1 = point.lerp(p1, p2, t);
-    return point.lerp(q0, q1, t);
+    const q0 = plerp(p0, p1, t);
+    const q1 = plerp(p1, p2, t);
+    return plerp(q0, q1, t);
   }
 
   private cubicBezier(t: number) {
-    const { sum, mtpn, si } = point;
     const { p0, p1, p2, p3 } = this.pointCache;
 
     if (this.cubicCache === null) {
@@ -159,7 +157,7 @@ export class Movement {
 
   public update(): Point {
     const t = this.t();
-    let c: Point = zeroPoint;
+    let c: Point = PZero;
 
     switch (this.current?.nature) {
       case MovementNature.Linear:

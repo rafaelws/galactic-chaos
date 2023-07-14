@@ -85,7 +85,7 @@ export class Boss extends GameObject {
 
     if (this.alpha < 1) {
       this.alphaTime += state.delta * 0.001 + 0.05;
-      this.alpha = lerp.pc01(1, 0, this.alphaTime);
+      this.alpha = lerp(1, 0, this.alphaTime);
 
       if (this.alphaTime >= 1) {
         this.alphaTime = 0;

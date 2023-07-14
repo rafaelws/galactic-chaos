@@ -1,4 +1,4 @@
-import { point, toRad } from "@/core/math";
+import { plerp, toRad } from "@/core/math";
 import { Boundaries, HitBox, Point } from "@/core/meta";
 import { iterate } from "@/core/util";
 
@@ -42,7 +42,7 @@ export class Radar {
     c.closePath();
 
     [0.333, 0.666].forEach((value) => {
-      const p = point.lerp({ x, y }, { x: mx, y: my }, value * 0.5);
+      const p = plerp({ x, y }, { x: mx, y: my }, value * 0.5);
       const b: Boundaries = {
         width: width - width * value,
         height: height - height * value,

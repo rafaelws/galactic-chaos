@@ -2,7 +2,7 @@ import "./styles.css";
 
 import { MouseEvent, useEffect, useRef, useState } from "react";
 
-import { point } from "@/core/math";
+import { plerp } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
 import { InputText, Label } from "@/docs/styles";
 import { classNames } from "@/docs/util";
@@ -108,8 +108,8 @@ export function Movement() {
 
   function createPoints(p0: Point, p1: Point, amount: 2 | 1): Point[] {
     return amount === 1
-      ? [point.lerp(p0, p1, 0.5)]
-      : [point.lerp(p0, p1, 0.333), point.lerp(p0, p1, 0.666)];
+      ? [plerp(p0, p1, 0.5)]
+      : [plerp(p0, p1, 0.333), plerp(p0, p1, 0.666)];
   }
 
   function handleNatureChange(newNature: Nature) {

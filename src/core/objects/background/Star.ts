@@ -41,7 +41,7 @@ export class Star implements Drawable {
     }
 
     if (this.alpha !== this.endAlpha) {
-      this.alpha = lerp.i(this.alpha, this.endAlpha, state.delta * 0.01);
+      this.alpha = lerp(this.alpha, this.endAlpha, state.delta * 0.01, "i");
     }
   }
 
