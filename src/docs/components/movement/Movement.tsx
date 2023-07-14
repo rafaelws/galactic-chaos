@@ -1,8 +1,8 @@
 import "./styles.css";
 
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
-import { plerp } from "@/core/math";
+import { plerp, PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
 import { InputText, Label } from "@/docs/styles";
 import { classNames } from "@/docs/util";
@@ -30,7 +30,7 @@ export function Movement() {
 
   const [points, setPoints] = useState<Point[]>([
     { x: 0, y: 0 },
-    { x: 1, y: 1 },
+    { x: 100, y: 100 },
   ]);
 
   const toAbsolute = (
@@ -38,15 +38,17 @@ export function Movement() {
     boundary: number,
     radius = circleRadius.current
   ) => {
-    if (value === 0) return radius;
-    else if (value === 1) return boundary - radius * 1.5;
-    else return value * boundary;
+    if (value <= 0) return radius;
+    else if (value >= 100) return boundary - radius * 1.5;
+    else return (value * boundary) / 100;
   };
 
-  const absolutePoints = points.map(({ x, y }) => ({
+  const toAbsolutePoint = ({ x, y }: Point) => ({
     x: toAbsolute(x, boundaries.width),
     y: toAbsolute(y, boundaries.height),
-  }));
+  });
+
+  const absolutePoints = points.map(toAbsolutePoint);
 
   useEffect(() => {
     const rect = svg.current?.getBoundingClientRect();
@@ -71,7 +73,7 @@ export function Movement() {
     else if (y + radius * 2 > height) relative.y = 1;
     else relative.y /= height;
 
-    return relative;
+    return PointM(relative).mtpn(100).floor().value();
   }
 
   function moveTo(point: Point) {
@@ -130,19 +132,18 @@ export function Movement() {
     setCurrentNature(newNature);
   }
 
-  // TODO disable?
-  // <input onChange={handleInputChange(ix, "y")}/>
-  // function handleInputChange(ix: number, axis: "x" | "y") {
-  //   return (ev: ChangeEvent<HTMLInputElement>) => {
-  //     // console.log(ev.target.value);
-  //     // const value = parseFloat(ev.target.value);
-  //     // console.log({ value });
-  //     // || value < 0 || value > 1
-  //     // if (isNaN(value)) return;
-  //     // points[ix][axis] = value;
-  //     // setPoints([...points]);
-  //   };
-  // }
+  function handleInputChange(ix: number, axis: "x" | "y") {
+    return (ev: ChangeEvent<HTMLInputElement>) => {
+      let value = Number(ev.target.value);
+      if (isNaN(value)) return;
+
+      if (value >= 100) value = 100;
+      else if (value <= 0) value = 0;
+
+      points[ix][axis] = value;
+      setPoints([...points]);
+    };
+  }
 
   const currentClassName = (ix: number) =>
     classNames({ current: pointIx === ix });
@@ -184,9 +185,9 @@ export function Movement() {
       {points.map((point, ix) => (
         <Label key={`p${ix}`} className={currentClassName(ix)}>
           P{ix}| x:
-          <InputText value={point.x} />
+          <InputText value={point.x} onChange={handleInputChange(ix, "x")} />
           y:
-          <InputText value={point.y} />
+          <InputText value={point.y} onChange={handleInputChange(ix, "y")} />
         </Label>
       ))}
     </div>
