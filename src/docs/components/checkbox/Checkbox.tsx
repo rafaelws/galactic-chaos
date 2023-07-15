@@ -27,7 +27,7 @@ export function Checkbox(props: Props) {
       {props.label}
       <RadixCheckbox.Root
         id={props.id}
-        className="checkbox-root colors"
+        className="checkbox colors"
         checked={checked}
         onCheckedChange={handleChange}
       >

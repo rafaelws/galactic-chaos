@@ -52,7 +52,7 @@ export function Slider(props: Props) {
         />
       </label>
       <RadixSlider.Root
-        className="slider-root"
+        className="slider"
         value={[local]}
         onValueChange={handleSliderChange}
         onValueCommit={handleSliderCommit}
@@ -60,11 +60,11 @@ export function Slider(props: Props) {
         max={props.max}
         step={props.step}
       >
-        <RadixSlider.Track className="slider-track">
-          <RadixSlider.Range className="slider-range" />
+        <RadixSlider.Track className="track">
+          <RadixSlider.Range className="range" />
         </RadixSlider.Track>
         <RadixSlider.Thumb
-          className="slider-thumb"
+          className="thumb"
           aria-label={props.label}
           onDoubleClick={reset}
         />
