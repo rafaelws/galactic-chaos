@@ -2,7 +2,7 @@ import "./styles.css";
 
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
-import { plerp, PointM } from "@/core/math";
+import { PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
 import { InputText, Label } from "@/docs/styles";
 import { classNames } from "@/docs/util";
@@ -24,7 +24,7 @@ export function Movement() {
     height: 0,
   });
 
-  const [currentNature, setCurrentNature] = useState<Nature>(natures[0]);
+  const [nature, setNature] = useState<Nature>(natures[0]);
   const [pointIx, setPointIx] = useState<number>(-1);
   const [dragging, setDragging] = useState(false);
 
@@ -54,6 +54,22 @@ export function Movement() {
     const rect = svg.current?.getBoundingClientRect();
     if (rect) setBoundaries(rect);
   }, []);
+
+  useEffect(() => {
+    const mouseMove = (ev: globalThis.MouseEvent) => {
+      moveTo({ x: ev.clientX, y: ev.clientY });
+    };
+
+    const mouseUp = () => dragEnd();
+
+    window.addEventListener("mousemove", mouseMove);
+    window.addEventListener("mouseup", mouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", mouseMove);
+      window.removeEventListener("mouseup", mouseUp);
+    };
+  });
 
   function offset(
     point: Point,
@@ -98,24 +114,13 @@ export function Movement() {
     }
   }
 
-  function drag(ev: MouseEvent<SVGElement>) {
-    ev.preventDefault();
-    moveTo({ x: ev.clientX, y: ev.clientY });
-  }
-
   function dragEnd() {
     setDragging(false);
-    // TODO onUpdate(targetPoint) // transform: 0 <= x,y <= 1
-  }
-
-  function createPoints(p0: Point, p1: Point, amount: 2 | 1): Point[] {
-    return amount === 1
-      ? [plerp(p0, p1, 0.5)]
-      : [plerp(p0, p1, 0.333), plerp(p0, p1, 0.666)];
+    // TODO onUpdate(targetPoint) // transform: 0 <= x,y <= 1 (divide by 100)
   }
 
   function handleNatureChange(newNature: Nature) {
-    if (newNature === currentNature) return;
+    if (newNature === nature) return;
 
     const first = points[0];
     const last = points[points.length - 1];
@@ -123,13 +128,18 @@ export function Movement() {
     const newPoints: Point[] = [first];
 
     if (newNature !== natures[0]) {
-      newPoints.push(
-        ...createPoints(first, last, newNature === natures[1] ? 1 : 2)
-      );
+      const ref = PointM(first);
+      if (newNature === natures[1])
+        newPoints.push(ref.lerp(last, 0.5).floor().value());
+      else
+        newPoints.push(
+          ref.lerp(last, 0.333).floor().value(),
+          ref.lerp(last, 0.666).floor().value()
+        );
     }
     newPoints.push(last);
     setPoints(newPoints);
-    setCurrentNature(newNature);
+    setNature(newNature);
   }
 
   function handleInputChange(ix: number, axis: "x" | "y") {
@@ -150,25 +160,14 @@ export function Movement() {
 
   return (
     <div className="movement-container">
-      <Toggle
-        type="single"
-        value={currentNature}
-        onValueChange={handleNatureChange}
-      >
+      <Toggle type="single" value={nature} onValueChange={handleNatureChange}>
         {natures.map((nature) => (
           <ToggleItem value={nature} key={nature}>
             {nature}
           </ToggleItem>
         ))}
       </Toggle>
-      <svg
-        className="movement-plot"
-        ref={svg}
-        onMouseDown={dragStart}
-        onMouseUp={dragEnd}
-        onMouseLeave={dragEnd}
-        onMouseMove={drag}
-      >
+      <svg className="movement-plot" ref={svg} onMouseDown={dragStart}>
         <Grid width={boundaries.width} />
         <Lines points={absolutePoints} />
         {absolutePoints.map((point, ix) => (

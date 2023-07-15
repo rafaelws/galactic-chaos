@@ -6,9 +6,12 @@ Misc:
 - [x] enable just rock and ship for now (boss for next iteration)
 
 Movement Component:
-- [ ] use global event for dragging (window -> mousemove, mouseup)
-- [ ] sliders for x and y
-- [ ] ability to set predefined (center, center left, top left, .15, .25, .333, .5, .666, .75...) and random values (rir)
+- [ ] add 2 sliders to change current point x and y
+- [ ] input to set movement `speed` (for each `step`)
+- [ ] input to determine if a movement is globally `repeatable`
+- [ ] ability to add more `steps`
+- [ ] communicate the canvas (finish)
+- [x] use global event for dragging (window -> mousemove, mouseup)
 - [x] fix dragging to stay in bounds
 - [x] (svg) [wrapper]
 - [x] plot grid
@@ -18,10 +21,8 @@ Movement Component:
 - [x] positions should be relative
 - [x] toggle to change movement type: linear, quadratic, cubic
 - [x] inputs to track x and y of each point
-- [ ] input to set movement speed
-- [ ] ability to add more `steps`
+- [ ] ability to set predefined (center, center left, top left, .15, .25, .333, .5, .666, .75...) and random values (rir)
 - [ ] ability to lock a point or step (so the user can't modify it)
-- [ ] communicate the canvas (finish)
 
 # NEXT
 
