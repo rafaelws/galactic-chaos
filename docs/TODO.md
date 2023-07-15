@@ -2,13 +2,13 @@
 
 Misc:
 - [x] (big) refactor: go back to plain css (remove css-in-js)
-- [ ] consider removing some libs: 
+- [x] consider removing some libs: 
   - [x] stiches
-  - [x] classnames[18.8kB]
+  - [x] classnames
   - [x] checkbox
-  - [ ] *toggleGroup[6kB]
-  - [ ] *slider[6kB]
-  - [ ] *scrollarea[6kB]
+  - [x] toggleGroup
+  - [ ] ~~scrollarea~~
+  - [ ] ~~slider~~
 - [x] enable just rock and ship for now (boss for next iteration)
 
 Movement Component:

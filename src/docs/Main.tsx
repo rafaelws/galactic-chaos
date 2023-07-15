@@ -11,7 +11,6 @@ import {
   ShipParameters,
   Stats,
   Toggle,
-  ToggleItem,
 } from "./components";
 import { setupRender } from "./render";
 import { Assets, EntityType, entityTypes, loadAssets } from "./util";
@@ -22,7 +21,7 @@ const { render, update } = setupRender();
 
 export function Main() {
   const [img, setImg] = useState<HTMLImageElement>();
-  const [current, setCurrent] = useState<EntityType>();
+  const [current, setCurrent] = useState<EntityType>(entityTypes[0]);
   const [assets, setAssets] = useState<Assets>();
 
   useEffect(() => {
@@ -31,10 +30,7 @@ export function Main() {
 
   useEffect(() => {
     show(document.body);
-    loadAssets().then((results) => {
-      setAssets(results);
-      setCurrent(entityTypes[0]);
-    });
+    loadAssets().then(setAssets);
   }, []);
 
   useEffect(() => raf(render), []);
@@ -72,18 +68,10 @@ export function Main() {
       <h3 className="title">Asset</h3>
       <div className="partition">
         <Toggle
-          type="single"
           value={current}
-          onValueChange={handleEntityChange}
-        >
-          {entityTypes.map((type) => {
-            return (
-              <ToggleItem key={type} value={type}>
-                {type}
-              </ToggleItem>
-            );
-          })}
-        </Toggle>
+          items={entityTypes}
+          onChange={handleEntityChange}
+        />
         {current && assets && (
           <AssetPicker assets={assets[current]} onPick={(img) => setImg(img)} />
         )}

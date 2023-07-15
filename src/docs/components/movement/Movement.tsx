@@ -6,7 +6,7 @@ import { PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
 import { classNames } from "@/docs/util";
 
-import { Toggle, ToggleItem } from "..";
+import { Toggle } from "..";
 import { Grid } from "./Grid";
 import { Lines } from "./Line";
 
@@ -159,13 +159,7 @@ export function Movement() {
 
   return (
     <div className="movement-container">
-      <Toggle type="single" value={nature} onValueChange={handleNatureChange}>
-        {natures.map((nature) => (
-          <ToggleItem value={nature} key={nature}>
-            {nature}
-          </ToggleItem>
-        ))}
-      </Toggle>
+      <Toggle value={nature} items={natures} onChange={handleNatureChange} />
       <svg className="movement-plot" ref={svg} onMouseDown={dragStart}>
         <Grid width={boundaries.width} />
         <Lines points={absolutePoints} />

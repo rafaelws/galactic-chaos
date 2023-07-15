@@ -1,28 +1,35 @@
 import "./styles.css";
 
-import * as ToggleGroup from "@radix-ui/react-toggle-group";
-import React from "react";
+import { useState } from "react";
 
-type ToggleItemProps = React.PropsWithChildren<
-  React.ComponentProps<typeof ToggleGroup.Item>
->;
-
-export function ToggleItem({ children, ...props }: ToggleItemProps) {
-  return (
-    <ToggleGroup.Item className="common colors item" {...props}>
-      {children}
-    </ToggleGroup.Item>
-  );
+interface ToggleProps {
+  value?: string;
+  onChange(value: string): void;
+  items: string[] | readonly string[];
 }
 
-type ToggleProps = React.PropsWithChildren<
-  React.ComponentProps<typeof ToggleGroup.Root>
->;
+export function Toggle(props: ToggleProps) {
+  const [current, setCurrent] = useState(props.value);
 
-export function Toggle({ children, ...props }: ToggleProps) {
+  function handleClick(item: string) {
+    if (current === item) return;
+    setCurrent(item);
+    props.onChange(item);
+  }
+
   return (
-    <ToggleGroup.Root className="toggle" {...props}>
-      {children}
-    </ToggleGroup.Root>
+    <div role="group" className="toggle">
+      {props.items.map((item) => (
+        <button
+          role="radio"
+          aria-checked={item === current}
+          data-state={item === current ? "on" : "off"}
+          className="common colors item"
+          onClick={() => handleClick(item)}
+        >
+          {item}
+        </button>
+      ))}
+    </div>
   );
 }
