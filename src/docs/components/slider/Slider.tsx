@@ -1,6 +1,7 @@
-import { ChangeEvent, useState } from "react";
+import "./styles.css";
 
-import { Container, Input, Range, Root, Thumb, Track } from "./styles";
+import * as RadixSlider from "@radix-ui/react-slider";
+import { ChangeEvent, useState } from "react";
 
 interface Props {
   label: string;
@@ -15,7 +16,15 @@ export function Slider(props: Props) {
   const [local, setLocal] = useState(props.value);
 
   function handleInputChange(ev: ChangeEvent<HTMLInputElement>) {
-    setLocal(Number(ev.target.value));
+    ev.preventDefault();
+
+    let value = Number(ev.target.value);
+    if (isNaN(value)) return;
+
+    if (value >= props.max) value = props.max;
+    else if (value <= props.min) value = props.min;
+
+    setLocal(value);
   }
 
   function handleSliderChange(values: number[]) {
@@ -34,11 +43,16 @@ export function Slider(props: Props) {
 
   return (
     <>
-      <Container>
+      <label className="slider-label">
         {props.label}
-        <Input value={local} onChange={handleInputChange} />
-      </Container>
-      <Root
+        <input
+          className="common colors"
+          value={local}
+          onChange={handleInputChange}
+        />
+      </label>
+      <RadixSlider.Root
+        className="slider-root"
         value={[local]}
         onValueChange={handleSliderChange}
         onValueCommit={handleSliderCommit}
@@ -46,11 +60,15 @@ export function Slider(props: Props) {
         max={props.max}
         step={props.step}
       >
-        <Track>
-          <Range />
-        </Track>
-        <Thumb aria-label={props.label} onDoubleClick={reset} />
-      </Root>
+        <RadixSlider.Track className="slider-track">
+          <RadixSlider.Range className="slider-range" />
+        </RadixSlider.Track>
+        <RadixSlider.Thumb
+          className="slider-thumb"
+          aria-label={props.label}
+          onDoubleClick={reset}
+        />
+      </RadixSlider.Root>
     </>
   );
 }
