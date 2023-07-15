@@ -1,9 +1,10 @@
+import "./styles.css";
+
+import * as RadixCheckbox from "@radix-ui/react-checkbox";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useState } from "react";
 
-import { Label } from "@/docs/styles";
-
-import { CheckboxIndicator, CheckboxRoot, CheckIcon } from "./styles";
+import { ReactComponent as Icon } from "./check.svg";
 
 interface Props {
   id: string;
@@ -22,17 +23,18 @@ export function Checkbox(props: Props) {
   }
 
   return (
-    <Label htmlFor={props.id}>
+    <label htmlFor={props.id}>
       {props.label}
-      <CheckboxRoot
+      <RadixCheckbox.Root
         id={props.id}
+        className="checkbox-root colors"
         checked={checked}
         onCheckedChange={handleChange}
       >
-        <CheckboxIndicator>
-          <CheckIcon />
-        </CheckboxIndicator>
-      </CheckboxRoot>
-    </Label>
+        <RadixCheckbox.Indicator>
+          <Icon />
+        </RadixCheckbox.Indicator>
+      </RadixCheckbox.Root>
+    </label>
   );
 }

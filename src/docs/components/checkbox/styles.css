@@ -1,0 +1,6 @@
+.checkbox-root {
+  width: 15px;
+  height: 15px;
+  border-radius: 1.5px;
+  cursor: default;
+}
