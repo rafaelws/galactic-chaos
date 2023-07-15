@@ -34,7 +34,7 @@ export function Debug({ update }: Props) {
           key={name}
           id={name}
           label={props.label}
-          value={props.value}
+          checked={props.value}
           onChange={(value) => handleChange(name, value)}
         />
       ))}

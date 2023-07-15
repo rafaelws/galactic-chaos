@@ -1,12 +1,12 @@
 # TODO (live-docs)
 
 Misc:
-- [ ] (big) refactor: go back to plain css (remove css-in-js)
+- [x] (big) refactor: go back to plain css (remove css-in-js)
 - [ ] consider removing some libs: 
-  - [ ] stiches[~100kB?]
+  - [x] stiches
   - [x] classnames[18.8kB]
+  - [x] checkbox
   - [ ] *toggleGroup[6kB]
-  - [ ] *checkbox[4kB]
   - [ ] *slider[6kB]
   - [ ] *scrollarea[6kB]
 - [x] enable just rock and ship for now (boss for next iteration)

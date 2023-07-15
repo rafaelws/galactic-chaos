@@ -4,3 +4,12 @@
   border-radius: 1.5px;
   cursor: default;
 }
+
+.checkbox svg {
+  color: var(--default-color);
+  display: none;
+}
+
+.checkbox[data-checked=true] svg {
+  display: block;
+}
