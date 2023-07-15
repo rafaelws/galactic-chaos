@@ -1,25 +1,28 @@
+import "./styles.css";
+
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import React from "react";
 
-import { styled } from "@/docs/stiches.config";
-import { common } from "@/docs/styles";
+type ToggleItemProps = React.PropsWithChildren<
+  React.ComponentProps<typeof ToggleGroup.Item>
+>;
 
-const ToggleRoot = styled(ToggleGroup.Root, {
-  display: "flex",
-  justifyContent: "space-evenly",
-  borderRadius: common.borderRadius,
-});
+export function ToggleItem({ children, ...props }: ToggleItemProps) {
+  return (
+    <ToggleGroup.Item className="common colors toggle-item" {...props}>
+      {children}
+    </ToggleGroup.Item>
+  );
+}
 
-export const ToggleItem = styled(ToggleGroup.Item, {
-  ...common,
-  borderRadius: 0,
-  "&[data-state=on]": {
-    backgroundColor: "$gray400",
-  },
-});
+type ToggleProps = React.PropsWithChildren<
+  React.ComponentProps<typeof ToggleGroup.Root>
+>;
 
-type Props = React.PropsWithChildren<React.ComponentProps<typeof ToggleRoot>>;
-
-export function Toggle({ children, ...props }: Props) {
-  return <ToggleRoot {...props}>{children}</ToggleRoot>;
+export function Toggle({ children, ...props }: ToggleProps) {
+  return (
+    <ToggleGroup.Root className="toggle-root" {...props}>
+      {children}
+    </ToggleGroup.Root>
+  );
 }
