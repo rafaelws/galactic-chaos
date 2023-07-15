@@ -111,6 +111,7 @@ input::selection {
 
 button {
   all: unset;
+  text-align: center;
   cursor: pointer;
   background-color: var(--colors-gray700);
   color: var(--colors-gray200);

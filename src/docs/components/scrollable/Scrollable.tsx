@@ -1,19 +1,15 @@
-import { PropsWithChildren } from "react";
+import "./styles.css";
 
-import {
-  ScrollAreaRoot,
-  ScrollAreaScrollbar,
-  ScrollAreaThumb,
-  ScrollAreaViewport,
-} from "./styles";
+import { Root, Scrollbar, Thumb, Viewport } from "@radix-ui/react-scroll-area";
+import { PropsWithChildren } from "react";
 
 export function Scrollable({ children }: PropsWithChildren) {
   return (
-    <ScrollAreaRoot type="always">
-      <ScrollAreaViewport>{children}</ScrollAreaViewport>
-      <ScrollAreaScrollbar orientation="vertical">
-        <ScrollAreaThumb />
-      </ScrollAreaScrollbar>
-    </ScrollAreaRoot>
+    <Root className="scrollable" type="always">
+      <Viewport className="viewport">{children}</Viewport>
+      <Scrollbar className="bar" orientation="vertical">
+        <Thumb className="thumb" />
+      </Scrollbar>
+    </Root>
   );
 }
