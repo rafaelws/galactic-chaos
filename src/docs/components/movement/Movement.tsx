@@ -4,7 +4,6 @@ import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
 import { PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
-import { InputText, Label } from "@/docs/styles";
 import { classNames } from "@/docs/util";
 
 import { Toggle, ToggleItem } from "..";
@@ -182,12 +181,20 @@ export function Movement() {
         ))}
       </svg>
       {points.map((point, ix) => (
-        <Label key={`p${ix}`} className={currentClassName(ix)}>
+        <label key={`p${ix}`} className={currentClassName(ix)}>
           P{ix}| x:
-          <InputText value={point.x} onChange={handleInputChange(ix, "x")} />
+          <input
+            className="common colors"
+            value={point.x}
+            onChange={handleInputChange(ix, "x")}
+          />
           y:
-          <InputText value={point.y} onChange={handleInputChange(ix, "y")} />
-        </Label>
+          <input
+            className="common colors"
+            value={point.y}
+            onChange={handleInputChange(ix, "y")}
+          />
+        </label>
       ))}
     </div>
   );
