@@ -4,7 +4,7 @@ import * as RadixCheckbox from "@radix-ui/react-checkbox";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useState } from "react";
 
-import { ReactComponent as Icon } from "./check.svg";
+import icon from "./check.svg";
 
 interface Props {
   id: string;
@@ -32,7 +32,7 @@ export function Checkbox(props: Props) {
         onCheckedChange={handleChange}
       >
         <RadixCheckbox.Indicator>
-          <Icon />
+          <img src={icon} />
         </RadixCheckbox.Indicator>
       </RadixCheckbox.Root>
     </label>
