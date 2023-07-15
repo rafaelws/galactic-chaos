@@ -1,11 +1,6 @@
-const style = {
-  display: "flex",
-  justifyContent: "space-evenly",
-};
-
 export function Stats() {
   return (
-    <div style={style}>
+    <div className="stats">
       <span>
         <span id="fps">0</span> fps
       </span>

@@ -84,18 +84,6 @@ export const InputText = styled("input", {
   },
 });
 
-export const Select = styled("select", {
-  ...common,
-  "& option": {
-    fontFamily: "$mono",
-    backgroundColor: "$gray200",
-  },
-  "& option:checked": {
-    backgroundColor: "$gray400",
-    color: "$gray900",
-  },
-});
-
 export const Button = styled("button", {
   ...common,
   cursor: "pointer",

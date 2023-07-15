@@ -1,0 +1,120 @@
+:root {
+  /*
+  100: bg, 
+  200: header/input bg,
+  300: header/input bg highlight,
+  600: font color,
+  800: input font color,
+  900: input font highlight
+  */
+  --colors-gray100: #28292E;
+  --colors-gray200: #37383D;
+  --colors-gray300: #3E3F44;
+  --colors-gray400: #44454b;
+  --colors-gray500: #717379;
+  --colors-gray600: #797A80;
+  --colors-gray700: #909098;
+  --colors-gray800: #A3A4AC;
+  --colors-gray900: #A8A9B1;
+  --fonts-mono: 'Roboto Mono', 'Source Code Pro', Menlo, Courier, monospace;
+
+  --transition-duration: 250ms;
+  --background-transition: background-color var(--transition-duration);
+  --default-background-color: var(--colors-gray200);
+  --default-color: var(--colors-gray800);
+  --default-border-radius: 2.5px;
+}
+
+.colors {
+  transition-property: background-color;
+  transition-duration: var(--transition-duration);
+  color: var(--colors-gray800);
+  background-color: var(--colors-gray200);
+}
+
+.colors:hover,
+.colors:focus {
+  background-color: var(--colors-gray300);
+}
+
+.common {
+  font-family: var(--fonts-mono);
+  width: 100%;
+  padding: 0.25rem;
+  border: none;
+  border-radius: 2.5px;
+  outline: none;
+}
+
+.main {
+  font-size: 11px;
+  font-family: var(--fonts-mono);
+  background-color: var(--colors-gray100);
+  color: var(--colors-gray600);
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 200px;
+  border-radius: 2.5px;
+  z-index: 1;
+}
+
+.title {
+  font-family: var(--fonts-mono);
+  font-size: 0.75rem;
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  color: var(--colors-gray800);
+  background-color: var(--colors-gray200);
+  border-left: 5px solid;
+  border-left-color: var(--colors-gray400);
+}
+
+.title:first-child {
+  border-radius: 2.5px 2.5px 0 0;
+}
+
+.partition {
+  padding: 0.5rem 0.25rem;
+}
+
+.partition:last-child {
+  padding-bottom: 0;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+label {
+  font-family: var(--fonts-mono);
+  margin-top: 0.25rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+label:first-child {
+  margin-top: 0;
+}
+
+input {
+  user-select: none;
+  margin-left: .25rem;
+}
+
+input::selection {
+  background-color: transparent;
+}
+
+button {
+  cursor: pointer;
+  background-color: var(--colors-gray700);
+  color: var(--colors-gray200);
+}
+
+button:hover {
+  background-color: var(--colors-gray900);
+}

@@ -1,8 +1,14 @@
 # TODO (live-docs)
 
 Misc:
-- [ ] (big) refactor: go plain css (remove css-in-js)
-- [ ] consider removing some libs: radix components (toggleGroup[6kB], checkbox[4kB], slider*[6kB], scrollarea*[6kB]), classnames[18.8kB][ok], stiches[>100kB?]
+- [ ] (big) refactor: go back to plain css (remove css-in-js)
+- [ ] consider removing some libs: 
+  - [ ] stiches[~100kB?]
+  - [x] classnames[18.8kB]
+  - [ ] *toggleGroup[6kB]
+  - [ ] *checkbox[4kB]
+  - [ ] *slider[6kB]
+  - [ ] *scrollarea[6kB]
 - [x] enable just rock and ship for now (boss for next iteration)
 
 Movement Component:
@@ -27,7 +33,7 @@ Movement Component:
 # NEXT
 
 ## Features
- - [ ] live docs
+ - [ ] live docs (aka `playground`)
  - [ ] level designer
 
 ## Tools & Processes
@@ -35,6 +41,8 @@ Movement Component:
  - [x] commit messages (cz, commitlint)
  - [ ] versioning (semver)
  - [ ] changelog
+ - [ ] vitest (unit tests)
+ - [ ] cypress, striker-js
 
 ## Fixes/Improvements
  - [ ] communicate player of controls (use menus)
@@ -55,6 +63,7 @@ Movement Component:
   - [ ] shield (item)
   - [ ] special (item)
 - [ ] projectile
+  - [ ] draw projectiles directly on canvas (do not use asset/image)
   - [ ] {idea} deflect projectile on hit
   - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
   - [ ] {idea} projectile upgrades (size, amount, speed, rate)

@@ -1,3 +1,5 @@
+import "./styles.css";
+
 import { useEffect, useState } from "react";
 
 import { raf, show } from "@/core/dom";
@@ -12,7 +14,6 @@ import {
   ToggleItem,
 } from "./components";
 import { setupRender } from "./render";
-import { Blade, Controls, Title } from "./styles";
 import { Assets, EntityType, entityTypes, loadAssets } from "./util";
 
 // TODO phantom player x, y
@@ -59,17 +60,17 @@ export function Main() {
   }
 
   return (
-    <Controls>
-      <Title>Main</Title>
-      <Blade>
+    <div className="main">
+      <h3 className="title">Main</h3>
+      <div className="partition">
         <Stats />
-      </Blade>
-      <Title>Debug</Title>
-      <Blade>
+      </div>
+      <h3 className="title">Debug</h3>
+      <div className="partition">
         <Debug update={update} />
-      </Blade>
-      <Title>Asset</Title>
-      <Blade>
+      </div>
+      <h3 className="title">Asset</h3>
+      <div className="partition">
         <Toggle
           type="single"
           value={current}
@@ -86,9 +87,9 @@ export function Main() {
         {current && assets && (
           <AssetPicker assets={assets[current]} onPick={(img) => setImg(img)} />
         )}
-      </Blade>
-      <Title>Parameters</Title>
-      <Blade>{parameters}</Blade>
-    </Controls>
+      </div>
+      <h3 className="title">Parameters</h3>
+      <div className="partition">{parameters}</div>
+    </div>
   );
 }
