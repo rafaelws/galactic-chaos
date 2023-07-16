@@ -21,7 +21,7 @@ const { render, update } = setupRender();
 
 export function Main() {
   const [img, setImg] = useState<HTMLImageElement>();
-  const [current, setCurrent] = useState<EntityType>(entityTypes[0]);
+  const [current, setCurrent] = useState<EntityType>();
   const [assets, setAssets] = useState<Assets>();
 
   useEffect(() => {
@@ -30,7 +30,10 @@ export function Main() {
 
   useEffect(() => {
     show(document.body);
-    loadAssets().then(setAssets);
+    loadAssets().then((results) => {
+      setAssets(results);
+      setCurrent(entityTypes[0]);
+    });
   }, []);
 
   useEffect(() => raf(render), []);
@@ -67,11 +70,13 @@ export function Main() {
       </div>
       <h3 className="title">Asset</h3>
       <div className="partition">
-        <Toggle
-          value={current}
-          items={entityTypes}
-          onChange={handleEntityChange}
-        />
+        {current && (
+          <Toggle
+            value={current}
+            items={entityTypes}
+            onChange={handleEntityChange}
+          />
+        )}
         {current && assets && (
           <AssetPicker assets={assets[current]} onPick={(img) => setImg(img)} />
         )}

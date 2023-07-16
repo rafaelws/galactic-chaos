@@ -51,6 +51,10 @@ export function si(c: Point) {
   return { x: -c.x, y: -c.y };
 }
 
+export function floor({ x, y }: Point) {
+  return { x: Math.floor(x), y: Math.floor(y) };
+}
+
 /**
  * Chainable point functions
  */

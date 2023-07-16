@@ -1,16 +1,5 @@
 # TODO (live-docs)
 
-Misc:
-- [x] (big) refactor: go back to plain css (remove css-in-js)
-- [x] consider removing some libs: 
-  - [x] stiches
-  - [x] classnames
-  - [x] checkbox
-  - [x] toggleGroup
-  - [ ] ~~scrollarea~~
-  - [ ] ~~slider~~
-- [x] enable just rock and ship for now (boss for next iteration)
-
 Movement Component:
 - [ ] add 2 sliders to change current point x and y
 - [ ] input to set movement `speed` (for each `step`)
@@ -29,6 +18,17 @@ Movement Component:
 - [x] inputs to track x and y of each point
 - [ ] ability to set predefined (center, center left, top left, .15, .25, .333, .5, .666, .75...) and random values (rir)
 - [ ] ability to lock a point or step (so the user can't modify it)
+
+Misc:
+- [x] (big) refactor: go back to plain css (remove css-in-js)
+- [x] consider removing some libs: 
+  - [x] stiches
+  - [x] classnames
+  - [x] checkbox
+  - [x] toggleGroup
+  - [ ] ~~scrollarea~~
+  - [ ] ~~slider~~
+- [x] enable just rock and ship for now (boss for next iteration)
 
 # NEXT
 

@@ -2,7 +2,7 @@ import "./styles.css";
 
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
-import { PointM } from "@/core/math";
+import { floor, plerp, PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
 import { classNames } from "@/docs/util";
 
@@ -50,8 +50,10 @@ export function Movement() {
   const absolutePoints = points.map(toAbsolutePoint);
 
   useEffect(() => {
-    const rect = svg.current?.getBoundingClientRect();
-    if (rect) setBoundaries(rect);
+    if (svg.current) {
+      const rect = svg.current.getBoundingClientRect();
+      setBoundaries(rect);
+    }
   }, []);
 
   useEffect(() => {
@@ -92,10 +94,10 @@ export function Movement() {
   }
 
   function moveTo(point: Point) {
-    if (pointIx < 0 || !dragging) return { x: 0, y: 0 };
+    if (pointIx < 0 || !dragging) return;
 
     const rect = svg.current?.getBoundingClientRect();
-    if (!rect) return { x: 0, y: 0 };
+    if (!rect) return;
 
     points[pointIx] = offset(point, rect);
     setPoints([...points]);
@@ -127,13 +129,12 @@ export function Movement() {
     const newPoints: Point[] = [first];
 
     if (newNature !== natures[0]) {
-      const ref = PointM(first);
       if (newNature === natures[1])
-        newPoints.push(ref.lerp(last, 0.5).floor().value());
+        newPoints.push(floor(plerp(first, last, 0.5)));
       else
         newPoints.push(
-          ref.lerp(last, 0.333).floor().value(),
-          ref.lerp(last, 0.666).floor().value()
+          floor(plerp(first, last, 0.333)),
+          floor(plerp(first, last, 0.666))
         );
     }
     newPoints.push(last);
