@@ -1,74 +1,151 @@
 import "./styles.css";
 
-import * as RadixSlider from "@radix-ui/react-slider";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
+
+import { Point } from "@/core/meta";
+
+type Orientation = "vertical" | "horizontal";
 
 interface Props {
-  label: string;
+  label?: string;
   onValue: (value: number) => void;
   value: number;
   min: number;
   max: number;
-  step: number;
+  orientation?: Orientation;
 }
 
-export function Slider(props: Props) {
-  const [local, setLocal] = useState(props.value);
+// FIXME step
+// FIXME getSliderSize (find a better approach)
+// FIXME after `dragEnd`, `handleSliderClick` is fired
+export function Slider({ onValue, ...props }: Props) {
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const thumbRef = useRef<HTMLSpanElement>(null);
 
-  function handleInputChange(ev: ChangeEvent<HTMLInputElement>) {
+  const range = props.max - props.min;
+  const orientation = props.orientation || "horizontal";
+  const isHorizontal = orientation === "horizontal";
+  const cssTrackProperty = isHorizontal ? "width" : "height";
+
+  const getSliderSize = (slider = sliderRef.current) => {
+    if (!slider) return 0;
+    return slider[isHorizontal ? "clientWidth" : "clientHeight"];
+  };
+
+  const toPosition = (val: number, sliderSize = getSliderSize()) => {
+    if (range === 0) return 0;
+    const normalized = Math.max(Math.min(val, props.max), props.min);
+    return ((normalized - props.min) / range) * sliderSize;
+  };
+
+  const toValue = (position: number, sliderSize = getSliderSize()) => {
+    if (sliderSize === 0) return 0;
+    const percent = position / sliderSize;
+    return percent * range + props.min;
+  };
+
+  const [value, setValue] = useState<number>(props.value);
+  const [position, setPosition] = useState<number>();
+
+  useEffect(() => {
+    setPosition(toPosition(props.value));
+  }, []);
+
+  useEffect(() => {
+    if (value !== undefined) onValue(value);
+  }, [value, onValue]);
+
+  function drag(ev: globalThis.MouseEvent) {
+    moveTo({ x: ev.clientX, y: ev.clientY });
+  }
+
+  function dragEnd() {
+    window.removeEventListener("mousemove", drag);
+    window.removeEventListener("mouseup", dragEnd);
+  }
+
+  function dragStart() {
+    window.addEventListener("mousemove", drag);
+    window.addEventListener("mouseup", dragEnd);
+  }
+
+  function moveTo(
+    point: Point,
+    slider = sliderRef.current,
+    thumb = thumbRef.current
+  ) {
+    if (!slider || !thumb) return;
+    const { width, height, top, left } = slider.getBoundingClientRect();
+
+    // FIXME properly offset
+    const offset = thumb.clientWidth * 0.5;
+
+    const max = isHorizontal ? width : height;
+    let pos = (isHorizontal ? point.x - left : point.y - top) - offset;
+
+    if (pos > max) pos = max;
+    else if (pos < 0) pos = 0;
+
+    setPosition(pos);
+    setValue(Math.floor(toValue(pos)));
+  }
+
+  function handleSliderClick(ev: MouseEvent<HTMLDivElement>) {
+    moveTo({ x: ev.clientX, y: ev.clientY });
+  }
+
+  function handleInput(ev: ChangeEvent<HTMLInputElement>) {
     ev.preventDefault();
-
-    let value = Number(ev.target.value);
-    if (isNaN(value)) return;
-
-    if (value >= props.max) value = props.max;
-    else if (value <= props.min) value = props.min;
-
-    setLocal(value);
-  }
-
-  function handleSliderChange(values: number[]) {
-    setLocal(values[0]);
-  }
-
-  function handleSliderCommit(values: number[]) {
-    props.onValue(values[0]);
+    let val = Number(ev.target.value);
+    if (isNaN(val)) {
+      val = value || props.value;
+      // https://github.com/preactjs/preact/issues/1899
+      ev.target.value = val.toString();
+      return setValue(val);
+    }
+    if (val === value) return;
+    if (val >= props.max) val = props.max;
+    else if (val <= props.min) val = props.min;
+    setValue(val);
+    setPosition(toPosition(val));
+    ev.target.value = val.toString();
   }
 
   function reset() {
-    const data = [props.value];
-    handleSliderChange(data);
-    handleSliderCommit(data);
+    setValue(props.value);
+    setPosition(toPosition(props.value));
   }
 
   return (
     <>
-      <label className="slider-label">
-        {props.label}
-        <input
-          className="common colors"
-          value={local}
-          onChange={handleInputChange}
-        />
-      </label>
-      <RadixSlider.Root
-        className="slider"
-        value={[local]}
-        onValueChange={handleSliderChange}
-        onValueCommit={handleSliderCommit}
-        min={props.min}
-        max={props.max}
-        step={props.step}
+      {props.label && (
+        <label className="slider-label">
+          {props.label}
+          <input
+            className="common colors"
+            value={value}
+            onChange={handleInput}
+          />
+        </label>
+      )}
+      <div
+        ref={sliderRef}
+        className={`slider ${orientation}`}
+        onClick={handleSliderClick}
       >
-        <RadixSlider.Track className="track">
-          <RadixSlider.Range className="range" />
-        </RadixSlider.Track>
-        <RadixSlider.Thumb
+        <div
+          className="track"
+          style={{
+            [cssTrackProperty]: position,
+          }}
+        ></div>
+        <span
           className="thumb"
-          aria-label={props.label}
+          ref={thumbRef}
+          onMouseDown={dragStart}
           onDoubleClick={reset}
-        />
-      </RadixSlider.Root>
+        ></span>
+      </div>
     </>
   );
 }

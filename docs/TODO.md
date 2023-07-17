@@ -20,6 +20,7 @@ Movement Component:
 - [ ] ability to lock a point or step (so the user can't modify it)
 
 Misc:
+- [ ] organize css - set common and colors to all input &+?
 - [x] (big) refactor: go back to plain css (remove css-in-js)
 - [x] consider removing some libs: 
   - [x] stiches
