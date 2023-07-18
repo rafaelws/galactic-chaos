@@ -26,8 +26,8 @@ export function Movement() {
   });
 
   const [nature, setNature] = useState<Nature>(natures[0]);
-  const [pointIx, setPointIx] = useState<number>(-1);
-  const [dragging, setDragging] = useState(false);
+  const [pointIx, setPointIx] = useState<number>(0);
+  const pointIxRef = useRef(pointIx);
 
   const [points, setPoints] = useState<Point[]>([
     { x: 0, y: 0 },
@@ -57,30 +57,20 @@ export function Movement() {
     setBoundaries({ width: clientWidth, height: clientHeight });
   }, []);
 
-  // TODO
   useEffect(() => {
-    const mouseMove = (ev: globalThis.MouseEvent) => {
-      moveTo({ x: ev.clientX, y: ev.clientY });
-    };
-
-    const mouseUp = () => dragEnd();
-
-    window.addEventListener("mousemove", mouseMove);
-    window.addEventListener("mouseup", mouseUp);
-
-    return () => {
-      window.removeEventListener("mousemove", mouseMove);
-      window.removeEventListener("mouseup", mouseUp);
-    };
-  });
+    // updates the ref to use pointIx
+    // out of the (p)react lifecycle
+    // (see dragStart "mousemove" and "mouseup" events)
+    pointIxRef.current = pointIx;
+  }, [pointIx]);
 
   function toRelativePoint(
     mousePoint: Point,
     rect: DOMRect,
+    { width, height }: Boundaries = boundaries,
     radius = circleRadiusRef.current,
     offset = circleSizeOffsetRef.current,
-    mouseOffset = circleMouseOffsetRef.current,
-    { width, height }: Boundaries = boundaries
+    mouseOffset = circleMouseOffsetRef.current
   ): Point {
     const x = mousePoint.x - rect.left - mouseOffset.x;
     const y = mousePoint.y - rect.top - mouseOffset.y;
@@ -97,8 +87,8 @@ export function Movement() {
     return PointM(relative).mtpn(100).floor().value();
   }
 
-  function moveTo(point: Point) {
-    if (!hasIndex() || !dragging) return;
+  function moveTo(point: Point, pointIx = pointIxRef.current) {
+    if (!hasIndex()) return;
 
     const rect = svg.current?.getBoundingClientRect();
     if (!rect) return;
@@ -118,16 +108,22 @@ export function Movement() {
     const el = ev.target as SVGElement;
     const ix = Number(el.dataset.ix);
 
-    if (el.tagName === "circle" && !isNaN(ix)) {
-      calculateMouseOffset(el, { x: ev.clientX, y: ev.clientY });
-      setPointIx(ix);
-      setDragging(true);
-    }
-  }
+    if (el.tagName !== "circle" || isNaN(ix)) return;
 
-  function dragEnd() {
-    setDragging(false);
-    // TODO onUpdate(targetPoint) // transform: 0 <= x,y <= 1 (divide by 100)
+    const drag = (ev: globalThis.MouseEvent) =>
+      moveTo({ x: ev.clientX, y: ev.clientY });
+
+    const dragEnd = () => {
+      window.removeEventListener("mousemove", drag);
+      window.removeEventListener("mouseup", dragEnd);
+      // transform: 0 <= x,y <= 1 (divide by 100)
+      // TODO onUpdate(transform(points))
+    };
+
+    setPointIx(ix);
+    calculateMouseOffset(el, { x: ev.clientX, y: ev.clientY });
+    window.addEventListener("mousemove", drag);
+    window.addEventListener("mouseup", dragEnd);
   }
 
   function handleNatureChange(newNature: Nature) {
