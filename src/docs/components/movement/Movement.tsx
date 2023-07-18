@@ -154,10 +154,15 @@ export function Movement() {
 
   function handleInputChange(ix: number, axis: "x" | "y") {
     return (ev: ChangeEvent<HTMLInputElement>) => {
-      const value = Number(ev.target.value);
-      if (isNaN(value)) return;
+      let val = Number(ev.target.value);
+      if (isNaN(val)) {
+        val = points[ix][axis];
+        // https://github.com/preactjs/preact/issues/1899
+        ev.target.value = val.toString();
+        return;
+      }
 
-      points[ix][axis] = clamp(value, 0, 100);
+      points[ix][axis] = clamp(val, 0, 100);
       setPoints([...points]);
     };
   }
