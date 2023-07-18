@@ -14,8 +14,6 @@
   --border-radius: 1.5px;
   --size: 10px;
 
-  margin-top: 0.25rem;
-
   user-select: none;
   touch-action: none;
 
@@ -26,14 +24,41 @@
   background-color: var(--colors-gray200);
 }
 
+.slider.disabled {
+  opacity: 0.25;
+}
+
+.slider.disabled .track {
+  cursor: not-allowed;
+}
+
+.slider.horizontal {
+  margin-top: 0.25rem;
+}
+
+.slider.vertical {
+  flex-direction: column;
+  width: var(--size);
+}
+
 .slider .track {
-  height: var(--size);
   border-radius: var(--border-radius);
-  background-color: var(--colors-gray600);
+  position: relative;
+  /* background-color: var(--colors-gray600); */
+}
+
+.slider.horizontal .track {
+  height: var(--size);
+  width: 100%;
+}
+
+.slider.vertical .track {
+  width: var(--size);
+  height: 100%;
 }
 
 .slider .thumb {
-  /* transform: translateX(-50%); */
+  position: absolute;
   display: block;
   width: var(--size);
   height: var(--size);
@@ -44,8 +69,4 @@
 
 .slider .thumb:hover {
   background-color: var(--colors-gray900);
-}
-
-.slider .thumb:focus {
-  outline: none;
 }

@@ -23,6 +23,7 @@
   --default-background-color: var(--colors-gray200);
   --default-color: var(--colors-gray800);
   --default-border-radius: 2.5px;
+  --default-inbetween: 0.25rem;
 }
 
 .colors {
