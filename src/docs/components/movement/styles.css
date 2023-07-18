@@ -1,7 +1,3 @@
-.movement-container {
-  margin-top: .25rem;
-}
-
 .movement-container label {
   margin: 0;
   padding: .25rem 0;
@@ -19,45 +15,54 @@
   text-align: right;
 }
 
-.movement-plot {
-  /* FIXME .25rem should be a bar at :root */
-  margin-top: .25rem;
+.movement-container .toggle {
+  margin-top: var(--default-inbetween);
+}
+
+.movement-container .slider.horizontal {
+  margin-left: calc(var(--default-inbetween) + var(--size));
+}
+
+.movement-container .plot-container {
+  display: flex;
+  gap: var(--default-inbetween);
+  margin-top: var(--default-inbetween);
+}
+
+.movement-container .plot {
   width: 100%;
   aspect-ratio: 1 / 1;
   border: 1px solid var(--colors-gray600);
-  /* TODO */
   cursor: crosshair;
 }
 
-.movement-plot .grid line {
+.movement-container .plot .grid line {
   stroke-width: 1;
   stroke: var(--colors-gray200);
 }
 
-.movement-plot circle {
+.movement-container .plot circle {
   fill: var(--colors-gray600);
   cursor: move;
-  /* cursor: grab; */
 }
 
-.movement-plot circle.current {
+.movement-container .plot circle.current {
   fill: var(--colors-gray800);
-  /* cursor: grabbing; */
 }
 
-.movement-plot path {
+.movement-container .plot path {
   fill: none;
   stroke: var(--colors-gray900);
   stroke-width: .5;
 }
 
-.movement-plot path.main {
+.movement-container .plot path.main {
   stroke-dasharray: 5;
   /* TODO change animation speed given the movement velocity */
   animation: dash 1s linear forwards infinite;
 }
 
-.movement-plot path.handle {
+.movement-container .plot path.handle {
   stroke: var(--colors-gray700);
 }
 

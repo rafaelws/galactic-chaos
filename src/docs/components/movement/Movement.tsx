@@ -6,7 +6,7 @@ import { floor, plerp, PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
 import { classNames } from "@/docs/util";
 
-import { Toggle } from "..";
+import { Slider, Toggle } from "..";
 import { Grid } from "./Grid";
 import { Lines } from "./Line";
 
@@ -31,6 +31,8 @@ export function Movement() {
     { x: 0, y: 0 },
     { x: 100, y: 100 },
   ]);
+
+  const hasIndex = () => pointIx >= 0;
 
   const toAbsolute = (
     value: number,
@@ -94,7 +96,7 @@ export function Movement() {
   }
 
   function moveTo(point: Point) {
-    if (pointIx < 0 || !dragging) return;
+    if (!hasIndex() || !dragging) return;
 
     const rect = svg.current?.getBoundingClientRect();
     if (!rect) return;
@@ -155,38 +157,66 @@ export function Movement() {
     };
   }
 
+  function handleSliderUpdate(axis: "x" | "y") {
+    return (value: number) => {
+      if (!hasIndex()) return;
+      points[pointIx][axis] = value;
+      setPoints([...points]);
+    };
+  }
+
   const currentClassName = (ix: number) =>
     classNames({ current: pointIx === ix });
 
   return (
     <div className="movement-container">
       <Toggle value={nature} items={natures} onChange={handleNatureChange} />
-      <svg className="movement-plot" ref={svg} onMouseDown={dragStart}>
-        <Grid width={boundaries.width} />
-        <Lines points={absolutePoints} />
-        {absolutePoints.map((point, ix) => (
-          <circle
-            className={currentClassName(ix)}
-            cx={point.x}
-            cy={point.y}
-            r={circleRadius.current}
-            key={ix}
-            data-ix={ix}
-          />
-        ))}
-      </svg>
+      <div className="plot-container">
+        <Slider
+          min={0}
+          max={100}
+          orientation="vertical"
+          disabled={!hasIndex()}
+          value={hasIndex() ? points[pointIx].y : 0}
+          onValue={handleSliderUpdate("y")}
+        />
+        <svg ref={svg} className="plot" onMouseDown={dragStart}>
+          <Grid width={boundaries.width} />
+          <Lines points={absolutePoints} />
+          {absolutePoints.map((point, ix) => (
+            <circle
+              className={currentClassName(ix)}
+              cx={point.x}
+              cy={point.y}
+              r={circleRadius.current}
+              key={ix}
+              data-ix={ix}
+            />
+          ))}
+        </svg>
+      </div>
+      <Slider
+        min={0}
+        max={100}
+        orientation="horizontal"
+        disabled={!hasIndex()}
+        value={hasIndex() ? points[pointIx].x : 0}
+        onValue={handleSliderUpdate("x")}
+      />
       {points.map((point, ix) => (
         <label key={`p${ix}`} className={currentClassName(ix)}>
           P{ix}| x:
           <input
             className="common colors"
             value={point.x}
+            onFocus={() => setPointIx(ix)}
             onChange={handleInputChange(ix, "x")}
           />
           y:
           <input
             className="common colors"
             value={point.y}
+            onFocus={() => setPointIx(ix)}
             onChange={handleInputChange(ix, "y")}
           />
         </label>

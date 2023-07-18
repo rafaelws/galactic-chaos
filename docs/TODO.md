@@ -1,11 +1,12 @@
 # TODO (live-docs)
 
 Movement Component:
-- [ ] add 2 sliders to change current point x and y
+- [ ] {fix} include circle radius (offset) when calculating min/max
 - [ ] input to set movement `speed` (for each `step`)
 - [ ] input to determine if a movement is globally `repeatable`
 - [ ] ability to add more `steps`
 - [ ] communicate the canvas (finish)
+- [x] add 2 sliders to change current point x and y
 - [x] use global event for dragging (window -> mousemove, mouseup)
 - [x] fix dragging to stay in bounds
 - [x] (svg) [wrapper]
@@ -27,8 +28,8 @@ Misc:
   - [x] classnames
   - [x] checkbox
   - [x] toggleGroup
+  - [x] slider
   - [ ] ~~scrollarea~~
-  - [ ] ~~slider~~
 - [x] enable just rock and ship for now (boss for next iteration)
 
 # NEXT
