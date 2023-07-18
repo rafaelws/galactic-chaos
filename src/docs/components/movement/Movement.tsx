@@ -181,7 +181,7 @@ export function Movement() {
           onValue={handleSliderUpdate("y")}
         />
         <svg ref={svg} className="plot" onMouseDown={dragStart}>
-          <Grid width={boundaries.width} />
+          <Grid size={boundaries.width} />
           <Lines points={absolutePoints} />
           {absolutePoints.map((point, ix) => (
             <circle
