@@ -2,7 +2,7 @@ import "./styles.css";
 
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
-import { floor, plerp, PointM } from "@/core/math";
+import { clamp, floor, lerp, plerp, PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
 import { classNames } from "@/docs/util";
 
@@ -17,7 +17,9 @@ type Nature = (typeof natures)[number];
 
 export function Movement() {
   const svg = useRef<SVGSVGElement>(null);
-  const circleRadius = useRef<number>(5);
+  const circleRadiusRef = useRef<number>(5);
+  const circleSizeOffsetRef = useRef<number>(circleRadiusRef.current * 1.5);
+  const circleMouseOffsetRef = useRef<Point>({ x: 0, y: 0 });
   const [boundaries, setBoundaries] = useState<Boundaries>({
     width: 0,
     height: 0,
@@ -37,11 +39,9 @@ export function Movement() {
   const toAbsolute = (
     value: number,
     boundary: number,
-    radius = circleRadius.current
+    offset = circleSizeOffsetRef.current
   ) => {
-    if (value <= 0) return radius;
-    else if (value >= 100) return boundary - radius * 1.5;
-    else return (value * boundary) / 100;
+    return lerp(offset, boundary - offset, value * 0.01);
   };
 
   const toAbsolutePoint = ({ x, y }: Point) => ({
@@ -52,12 +52,12 @@ export function Movement() {
   const absolutePoints = points.map(toAbsolutePoint);
 
   useEffect(() => {
-    if (svg.current) {
-      const rect = svg.current.getBoundingClientRect();
-      setBoundaries(rect);
-    }
+    if (!svg.current) return;
+    const { clientWidth, clientHeight } = svg.current;
+    setBoundaries({ width: clientWidth, height: clientHeight });
   }, []);
 
+  // TODO
   useEffect(() => {
     const mouseMove = (ev: globalThis.MouseEvent) => {
       moveTo({ x: ev.clientX, y: ev.clientY });
@@ -74,23 +74,25 @@ export function Movement() {
     };
   });
 
-  function offset(
-    point: Point,
+  function toRelativePoint(
+    mousePoint: Point,
     rect: DOMRect,
-    radius = circleRadius.current,
+    radius = circleRadiusRef.current,
+    offset = circleSizeOffsetRef.current,
+    mouseOffset = circleMouseOffsetRef.current,
     { width, height }: Boundaries = boundaries
   ): Point {
-    const x = point.x - rect.left;
-    const y = point.y - rect.top;
+    const x = mousePoint.x - rect.left - mouseOffset.x;
+    const y = mousePoint.y - rect.top - mouseOffset.y;
     const relative = { x, y };
 
     if (x - radius < 0) relative.x = 0;
-    else if (x + radius * 2 > width) relative.x = 1;
-    else relative.x /= width;
+    else if (x + offset > width) relative.x = 1;
+    else relative.x /= width - offset;
 
     if (y - radius < 0) relative.y = 0;
-    else if (y + radius * 2 > height) relative.y = 1;
-    else relative.y /= height;
+    else if (y + offset > height) relative.y = 1;
+    else relative.y /= height - offset;
 
     return PointM(relative).mtpn(100).floor().value();
   }
@@ -101,8 +103,13 @@ export function Movement() {
     const rect = svg.current?.getBoundingClientRect();
     if (!rect) return;
 
-    points[pointIx] = offset(point, rect);
+    points[pointIx] = toRelativePoint(point, rect);
     setPoints([...points]);
+  }
+
+  function calculateMouseOffset(el: SVGElement, { x, y }: Point) {
+    const { top, left } = el.getBoundingClientRect();
+    circleMouseOffsetRef.current = { x: x - left, y: y - top };
   }
 
   function dragStart(ev: MouseEvent<SVGElement>) {
@@ -112,6 +119,7 @@ export function Movement() {
     const ix = Number(el.dataset.ix);
 
     if (el.tagName === "circle" && !isNaN(ix)) {
+      calculateMouseOffset(el, { x: ev.clientX, y: ev.clientY });
       setPointIx(ix);
       setDragging(true);
     }
@@ -146,13 +154,10 @@ export function Movement() {
 
   function handleInputChange(ix: number, axis: "x" | "y") {
     return (ev: ChangeEvent<HTMLInputElement>) => {
-      let value = Number(ev.target.value);
+      const value = Number(ev.target.value);
       if (isNaN(value)) return;
 
-      if (value >= 100) value = 100;
-      else if (value <= 0) value = 0;
-
-      points[ix][axis] = value;
+      points[ix][axis] = clamp(value, 0, 100);
       setPoints([...points]);
     };
   }
@@ -188,7 +193,7 @@ export function Movement() {
               className={currentClassName(ix)}
               cx={point.x}
               cy={point.y}
-              r={circleRadius.current}
+              r={circleRadiusRef.current}
               key={ix}
               data-ix={ix}
             />

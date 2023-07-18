@@ -1,11 +1,13 @@
 # TODO (live-docs)
 
 Movement Component:
-- [ ] {fix} include circle radius (offset) when calculating min/max
+- [x] {fix} include mouse offset while dragging point/circle
+- [ ] {fix} better highlight current point
 - [ ] input to set movement `speed` (for each `step`)
 - [ ] input to determine if a movement is globally `repeatable`
 - [ ] ability to add more `steps`
 - [ ] communicate the canvas (finish)
+- [x] {fix} include circle radius (offset) when calculating min/max
 - [x] add 2 sliders to change current point x and y
 - [x] use global event for dragging (window -> mousemove, mouseup)
 - [x] fix dragging to stay in bounds
