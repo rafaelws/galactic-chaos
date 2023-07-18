@@ -22,9 +22,9 @@ export function plerp(
 }
 
 /**
- * sum n points
+ * sum x and y of given points
  */
-export function sum(...points: Point[]) {
+export function psum(...points: Point[]) {
   let x = 0;
   let y = 0;
 
@@ -40,18 +40,18 @@ export function sum(...points: Point[]) {
 /**
  * Multiplies x and y by `n`
  */
-export function mtpn(c: Point, n: number) {
+export function pmtpn(c: Point, n: number) {
   return { x: c.x * n, y: c.y * n };
 }
 
 /**
  * signal inversion
  */
-export function si(c: Point) {
+export function psi(c: Point) {
   return { x: -c.x, y: -c.y };
 }
 
-export function floor({ x, y }: Point) {
+export function pfloor({ x, y }: Point) {
   return { x: Math.floor(x), y: Math.floor(y) };
 }
 
@@ -70,11 +70,11 @@ export function PointM(point: Point) {
       return this;
     },
     sum(...all: Point[]) {
-      value = sum(value, ...all);
+      value = psum(value, ...all);
       return this;
     },
     mtpn(n: number) {
-      value = mtpn(value, n);
+      value = pmtpn(value, n);
       return this;
     },
     floor() {
@@ -83,7 +83,7 @@ export function PointM(point: Point) {
       return this;
     },
     si() {
-      value = si(value);
+      value = psi(value);
       return this;
     },
   };

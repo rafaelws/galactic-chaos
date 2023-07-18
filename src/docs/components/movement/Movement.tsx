@@ -2,7 +2,7 @@ import "./styles.css";
 
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
-import { clamp, floor, lerp, plerp, PointM } from "@/core/math";
+import { clamp, lerp, pfloor, plerp, PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
 import { classNames } from "@/docs/util";
 
@@ -140,11 +140,11 @@ export function Movement() {
 
     if (newNature !== natures[0]) {
       if (newNature === natures[1])
-        newPoints.push(floor(plerp(first, last, 0.5)));
+        newPoints.push(pfloor(plerp(first, last, 0.5)));
       else
         newPoints.push(
-          floor(plerp(first, last, 0.333)),
-          floor(plerp(first, last, 0.666))
+          pfloor(plerp(first, last, 0.333)),
+          pfloor(plerp(first, last, 0.666))
         );
     }
     newPoints.push(last);

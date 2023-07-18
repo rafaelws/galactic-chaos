@@ -1,4 +1,4 @@
-import { mtpn, plerp, PZero, si, sum } from "@/core/math";
+import { plerp, pmtpn, psi, psum, PZero } from "@/core/math";
 import { Boundaries, Concrete, Point } from "@/core/meta";
 
 import { FluentMovement } from "./FluentMovement";
@@ -135,23 +135,23 @@ export class Movement {
     const { p0, p1, p2, p3 } = this.pointCache;
 
     if (this.cubicCache === null) {
-      const p0m3 = mtpn(p0, 3);
-      const p1m3 = mtpn(p1, 3);
-      const p2m3 = mtpn(p2, 3);
+      const p0m3 = pmtpn(p0, 3);
+      const p1m3 = pmtpn(p1, 3);
+      const p2m3 = pmtpn(p2, 3);
 
       this.cubicCache = {
-        a: sum(si(p0m3), p1m3),
-        b: sum(p0m3, mtpn(p1, -6), p2m3),
-        c: sum(si(p0), p1m3, si(p2m3), p3),
+        a: psum(psi(p0m3), p1m3),
+        b: psum(p0m3, pmtpn(p1, -6), p2m3),
+        c: psum(psi(p0), p1m3, psi(p2m3), p3),
       };
     }
 
     const quad = t * t;
-    return sum(
+    return psum(
       p0,
-      mtpn(this.cubicCache.a, t),
-      mtpn(this.cubicCache.b, quad),
-      mtpn(this.cubicCache.c, quad * t)
+      pmtpn(this.cubicCache.a, t),
+      pmtpn(this.cubicCache.b, quad),
+      pmtpn(this.cubicCache.c, quad * t)
     );
   }
 
