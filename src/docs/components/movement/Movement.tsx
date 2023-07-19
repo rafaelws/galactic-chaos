@@ -6,7 +6,7 @@ import { clamp, lerp, pfloor, plerp, PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
 import { classNames } from "@/docs/util";
 
-import { Slider, Toggle } from "..";
+import { Input, Slider, Toggle } from "..";
 import { Grid } from "./Grid";
 import { Lines } from "./Line";
 
@@ -212,15 +212,13 @@ export function Movement() {
       {points.map((point, ix) => (
         <label key={`p${ix}`} className={currentClassName(ix)}>
           P{ix}| x:
-          <input
-            className="common colors"
+          <Input
             value={point.x}
             onFocus={() => setPointIx(ix)}
             onChange={handleInputChange(ix, "x")}
           />
           y:
-          <input
-            className="common colors"
+          <Input
             value={point.y}
             onFocus={() => setPointIx(ix)}
             onChange={handleInputChange(ix, "y")}

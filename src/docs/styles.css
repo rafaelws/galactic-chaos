@@ -39,12 +39,12 @@
 }
 
 .common {
-  font-family: var(--fonts-mono);
   width: 100%;
-  padding: 0.25rem;
   border: none;
-  border-radius: 2.5px;
   outline: none;
+  font-family: var(--fonts-mono);
+  padding: var(--default-inbetween);
+  border-radius: var(--default-border-radius);
 }
 
 .main {
@@ -56,7 +56,7 @@
   top: 0.5rem;
   right: 0.5rem;
   width: 200px;
-  border-radius: 2.5px;
+  border-radius: var(--default-border-radius);
   z-index: 1;
 }
 
@@ -64,7 +64,7 @@
   font-family: var(--fonts-mono);
   font-size: 0.75rem;
   width: 100%;
-  padding: 0.25rem 0.5rem;
+  padding: var(--default-inbetween) 0.5rem;
   color: var(--colors-gray800);
   background-color: var(--colors-gray200);
   border-left: 5px solid;
@@ -72,11 +72,11 @@
 }
 
 .title:first-child {
-  border-radius: 2.5px 2.5px 0 0;
+  border-radius: var(--default-border-radius) var(--default-border-radius) 0 0;
 }
 
 .partition {
-  padding: 0.5rem 0.25rem;
+  padding: 0.5rem var(--default-inbetween);
 }
 
 .partition:last-child {
@@ -90,7 +90,7 @@
 
 label {
   font-family: var(--fonts-mono);
-  margin-top: 0.25rem;
+  margin-top: var(--default-inbetween);
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -103,7 +103,7 @@ label:first-child {
 
 input {
   user-select: none;
-  margin-left: .25rem;
+  margin-left: var(--default-inbetween);
 }
 
 input::selection {

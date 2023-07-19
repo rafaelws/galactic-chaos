@@ -1,6 +1,6 @@
 .movement-container label {
   margin: 0;
-  padding: .25rem 0;
+  padding: var(--default-inbetween) 0;
 }
 
 /* TODO change styling */

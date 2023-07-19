@@ -5,6 +5,8 @@ import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { clamp, lerp } from "@/core/math";
 import { Point } from "@/core/meta";
 
+import { Input } from "..";
+
 type Orientation = "vertical" | "horizontal";
 
 interface Props {
@@ -126,11 +128,7 @@ export function Slider(props: Props) {
       {props.label && (
         <label className="slider-label">
           {props.label}
-          <input
-            className="common colors"
-            value={value}
-            onChange={handleInput}
-          />
+          <Input value={value} onChange={handleInput} />
         </label>
       )}
       <div
