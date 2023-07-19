@@ -1,6 +1,13 @@
 import "./styles.css";
 
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  ComponentProps,
+  MouseEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { clamp, lerp } from "@/core/math";
 import { Point } from "@/core/meta";
@@ -9,20 +16,22 @@ import { Input } from "..";
 
 type Orientation = "vertical" | "horizontal";
 
-interface Props {
+type SliderProps = {
   label?: string;
-  onValue: (value: number) => void;
-  value: number;
+  onValue?: (value: number) => void;
+  value?: number;
   min: number;
   max: number;
   orientation?: Orientation;
   disabled?: boolean;
-}
+};
+
+type Props = ComponentProps<"div"> & SliderProps;
 
 // TODO missing feature: step
 // FIXME value is always floored
 // FIXME after `dragEnd`, `handleSliderClick` is fired
-export function Slider(props: Props) {
+export function Slider({ className, ...props }: Props) {
   const sliderRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLSpanElement>(null);
   const mouseOffsetRef = useRef<number>(0);
@@ -31,13 +40,19 @@ export function Slider(props: Props) {
   const orientation = props.orientation || "horizontal";
   const isHorizontal = orientation === "horizontal";
   const cssProperty = isHorizontal ? "left" : "top";
+  const classes = [
+    "slider",
+    orientation,
+    props.disabled ? "disabled" : "",
+    className || "",
+  ].join(" ");
 
   const [value, setValue] = useState<number>();
   const [position, setPosition] = useState<number>();
 
   useEffect(() => {
     setValue(props.value);
-    updatePosition(props.value);
+    updatePosition(props.value || props.min);
   }, [props.value]);
 
   function drag(ev: globalThis.MouseEvent) {
@@ -92,7 +107,7 @@ export function Slider(props: Props) {
   function updateValue(normalizedPosition: number) {
     const val = Math.floor(lerp(props.min, props.max, normalizedPosition));
     setValue(val);
-    props.onValue(val);
+    props.onValue && props.onValue(val);
   }
 
   function updatePosition(val: number, range = rangeRef.current) {
@@ -105,7 +120,7 @@ export function Slider(props: Props) {
   function handleInput(ev: ChangeEvent<HTMLInputElement>) {
     let val = Number(ev.target.value);
     if (isNaN(val)) {
-      val = value || props.value;
+      val = value || props.value || props.min;
       // https://github.com/preactjs/preact/issues/1899
       ev.target.value = val.toString();
       return setValue(val);
@@ -120,20 +135,20 @@ export function Slider(props: Props) {
 
   function reset() {
     setValue(props.value);
-    updatePosition(props.value);
+    updatePosition(props.value || props.min);
   }
 
   return (
-    <>
+    <div className={classes} {...props}>
       {props.label && (
-        <label className="slider-label">
+        <label>
           {props.label}
           <Input value={value} onChange={handleInput} />
         </label>
       )}
       <div
         ref={sliderRef}
-        className={`slider ${orientation} ${props.disabled ? "disabled" : ""}`}
+        className="container"
         onClick={(ev) => moveTo({ x: ev.clientX, y: ev.clientY })}
       >
         <div className="track">
@@ -146,6 +161,6 @@ export function Slider(props: Props) {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }

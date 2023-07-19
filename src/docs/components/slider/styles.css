@@ -1,19 +1,21 @@
-.slider-label {
+.slider {
+  --border-radius: 1.5px;
+  --size: 10px;
+}
+
+.slider label {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.slider-label input {
+.slider input {
   height: 1rem;
   max-width: 2.5rem;
   text-align: right;
 }
 
-.slider {
-  --border-radius: 1.5px;
-  --size: 10px;
-
+.slider .container {
   user-select: none;
   touch-action: none;
 
@@ -32,11 +34,16 @@
   cursor: not-allowed;
 }
 
-.slider.horizontal {
+.slider .container {
+  width: 100%;
+  height: 100%;
+}
+
+.slider.horizontal .container {
   margin-top: var(--default-inbetween);
 }
 
-.slider.vertical {
+.slider.vertical .container {
   flex-direction: column;
   width: var(--size);
 }
