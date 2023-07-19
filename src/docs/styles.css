@@ -76,11 +76,7 @@
 }
 
 .partition {
-  padding: 0.5rem var(--default-inbetween);
-}
-
-.partition:last-child {
-  padding-bottom: 0;
+  padding: var(--default-inbetween);
 }
 
 .stats {

@@ -1,15 +1,14 @@
-.movement-container label {
+.movement-container label.point {
   margin: 0;
   padding: var(--default-inbetween) 0;
 }
 
-/* TODO change styling */
-.movement-container label.current {
+.movement-container label.point.current {
   font-weight: bold;
-  /* border-left: 4px solid var(--colors-gray400); */
+  filter: brightness(2);
 }
 
-.movement-container input {
+.movement-container label.point input {
   height: 1rem;
   max-width: 3.5rem;
   text-align: right;
@@ -19,8 +18,13 @@
   margin-top: var(--default-inbetween);
 }
 
-.movement-container .slider.horizontal {
+.movement-container .slider.x-axis {
   margin-left: calc(var(--default-inbetween) + var(--size));
+}
+
+.movement-container .slider.speed {
+  border-top: 1px solid var(--colors-gray400);
+  padding-top: var(--default-inbetween);
 }
 
 .movement-container .plot-container {
@@ -48,6 +52,7 @@
 
 .movement-container .plot circle.current {
   fill: var(--colors-gray800);
+  filter: brightness(2);
 }
 
 .movement-container .plot path {

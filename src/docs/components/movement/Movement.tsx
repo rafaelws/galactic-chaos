@@ -208,9 +208,10 @@ export function Movement() {
         disabled={!hasIndex()}
         value={hasIndex() ? points[pointIx].x : 0}
         onValue={handleSliderUpdate("x")}
+        className="x-axis"
       />
       {points.map((point, ix) => (
-        <label key={`p${ix}`} className={currentClassName(ix)}>
+        <label key={`p${ix}`} className={"point " + currentClassName(ix)}>
           P{ix}| x:
           <Input
             value={point.x}
@@ -225,6 +226,7 @@ export function Movement() {
           />
         </label>
       ))}
+      <Slider label="Speed" className="speed" value={1} min={0.01} max={10} />
     </div>
   );
 }
