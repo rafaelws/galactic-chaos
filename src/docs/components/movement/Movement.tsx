@@ -1,5 +1,6 @@
 import "./styles.css";
 
+import debounce from "lodash.debounce";
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
 import { cssVar } from "@/core/dom";
@@ -238,7 +239,7 @@ export function Movement() {
         value={10}
         min={1}
         max={100}
-        onValue={handleSpeedChange}
+        onValue={debounce(handleSpeedChange, 50)}
       />
     </div>
   );
