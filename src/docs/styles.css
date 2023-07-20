@@ -81,7 +81,12 @@
 
 .stats {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stats span:last-child {
+  font-size: 10px;
 }
 
 label {

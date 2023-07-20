@@ -60,11 +60,9 @@ export function Main() {
 
   return (
     <div className="main">
-      <h3 className="title">Main</h3>
-      <div className="partition">
-        <Stats />
-      </div>
-      <h3 className="title">Debug</h3>
+      <h3 className="title">
+        <Stats title="Debug" />
+      </h3>
       <div className="partition">
         <Debug update={update} />
       </div>
