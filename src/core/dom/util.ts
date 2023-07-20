@@ -85,7 +85,11 @@ export function raf(cb: (delta: number) => void): () => void {
   return () => handle && cancelAnimationFrame(handle);
 }
 
-export function cssVar(name: string, value?: string) {
-  if (value) document.documentElement.style.setProperty(name, value);
-  return getComputedStyle(document.documentElement).getPropertyValue(name);
+export function cssVar(name: string, value?: string, el?: StOrEl) {
+  const target =
+    (typeof el === "string" ? document.querySelector<HTMLElement>(el) : el) ||
+    document.documentElement;
+
+  if (value) target.style.setProperty(name, value);
+  return getComputedStyle(target).getPropertyValue(name);
 }

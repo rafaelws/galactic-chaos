@@ -7,7 +7,7 @@ interface Props {
   type?: "main" | "handle";
 }
 
-function Line({ points, type = "main" }: Props) {
+function Line({ points, type: className = "main" }: Props) {
   const [p0, p1, p2, p3] = points;
   let d = `M ${p(p0)} `;
 
@@ -15,7 +15,7 @@ function Line({ points, type = "main" }: Props) {
   else if (p2) d += `Q ${p(p1)} ${p(p2)}`;
   else d += `L ${p(p1)}`;
 
-  return <path className={type} d={d} />;
+  return <path className={className} d={d} />;
 }
 
 export function Lines({ points }: { points: Point[] }) {

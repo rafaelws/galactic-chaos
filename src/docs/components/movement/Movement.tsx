@@ -2,6 +2,7 @@ import "./styles.css";
 
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
+import { cssVar } from "@/core/dom";
 import { clamp, lerp, pfloor, plerp, PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
 import { classNames } from "@/docs/util";
@@ -171,6 +172,11 @@ export function Movement() {
     };
   }
 
+  function handleSpeedChange(speed: number) {
+    const normalized = (110 - speed) * 10;
+    cssVar("--trajectory-time", `${normalized}ms`, ".plot path.main");
+  }
+
   const currentClassName = (ix: number) =>
     classNames({ current: pointIx === ix });
 
@@ -226,7 +232,14 @@ export function Movement() {
           />
         </label>
       ))}
-      <Slider label="Speed" className="speed" value={1} min={0.01} max={10} />
+      <Slider
+        label="Speed"
+        className="speed"
+        value={10}
+        min={1}
+        max={100}
+        onValue={handleSpeedChange}
+      />
     </div>
   );
 }

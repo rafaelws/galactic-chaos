@@ -28,15 +28,13 @@ type SliderProps = {
 
 type Props = ComponentProps<"div"> & SliderProps;
 
-// TODO missing feature: step
-// FIXME value is always floored
-// FIXME after `dragEnd`, `handleSliderClick` is fired
 export function Slider({ className, ...props }: Props) {
   const sliderRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLSpanElement>(null);
   const mouseOffsetRef = useRef<number>(0);
   const rangeRef = useRef<number>(props.max - props.min);
 
+  const valueOrMin = props.value == undefined ? props.min : props.value;
   const orientation = props.orientation || "horizontal";
   const isHorizontal = orientation === "horizontal";
   const cssProperty = isHorizontal ? "left" : "top";
@@ -52,7 +50,7 @@ export function Slider({ className, ...props }: Props) {
 
   useEffect(() => {
     setValue(props.value);
-    updatePosition(props.value || props.min);
+    updatePosition(valueOrMin);
   }, [props.value]);
 
   function drag(ev: globalThis.MouseEvent) {
@@ -105,7 +103,7 @@ export function Slider({ className, ...props }: Props) {
   }
 
   function updateValue(normalizedPosition: number) {
-    const val = Math.floor(lerp(props.min, props.max, normalizedPosition));
+    const val = Math.trunc(lerp(props.min, props.max, normalizedPosition));
     setValue(val);
     props.onValue && props.onValue(val);
   }
@@ -120,7 +118,7 @@ export function Slider({ className, ...props }: Props) {
   function handleInput(ev: ChangeEvent<HTMLInputElement>) {
     let val = Number(ev.target.value);
     if (isNaN(val)) {
-      val = value || props.value || props.min;
+      val = value || valueOrMin;
       // https://github.com/preactjs/preact/issues/1899
       ev.target.value = val.toString();
       return setValue(val);
@@ -135,7 +133,7 @@ export function Slider({ className, ...props }: Props) {
 
   function reset() {
     setValue(props.value);
-    updatePosition(props.value || props.min);
+    updatePosition(valueOrMin);
   }
 
   return (

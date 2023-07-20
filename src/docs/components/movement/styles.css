@@ -62,9 +62,10 @@
 }
 
 .movement-container .plot path.main {
+  /* this variable is handled in js */
+  --trajectory-time: 1s;
   stroke-dasharray: 5;
-  /* TODO change animation speed given the movement velocity */
-  animation: dash 1s linear forwards infinite;
+  animation: dash var(--trajectory-time) linear forwards infinite;
 }
 
 .movement-container .plot path.handle {
