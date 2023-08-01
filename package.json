@@ -11,7 +11,8 @@
     "preview": "run-s build vite:preview",
     "test": "vitest run --dir test",
     "test:watch": "vitest --dir test",
-    "eslint": "eslint src --ext .ts",
+    "test:staged": "vitest related --run --bail 1",
+    "eslint": "eslint src --ext .ts,.tsx --report-unused-disable-directives --max-warnings 15",
     "eslint:fix": "run-s eslint -- --fix",
     "tscheck": "tsc --noEmit",
     "lint": "run-s tscheck eslint",
@@ -20,24 +21,38 @@
   "devDependencies": {
     "@commitlint/cli": "^17.6.5",
     "@commitlint/config-conventional": "^17.6.5",
+    "@preact/preset-vite": "^2.5.0",
+    "@radix-ui/react-scroll-area": "^1.0.4",
     "@types/lodash.debounce": "^4.0.7",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
+    "@vitejs/plugin-react": "^4.0.1",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^8.0.0",
     "lint-staged": "^13.2.2",
-    "npm-run-all": "^4.1.5",
+    "npm-run-all": "^4.1.2",
     "prettier": "^2.8.8",
-    "typescript": "^4.9.4",
+    "typescript": "^5.1.3",
     "vite": "^4.0.0",
-    "vite-tsconfig-paths": "^4.0.3",
-    "vitest": "^0.31.0"
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^0.32.2"
   },
   "dependencies": {
-    "lodash.debounce": "^4.0.8"
+    "lodash.debounce": "^4.0.8",
+    "preact": "^10.16.0",
+    "react": "npm:@preact/compat@^17.1.2",
+    "react-dom": "npm:@preact/compat@^17.1.2"
   }
 }

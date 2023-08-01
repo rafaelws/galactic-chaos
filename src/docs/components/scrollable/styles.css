@@ -1,0 +1,61 @@
+.scrollable {
+  --scrollbar-size: 8px;
+
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.scrollable .viewport {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.scrollable .bar {
+  display: flex;
+  /* ensures no selection */
+  user-select: none;
+  /* disable browser handling of all panning
+  and zooming gestures on touch devices */
+  touch-action: none;
+  padding: 2px;
+  transition: var(--background-transition);
+  background-color: var(--colors-gray200);
+  opacity: 0.5;
+}
+
+.scrollable .bar:hover {
+  background-color: var(--colors-gray300);
+}
+
+.scrollable .bar[data-orientation=vertical] {
+  width: var(--scrollbar-size);
+}
+
+.scrollable .thumb {
+  flex: 1;
+  transition: var(--background-transition);
+  background: var(--colors-gray700);
+  /* increase target size for touch devices
+  https://www.w3.org/WAI/WCAG21/Understanding/target-size.html */
+  border-radius: 1.5px;
+  position: relative;
+}
+
+.scrollable .thumb:hover {
+  background: var(--colors-gray900);
+}
+
+.scrollable .thumb::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  min-width: 50px;
+  min-height: 50px;
+}

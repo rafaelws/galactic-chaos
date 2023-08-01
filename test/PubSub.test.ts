@@ -1,4 +1,4 @@
-import { PubSub } from "@/common/PubSub";
+import { PubSub } from "@/core/PubSub";
 
 describe("PubSub", () => {
   it("should sub and pub", () => {

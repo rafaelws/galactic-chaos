@@ -1,0 +1,13 @@
+.toggle {
+  display: flex;
+  justify-content: space-evenly;
+  border-radius: var(--default-boder-radius);
+}
+
+.toggle .item {
+  border-radius: 0;
+}
+
+.toggle .item[data-state=on] {
+  background-color: var(--colors-gray400);
+}

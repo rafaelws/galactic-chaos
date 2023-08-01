@@ -1,0 +1,81 @@
+.asset-picker {
+  --height: 100px;
+  --delay: 150ms;
+}
+
+.asset-picker .item {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  cursor: pointer;
+  padding: 0.25rem;
+  min-height: var(--height);
+  border-bottom: 1px solid var(--colors-gray400);
+}
+
+.asset-picker .item.active {
+  background-color: var(--colors-gray400);
+}
+
+.asset-picker .preview {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-radius: 2.5px;
+  background-color: var(--colors-gray200);
+  margin-top: 0.25rem;
+  cursor: pointer;
+  transition: height var(--delay), background-color var(--transition-duration);
+}
+
+.asset-picker .preview.closed {
+  padding: 0;
+  height: 0;
+}
+
+.asset-picker .preview.open {
+  transition: height var(--delay) ease var(--delay),
+    background-color var(--transition-duration);
+  padding: 0.25rem;
+  height: var(--height);
+}
+
+.asset-picker .preview:hover {
+  background-color: var(--colors-gray300);
+}
+
+.asset-picker .list {
+  overflow: hidden;
+  width: 100%;
+  border-radius: 2.5px;
+  height: 0;
+  transition-property: height;
+  transition-duration: var(--delay);
+}
+
+.asset-picker .list.open {
+  height: calc(var(--height) * 2.5);
+  transition-delay: var(--delay);
+}
+
+.asset-picker .preview.closed+.list.open {
+  transition-delay: 0ms;
+}
+
+.asset-picker .asset {
+  object-fit: scale-down;
+  max-height: var(--height);
+  max-width: var(--height);
+}
+
+.asset-picker button {
+  margin-top: 0.25rem;
+  padding: 0.25rem 0;
+  width: 100%;
+  border-radius: var(--default-border-radius);
+  display: none;
+}
+
+.asset-picker button.open {
+  display: block;
+}

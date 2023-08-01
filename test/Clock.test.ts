@@ -1,4 +1,4 @@
-import { Clock } from "@/common/Clock";
+import { Clock } from "@/core/Clock";
 
 describe("Clock", () => {
   it("should not be pending", () => {

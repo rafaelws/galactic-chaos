@@ -1,7 +1,46 @@
+# TODO (live-docs/playground)
+
+Movement Component:
+- [ ] input to determine if a movement is globally `repeatable`
+- [ ] ability to add more `steps`
+- [ ] communicate the canvas (finish)
+- [x] {fix} better highlighting for current point
+- [x] input to set movement `speed` (for each `step`)
+- [X] {fix} window events
+- [x] {fix} include mouse offset while dragging point/circle
+- [x] {fix} include circle radius (offset) when calculating min/max
+- [x] add 2 sliders to change current point x and y
+- [x] use global event for dragging (window -> mousemove, mouseup)
+- [x] fix dragging to stay in bounds
+- [x] (svg) [wrapper]
+- [x] plot grid
+- [x] plot points
+- [x] plot lines between points (traced animated showing direction)
+- [x] Line Component 
+- [x] positions should be relative
+- [x] toggle to change movement type: linear, quadratic, cubic
+- [x] inputs to track x and y of each point
+- [ ] ability to set predefined (center, center left, top left, .15, .25, .333, .5, .666, .75...) and random values (rir)
+- [ ] ability to lock a point or step (so the user can't modify it)
+
+Misc:
+- [ ] organize css - set common and colors to all input &+?
+- [x] {refac} rename math methods
+- [x] (big) refactor: go back to plain css (remove css-in-js)
+- [x] consider removing some libs: 
+  - [x] stiches
+  - [x] classnames
+  - [x] checkbox
+  - [x] toggleGroup
+  - [x] slider
+  - [ ] ~~scrollarea~~
+- [x] enable just rock and ship for now (boss for next iteration)
+- [ ] review/re-write README
+
 # NEXT
 
 ## Features
- - [ ] live docs
+ - [ ] live docs (aka `playground`)
  - [ ] level designer
 
 ## Tools & Processes
@@ -9,12 +48,14 @@
  - [x] commit messages (cz, commitlint)
  - [ ] versioning (semver)
  - [ ] changelog
+ - [ ] vitest (unit tests)
+ - [ ] cypress, striker-js
 
 ## Fixes/Improvements
  - [ ] communicate player of controls (use menus)
  - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
  - [ ] polish game end
- - [ ] rewrite hud, menus as web components?
+ - [ ] remove colors from source code if possible
 
 ## To Consider
  - [ ] game assets: either simplify asset loading or change to a simplified neon line style (without external assets)
@@ -29,6 +70,7 @@
   - [ ] shield (item)
   - [ ] special (item)
 - [ ] projectile
+  - [ ] draw projectiles directly on canvas (do not use asset/image)
   - [ ] {idea} deflect projectile on hit
   - [ ] {idea} piercing projectile: projectiles keeps attacking given a timeout until hp is depleated
   - [ ] {idea} projectile upgrades (size, amount, speed, rate)

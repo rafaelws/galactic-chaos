@@ -1,0 +1,83 @@
+.movement-container label.point {
+  margin: 0;
+  padding: var(--default-inbetween) 0;
+}
+
+.movement-container label.point.current {
+  font-weight: bold;
+  filter: brightness(2);
+}
+
+.movement-container label.point input {
+  height: 1rem;
+  max-width: 3.5rem;
+  text-align: right;
+}
+
+.movement-container .toggle {
+  margin-top: var(--default-inbetween);
+}
+
+.movement-container .slider.x-axis {
+  margin-left: calc(var(--default-inbetween) + var(--size));
+}
+
+.movement-container .slider.speed {
+  border-top: 1px solid var(--colors-gray400);
+  padding-top: var(--default-inbetween);
+}
+
+.movement-container .plot-container {
+  display: flex;
+  gap: var(--default-inbetween);
+  margin-top: var(--default-inbetween);
+}
+
+.movement-container .plot {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--colors-gray600);
+  cursor: crosshair;
+}
+
+.movement-container .plot .grid line {
+  stroke-width: 1;
+  stroke: var(--colors-gray200);
+}
+
+.movement-container .plot circle {
+  fill: var(--colors-gray600);
+  cursor: move;
+}
+
+.movement-container .plot circle.current {
+  fill: var(--colors-gray800);
+  filter: brightness(2);
+}
+
+.movement-container .plot path {
+  fill: none;
+  stroke: var(--colors-gray900);
+  stroke-width: .5;
+}
+
+.movement-container .plot path.main {
+  /* this variable is handled in js */
+  --trajectory-time: 1s;
+  stroke-dasharray: 5;
+  animation: dash var(--trajectory-time) linear forwards infinite;
+}
+
+.movement-container .plot path.handle {
+  stroke: var(--colors-gray700);
+}
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 20;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
