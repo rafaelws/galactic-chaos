@@ -5,16 +5,18 @@ import { useState } from "react";
 interface Props {
   id: string;
   label: string;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
 }
 
 export function Checkbox(props: Props) {
-  const [checked, setChecked] = useState(props.checked);
+  const [checked, setChecked] = useState(
+    props.checked == undefined ? true : props.checked
+  );
 
   function handleChange() {
     const value = !checked;
-    props.onChange(value);
+    props.onChange && props.onChange(value);
     setChecked(value);
   }
 

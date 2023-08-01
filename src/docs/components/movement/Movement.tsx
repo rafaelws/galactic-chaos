@@ -8,7 +8,7 @@ import { clamp, lerp, pfloor, plerp, PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
 import { classNames } from "@/docs/util";
 
-import { Input, Slider, Toggle } from "..";
+import { Checkbox, Input, Slider, Toggle } from "..";
 import { Grid } from "./Grid";
 import { Lines } from "./Line";
 
@@ -241,6 +241,7 @@ export function Movement() {
         max={100}
         onValue={debounce(handleSpeedChange, 50)}
       />
+      <Checkbox id="repeatable" label="Repeatable" />
     </div>
   );
 }

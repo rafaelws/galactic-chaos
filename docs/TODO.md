@@ -1,4 +1,4 @@
-# TODO (live-docs)
+# TODO (live-docs/playground)
 
 Movement Component:
 - [ ] input to determine if a movement is globally `repeatable`
@@ -35,6 +35,7 @@ Misc:
   - [x] slider
   - [ ] ~~scrollarea~~
 - [x] enable just rock and ship for now (boss for next iteration)
+- [ ] review/re-write README
 
 # NEXT
 
