@@ -1,9 +1,9 @@
 # TODO (live-docs/playground)
 
 Movement Component:
-- [ ] input to determine if a movement is globally `repeatable`
 - [ ] ability to add more `steps`
 - [ ] communicate the canvas (finish)
+- [x] input to determine if a movement is globally `repeatable`
 - [x] {fix} better highlighting for current point
 - [x] input to set movement `speed` (for each `step`)
 - [X] {fix} window events
@@ -24,7 +24,9 @@ Movement Component:
 - [ ] ability to lock a point or step (so the user can't modify it)
 
 Misc:
-- [ ] organize css - set common and colors to all input &+?
+- [ ] review/re-write README
+- [x] move to solidjs
+- [x] organize css - set `common` and `colors` to all input
 - [x] {refac} rename math methods
 - [x] (big) refactor: go back to plain css (remove css-in-js)
 - [x] consider removing some libs: 
@@ -33,9 +35,8 @@ Misc:
   - [x] checkbox
   - [x] toggleGroup
   - [x] slider
-  - [ ] ~~scrollarea~~
+  - [x] ~~scrollarea~~
 - [x] enable just rock and ship for now (boss for next iteration)
-- [ ] review/re-write README
 
 # NEXT
 
@@ -52,7 +53,7 @@ Misc:
  - [ ] cypress, striker-js
 
 ## Fixes/Improvements
- - [ ] communicate player of controls (use menus)
+ - [ ] communicate player of controls @ menus (use `<kbd>`)
  - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
  - [ ] polish game end
  - [ ] remove colors from source code if possible

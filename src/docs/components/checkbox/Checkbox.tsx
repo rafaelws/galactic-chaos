@@ -1,6 +1,6 @@
 import "./styles.css";
 
-import { useState } from "react";
+import { createSignal } from "solid-js";
 
 interface Props {
   id: string;
@@ -10,25 +10,27 @@ interface Props {
 }
 
 export function Checkbox(props: Props) {
-  const [checked, setChecked] = useState(
+  const [checked, setChecked] = createSignal(
     props.checked == undefined ? true : props.checked
   );
 
   function handleChange() {
-    const value = !checked;
-    props.onChange && props.onChange(value);
-    setChecked(value);
+    setChecked((prev) => {
+      const value = !prev;
+      props.onChange && props.onChange(value);
+      return value;
+    });
   }
 
   return (
-    <label htmlFor={props.id}>
+    <label for={props.id}>
       {props.label}
       <button
         id={props.id}
         role="checkbox"
-        aria-checked={checked}
-        data-checked={checked}
-        className="checkbox colors"
+        aria-checked={checked()}
+        data-checked={checked()}
+        class="checkbox colors"
         onClick={handleChange}
       >
         <svg
@@ -46,8 +48,8 @@ export function Checkbox(props: Props) {
               7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 
               3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z`}
             fill="currentColor"
-            fillRule="evenodd"
-            clipRule="evenodd"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
           ></path>
         </svg>
       </button>

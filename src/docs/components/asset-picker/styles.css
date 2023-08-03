@@ -54,6 +54,7 @@
 }
 
 .asset-picker .list.open {
+  overflow-y: auto;
   height: calc(var(--height) * 2.5);
   transition-delay: var(--delay);
 }
@@ -73,9 +74,4 @@
   padding: 0.25rem 0;
   width: 100%;
   border-radius: var(--default-border-radius);
-  display: none;
-}
-
-.asset-picker button.open {
-  display: block;
 }

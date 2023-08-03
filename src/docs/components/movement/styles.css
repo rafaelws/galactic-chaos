@@ -40,11 +40,6 @@
   cursor: crosshair;
 }
 
-.movement-container .plot .grid line {
-  stroke-width: 1;
-  stroke: var(--colors-gray200);
-}
-
 .movement-container .plot circle {
   fill: var(--colors-gray600);
   cursor: move;
@@ -59,6 +54,11 @@
   fill: none;
   stroke: var(--colors-gray900);
   stroke-width: .5;
+}
+
+.movement-container .plot path.grid {
+  stroke-width: 1;
+  stroke: var(--colors-gray200);
 }
 
 .movement-container .plot path.main {

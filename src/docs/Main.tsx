@@ -1,6 +1,13 @@
 import "./styles.css";
 
-import { useEffect, useState } from "react";
+import {
+  createResource,
+  createSignal,
+  Match,
+  onMount,
+  Show,
+  Switch,
+} from "solid-js";
 
 import { raf, show } from "@/core/dom";
 
@@ -13,74 +20,69 @@ import {
   Toggle,
 } from "./components";
 import { setupRender } from "./render";
-import { Assets, EntityType, entityTypes, loadAssets } from "./util";
+import { EntityType, entityTypes, loadAssets } from "./util";
 
 // TODO phantom player x, y
-
-const { render, update } = setupRender();
+const { render } = setupRender();
 
 export function Main() {
-  const [img, setImg] = useState<HTMLImageElement>();
-  const [current, setCurrent] = useState<EntityType>();
-  const [assets, setAssets] = useState<Assets>();
+  // useEffect(() => {
+  //   update({ img, assetType: current });
+  // }, [img, current]);
 
-  useEffect(() => {
-    update({ img, assetType: current });
-  }, [img, current]);
-
-  useEffect(() => {
+  onMount(() => {
+    raf(render);
     show(document.body);
-    loadAssets().then((results) => {
-      setAssets(results);
-      setCurrent(entityTypes[0]);
-    });
-  }, []);
+  });
 
-  useEffect(() => raf(render), []);
+  const [assets] = createResource(loadAssets);
+  const [, setImg] = createSignal<HTMLImageElement>();
+  const [current, setCurrent] = createSignal<EntityType>(entityTypes[0]);
+
+  const currentAssets = () => assets()![current()];
 
   function handleEntityChange(value: EntityType) {
-    // TODO when empty, could close the scrollable@AssetPicker
+    // TODO when empty, could close the AssetPicker
     if (!value || value.trim() === "") return;
     setImg(undefined);
     setCurrent(value);
   }
 
-  let parameters;
-  switch (current) {
-    // case "Boss":
-    //   parameters = <BossParameters />;
-    //   break;
-    case "Ship":
-      parameters = <ShipParameters />;
-      break;
-    case "Rock":
-      parameters = <RockParameters />;
-      break;
-  }
-
   return (
-    <div className="main">
-      <h3 className="title">
+    <div class="main">
+      <h3 class="title">
         <Stats title="Debug" />
       </h3>
-      <div className="partition">
-        <Debug update={update} />
+      <div class="partition">
+        <Debug />
       </div>
-      <h3 className="title">Asset</h3>
-      <div className="partition">
-        {current && (
+      <h3 class="title">Asset</h3>
+      <div class="partition">
+        <Show when={current()}>
           <Toggle
-            value={current}
+            value={current()}
             items={entityTypes}
             onChange={handleEntityChange}
           />
-        )}
-        {current && assets && (
-          <AssetPicker assets={assets[current]} onPick={(img) => setImg(img)} />
-        )}
+          <Show when={!assets.loading}>
+            <AssetPicker
+              assets={currentAssets()}
+              onPick={(img) => setImg(img)}
+            />
+          </Show>
+        </Show>
       </div>
-      <h3 className="title">Parameters</h3>
-      <div className="partition">{parameters}</div>
+      <h3 class="title">Parameters</h3>
+      <div class="partition">
+        <Switch>
+          <Match when={current() === "Ship"}>
+            <ShipParameters />
+          </Match>
+          <Match when={current() === "Rock"}>
+            <RockParameters />
+          </Match>
+        </Switch>
+      </div>
     </div>
   );
 }

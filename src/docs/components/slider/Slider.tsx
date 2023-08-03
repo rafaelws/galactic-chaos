@@ -1,14 +1,8 @@
 import "./styles.css";
 
-import {
-  ChangeEvent,
-  ComponentProps,
-  MouseEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { createEffect, createSignal, JSX, Show } from "solid-js";
 
+import { cssVar } from "@/core/dom";
 import { clamp, lerp } from "@/core/math";
 import { Point } from "@/core/meta";
 
@@ -16,7 +10,8 @@ import { Input } from "..";
 
 type Orientation = "vertical" | "horizontal";
 
-type SliderProps = {
+interface Props {
+  class?: string;
   label?: string;
   onValue?: (value: number) => void;
   value?: number;
@@ -24,34 +19,59 @@ type SliderProps = {
   max: number;
   orientation?: Orientation;
   disabled?: boolean;
-};
+}
 
-type Props = ComponentProps<"div"> & SliderProps;
+export function Slider(props: Props) {
+  let slider: HTMLDivElement | undefined;
+  let thumb: HTMLSpanElement | undefined;
 
-export function Slider({ className, ...props }: Props) {
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const thumbRef = useRef<HTMLSpanElement>(null);
-  const mouseOffsetRef = useRef<number>(0);
-  const rangeRef = useRef<number>(props.max - props.min);
-
-  const valueOrMin = props.value == undefined ? props.min : props.value;
+  let mouseOffset = 0;
   const orientation = props.orientation || "horizontal";
   const isHorizontal = orientation === "horizontal";
-  const cssProperty = isHorizontal ? "left" : "top";
-  const classes = [
-    "slider",
-    orientation,
-    props.disabled ? "disabled" : "",
-    className || "",
-  ].join(" ");
 
-  const [value, setValue] = useState<number>();
-  const [position, setPosition] = useState<number>();
+  const range = props.max - props.min;
+  const initialValue = props.value == undefined ? props.min : props.value;
+  const classes = () =>
+    [
+      "slider",
+      orientation,
+      props.disabled ? "disabled" : "",
+      props.class || "",
+    ].join(" ");
 
-  useEffect(() => {
-    setValue(props.value);
-    updatePosition(valueOrMin);
-  }, [props.value]);
+  const [value, setValue] = createSignal<number>(initialValue);
+  createEffect(() => {
+    const val = props.value || initialValue;
+    setValue(val);
+    setPosition(valueToPosition(val));
+  });
+
+  function calculateThumbOffset(
+    { x, y }: Point,
+    thumbRect = thumb?.getBoundingClientRect()
+  ) {
+    if (!thumbRect) return;
+    mouseOffset = isHorizontal ? x - thumbRect.left : y - thumbRect.top;
+  }
+
+  function getMax(sliderRect = slider?.getBoundingClientRect()) {
+    if (!sliderRect || !thumb) return 0;
+    const thumbSize = isHorizontal ? thumb.clientWidth : thumb.clientHeight;
+    return (isHorizontal ? sliderRect.width : sliderRect.height) - thumbSize;
+  }
+
+  const positionToValue = (position: number, max = getMax()) =>
+    Math.trunc(lerp(props.min, props.max, position / max));
+
+  function valueToPosition(value: number, max = getMax()) {
+    if (range === 0) return 0;
+    const normalized = Math.max(Math.min(value, props.max), props.min);
+    return ((normalized - props.min) / range) * max;
+  }
+
+  const setPosition = (position: number) => {
+    cssVar("--position", `${position}px`, thumb);
+  };
 
   function drag(ev: globalThis.MouseEvent) {
     moveTo({ x: ev.clientX, y: ev.clientY });
@@ -62,35 +82,16 @@ export function Slider({ className, ...props }: Props) {
     window.removeEventListener("mouseup", dragEnd);
   }
 
-  function dragStart(ev: MouseEvent<HTMLSpanElement>) {
+  function dragStart(ev: globalThis.MouseEvent) {
     calculateThumbOffset({ x: ev.clientX, y: ev.clientY });
     window.addEventListener("mousemove", drag);
     window.addEventListener("mouseup", dragEnd);
   }
 
-  function calculateThumbOffset(
-    { x, y }: Point,
-    thumbRect = thumbRef.current?.getBoundingClientRect()
-  ) {
-    if (!thumbRect) return;
-    mouseOffsetRef.current = isHorizontal
-      ? x - thumbRect.left
-      : y - thumbRect.top;
-  }
-
-  function getMax(
-    sliderRect = sliderRef.current?.getBoundingClientRect(),
-    thumb = thumbRef.current
-  ) {
-    if (!sliderRect || !thumb) return 0;
-    const thumbSize = isHorizontal ? thumb.clientWidth : thumb.clientHeight;
-    return (isHorizontal ? sliderRect.width : sliderRect.height) - thumbSize;
-  }
-
   function moveTo(
     { x, y }: Point,
-    sliderRect = sliderRef.current?.getBoundingClientRect(),
-    offset = mouseOffsetRef.current
+    sliderRect = slider?.getBoundingClientRect(),
+    offset = mouseOffset
   ) {
     if (props.disabled || !sliderRect) return;
     const { left, top } = sliderRect;
@@ -98,64 +99,51 @@ export function Slider({ className, ...props }: Props) {
 
     const max = getMax(sliderRect);
     pos = clamp(pos, 0, max);
-    updateValue(pos / max);
-    setPosition(pos);
-  }
 
-  function updateValue(normalizedPosition: number) {
-    const val = Math.trunc(lerp(props.min, props.max, normalizedPosition));
+    const val = positionToValue(pos, max);
     setValue(val);
     props.onValue && props.onValue(val);
-  }
-
-  function updatePosition(val: number, range = rangeRef.current) {
-    if (range === 0) return;
-    const normalized = Math.max(Math.min(val, props.max), props.min);
-    const pos = ((normalized - props.min) / range) * getMax();
     setPosition(pos);
   }
 
-  function handleInput(ev: ChangeEvent<HTMLInputElement>) {
-    let val = Number(ev.target.value);
+  const handleInput: JSX.EventHandler<HTMLInputElement, InputEvent> = (ev) => {
+    let val = Number(ev.currentTarget.value);
     if (isNaN(val)) {
-      val = value || valueOrMin;
-      // https://github.com/preactjs/preact/issues/1899
-      ev.target.value = val.toString();
-      return setValue(val);
+      val = props.value || initialValue;
+      ev.currentTarget.value = val.toString();
+      return;
     }
-    if (val === value) return;
+    if (val === props.value) return;
     val = clamp(val, props.min, props.max);
 
-    ev.target.value = val.toString();
-    updatePosition(val);
+    ev.currentTarget.value = val.toString();
     setValue(val);
-  }
+    setPosition(valueToPosition(val));
+  };
 
   function reset() {
-    setValue(props.value);
-    updatePosition(valueOrMin);
+    setPosition(valueToPosition(initialValue));
   }
 
   return (
-    <div className={classes} {...props}>
-      {props.label && (
+    <div class={classes()}>
+      <Show when={props.label != undefined}>
         <label>
           {props.label}
-          <Input value={value} onChange={handleInput} />
+          <Input value={value()} onInput={handleInput} />
         </label>
-      )}
+      </Show>
       <div
-        ref={sliderRef}
-        className="container"
+        ref={slider!}
+        class="container"
         onClick={(ev) => moveTo({ x: ev.clientX, y: ev.clientY })}
       >
-        <div className="track">
+        <div class="track">
           <span
-            className="thumb"
-            ref={thumbRef}
+            class="thumb"
+            ref={thumb!}
             onMouseDown={dragStart}
-            onDoubleClick={reset}
-            style={{ [cssProperty]: position }}
+            onDblClick={reset}
           />
         </div>
       </div>

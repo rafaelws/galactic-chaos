@@ -1,34 +1,41 @@
+import { createEffect, createSignal, Show } from "solid-js";
+
 import { Point } from "@/core/meta";
 
 const p = ({ x, y }: Point) => `${x},${y}`;
 
-interface Props {
+interface LineProps {
   points: Point[];
-  type?: "main" | "handle";
+  type: "main" | "handle" | "grid";
 }
 
-function Line({ points, type: className = "main" }: Props) {
-  const [p0, p1, p2, p3] = points;
-  let d = `M ${p(p0)} `;
+export function Line(props: LineProps) {
+  const [path, setPath] = createSignal("");
 
-  if (p3) d += `C ${p(p1)} ${p(p2)} ${p(p3)}`;
-  else if (p2) d += `Q ${p(p1)} ${p(p2)}`;
-  else d += `L ${p(p1)}`;
+  createEffect(() => {
+    const [p0, p1, p2, p3] = props.points;
+    let d = `M ${p(p0)} `;
 
-  return <path className={className} d={d} />;
+    if (p3) d += `C ${p(p1)} ${p(p2)} ${p(p3)}`;
+    else if (p2) d += `Q ${p(p1)} ${p(p2)}`;
+    else d += `L ${p(p1)}`;
+
+    setPath(d);
+  });
+  return <path class={props.type} d={path()} />;
 }
 
-export function Lines({ points }: { points: Point[] }) {
+type LineWithHandlesProps = { points: Point[] };
+
+export function LineWithHandles(props: LineWithHandlesProps) {
+  // TODO create handles for quadratic
   return (
-    <g>
-      {/* TODO create handles for quadratic */}
-      {points.length === 4 && (
-        <>
-          <Line type="handle" points={points.slice(0, 2)} />
-          <Line type="handle" points={points.slice(2)} />
-        </>
-      )}
-      <Line points={points} />
-    </g>
+    <>
+      <Show when={props.points.length === 4}>
+        <Line type="handle" points={props.points.slice(0, 2)} />
+        <Line type="handle" points={props.points.slice(2)} />
+      </Show>
+      <Line type="main" points={props.points} />
+    </>
   );
 }

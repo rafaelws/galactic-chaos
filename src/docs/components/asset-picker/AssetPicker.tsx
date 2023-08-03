@@ -1,68 +1,57 @@
 import "./styles.css";
 
-import { useEffect, useState } from "react";
-
-import { classNames } from "@/docs/util";
-
-import { Scrollable } from "..";
+import { createEffect, createSignal, For, Show } from "solid-js";
 
 interface Props {
   assets: HTMLImageElement[];
   onPick: (img: HTMLImageElement) => void;
 }
 
-export function AssetPicker({ assets, onPick }: Props) {
-  const [open, setOpen] = useState<boolean>(false);
-  const [current, setCurrent] = useState<HTMLImageElement>();
+export function AssetPicker(props: Props) {
+  const [open, setOpen] = createSignal<boolean>(false);
+  const [current, setCurrent] = createSignal<HTMLImageElement>();
 
-  useEffect(() => {
-    setCurrent(assets[0]);
-  }, [assets]);
+  createEffect(() => setCurrent(props.assets[0]));
 
-  const previewOpen = !open && !!current;
-  const openClassName = classNames({ open });
-
-  const handleClick = () => setOpen(!open);
+  const previewOpen = () => !open() && !!current();
+  const handleClick = () => setOpen((prev) => !prev);
 
   function handlePick(img: HTMLImageElement) {
-    onPick(img);
+    props.onPick(img);
     setCurrent(img);
     setOpen(false);
   }
 
   return (
-    <div className="asset-picker">
+    <div class="asset-picker">
       <div
         onClick={handleClick}
-        className={
-          "preview " +
-          classNames({
-            open: previewOpen,
-            closed: !previewOpen,
-          })
-        }
+        class="preview"
+        classList={{
+          open: previewOpen(),
+          closed: !previewOpen(),
+        }}
       >
-        {current && <img className="asset" src={current.src} />}
+        <Show when={current()}>
+          <img class="asset" src={current()!.src} />
+        </Show>
       </div>
-      <ul className={"list " + openClassName}>
-        <Scrollable>
-          {assets.map((img) => (
+      <ul class="list" classList={{ open: open() }}>
+        <For each={props.assets}>
+          {(img) => (
             <li
-              key={img.src}
-              className={
-                "item colors " +
-                classNames({ active: current?.src === img.src })
-              }
+              class="item colors"
+              classList={{ active: current()?.src === img.src }}
               onClick={() => handlePick(img)}
             >
-              <img className="asset" src={img.src} />
+              <img class="asset" src={img.src} />
             </li>
-          ))}
-        </Scrollable>
+          )}
+        </For>
       </ul>
-      <button className={openClassName} onClick={handleClick}>
-        Close
-      </button>
+      <Show when={open()}>
+        <button onClick={handleClick}>Close</button>
+      </Show>
     </div>
   );
 }

@@ -65,6 +65,7 @@
 }
 
 .slider .thumb {
+  --position: 0px;
   position: absolute;
   display: block;
   width: var(--size);
@@ -72,6 +73,14 @@
   background-color: var(--colors-gray700);
   border-radius: var(--border-radius);
   transition: var(--background-transition);
+}
+
+.slider.horizontal .thumb {
+  left: var(--position);
+}
+
+.slider.vertical .thumb {
+  top: var(--position);
 }
 
 .slider .thumb:hover {

@@ -1,47 +1,43 @@
-import { useCallback, useEffect, useState } from "react";
+import { createEffect, createSignal, For, mergeProps } from "solid-js";
 
-import { Point } from "@/core/meta";
+import { Boundaries, Point } from "@/core/meta";
 
-interface InternalLineProps {
-  p0: Point;
-  p1: Point;
-  key: string;
-}
+import { Line } from "./Line";
+
+type PointTuple = [Point, Point];
+type Dimension = "width" | "height";
 
 interface Props {
-  size: number;
+  boundaries: Boundaries;
+  dimension?: Dimension;
   slices?: number;
 }
 
-export function Grid({ size, slices = 10 }: Props) {
-  const [lines, setLines] = useState<InternalLineProps[]>([]);
+export function Grid(props: Props) {
+  const merged = mergeProps({ slices: 10, dimension: "width" }, props);
+  const [lines, setLines] = createSignal<PointTuple[]>();
 
-  const calculateLines = useCallback(() => {
-    const spacing = size / slices;
-    const _lines = [];
-    for (let i = 1; i < slices; i++) {
+  createEffect(() => {
+    const size = props.boundaries[merged.dimension as Dimension];
+    const lines: PointTuple[] = [];
+    const spacing = size / merged.slices;
+    for (let i = 1; i < merged.slices; i++) {
       const tile = i * spacing;
-      _lines.push(
-        {
-          p0: { x: 0, y: tile },
-          p1: { x: size, y: tile },
-          key: `h${i}`,
-        },
-        { p0: { x: tile, y: 0 }, p1: { x: tile, y: size }, key: `v${i}` }
+      lines.push(
+        [
+          { x: 0, y: tile },
+          { x: size, y: tile },
+        ],
+        [
+          { x: tile, y: 0 },
+          { x: tile, y: size },
+        ]
       );
     }
-    setLines(_lines);
-  }, [size, slices]);
-
-  useEffect(() => {
-    calculateLines();
-  }, [size, calculateLines]);
+    setLines(lines);
+  });
 
   return (
-    <g className="grid">
-      {lines.map(({ p0, p1, key }) => {
-        return <line x1={p0.x} y1={p0.y} x2={p1.x} y2={p1.y} key={key} />;
-      })}
-    </g>
+    <For each={lines()}>{(points) => <Line type="grid" points={points} />}</For>
   );
 }

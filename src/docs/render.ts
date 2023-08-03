@@ -1,7 +1,19 @@
+import { showStats } from "./components/debug";
+
+export type RenderFn = (delta: number) => void;
+export type SetupRenderFn = { render: RenderFn };
+
+export function setupRender(): SetupRenderFn {
+  function render(delta: number) {
+    showStats(delta);
+  }
+  return { render };
+}
+
+/*
 import { CanvasManager } from "@/core";
 import { GameObject } from "@/core/objects";
 
-import { showStats } from "./components/debug";
 import { EntityType } from "./util";
 
 let debug = {
@@ -67,3 +79,4 @@ export function setupRender(): SetupRenderFn {
 
   return { render, update };
 }
+*/

@@ -1,6 +1,6 @@
 export function Stats({ title }: { title: string }) {
   return (
-    <div className="stats">
+    <div class="stats">
       <span>{title}</span>
       <span>
         <span>

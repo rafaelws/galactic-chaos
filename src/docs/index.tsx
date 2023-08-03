@@ -1,14 +1,10 @@
 import "./index.css";
 
-import React from "react";
-import ReactDOM from "react-dom/client";
+/* @refresh reload */
+import { render } from "solid-js/web";
 
 import { Main } from "./Main";
 
-const root = document.querySelector<HTMLElement>("#root")!;
+const root = document.getElementById("root")!;
 
-ReactDOM.createRoot(root).render(
-  <React.StrictMode>
-    <Main />
-  </React.StrictMode>
-);
+render(() => <Main />, root);
