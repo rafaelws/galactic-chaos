@@ -2,13 +2,13 @@ import "./styles.css";
 
 import { createSignal } from "solid-js";
 
-interface ToggleProps {
+interface RadioProps {
   value?: string;
   onChange(value: string): void;
   items: string[] | readonly string[];
 }
 
-export function Toggle(props: ToggleProps) {
+export function Radio(props: RadioProps) {
   const [current, setCurrent] = createSignal(props.value);
 
   function handleClick(item: string) {
@@ -18,7 +18,7 @@ export function Toggle(props: ToggleProps) {
   }
 
   return (
-    <div role="group" class="toggle">
+    <div role="group" class="radio">
       {props.items.map((item) => (
         <button
           role="radio"

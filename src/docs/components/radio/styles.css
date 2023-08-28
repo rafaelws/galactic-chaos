@@ -1,13 +1,13 @@
-.toggle {
+.radio {
   display: flex;
   justify-content: space-evenly;
   border-radius: var(--default-boder-radius);
 }
 
-.toggle .item {
+.radio .item {
   border-radius: 0;
 }
 
-.toggle .item[data-state=on] {
+.radio .item[data-state=on] {
   background-color: var(--colors-gray400);
 }
