@@ -14,10 +14,10 @@ import { raf, show } from "@/core/dom";
 import {
   AssetPicker,
   Debug,
+  Radio,
   RockParameters,
   ShipParameters,
   Stats,
-  Toggle,
 } from "./components";
 import { setupRender } from "./render";
 import { EntityType, entityTypes, loadAssets } from "./util";
@@ -59,7 +59,7 @@ export function Main() {
       <h3 class="title">Asset</h3>
       <div class="partition">
         <Show when={current()}>
-          <Toggle
+          <Radio
             value={current()}
             items={entityTypes}
             onChange={handleEntityChange}

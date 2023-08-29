@@ -1,3 +1,37 @@
+.movement-step-manager {
+  border-top: 1px solid var(--colors-gray400);
+  margin-top: var(--default-inbetween);
+  padding-top: var(--default-inbetween);
+}
+
+.movement-step-manager .header {
+  padding: var(--default-inbetween);
+  width: 100%;
+}
+
+.movement-step-manager .header.active {
+  background-color: var(--colors-gray400);
+}
+
+.movement-step-manager>button {
+  margin: var(--default-inbetween) 0;
+}
+
+.movement-step-manager>select {
+  padding: var(--default-inbetween);
+  background-color: var(--colors-gray400);
+  color: var(--colors-gray800);
+  font-family: var(--fonts-mono);
+  border-radius: var(--default-border-radius);
+  font-size: 11px;
+  width: 100%;
+  outline: none;
+}
+
+.movement-container {
+  padding: var(--default-inbetween) 0;
+}
+
 .movement-container label.point {
   margin: 0;
   padding: var(--default-inbetween) 0;

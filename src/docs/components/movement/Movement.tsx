@@ -1,29 +1,46 @@
-import "./styles.css";
-
-import debounce from "lodash.debounce";
-import { createSignal, For, JSX, onMount } from "solid-js";
+import { createEffect, createSignal, For, JSX, onMount } from "solid-js";
 
 import { cssVar } from "@/core/dom";
-import { clamp, lerp, pfloor, plerp, PointM } from "@/core/math";
+import { clamp, lerp, pdivn, pfloor, plerp, PointM } from "@/core/math";
 import { Boundaries, Point } from "@/core/meta";
+import {
+  MovementNature,
+  MovementStep,
+} from "@/core/objects/shared/movement/MovementParams";
 
-import { Checkbox, Input, Slider, Toggle } from "..";
+import { Input, Radio, Slider } from "..";
 import { Grid } from "./Grid";
 import { LineWithHandles } from "./Line";
+
+function pointsFromStep({ p0, p1, p2, p3 }: MovementStep) {
+  return [p0, p1, p2, p3]
+    .filter((p) => p !== undefined)
+    .map((p) => PointM(p!).mtpn(100).trunc().value());
+}
+
+export interface StepParams {
+  step: MovementStep;
+  onUpdate: (step: MovementStep) => void;
+}
 
 const MIN = 0;
 const MAX = 100;
 
-const natures = ["Linear", "Quadratic", "Cubic"] as const;
+const naturesMap: Record<string, MovementNature> = {
+  Linear: MovementNature.Linear,
+  Quadratic: MovementNature.QuadraticBezier,
+  Cubic: MovementNature.CubicBezier,
+} as const;
+const natures = Object.keys(naturesMap);
 type Nature = (typeof natures)[number];
 
-export function Movement() {
-  const [nature, setNature] = createSignal<Nature>(natures[0]);
+export function Movement({ step, onUpdate }: StepParams) {
+  const [speed, setSpeed] = createSignal<number>(
+    Math.trunc((step.speed || 1) * 10)
+  );
+  const [nature, setNature] = createSignal<Nature>(step.nature);
   const [pointIx, setPointIx] = createSignal<number>(0);
-  const [points, setPoints] = createSignal<Point[]>([
-    { x: MIN, y: MIN },
-    { x: MAX, y: MAX },
-  ]);
+  const [points, setPoints] = createSignal<Point[]>(pointsFromStep(step));
 
   let svg: SVGSVGElement | undefined;
   let circleMouseOffsetRef: Point = { x: 0, y: 0 };
@@ -52,6 +69,18 @@ export function Movement() {
   });
 
   const absolutePoints = () => points().map(toAbsolutePoint);
+
+  createEffect(() => {
+    const [p0, p1, p2, p3] = points();
+    onUpdate({
+      nature: naturesMap[nature()],
+      speed: speed() / 10,
+      p0: pdivn(p0, 100),
+      p1: pdivn(p1, 100),
+      p2: p2 ? pdivn(p2, 100) : undefined,
+      p3: p3 ? pdivn(p3, 100) : undefined,
+    });
+  });
 
   onMount(() => {
     if (!svg) return;
@@ -182,6 +211,7 @@ export function Movement() {
   function handleSpeedChange(speed: number) {
     const normalized = (110 - speed) * 10;
     cssVar("--trajectory-time", `${normalized}ms`, ".plot path.main");
+    setSpeed(speed);
   }
 
   const isCurrent = (ix: number) => pointIx() === ix;
@@ -189,7 +219,7 @@ export function Movement() {
 
   return (
     <div class="movement-container">
-      <Toggle value={nature()} items={natures} onChange={handleNatureChange} />
+      <Radio value={nature()} items={natures} onChange={handleNatureChange} />
       <div class="plot-container">
         <Slider
           min={MIN}
@@ -245,12 +275,11 @@ export function Movement() {
       <Slider
         label="Speed"
         class="speed"
-        value={10}
+        value={speed()}
         min={1}
         max={100}
-        onValue={debounce(handleSpeedChange, 50)}
+        onValue={handleSpeedChange}
       />
-      <Checkbox id="repeatable" label="Repeatable" />
     </div>
   );
 }

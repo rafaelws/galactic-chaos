@@ -29,9 +29,9 @@ export function psum(...points: Point[]) {
   let y = 0;
 
   for (let i = 0; i < points.length; i++) {
-    const c = points[i];
-    x += c.x;
-    y += c.y;
+    const p = points[i];
+    x += p.x;
+    y += p.y;
   }
 
   return { x, y };
@@ -40,19 +40,23 @@ export function psum(...points: Point[]) {
 /**
  * Multiplies x and y by `n`
  */
-export function pmtpn(c: Point, n: number) {
-  return { x: c.x * n, y: c.y * n };
+export function pmtpn(p: Point, n: number) {
+  return { x: p.x * n, y: p.y * n };
 }
 
 /**
  * signal inversion
  */
-export function psi(c: Point) {
-  return { x: -c.x, y: -c.y };
+export function psi(p: Point) {
+  return { x: -p.x, y: -p.y };
 }
 
 export function pfloor({ x, y }: Point) {
   return { x: Math.floor(x), y: Math.floor(y) };
+}
+
+export function pdivn(p: Point, n: number) {
+  return { x: p.x / n, y: p.y / n };
 }
 
 /**
@@ -77,9 +81,18 @@ export function PointM(point: Point) {
       value = pmtpn(value, n);
       return this;
     },
+    pdivn(n: number) {
+      value = pdivn(value, n);
+      return this;
+    },
     floor() {
       value.x = Math.floor(value.x);
       value.y = Math.floor(value.y);
+      return this;
+    },
+    trunc() {
+      value.x = Math.trunc(value.x);
+      value.y = Math.trunc(value.y);
       return this;
     },
     si() {

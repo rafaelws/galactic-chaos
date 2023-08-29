@@ -1,6 +1,6 @@
 import "./styles.css";
 
-import { createSignal } from "solid-js";
+import { createSignal, For } from "solid-js";
 
 interface RadioProps {
   value?: string;
@@ -19,17 +19,19 @@ export function Radio(props: RadioProps) {
 
   return (
     <div role="group" class="radio">
-      {props.items.map((item) => (
-        <button
-          role="radio"
-          aria-checked={item === current()}
-          data-state={item === current() ? "on" : "off"}
-          class="common colors item"
-          onClick={() => handleClick(item)}
-        >
-          {item}
-        </button>
-      ))}
+      <For each={props.items}>
+        {(item) => (
+          <button
+            role="radio"
+            aria-checked={item === current()}
+            data-state={item === current() ? "on" : "off"}
+            class="common colors item"
+            onClick={() => handleClick(item)}
+          >
+            {item}
+          </button>
+        )}
+      </For>
     </div>
   );
 }

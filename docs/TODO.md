@@ -1,8 +1,10 @@
 # TODO (live-docs/playground)
 
 Movement Component:
-- [ ] ability to add more `steps`
 - [ ] communicate the canvas (finish)
+- [ ] check build sizes and optimize imports
+- [x] use nature from MovementParams on Movement.tsx (drop custom Nature type)
+- [x] ability to add more `steps`
 - [x] input to determine if a movement is globally `repeatable`
 - [x] {fix} better highlighting for current point
 - [x] input to set movement `speed` (for each `step`)

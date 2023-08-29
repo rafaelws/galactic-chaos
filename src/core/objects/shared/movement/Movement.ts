@@ -4,7 +4,7 @@ import { Boundaries, Concrete, Point } from "@/core/meta";
 import { FluentMovement } from "./FluentMovement";
 import { MovementNature, MovementParams, MovementStep } from "./MovementParams";
 
-const zeroedPoints = {
+const zeroPoints = {
   p0: PZero,
   p1: PZero,
   p2: PZero,
@@ -28,7 +28,7 @@ export class Movement {
   private readonly stepDefaults: Concrete<MovementStep> = {
     nature: MovementNature.Linear,
     speed: 1,
-    ...zeroedPoints,
+    ...zeroPoints,
   };
 
   private steps: MovementStep[];
@@ -37,7 +37,7 @@ export class Movement {
   private current: Concrete<MovementStep> | null = null;
   private deltaSum = 0;
 
-  private pointCache: PointCache = zeroedPoints;
+  private pointCache: PointCache = zeroPoints;
   private cubicCache: CubicBezierCoefficientCache | null = null;
 
   private repeatable: boolean;
