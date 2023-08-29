@@ -227,7 +227,7 @@ export function Movement({ step, onUpdate }: StepParams) {
           orientation="vertical"
           disabled={!hasIndex()}
           value={getAxis("y")}
-          onValue={handleSliderUpdate("y")}
+          onChange={handleSliderUpdate("y")}
         />
         <svg ref={svg} class="plot" onMouseDown={dragStart}>
           <Grid boundaries={boundaries()} />
@@ -251,7 +251,7 @@ export function Movement({ step, onUpdate }: StepParams) {
         orientation="horizontal"
         disabled={!hasIndex()}
         value={getAxis("x")}
-        onValue={handleSliderUpdate("x")}
+        onChange={handleSliderUpdate("x")}
         class="x-axis"
       />
       <For each={points()}>
@@ -278,7 +278,7 @@ export function Movement({ step, onUpdate }: StepParams) {
         value={speed()}
         min={1}
         max={100}
-        onValue={handleSpeedChange}
+        onChange={handleSpeedChange}
       />
     </div>
   );

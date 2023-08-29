@@ -13,7 +13,7 @@ type Orientation = "vertical" | "horizontal";
 interface Props {
   class?: string;
   label?: string;
-  onValue?: (value: number) => void;
+  onChange?: (value: number) => void;
   value?: number;
   min: number;
   max: number;
@@ -102,7 +102,7 @@ export function Slider(props: Props) {
 
     const val = positionToValue(pos, max);
     setValue(val);
-    props.onValue && props.onValue(val);
+    props.onChange && props.onChange(val);
     setPosition(pos);
   }
 

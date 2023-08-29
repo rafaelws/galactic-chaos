@@ -18,7 +18,7 @@ export function RockParameters() {
         min={-360}
         max={360}
         label="Rotation (deg)"
-        onValue={handleRotation}
+        onChange={handleRotation}
       />
       <Movement onUpdate={handleMovement} />
     </>

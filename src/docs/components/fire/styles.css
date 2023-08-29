@@ -1,0 +1,4 @@
+.fire-container .slider,
+.fire-container .radio {
+  margin-bottom: var(--default-inbetween);
+}
