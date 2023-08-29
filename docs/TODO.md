@@ -1,32 +1,18 @@
-# TODO (live-docs/playground)
+# TODO 
 
-Movement Component:
-- [ ] communicate the canvas (finish)
+## live-docs/playground
+
+- [ ] Ship params
+- [ ] Fire component
+- [ ] communicate the canvas (Rock and Ship params) [shared signal? pubsub?]
+- [x] enable just rock and ship for now (boss for next cycle)
+
+## misc
+
+- [ ] rewrite game ui with solid
 - [ ] check build sizes and optimize imports
-- [x] use nature from MovementParams on Movement.tsx (drop custom Nature type)
-- [x] ability to add more `steps`
-- [x] input to determine if a movement is globally `repeatable`
-- [x] {fix} better highlighting for current point
-- [x] input to set movement `speed` (for each `step`)
-- [X] {fix} window events
-- [x] {fix} include mouse offset while dragging point/circle
-- [x] {fix} include circle radius (offset) when calculating min/max
-- [x] add 2 sliders to change current point x and y
-- [x] use global event for dragging (window -> mousemove, mouseup)
-- [x] fix dragging to stay in bounds
-- [x] (svg) [wrapper]
-- [x] plot grid
-- [x] plot points
-- [x] plot lines between points (traced animated showing direction)
-- [x] Line Component 
-- [x] positions should be relative
-- [x] toggle to change movement type: linear, quadratic, cubic
-- [x] inputs to track x and y of each point
-- [ ] ability to set predefined (center, center left, top left, .15, .25, .333, .5, .666, .75...) and random values (rir)
-- [ ] ability to lock a point or step (so the user can't modify it)
-
-Misc:
-- [ ] review/re-write README
+- [ ] communicate player of controls @ menus (use `<kbd>`)
+- [ ] review/re-write README (for conciseness)
 - [x] move to solidjs
 - [x] organize css - set `common` and `colors` to all input
 - [x] {refac} rename math methods
@@ -37,14 +23,22 @@ Misc:
   - [x] checkbox
   - [x] toggleGroup
   - [x] slider
-  - [x] ~~scrollarea~~
-- [x] enable just rock and ship for now (boss for next iteration)
+  - [x] scrollarea
 
 # NEXT
 
 ## Features
  - [ ] live docs (aka `playground`)
  - [ ] level designer
+
+## To Consider
+ - [ ] game assets (loading): either simplify asset loading or change to a simplified neon line style (without external assets)
+ - [ ] change/simplify mechanics
+
+## Fixes/Improvements
+ - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
+ - [ ] polish game end
+ - [ ] remove colors from source code if possible
 
 ## Tools & Processes
  - [x] husky, lint-staged
@@ -53,16 +47,6 @@ Misc:
  - [ ] changelog
  - [ ] vitest (unit tests)
  - [ ] cypress, striker-js
-
-## Fixes/Improvements
- - [ ] communicate player of controls @ menus (use `<kbd>`)
- - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
- - [ ] polish game end
- - [ ] remove colors from source code if possible
-
-## To Consider
- - [ ] game assets: either simplify asset loading or change to a simplified neon line style (without external assets)
- - [ ] change/simplify mechanics
 
 ---
 
@@ -218,3 +202,28 @@ Misc:
 - [x] (Asset Loading) trigger "loading state" while a level is loading
 - [x] pub on PubSub made async
 - [x] radar
+
+- - -
+
+Movement Component:
+- [x] use nature from MovementParams on Movement.tsx (drop custom Nature type)
+- [x] ability to add more `steps`
+- [x] input to determine if a movement is globally `repeatable`
+- [x] {fix} better highlighting for current point
+- [x] input to set movement `speed` (for each `step`)
+- [X] {fix} window events
+- [x] {fix} include mouse offset while dragging point/circle
+- [x] {fix} include circle radius (offset) when calculating min/max
+- [x] add 2 sliders to change current point x and y
+- [x] use global event for dragging (window -> mousemove, mouseup)
+- [x] fix dragging to stay in bounds
+- [x] (svg) [wrapper]
+- [x] plot grid
+- [x] plot points
+- [x] plot lines between points (traced animated showing direction)
+- [x] Line Component 
+- [x] positions should be relative
+- [x] toggle to change movement type: linear, quadratic, cubic
+- [x] inputs to track x and y of each point
+- [ ] ability to set predefined (center, center left, top left, .15, .25, .333, .5, .666, .75...) and random values (rir)
+- [ ] ability to lock a point or step (so the user can't modify it)

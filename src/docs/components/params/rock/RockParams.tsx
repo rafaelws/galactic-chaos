@@ -1,15 +1,14 @@
-// interface Props {
-//   update: UpdateFn;
-// }
+import { MovementParams } from "@/core/objects/shared/movement/MovementParams";
 
 import { Movement, Slider } from "../..";
 
 export function RockParameters() {
-  // const [state, setState] = useState<RockParams>();
+  function handleMovement(_: MovementParams) {
+    // TODO
+  }
 
-  // useEffect(() => () => update({ params: state }), [state]);
   function handleRotation(_: number) {
-    //
+    // TODO
   }
 
   return (
@@ -21,7 +20,7 @@ export function RockParameters() {
         label="Rotation (deg)"
         onValue={handleRotation}
       />
-      <Movement />
+      <Movement onUpdate={handleMovement} />
     </>
   );
 }

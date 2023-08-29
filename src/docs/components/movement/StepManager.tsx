@@ -4,6 +4,7 @@ import { createSignal, For, Show } from "solid-js";
 
 import {
   MovementNature,
+  MovementParams,
   MovementStep,
 } from "@/core/objects/shared/movement/MovementParams";
 
@@ -17,7 +18,11 @@ const emptyStep = {
   speed: 1,
 };
 
-export function StepManager() {
+interface StepManagerParams {
+  onUpdate?: (params: MovementParams) => void;
+}
+
+export function StepManager(params: StepManagerParams) {
   const [steps, setSteps] = createSignal<MovementStep[]>([emptyStep]);
   const [repeatable, setRepeatable] = createSignal<boolean>(false);
 
@@ -28,7 +33,15 @@ export function StepManager() {
 
   function onUpdate(step: MovementStep) {
     currentStep = step;
-    // TODO send upstream
+
+    if (!params.onUpdate) return;
+    const _steps = [...steps()];
+    _steps[activeIx()] = step;
+
+    params.onUpdate({
+      steps: _steps,
+      repeatable: repeatable(),
+    });
   }
 
   function changeActive(ix: number) {
