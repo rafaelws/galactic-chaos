@@ -11,11 +11,11 @@
 
 ## misc
 
-- [ ] remove tooling (husky, lint-staged, cz, commitlint)
 - [ ] rewrite game ui with solid
 - [ ] check build sizes and optimize imports
 - [ ] communicate player of controls @ menus (use `<kbd>`)
 - [ ] review/re-write README (for conciseness)
+- [x] remove tooling (husky, lint-staged, cz, commitlint)
 - [x] move to solidjs
 - [x] organize css - set `common` and `colors` to all input
 - [x] {refac} rename math methods

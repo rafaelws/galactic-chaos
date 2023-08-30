@@ -15,17 +15,12 @@
     "eslint": "eslint src --ext .ts,.tsx --report-unused-disable-directives --max-warnings 15",
     "eslint:fix": "run-s eslint -- --fix",
     "tscheck": "tsc --noEmit",
-    "lint": "run-s tscheck eslint",
-    "prepare": "husky install"
+    "lint": "run-s tscheck eslint"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.6.5",
-    "@commitlint/config-conventional": "^17.6.5",
     "@types/lodash.debounce": "^4.0.7",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
-    "commitizen": "^4.3.0",
-    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-typescript": "^3.5.5",
@@ -33,8 +28,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "husky": "^8.0.0",
-    "lint-staged": "^13.2.2",
     "npm-run-all": "^4.1.2",
     "prettier": "^2.8.8",
     "typescript": "^5.1.3",
