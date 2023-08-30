@@ -1,9 +1,11 @@
 import "./styles.css";
 
 import {
+  createEffect,
   createResource,
   createSignal,
   Match,
+  onCleanup,
   onMount,
   Show,
   Switch,
@@ -19,27 +21,37 @@ import {
   ShipParameters,
   Stats,
 } from "./components";
-import { setupRender } from "./render";
+import { events } from "./events";
+import { prepare } from "./render";
 import { EntityType, entityTypes, loadAssets } from "./util";
 
-// TODO phantom player x, y
-const { render } = setupRender();
-
 export function Main() {
-  // useEffect(() => {
-  //   update({ img, assetType: current });
-  // }, [img, current]);
+  const [assets] = createResource(loadAssets);
+  const [img, setImg] = createSignal<HTMLImageElement>();
+  const [current, setCurrent] = createSignal<EntityType>(entityTypes[1]);
+
+  const currentAssets = () => (assets() ? assets()![current()] : []);
+
+  const { render, destroy } = prepare();
 
   onMount(() => {
     raf(render);
     show(document.body);
   });
 
-  const [assets] = createResource(loadAssets);
-  const [, setImg] = createSignal<HTMLImageElement>();
-  const [current, setCurrent] = createSignal<EntityType>(entityTypes[0]);
+  onCleanup(() => destroy());
 
-  const currentAssets = () => assets()![current()];
+  createEffect(() => {
+    if (img()) events.img(img()!);
+  });
+
+  createEffect(() => {
+    if (current()) events.entity(current()!);
+  });
+
+  createEffect(() => {
+    if (currentAssets().length > 0) setImg(currentAssets()[0]);
+  });
 
   function handleEntityChange(value: EntityType) {
     // TODO when empty, could close the AssetPicker

@@ -24,7 +24,7 @@ interface StepManagerParams {
 
 export function StepManager(params: StepManagerParams) {
   const [steps, setSteps] = createSignal<MovementStep[]>([emptyStep]);
-  const [repeatable, setRepeatable] = createSignal<boolean>(false);
+  const [repeatable, setRepeatable] = createSignal<boolean>(true);
 
   const [activeIx, setActiveIx] = createSignal(0);
 

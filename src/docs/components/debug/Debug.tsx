@@ -1,11 +1,24 @@
 import { createSignal, For } from "solid-js";
 
+import { events } from "../../events";
 import { Checkbox } from "..";
 
 const fieldNames = ["hitboxes", "trajectory", "statusText"] as const;
 type FieldName = (typeof fieldNames)[number];
 type FieldProps = { label: string; value: boolean };
 type Fields = Record<FieldName, FieldProps>;
+
+export interface DebugParams {
+  hitboxes: boolean;
+  trajectory: boolean;
+  statusText: boolean;
+}
+
+const toDebugParams = (fields: Fields): DebugParams => ({
+  hitboxes: fields.hitboxes.value,
+  trajectory: fields.trajectory.value,
+  statusText: fields.statusText.value,
+});
 
 export function Debug() {
   const [fields, setFields] = createSignal<Fields>({
@@ -15,9 +28,10 @@ export function Debug() {
   });
 
   function handleChange(id: string, checked: boolean) {
-    setFields((previous) => {
-      previous[id as FieldName].value = checked;
-      return { ...previous };
+    setFields((prev) => {
+      prev[id as FieldName].value = checked;
+      events.debug(toDebugParams(prev));
+      return { ...prev };
     });
   }
 

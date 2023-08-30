@@ -22,7 +22,7 @@ const precisionProfiles = Object.keys(precisionMap);
 
 export function Fire(params: Params) {
   const [angle, setAngle] = createSignal(180);
-  const [rate, setRate] = createSignal(0);
+  const [rate, setRate] = createSignal(1000);
   const [precision, setPrecision] = createSignal(precisionProfiles[0]);
 
   createEffect(() => {

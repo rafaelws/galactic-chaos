@@ -61,7 +61,7 @@ export class LevelManager implements Destroyable {
     this.levels[this.currentLevelIx]()
       .then((objects) => this.gameObjects.push(...objects))
       // TODO improve error handling
-      .catch((err) => console.error("could not load assets", err))
+      // .catch((err) => console.error("could not load assets", err))
       .finally(() => {
         this.loading = false;
       });

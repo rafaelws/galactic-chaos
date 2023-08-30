@@ -1,14 +1,24 @@
+import { RockParams } from "@/core/objects/rock/RockParams";
 import { MovementParams } from "@/core/objects/shared/movement/MovementParams";
+import { events } from "@/docs/events";
 
 import { Movement, Slider } from "../..";
 
 export function RockParameters() {
-  function handleMovement(_: MovementParams) {
-    // TODO
+  let params: Partial<RockParams> | null = null;
+
+  function setParams(extras: Partial<RockParams>) {
+    params = { ...(params || {}), ...extras };
   }
 
-  function handleRotation(_: number) {
-    // TODO
+  function handleMovement(movement: MovementParams) {
+    setParams({ movement });
+    if (params) events.rock(params);
+  }
+
+  function handleRotation(rotationSpeed: number) {
+    setParams({ rotationSpeed });
+    if (params) events.rock(params);
   }
 
   return (

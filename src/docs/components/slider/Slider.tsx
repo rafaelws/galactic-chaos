@@ -31,13 +31,6 @@ export function Slider(props: Props) {
 
   const range = props.max - props.min;
   const initialValue = props.value == undefined ? props.min : props.value;
-  const classes = () =>
-    [
-      "slider",
-      orientation,
-      props.disabled ? "disabled" : "",
-      props.class || "",
-    ].join(" ");
 
   const [value, setValue] = createSignal<number>(initialValue);
   createEffect(() => {
@@ -118,6 +111,7 @@ export function Slider(props: Props) {
 
     ev.currentTarget.value = val.toString();
     setValue(val);
+    props.onChange && props.onChange(val);
     setPosition(valueToPosition(val));
   };
 
@@ -126,7 +120,10 @@ export function Slider(props: Props) {
   }
 
   return (
-    <div class={classes()}>
+    <div
+      class={`slider ${props.class} ${orientation}`}
+      classList={{ disabled: props.disabled }}
+    >
       <Show when={props.label != undefined}>
         <label>
           {props.label}

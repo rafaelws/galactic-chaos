@@ -1,14 +1,17 @@
 # TODO 
 
-## live-docs/playground
+## playground
 
-- [ ] Ship params
-- [ ] Fire component
-- [ ] communicate the canvas (Rock and Ship params) [shared signal? pubsub?]
+- [ ] fix bugs
+- [ ] rename files from docs to playground
+- [x] Ship params
+- [x] Fire component
+- [x] communicate the canvas using pubsub
 - [x] enable just rock and ship for now (boss for next cycle)
 
 ## misc
 
+- [ ] remove tooling (husky, lint-staged, cz, commitlint)
 - [ ] rewrite game ui with solid
 - [ ] check build sizes and optimize imports
 - [ ] communicate player of controls @ menus (use `<kbd>`)
@@ -39,15 +42,7 @@
  - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
  - [ ] polish game end
  - [ ] remove colors from source code if possible
-
-## Tools & Processes
- - [x] husky, lint-staged
- - [x] commit messages (cz, commitlint)
- - [ ] versioning (semver)
- - [ ] changelog
- - [ ] vitest (unit tests)
- - [ ] cypress, striker-js
-
+ 
 ---
 
 # TODO
