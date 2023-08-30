@@ -1,4 +1,4 @@
-import { createEffect, createSignal, For, JSX, onMount } from "solid-js";
+import { createEffect, createSignal, JSX, onMount } from "solid-js";
 
 import { cssVar } from "@/core/dom";
 import { clamp, lerp, pdivn, pfloor, plerp, PointM } from "@/core/math";
@@ -142,8 +142,6 @@ export function Movement({ step, onUpdate }: StepParams) {
     const dragEnd = () => {
       window.removeEventListener("mousemove", drag);
       window.removeEventListener("mouseup", dragEnd);
-      // transform: 0 <= x,y <= 1 (divide by 100)
-      // TODO onUpdate(transform(points))
     };
 
     setPointIx(ix);
@@ -232,17 +230,15 @@ export function Movement({ step, onUpdate }: StepParams) {
         <svg ref={svg} class="plot" onMouseDown={dragStart}>
           <Grid boundaries={boundaries()} />
           <LineWithHandles points={absolutePoints()} />
-          <For each={absolutePoints()}>
-            {(point, ix) => (
-              <circle
-                classList={{ current: isCurrent(ix()) }}
-                cx={point.x}
-                cy={point.y}
-                r={circleRadius}
-                data-ix={ix()}
-              />
-            )}
-          </For>
+          {absolutePoints().map((point, ix) => (
+            <circle
+              classList={{ current: isCurrent(ix) }}
+              cx={point.x}
+              cy={point.y}
+              r={circleRadius}
+              data-ix={ix}
+            />
+          ))}
         </svg>
       </div>
       <Slider
@@ -254,24 +250,22 @@ export function Movement({ step, onUpdate }: StepParams) {
         onChange={handleSliderUpdate("x")}
         class="x-axis"
       />
-      <For each={points()}>
-        {(point, ix) => (
-          <label class="point" classList={{ current: isCurrent(ix()) }}>
-            P{ix()}| x:
-            <Input
-              value={point.x}
-              onFocus={() => setPointIx(ix())}
-              onInput={handleInputChange(ix(), "x")}
-            />
-            y:
-            <Input
-              value={point.y}
-              onFocus={() => setPointIx(ix())}
-              onInput={handleInputChange(ix(), "y")}
-            />
-          </label>
-        )}
-      </For>
+      {points().map((point, ix) => (
+        <label class="point" classList={{ current: isCurrent(ix) }}>
+          P{ix}| x:
+          <Input
+            value={point.x}
+            onFocus={() => setPointIx(ix)}
+            onInput={handleInputChange(ix, "x")}
+          />
+          y:
+          <Input
+            value={point.y}
+            onFocus={() => setPointIx(ix)}
+            onInput={handleInputChange(ix, "y")}
+          />
+        </label>
+      ))}
       <Slider
         label="Speed"
         class="speed"

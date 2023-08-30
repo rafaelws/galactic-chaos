@@ -1,6 +1,6 @@
 import "./styles.css";
 
-import { createSignal, For, Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 
 import {
   MovementNature,
@@ -87,26 +87,22 @@ export function StepManager(params: StepManagerParams) {
         Add Step
       </button>
       <select onChange={(ev) => changeActive(Number(ev.currentTarget.value))}>
-        <For each={steps()}>
-          {(_, ix) => (
-            <option value={ix()} selected={isActive(ix())}>
-              Step {ix() + 1}
-            </option>
-          )}
-        </For>
+        {steps().map((_, ix) => (
+          <option value={ix} selected={isActive(ix)}>
+            Step {ix + 1}
+          </option>
+        ))}
       </select>
-      <For each={steps()}>
-        {(step, ix) => (
-          <Show when={isActive(ix())}>
-            <Movement step={step} onUpdate={onUpdate} />
-            <Show when={steps().length > 1}>
-              <button class="common" onClick={() => removeStep(ix())}>
-                Remove step
-              </button>
-            </Show>
+      {steps().map((step, ix) => (
+        <Show when={isActive(ix)}>
+          <Movement step={step} onUpdate={onUpdate} />
+          <Show when={steps().length > 1}>
+            <button class="common" onClick={() => removeStep(ix)}>
+              Remove step
+            </button>
           </Show>
-        )}
-      </For>
+        </Show>
+      ))}
     </div>
   );
 }

@@ -2,8 +2,8 @@
 
 ## playground
 
-- [ ] fix bugs
 - [ ] rename files from docs to playground
+- [ ] fix bugs
 - [x] Ship params
 - [x] Fire component
 - [x] communicate the canvas using pubsub
@@ -200,7 +200,7 @@
 
 - - -
 
-Movement Component:
+(Playground) Movement Component:
 - [x] use nature from MovementParams on Movement.tsx (drop custom Nature type)
 - [x] ability to add more `steps`
 - [x] input to determine if a movement is globally `repeatable`
