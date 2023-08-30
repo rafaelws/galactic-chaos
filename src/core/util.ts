@@ -9,6 +9,7 @@ export function iterate<T>(
   }
 }
 
+/* eslint-disable */
 export function throttle(fn: (...args: any) => void, time = 200) {
   let lastCallTime = Date.now() + time;
   return (...args: any) => {

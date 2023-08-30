@@ -48,6 +48,7 @@ function AudioManager() {
       track.loop = loop;
       currentTrack = track;
     } catch (err) {
+      // eslint-disable-next-line
       console.error(
         `AudioManager - could not play audio: ${err}\n${assetPath}`
       );

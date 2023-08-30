@@ -1,8 +1,11 @@
+// eslint-disable-next-line
+export type SubFn = (data?: any) => void;
+
+export type UnsubFn = () => void;
+
 export type Subscribers = {
   [topic: string]: SubFn;
 };
-export type UnsubFn = () => void;
-export type SubFn = (data?: any) => void;
 
 export class PubSub {
   private topics: Map<string, Map<string, SubFn>>;
@@ -15,6 +18,7 @@ export class PubSub {
     return Math.random().toString(16).slice(2) + Date.now();
   }
 
+  // eslint-disable-next-line
   public pub(topic: string, message?: any) {
     const topics = this.topics.get(topic);
     if (!topics) return;

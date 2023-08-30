@@ -13,6 +13,8 @@ export enum ConfigKey {
   AudioGain = "AudioGain",
 }
 
+// TODO research the usage of unknown
+// eslint-disable-next-line
 export type ConfigMap = Record<ConfigKey, any>;
 
 const storageKey = "configuration";
