@@ -6,20 +6,20 @@ import { events } from "@/docs/events";
 import { Fire, Movement } from "../..";
 
 export function ShipParameters() {
-  let params: Partial<ShipParams> | null = null;
+  let params: Partial<ShipParams> = {};
 
   function setParams(extras: Partial<ShipParams>) {
-    params = { ...(params || {}), ...extras };
+    params = { ...params, ...extras };
   }
 
   function handleFire(fire: FireParams) {
     setParams({ fire });
-    if (params) events.ship(params);
+    events.ship(params);
   }
 
   function handleMovement(movement: MovementParams) {
     setParams({ movement });
-    if (params) events.ship(params);
+    events.ship(params);
   }
 
   return (

@@ -5,20 +5,20 @@ import { events } from "@/docs/events";
 import { Movement, Slider } from "../..";
 
 export function RockParameters() {
-  let params: Partial<RockParams> | null = null;
+  let params: Partial<RockParams> = {};
 
   function setParams(extras: Partial<RockParams>) {
-    params = { ...(params || {}), ...extras };
+    params = { ...params, ...extras };
   }
 
   function handleMovement(movement: MovementParams) {
     setParams({ movement });
-    if (params) events.rock(params);
+    events.rock(params);
   }
 
   function handleRotation(rotationSpeed: number) {
     setParams({ rotationSpeed });
-    if (params) events.rock(params);
+    events.rock(params);
   }
 
   return (

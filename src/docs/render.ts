@@ -2,22 +2,11 @@ import { CanvasManager } from "@/core";
 import { events } from "@/core/events";
 import { GameState } from "@/core/meta";
 import { Rock, RockParams, Ship, ShipParams } from "@/core/objects";
-import { GameObject, MovementNature } from "@/core/objects/shared";
+import { GameObject } from "@/core/objects/shared";
 
 import { showStats } from "./components/debug";
 import { events as parametricEvents } from "./events";
 import { EntityType } from "./util";
-
-const movement = {
-  steps: [
-    {
-      nature: MovementNature.Linear,
-      p0: { x: 0, y: 0 },
-      p1: { x: 1, y: 1 },
-      speed: 1,
-    },
-  ],
-};
 
 let debug = {
   global: false,
@@ -42,20 +31,23 @@ export function prepare() {
     parametricEvents.onDebug((params) => {
       debug = { ...debug, ...params };
     }),
-    parametricEvents.onEntity((newType) => {
-      entityType = newType;
-      change = true;
-    }),
     parametricEvents.onImg((img) => {
       params.img = img;
       change = true;
     }),
+    parametricEvents.onEntity((newType) => {
+      if (entityType === newType) return;
+      entityType = newType;
+      params = {};
+      change = true;
+    }),
     parametricEvents.onRock((rockParams) => {
-      params = { ...params, ...rockParams };
+      params = rockParams;
       change = true;
     }),
     parametricEvents.onShip((shipParams) => {
-      params = { ...params, ...shipParams };
+      // params = { ...params, ...shipParams };
+      params = shipParams;
       change = true;
     }),
   ];
@@ -81,36 +73,36 @@ export function prepare() {
     };
 
     if (change) {
-      if (params.img && params.movement) {
-        const common = {
-          img: params.img,
-          movement: params.movement || movement,
-          ...params,
-        };
-        entity = entityType === "Rock" ? new Rock(common) : new Ship(common);
-      }
       change = false;
+      if (!params.img || !params.movement) return;
+      const common = {
+        img: params.img,
+        movement: params.movement,
+        ...params,
+      };
+      entity = entityType === "Rock" ? new Rock(common) : new Ship(common);
     }
 
-    if (entity) {
-      entity.update(state);
-      if (entityType === "Ship") drawGhost(state, cm.context, params.img!);
-      if (spawnables.length > 0) {
-        const newSpawnables: GameObject[] = [];
-        for (let i = 0; i < spawnables.length; i++) {
-          const s = spawnables[i];
-          s.update(state);
-          s.draw(cm.context);
-          if (s.isActive) newSpawnables.push(s);
-        }
-        spawnables = newSpawnables;
-      }
-      entity.draw(cm.context);
+    if (!entity) return;
 
-      if (!entity.isActive) {
-        spawnables = [];
-        entity = null;
+    entity.update(state);
+
+    if (entityType === "Ship") drawGhost(state, cm.context, params.img!);
+    if (spawnables.length > 0) {
+      const newSpawnables: GameObject[] = [];
+      for (let i = 0; i < spawnables.length; i++) {
+        const s = spawnables[i];
+        s.update(state);
+        s.draw(cm.context);
+        if (s.isActive) newSpawnables.push(s);
       }
+      spawnables = newSpawnables;
+    }
+    entity.draw(cm.context);
+
+    if (!entity.isActive) {
+      spawnables = [];
+      entity = null;
     }
   }
   return { render, destroy };
