@@ -1,6 +1,6 @@
 import "./styles.css";
 
-import { createSignal, Show } from "solid-js";
+import { createSignal, For, Show } from "solid-js";
 
 import {
   MovementNature,
@@ -11,68 +11,55 @@ import {
 import { Checkbox } from "..";
 import { Movement } from "./Movement";
 
-const emptyStep = {
+const emptyStep = () => ({
   nature: MovementNature.Linear,
   p0: { x: 0, y: 0 },
   p1: { x: 1, y: 1 },
   speed: 1,
-};
+});
 
 interface StepManagerParams {
   onUpdate?: (params: MovementParams) => void;
 }
 
 export function StepManager(params: StepManagerParams) {
-  const [steps, setSteps] = createSignal<MovementStep[]>([emptyStep]);
-  const [repeatable, setRepeatable] = createSignal<boolean>(true);
+  const steps: MovementStep[] = [emptyStep()];
+  const [slots, setSlots] = createSignal([undefined]);
 
   const [activeIx, setActiveIx] = createSignal(0);
+  const [repeatable, setRepeatable] = createSignal(true);
 
-  const isActive = (ix: number) => activeIx() === ix;
-  let currentStep: MovementStep | null = null;
-
-  function onUpdate(step: MovementStep) {
-    currentStep = step;
-
-    if (!params.onUpdate) return;
-    const _steps = [...steps()];
-    _steps[activeIx()] = step;
-
-    params.onUpdate({
-      steps: _steps,
-      repeatable: repeatable(),
-    });
+  function dispatchUpdate(steps: MovementStep[]) {
+    if (params.onUpdate) params.onUpdate({ steps, repeatable: repeatable() });
   }
 
-  function changeActive(ix: number) {
-    if (currentStep)
-      setSteps((prev) => {
-        prev[activeIx()] = currentStep!;
-        return [...prev];
-      });
-
-    setActiveIx(ix);
+  function onUpdate(partial: Partial<MovementStep>, ix: number) {
+    const step = { ...steps[ix], ...partial };
+    steps[ix] = step;
+    dispatchUpdate(steps);
   }
 
   function addStep() {
-    setSteps((prev) => {
-      if (currentStep) prev[activeIx()] = currentStep;
-      const nextIx = activeIx() + 1;
-      prev.splice(nextIx > prev.length ? prev.length : nextIx, 0, {
-        ...emptyStep,
-      });
-      setActiveIx(nextIx);
+    let next = activeIx() + 1;
+    next = next > steps.length ? steps.length : next;
+    setSlots((prev) => {
+      prev.splice(next, 0, undefined);
       return [...prev];
     });
+    steps.splice(next, 0, emptyStep());
+    dispatchUpdate(steps);
+    setActiveIx(next);
   }
 
-  function removeStep(ix: number) {
-    setSteps((prev) => {
+  function removeStep() {
+    const ix = activeIx();
+    setSlots((prev) => {
       prev.splice(ix, 1);
-      const prevIx = ix - 1;
-      setActiveIx(prevIx < 0 ? 0 : prevIx);
       return [...prev];
     });
+    steps.splice(ix, 1);
+    dispatchUpdate(steps);
+    setActiveIx(ix - 1 < 0 ? 0 : ix - 1);
   }
 
   return (
@@ -81,28 +68,36 @@ export function StepManager(params: StepManagerParams) {
         id="repeatable"
         label="Repeatable"
         checked={repeatable()}
-        onChange={(value) => setRepeatable(value)}
+        onChange={setRepeatable}
       />
       <button class="common" onClick={addStep}>
         Add Step
       </button>
-      <select onChange={(ev) => changeActive(Number(ev.currentTarget.value))}>
-        {steps().map((_, ix) => (
-          <option value={ix} selected={isActive(ix)}>
-            Step {ix + 1}
-          </option>
-        ))}
+      <select onChange={(ev) => setActiveIx(Number(ev.currentTarget.value))}>
+        <For each={slots()}>
+          {(_, ix) => (
+            <option value={ix()} selected={activeIx() === ix()}>
+              Step {ix() + 1}
+            </option>
+          )}
+        </For>
       </select>
-      {steps().map((step, ix) => (
-        <Show when={isActive(ix)}>
-          <Movement step={step} onUpdate={onUpdate} />
-          <Show when={steps().length > 1}>
-            <button class="common" onClick={() => removeStep(ix)}>
-              Remove step
-            </button>
+      <For each={slots()}>
+        {(_, ix) => (
+          <Show when={activeIx() === ix()}>
+            <Movement
+              step={steps[ix()]}
+              onUpdate={(step) => onUpdate(step, ix())}
+            />
           </Show>
-        </Show>
-      ))}
+        )}
+      </For>
+
+      <Show when={slots().length > 1}>
+        <button class="common" onClick={removeStep}>
+          Remove step
+        </button>
+      </Show>
     </div>
   );
 }

@@ -20,25 +20,33 @@ function pointsFromStep({ p0, p1, p2, p3 }: MovementStep) {
 
 export interface StepParams {
   step: MovementStep;
-  onUpdate: (step: MovementStep) => void;
+  onUpdate: (step: Partial<MovementStep>) => void;
 }
 
 const MIN = 0;
 const MAX = 100;
 
-const naturesMap: Record<string, MovementNature> = {
-  Linear: MovementNature.Linear,
-  Quadratic: MovementNature.QuadraticBezier,
-  Cubic: MovementNature.CubicBezier,
-} as const;
-const natures = Object.keys(naturesMap);
+const enumNatures = [
+  MovementNature.Linear,
+  MovementNature.QuadraticBezier,
+  MovementNature.CubicBezier,
+];
+const natures = ["Linear", "Quadratic", "Cubic"];
 type Nature = (typeof natures)[number];
+
+const toNatureString = (nature: MovementNature) => {
+  return natures[enumNatures.indexOf(nature)];
+};
+
+const toNatureEnum = (nature: Nature) => {
+  return enumNatures[natures.indexOf(nature)];
+};
 
 export function Movement({ step, onUpdate }: StepParams) {
   const [speed, setSpeed] = createSignal<number>(
     Math.trunc((step.speed || 1) * 10)
   );
-  const [nature, setNature] = createSignal<Nature>(step.nature);
+  const [nature, setNature] = createSignal<Nature>(toNatureString(step.nature));
   const [pointIx, setPointIx] = createSignal<number>(0);
   const [points, setPoints] = createSignal<Point[]>(pointsFromStep(step));
 
@@ -72,14 +80,22 @@ export function Movement({ step, onUpdate }: StepParams) {
 
   createEffect(() => {
     const [p0, p1, p2, p3] = points();
+    if (!p0 && !p1) return;
     onUpdate({
-      nature: naturesMap[nature()],
-      speed: speed() / 10,
       p0: pdivn(p0, 100),
       p1: pdivn(p1, 100),
       p2: p2 ? pdivn(p2, 100) : undefined,
       p3: p3 ? pdivn(p3, 100) : undefined,
     });
+  });
+
+  createEffect(() => {
+    const curr = speed();
+    if (curr > 0) onUpdate({ speed: curr / 10 });
+  });
+
+  createEffect(() => {
+    if (nature()) onUpdate({ nature: toNatureEnum(nature()) });
   });
 
   onMount(() => {

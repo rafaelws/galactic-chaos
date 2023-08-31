@@ -11,6 +11,8 @@ interface RadioProps {
 export function Radio(props: RadioProps) {
   const [current, setCurrent] = createSignal(props.value);
 
+  const isCurrent = (item: string) => item === current();
+
   function handleClick(item: string) {
     if (current() === item) return;
     setCurrent(item);
@@ -23,9 +25,10 @@ export function Radio(props: RadioProps) {
         {(item) => (
           <button
             role="radio"
-            aria-checked={item === current()}
-            data-state={item === current() ? "on" : "off"}
+            aria-checked={isCurrent(item)}
+            data-state={isCurrent(item) ? "on" : "off"}
             class="common colors item"
+            classList={{ active: isCurrent(item) }}
             onClick={() => handleClick(item)}
           >
             {item}

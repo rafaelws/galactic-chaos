@@ -4,7 +4,6 @@ export * from "./debug";
 export * from "./fire/Fire";
 export * from "./Input";
 export { StepManager as Movement } from "./movement/StepManager";
-// export { Movement } from "./movement/Movement";
 export * from "./params";
 export * from "./radio/Radio";
 export * from "./slider/Slider";

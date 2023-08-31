@@ -8,6 +8,6 @@
   border-radius: 0;
 }
 
-.radio .item[data-state=on] {
+.radio .item.active {
   background-color: var(--colors-gray400);
 }
