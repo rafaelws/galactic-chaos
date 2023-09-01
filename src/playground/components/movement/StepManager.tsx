@@ -1,6 +1,6 @@
 import "./styles.css";
 
-import { createSignal, For, Show } from "solid-js";
+import { createSignal, Show } from "solid-js";
 
 import {
   MovementNature,
@@ -19,48 +19,49 @@ const emptyStep = () => ({
 });
 
 interface StepManagerParams {
-  onUpdate?: (params: MovementParams) => void;
+  onUpdate: (params: MovementParams) => void;
 }
 
 export function StepManager(params: StepManagerParams) {
   const steps: MovementStep[] = [emptyStep()];
   const [slots, setSlots] = createSignal([undefined]);
-
   const [activeIx, setActiveIx] = createSignal(0);
   const [repeatable, setRepeatable] = createSignal(true);
-
-  function dispatchUpdate(steps: MovementStep[]) {
-    if (params.onUpdate) params.onUpdate({ steps, repeatable: repeatable() });
-  }
-
-  function onUpdate(partial: Partial<MovementStep>, ix: number) {
-    const step = { ...steps[ix], ...partial };
-    steps[ix] = step;
-    dispatchUpdate(steps);
-  }
 
   function addStep() {
     let next = activeIx() + 1;
     next = next > steps.length ? steps.length : next;
+    steps.splice(next, 0, emptyStep());
     setSlots((prev) => {
-      prev.splice(next, 0, undefined);
+      // order does not matter here
+      prev.push(undefined);
       return [...prev];
     });
-    steps.splice(next, 0, emptyStep());
-    dispatchUpdate(steps);
     setActiveIx(next);
   }
 
   function removeStep() {
     const ix = activeIx();
+    steps.splice(ix, 1);
     setSlots((prev) => {
-      prev.splice(ix, 1);
+      // order does not matter here
+      prev.pop();
       return [...prev];
     });
-    steps.splice(ix, 1);
-    dispatchUpdate(steps);
     setActiveIx(ix - 1 < 0 ? 0 : ix - 1);
   }
+
+  // (!) should always notify on update
+  function updateStep(step: Partial<MovementStep>, ix: number) {
+    steps[ix] = { ...steps[ix], ...step };
+
+    params.onUpdate({
+      steps,
+      repeatable: repeatable(),
+    });
+  }
+
+  const isActiveIx = (ix: number) => activeIx() === ix;
 
   return (
     <div class="movement-step-manager">
@@ -70,28 +71,27 @@ export function StepManager(params: StepManagerParams) {
         checked={repeatable()}
         onChange={setRepeatable}
       />
+
       <button class="common" onClick={addStep}>
         Add Step
       </button>
+
       <select onChange={(ev) => setActiveIx(Number(ev.currentTarget.value))}>
-        <For each={slots()}>
-          {(_, ix) => (
-            <option value={ix()} selected={activeIx() === ix()}>
-              Step {ix() + 1}
-            </option>
-          )}
-        </For>
+        {slots().map((_, ix) => (
+          <option value={ix} selected={isActiveIx(ix)}>
+            Step {ix + 1}
+          </option>
+        ))}
       </select>
-      <For each={slots()}>
-        {(_, ix) => (
-          <Show when={activeIx() === ix()}>
-            <Movement
-              step={steps[ix()]}
-              onUpdate={(step) => onUpdate(step, ix())}
-            />
-          </Show>
-        )}
-      </For>
+
+      {slots().map((_, ix) => (
+        <Show when={isActiveIx(ix)}>
+          <Movement
+            step={steps[ix]}
+            onUpdate={(step) => updateStep(step, ix)}
+          />
+        </Show>
+      ))}
 
       <Show when={slots().length > 1}>
         <button class="common" onClick={removeStep}>
