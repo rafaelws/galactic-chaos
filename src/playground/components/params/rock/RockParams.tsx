@@ -1,6 +1,6 @@
 import { RockParams } from "@/core/objects/rock/RockParams";
 import { MovementParams } from "@/core/objects/shared/movement/MovementParams";
-import { events } from "@/docs/events";
+import { events } from "@/playground/events";
 
 import { Movement, Slider } from "../..";
 

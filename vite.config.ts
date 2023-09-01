@@ -11,8 +11,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: resolve(__dirname, "index.html"),
-        docs: resolve(__dirname, "docs.html"),
-        // designer: resolve(__dirname, "designer.html"),
+        playground: resolve(__dirname, "playground.html"),
       },
     },
   },

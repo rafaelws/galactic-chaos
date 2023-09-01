@@ -1,7 +1,7 @@
 import { FireParams } from "@/core/objects/shared/fire/FireParams";
 import { MovementParams } from "@/core/objects/shared/movement/MovementParams";
 import { ShipParams } from "@/core/objects/ship/ShipParams";
-import { events } from "@/docs/events";
+import { events } from "@/playground/events";
 
 import { Fire, Movement } from "../..";
 

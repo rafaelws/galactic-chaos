@@ -2,8 +2,8 @@
 
 ## playground
 
-- [ ] rename files from docs to playground
 - [ ] fix bugs
+- [x] rename files from docs to playground
 - [x] Ship params
 - [x] Fire component
 - [x] communicate the canvas using pubsub
@@ -11,10 +11,10 @@
 
 ## misc
 
+- [ ] review/re-write README (for conciseness + playground)
 - [ ] rewrite game ui with solid
-- [ ] check build sizes and optimize imports
 - [ ] communicate player of controls @ menus (use `<kbd>`)
-- [ ] review/re-write README (for conciseness)
+- [ ] check build sizes and optimize imports
 - [x] remove tooling (husky, lint-staged, cz, commitlint)
 - [x] move to solidjs
 - [x] organize css - set `common` and `colors` to all input
