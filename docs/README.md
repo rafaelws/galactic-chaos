@@ -34,23 +34,21 @@ This project is [MIT licensed](../LICENSE).
 
 Web game that uses APIs such as [Canvas](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D), [Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and [Gamepad](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API). No game engine was used.
 
-## Structure
+## Game Structure
 
-The entry point is [`src/main.ts`](../src/main.ts). It waits for the [`DOMContentLoaded` event](https://developer.mozilla.org/en-US/docs/Web/API/Window/DOMContentLoaded_event) to show the main menu.
+The entry point is [`main.ts`](../src/game/main.ts). When the player starts the game, a loop is created using [`requestAnimationFrame()`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
 
-When the player starts the game, a loop is created using [`requestAnimationFrame()`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
+Inside the game [loop](../src/game/loop.ts), a [GameManager](../src/game/GameManager.ts) is instantiated. It's a wrapper class that setups and manages input, canvas, pause state, and levels. It is also where the ["on screen debug"](#debug) is configured. 
 
-Inside the game [loop](../src/main/loop.ts), a [GameManager](../src/main/GameManager.ts) is instantiated. It's a wrapper class that setups and manages input, canvas, pause state, and the LevelManager. It is also where the "on-screen-debug" ([more details](#debug)) feature is configured.
+Next, the [LevelManager](../src/game/level/LevelManager.ts) handles level loading, game state, and game objects.
 
-Next, the [LevelManager](../src/level/LevelManager.ts) handles level loading, game state, and game objects.
+A `Level` is simply an async function that returns an array of [GameObjects](../src/core/objects/shared/GameObject.ts).
 
-A `Level` is simply an async function that returns an array of [GameObjects](../src/objects/shared/GameObject.ts).
-
-There is a single [HTML file](../index.html) where the HUD and menus are located. To prevent abrupt rendering changes, especially on the first visit, certain CSS and SVG elements were set inline. This approach helps avoid sudden background color changes, for example.
+HTML contents for the game can be [found here](../index.html).
 
 ## Input
 
-The game supports input from both keyboard/mouse and [gamepad](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API). To consolidate the behavior regardless of the input source, a common interface ([InputHandler](../src/common/controls/Input.ts)) was created.
+The game supports input from both keyboard/mouse and [gamepad](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API). To consolidate the behavior regardless of the input source, a [common interface (InputHandler)](../src/core/controls/Input.ts) was created.
 
 The menus support simultaneous input from both keyboard/mouse and gamepad sources. While on the pause menu, the player can **swap** between input sources. For example, if the player is using keyboard/mouse and connects a gamepad, they can press the Start button to resume the game, and from that point on, the game will respond to the gamepad input (and vice versa).
 
@@ -62,7 +60,7 @@ The [WebAudio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_AP
 
 Movement might have been the most challenging feature to implement.
 
-Even though helper/syntactic sugar-ish code was implemented ([FluentMovement](../src/objects/shared/movement/FluentMovement.ts)), designing movement patterns for enemies relied heavily on mental abstraction. The implementation of a preview GUI is strongly considered in the future.
+Even though [helper code was implemented](../src/core/objects/shared/movement/FluentMovement.ts), designing movement patterns for enemies relied heavily on mental abstraction. ~~The implementation of a preview GUI is strongly considered in the future~~. Check out the [playground](#playground).
 
 ### Lerp
 
@@ -85,7 +83,7 @@ Considerations:
 - (Usually) The "progress" (`t`) changes over time.
 - Since it's an `inter`polation, the `t` value ranges from 0 to 1 (0 is `a`, 1 is `b`).
 - There's also something called `extra`polation, where `t` can be lower than 0 or higher than 1 (that way values can be projected before `a` - below 0 - and after `b` - above 1).
-- You can "shape" the "progress" (`t`) using a "shaping function." [See examples.](https://easings.net/)
+- You can "shape" the "progress" (`t`) using a ["shaping function."](https://easings.net/)
 
 Usage A: In a scenario where an object's transparency needs to be progressively changed, lerp can be used to fade in and out of these states (opaque <> transparent).
 
@@ -116,6 +114,12 @@ Lerp, on its own, takes care of linear movement (lines/rects). To achieve differ
 An "on-screen-debug" feature was implemented. There are options to show hitboxes, angles, positions, and trajectories (+filtering by game object/entity type).
 
 !["on-screen-debug"](./debug-mode.gif "on-screen-debug")
+
+## Playground
+
+To get a glimpse of how things work behind the scenes, [you can visit the playground here](https://galactic-chaos.netlify.app/playground).
+
+!["playground"](./playground.gif "playground")
 
 ---
 

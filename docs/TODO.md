@@ -1,20 +1,11 @@
 # TODO 
 
-## playground
-
-- [ ] fix bugs
-- [x] rename files from docs to playground
-- [x] Ship params
-- [x] Fire component
-- [x] communicate the canvas using pubsub
-- [x] enable just rock and ship for now (boss for next cycle)
-
 ## misc
 
-- [ ] review/re-write README (for conciseness + playground)
-- [ ] rewrite game ui with solid
+- [ ] rewrite game ui with solidjs
 - [ ] communicate player of controls @ menus (use `<kbd>`)
 - [ ] check build sizes and optimize imports
+- [x] review/re-write README (for conciseness + playground)
 - [x] remove tooling (husky, lint-staged, cz, commitlint)
 - [x] move to solidjs
 - [x] organize css - set `common` and `colors` to all input
@@ -199,6 +190,14 @@
 - [x] radar
 
 - - -
+
+Playground
+- [x] Ship params component
+- [x] {Ship} Fire component
+- [x] Rock params component
+- [x] communicate the canvas using PubSub
+- [x] enable just rock and ship for now (boss for next cycle)
+- [x] rename files from docs to playground
 
 (Playground) Movement Component:
 - [x] use nature from MovementParams on Movement.tsx (drop custom Nature type)
