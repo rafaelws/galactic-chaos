@@ -10,8 +10,9 @@ import { DebugParams, NoDebug } from "@/core/debug";
 import { events } from "@/core/events";
 import { Destroyable } from "@/core/meta";
 import { iterate } from "@/core/util";
-import { LevelManager } from "@/game/level";
 import { hud } from "@/game/ui/hud";
+
+import { LevelManager } from "./LevelManager";
 
 const debug: DebugParams = {
   ...NoDebug,

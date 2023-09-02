@@ -4,34 +4,27 @@
 
 - [ ] rewrite game ui with solidjs
 - [ ] communicate player of controls @ menus (use `<kbd>`)
-- [ ] check build sizes and optimize imports
-- [x] review/re-write README (for conciseness + playground)
-- [x] remove tooling (husky, lint-staged, cz, commitlint)
-- [x] move to solidjs
-- [x] organize css - set `common` and `colors` to all input
-- [x] {refac} rename math methods
-- [x] (big) refactor: go back to plain css (remove css-in-js)
-- [x] consider removing some libs: 
-  - [x] stiches
-  - [x] classnames
-  - [x] checkbox
-  - [x] toggleGroup
-  - [x] slider
-  - [x] scrollarea
+- [ ] simplify image asset loading (use svg atlas?)
+- [ ] rethink audio assets loading
+  - [ ] do not preload (only load on request)
+  - [ ] fix overlapping audio problem
+- [ ] add a song and "level cleared" message to the game end
+- [ ] check build sizes and optimize if necessary (code and assets)
+- [ ] beziers: verify if it is possible to better distribute points
+- [ ] blog post (release) + publish
 
 # NEXT
 
 ## Features
- - [ ] live docs (aka `playground`)
+ - [x] playground
  - [ ] level designer
 
 ## To Consider
- - [ ] game assets (loading): either simplify asset loading or change to a simplified neon line style (without external assets)
  - [ ] change/simplify mechanics
+ - [ ] make the game and playground mobile friendly
 
 ## Fixes/Improvements
  - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
- - [ ] polish game end
  - [ ] remove colors from source code if possible
  
 ---
@@ -191,7 +184,9 @@
 
 - - -
 
-Playground
+# Playground
+
+## Main
 - [x] Ship params component
 - [x] {Ship} Fire component
 - [x] Rock params component
@@ -199,7 +194,7 @@ Playground
 - [x] enable just rock and ship for now (boss for next cycle)
 - [x] rename files from docs to playground
 
-(Playground) Movement Component:
+## (Playground) Movement Component:
 - [x] use nature from MovementParams on Movement.tsx (drop custom Nature type)
 - [x] ability to add more `steps`
 - [x] input to determine if a movement is globally `repeatable`
@@ -221,3 +216,18 @@ Playground
 - [x] inputs to track x and y of each point
 - [ ] ability to set predefined (center, center left, top left, .15, .25, .333, .5, .666, .75...) and random values (rir)
 - [ ] ability to lock a point or step (so the user can't modify it)
+
+## Misc
+- [x] review README (add playground)
+- [x] remove tooling (husky, lint-staged, cz, commitlint)
+- [x] move UI to solidjs
+- [x] organize css - set `common` and `colors` to all input
+- [x] {refac} rename math methods
+- [x] (big) refactor: go back to plain css (remove css-in-js)
+- [x] consider removing some libs: 
+  - [x] stiches
+  - [x] classnames
+  - [x] checkbox
+  - [x] toggleGroup
+  - [x] slider
+  - [x] scrollarea
