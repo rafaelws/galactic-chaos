@@ -24,26 +24,25 @@ export function readInput(inputs: TriggerOnInput[]): Destroyable {
     clearInterval(interval);
   }
 
-  const interval = setInterval(() => {
-    inputs.forEach(({ action, fn, destroyOnHit = true }) => {
-      const joystickHit = gp.getState()[action]?.active;
-      const keyboardHit = km.getState()[action]?.active;
-      const hit = joystickHit || keyboardHit;
+  function eachInput({ action, fn, destroyOnHit = true }: TriggerOnInput) {
+    const joystickHit = gp.getState()[action]?.active;
+    const keyboardHit = km.getState()[action]?.active;
+    const hit = joystickHit || keyboardHit;
 
-      if (hit) {
-        if (destroyOnHit) {
-          Config.set(
-            ConfigKey.Input,
-            joystickHit
-              ? ConfigInputType.Joystick
-              : ConfigInputType.KeyboardAndMouse
-          );
-          destroy();
-        }
-        fn();
-      }
-    });
-  }, intervalTime);
+    if (!hit) return;
+    if (destroyOnHit) {
+      Config.set(
+        ConfigKey.Input,
+        joystickHit
+          ? ConfigInputType.Joystick
+          : ConfigInputType.KeyboardAndMouse
+      );
+      destroy();
+    }
+    fn();
+  }
+
+  const interval = setInterval(() => inputs.forEach(eachInput), intervalTime);
 
   return { destroy };
 }

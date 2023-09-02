@@ -6,6 +6,15 @@ export enum ConfigInputType {
   Joystick = "GP",
 }
 
+export const ConfigKeys = [
+  "Input",
+  "BackgroundDensity",
+  "AudioEnabled",
+  "AudioGain",
+] as const;
+
+type ConfigKeyString = (typeof ConfigKeys)[number];
+
 export enum ConfigKey {
   Input = "Input",
   BackgroundDensity = "BackgroundDensity",
@@ -17,7 +26,7 @@ export enum ConfigKey {
 // eslint-disable-next-line
 export type ConfigMap = Record<ConfigKey, any>;
 
-const storageKey = "configuration";
+const storageKey = "configuration" as const;
 
 const defaults: ConfigMap = {
   Input: ConfigInputType.KeyboardAndMouse,
@@ -28,24 +37,24 @@ const defaults: ConfigMap = {
 } as const;
 
 export class Config {
-  public static all() {
+  public static all(): ConfigMap {
     return {
       ...defaults,
       ...Store.get(storageKey),
     };
   }
 
-  public static get<T>(key: ConfigKey) {
-    return Config.all()[key] as T;
+  public static get<T>(configKey: ConfigKey | ConfigKeyString) {
+    return Config.all()[configKey] as T;
   }
 
-  public static set<T>(key: ConfigKey, value: T) {
+  public static set<T>(configKey: ConfigKey | ConfigKeyString, value: T) {
     let config = Store.get(storageKey);
 
     if (!config) config = {};
-    config[key] = value;
+    config[configKey] = value;
 
     Store.set(storageKey, config);
-    pub(key, value);
+    pub(configKey, value); // FIXME
   }
 }
