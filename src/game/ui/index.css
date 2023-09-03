@@ -18,6 +18,10 @@
   font-family: orbitron, sans-serif;
 }
 
+html, body {
+  overflow: hidden;
+}
+
 body {
   cursor: crosshair;
   user-select: none;
