@@ -1,0 +1,106 @@
+@font-face {
+  font-family: orbitron;
+  src: url("/font/orbitron.woff2") format("woff2"),
+    url("/font/orbitron.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --danger-color: rgba(172, 57, 57, 0.95);
+  --player-color: rgba(48, 178, 233, 0.95);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: orbitron, sans-serif;
+}
+
+body {
+  cursor: crosshair;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
+  color: white;
+  background-color: black;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  animation: fade-in 1s;
+}
+
+#gh-link {
+  animation: fade-in 1s;
+}
+
+.fade-in {
+  animation: fade-in 2s forwards;
+}
+
+.fade-out {
+  animation: fade-out 2s forwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes glow {
+  0% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.33);
+  }
+
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@keyframes text-glow {
+  0% {
+    text-shadow: 0 0 5px white;
+  }
+
+  50% {
+    text-shadow: 0 0 0 white;
+  }
+
+  100% {
+    text-shadow: 0 0 5px white;
+  }
+}

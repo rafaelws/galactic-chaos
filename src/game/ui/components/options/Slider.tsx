@@ -16,11 +16,12 @@ export function SliderCtrl({ min, max, step }: SliderParams) {
 }
 
 export function Slider(params: SliderParams) {
-  const [value, setValue] = createSignal(params.value);
-  createEffect(() => {
-    // .handle is 20% wide
-    setValue((params.value / params.max) * 80);
-  });
+  // .handle is 20% wide
+  const toValue = (val: number) => (val / params.max) * 80;
+  const [value, setValue] = createSignal(toValue(params.value));
+
+  createEffect(() => setValue(toValue(params.value)));
+
   return (
     <div class="slider">
       <div class="handle" style={{ "margin-left": `${value()}%` }}></div>

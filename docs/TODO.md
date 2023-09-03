@@ -2,12 +2,13 @@
 
 ## misc
 
-- [ ] rewrite game ui with solidjs
+- [ ] fix menu/options animations/transition (using ref and js)
+- [x] rewrite game ui with solidjs
 - [ ] communicate player of controls @ menus (use `<kbd>`)
-- [ ] simplify image asset loading (use svg atlas?)
 - [ ] rethink audio assets loading
   - [ ] do not preload (only load on request)
   - [ ] fix overlapping audio problem
+- [ ] simplify image asset loading (use svg atlas?)
 - [ ] add a song and "level cleared" message to the game end
 - [ ] check build sizes and optimize if necessary (code and assets)
 - [ ] beziers: verify if it is possible to better distribute points

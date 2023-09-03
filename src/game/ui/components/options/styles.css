@@ -4,6 +4,7 @@
   font-size: 1.5rem;
   line-height: 2;
   display: inline-block;
+  animation: fade-in 0.5s;
 }
 
 .field {

@@ -1,3 +1,5 @@
+import "./styles.css";
+
 import { createSignal, onCleanup, onMount } from "solid-js";
 
 import { Config, ConfigKeys } from "@/core";
@@ -9,15 +11,21 @@ import { Slider, SliderCtrl, SliderParams } from "./Slider";
 import { Toggle } from "./Toggle";
 
 export function Options() {
-  const [audioEnabled, setAudioEnabled] = createSignal(false);
+  const config = Config.all();
+  const props = ConfigKeys.slice(1);
 
-  const props = [...ConfigKeys.slice(1)] as const;
+  // use ref to control animation
+
+  const [audioEnabled, setAudioEnabled] = createSignal(config.AudioEnabled);
+  const [audioGain, setAudioGain] = createSignal(config.AudioGain);
+  const [backgroundDensity, setBackgroundDensity] = createSignal(
+    config.BackgroundDensity
+  );
+
   const [activeIx, setActiveIx] = createSignal(0);
 
-  const config = Config.all();
-
   const gainSlider: SliderParams = {
-    value: config.AudioGain,
+    value: audioGain(),
     min: 0,
     step: 1,
     max: 12,
@@ -25,7 +33,7 @@ export function Options() {
   const gainCtrl = SliderCtrl(gainSlider);
 
   const densitySlider: SliderParams = {
-    value: config.BackgroundDensity,
+    value: backgroundDensity(),
     min: 0,
     step: 200,
     max: 2000,
@@ -56,9 +64,15 @@ export function Options() {
         return prev === val ? prev : val;
       });
     else if (ix === 1)
-      val = gainSlider.value = gainCtrl(gainSlider.value, operation);
+      setAudioGain((prev) => {
+        val = gainCtrl(prev, operation);
+        return val;
+      });
     else if (ix === 2)
-      val = densitySlider.value = densityCtrl(densitySlider.value, operation);
+      setBackgroundDensity((prev) => {
+        val = densityCtrl(prev, operation);
+        return val;
+      });
 
     if (val !== undefined) Config.set(props[ix], val);
   };
@@ -88,18 +102,18 @@ export function Options() {
   });
 
   return (
-    <div id="options" style="opacity: 0">
+    <div id="options">
       <div class="field" classList={{ active: activeIx() === 0 }}>
         <span>Audio</span>
         <Toggle active={audioEnabled()} />
       </div>
       <div class="field" classList={{ active: activeIx() === 1 }}>
         <span>Audio Volume</span>
-        <Slider {...gainSlider} />
+        <Slider {...gainSlider} value={audioGain()} />
       </div>
       <div class="field" classList={{ active: activeIx() === 2 }}>
         <span>Background Density</span>
-        <Slider {...densitySlider} />
+        <Slider {...densitySlider} value={backgroundDensity()} />
       </div>
     </div>
   );

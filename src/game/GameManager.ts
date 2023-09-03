@@ -10,7 +10,6 @@ import { DebugParams, NoDebug } from "@/core/debug";
 import { events } from "@/core/events";
 import { Destroyable } from "@/core/meta";
 import { iterate } from "@/core/util";
-import { hud } from "@/game/ui/hud";
 
 import { LevelManager } from "./LevelManager";
 
@@ -45,7 +44,7 @@ export class GameManager implements Destroyable {
       }),
     ];
     // TODO test input handler destroyable after switch
-    this.destroyables = [hud(), this.ih, this.cm, this.lm];
+    this.destroyables = [this.ih, this.cm, this.lm];
   }
 
   public destroy() {

@@ -1,0 +1,54 @@
+.menu {
+  /* display: none; */
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.75);
+  animation: fade-in 2s;
+
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.menu p {
+  text-align: center;
+}
+
+.menu .main-text {
+  font-size: 6rem;
+  animation: text-glow 2s infinite;
+}
+
+.menu .hint-text {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.menu .hint-text:first-child {
+  margin-top: 0.5rem;
+}
+
+#pause-menu {
+  inset: 0;
+  transform: none;
+}
+
+#pause-menu .hint-text,
+#pause-menu .main-text {
+  position: absolute;
+  right: 1rem;
+  text-align: right;
+}
+
+#pause-menu .hint-text {
+  font-size: 1rem;
+  top: 1.5rem;
+  line-height: 1.1;
+  margin-top: 0;
+}
+
+#pause-menu .main-text {
+  font-size: 4rem;
+  bottom: 0.5rem;
+}

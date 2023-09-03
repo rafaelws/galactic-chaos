@@ -8,9 +8,9 @@ export enum ConfigInputType {
 
 export const ConfigKeys = [
   "Input",
-  "BackgroundDensity",
   "AudioEnabled",
   "AudioGain",
+  "BackgroundDensity",
 ] as const;
 
 type ConfigKeyString = (typeof ConfigKeys)[number];
