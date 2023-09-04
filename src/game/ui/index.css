@@ -23,7 +23,6 @@ html, body {
 }
 
 body {
-  cursor: crosshair;
   user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -45,6 +44,7 @@ code {
 }
 
 canvas {
+  cursor: crosshair;
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -101,7 +101,7 @@ canvas {
   }
 
   50% {
-    text-shadow: 0 0 0 white;
+    text-shadow: 0 0 0px white;
   }
 
   100% {

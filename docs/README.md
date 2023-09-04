@@ -20,7 +20,9 @@ npm run preview # run the preview server (vite)
 
 # CREDITS
 
-Image assets (CC0) by [Kenney.](https://www.kenney.nl/)
+[Image assets](https://www.kenney.nl/assets/space-shooter-redux) ([CC0](https://creativecommons.org/share-your-work/public-domain/cc0/)) by [Kenney.](https://www.kenney.nl/)
+
+[Orbitron](https://fonts.google.com/specimen/Orbitron/about) Font ([OFL](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)) by [Matt McInerney](https://matt.cc/).
 
 Music by me.
 

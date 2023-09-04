@@ -11,6 +11,7 @@ import { throttle } from "@/core/util";
 
 import { setup } from "../loop";
 import {
+  ControlsInfo,
   GameEndMenu,
   GameOverMenu,
   Hp,
@@ -170,6 +171,7 @@ export function Main() {
     <>
       <Show when={isOptionsOpen()}>
         <Options />
+        <ControlsInfo />
       </Show>
       <Show when={isPauseMenuOpen()}>
         <PauseMenu />

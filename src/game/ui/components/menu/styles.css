@@ -18,6 +18,7 @@
 .menu .main-text {
   font-size: 6rem;
   animation: text-glow 2s infinite;
+  /* animation-timing-function: ; */
 }
 
 .menu .hint-text {
@@ -51,4 +52,39 @@
 #pause-menu .main-text {
   font-size: 4rem;
   bottom: 0.5rem;
+}
+
+#controls-info {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  left: 0.5rem;
+  bottom: 0;
+  animation: 1s fade-in;
+  z-index: 3;
+}
+
+#controls-info img {
+  height: 3rem;
+  margin: -0.25rem;
+}
+
+#controls-info kbd {
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.35rem;
+  font-size: 1rem;
+  font-family: 'Courier New', Courier, monospace;
+  /* font-family: sans-serif; */
+  font-weight: bold;
+  background-color: white;
+  color: #242424;
+  border: 2px solid #b4b4b4;
+  border-radius: 1.5px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+#controls-info kbd:last-child {
+  margin-right: 2rem;
 }
