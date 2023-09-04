@@ -15,28 +15,28 @@ export function ControlsInfo() {
               <kbd>d</kbd>
             </td>
             <td>
-              <img src="/img/controls/joy_l.png" />
+              <img class="control-image" src="/img/controls/joy_l.png" />
             </td>
             <td>
-              <img src="/img/controls/dpad.png" />
+              <img class="control-image" src="/img/controls/dpad.png" />
             </td>
           </tr>
           <tr>
             <td>aim</td>
             <td>
-              <img src="/img/controls/mouse.png" />
+              <img class="control-image" src="/img/controls/mouse.png" />
             </td>
             <td>
-              <img src="/img/controls/joy_r.png" />
+              <img class="control-image" src="/img/controls/joy_r.png" />
             </td>
           </tr>
           <tr>
             <td>shoot</td>
             <td>
-              <img src="/img/controls/mouse_l.png" />
+              <img class="control-image" src="/img/controls/mouse_l.png" />
             </td>
             <td>
-              <img src="/img/controls/r1.png" />
+              <img class="control-image" src="/img/controls/r1.png" />
             </td>
           </tr>
           <tr>
@@ -45,7 +45,7 @@ export function ControlsInfo() {
               <kbd>q</kbd>
             </td>
             <td>
-              <img src="/img/controls/select.png" />
+              <img class="control-image" src="/img/controls/select.png" />
             </td>
           </tr>
         </tbody>

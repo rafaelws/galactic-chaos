@@ -4,11 +4,16 @@ export function GameEndMenu() {
   return (
     <Menu id="game-end-menu">
       <p class="main-text">thanks for playing</p>
-      <p class="hint-text">
-        &lt;q&gt; or &lt;start&gt; to restart
-        <br />
-        &lt;e&gt; or &lt;select&gt; to quit
-      </p>
+      <div class="hint giga-hint">
+        <p class="line">
+          <kbd>q</kbd> or{" "}
+          <img class="control-image" src="/img/controls/start.png" /> to restart
+        </p>
+        <p class="line">
+          <kbd>e</kbd> or{" "}
+          <img class="control-image" src="/img/controls/select.png" /> to quit
+        </p>
+      </div>
     </Menu>
   );
 }

@@ -18,16 +18,45 @@
 .menu .main-text {
   font-size: 6rem;
   animation: text-glow 2s infinite;
-  /* animation-timing-function: ; */
 }
 
-.menu .hint-text {
+.menu .hint {
   font-size: 1.5rem;
   line-height: 1.2;
 }
 
-.menu .hint-text:first-child {
+.menu .hint:first-child {
   margin-top: 0.5rem;
+}
+
+.menu .hint .line {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.menu .hint.giga-hint {
+  opacity: 0.85;
+  animation: half-fade-in 10s;
+  margin-top: 0.5rem;
+}
+
+.menu .hint.giga-hint .line {
+  justify-content: center;
+}
+
+.menu .hint .line kbd {
+  margin-right: 0.5rem;
+  margin-left: 0;
+}
+
+.menu .hint .line .control-image {
+  margin: -0.25rem 0.25rem;  
+}
+
+.control-image {
+  /* height: 3rem; */
+  margin: -0.25rem 0;
 }
 
 #pause-menu {
@@ -35,14 +64,14 @@
   transform: none;
 }
 
-#pause-menu .hint-text,
+#pause-menu .hint,
 #pause-menu .main-text {
   position: absolute;
   right: 1rem;
   text-align: right;
 }
 
-#pause-menu .hint-text {
+#pause-menu .hint {
   font-size: 1rem;
   top: 1.5rem;
   line-height: 1.1;
@@ -63,26 +92,6 @@
   bottom: 0;
   animation: 1s fade-in;
   z-index: 3;
-}
-
-#controls-info img {
-  height: 3rem;
-  margin: -0.25rem;
-}
-
-#controls-info kbd {
-  margin-left: 0.5rem;
-  padding: 0.15rem 0.35rem;
-  font-size: 1rem;
-  font-family: 'Courier New', Courier, monospace;
-  /* font-family: sans-serif; */
-  font-weight: bold;
-  background-color: white;
-  color: #242424;
-  border: 2px solid #b4b4b4;
-  border-radius: 1.5px;
-  display: inline-block;
-  white-space: nowrap;
 }
 
 #controls-info kbd:last-child {
