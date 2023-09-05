@@ -13,8 +13,8 @@ const keyboardMap: ActionMap = {
   // arrowdown: "L_DOWN",
   // arrowleft: "L_LEFT",
   // arrowright: "L_RIGHT",
-  q: "START",
-  e: "SELECT",
+  e: "START",
+  q: "SELECT",
 };
 
 export class KeyboardAndMouse implements InputHandler {

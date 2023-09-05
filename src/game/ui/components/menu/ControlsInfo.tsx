@@ -42,7 +42,7 @@ export function ControlsInfo() {
           <tr>
             <td>pause</td>
             <td>
-              <kbd>q</kbd>
+              <kbd>e</kbd>
             </td>
             <td>
               <img class="control-image" src="/img/controls/select.png" />

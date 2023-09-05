@@ -10,6 +10,7 @@
 - [ ] add a song and "level cleared" message to the game end
 - [ ] check build sizes and optimize if necessary (code and assets)
 - [ ] beziers: verify if it is possible to better distribute points
+- [x] switch q/e actions on menus  (q for quit)
 - [x] communicate player of controls @ menus (use `<kbd>`)
 - [x] rewrite game ui with solidjs
 - [ ] blog post (release) + publish

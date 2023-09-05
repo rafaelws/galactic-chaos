@@ -16,6 +16,9 @@ npm run dev # run the development server (vite)
 # to build and preview
 npm run build # build the project to `/dist` (vite)
 npm run preview # run the preview server (vite)
+
+# to lint (eslint, tsc)
+npm run lint
 ```
 
 # CREDITS
@@ -36,13 +39,13 @@ This project is [MIT licensed](../LICENSE).
 
 Web game that uses APIs such as [Canvas](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D), [Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and [Gamepad](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API). No game engine was used.
 
-## Game Structure
+## Structure
 
-The entry point is [`main.ts`](../src/game/main.ts). When the player starts the game, a loop is created using [`requestAnimationFrame()`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
+The entry point is [`Main.tsx`](../src/game/ui/Main.tsx) (note: refactored from vanilla js to [solidjs](https://solidjs.com/)). When the player starts the game, a loop is created using [`requestAnimationFrame()`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
 
 Inside the game [loop](../src/game/loop.ts), a [GameManager](../src/game/GameManager.ts) is instantiated. It's a wrapper class that setups and manages input, canvas, pause state, and levels. It is also where the ["on screen debug"](#debug) is configured. 
 
-Next, the [LevelManager](../src/game/level/LevelManager.ts) handles level loading, game state, and game objects.
+Next, the [LevelManager](../src/game/LevelManager.ts) handles level loading, game state, and game objects.
 
 A `Level` is simply an async function that returns an array of [GameObjects](../src/core/objects/shared/GameObject.ts).
 
@@ -127,10 +130,10 @@ To get a glimpse of how things work behind the scenes, [you can visit the playgr
 
 # Known Issues
 
-- Screen resize: affects both overall dimensions and movement
-  - Movement is instantiated once per object. If the world boundaries, frame time (monitor frequency) or object dimensions change, moving objects will not behave as expected.
-  - Dimensions are set once per object. If the world boundaries change, rendered objects won't resize.
 - Not supported (devices)
-  - Smartphones/tablets/smaller devices
+  - Smartphones, tablets, and smaller devices
   - Browsers that do not support JS modules (as of the publishing of this project, [most browsers support this feature](https://caniuse.com/es6-module))
+- Screen resize: affects both overall dimensions and movement
+  - Dimensions are set once per object. If the world boundaries change, rendered objects won't resize.
+  - Movement is instantiated once per object. If the world boundaries, frame time (monitor frequency) or object dimensions change, moving objects will not behave as expected.
 - Rarely, audio tracks can overlap each other (especially while exiting menus)

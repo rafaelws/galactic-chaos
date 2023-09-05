@@ -37,7 +37,7 @@
 
 .menu .hint.giga-hint {
   opacity: 0.85;
-  animation: half-fade-in 10s;
+  animation: half-fade-in 5s;
   margin-top: 0.5rem;
 }
 
