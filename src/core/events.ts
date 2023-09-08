@@ -1,12 +1,9 @@
 import { GameObject } from "@/core/objects";
 
-import { ConfigInputType, ConfigKey } from "./Config";
+import { ConfigInputType, ConfigKey, ConfigKeyString } from "./Config";
 import { PubSub } from "./PubSub";
 
 const pubSub = new PubSub();
-export const pub = pubSub.pub.bind(pubSub);
-export const sub = pubSub.sub.bind(pubSub);
-export const register = pubSub.register.bind(pubSub);
 
 type EmptyFn = () => void;
 
@@ -86,11 +83,15 @@ const game = {
 };
 
 const config = {
-  onBackgroundDensity(sub: (density: number) => void) {
-    return pubSub.sub(ConfigKey.BackgroundDensity, sub);
+  // eslint-disable-next-line
+  pub(key: ConfigKey | ConfigKeyString, value: any) {
+    pubSub.pub(key, value);
   },
   onInput(sub: (inputType: ConfigInputType) => void) {
     return pubSub.sub(ConfigKey.Input, sub);
+  },
+  onBackgroundDensity(sub: (density: number) => void) {
+    return pubSub.sub(ConfigKey.BackgroundDensity, sub);
   },
   onAudioEnabled(sub: (isEnabled: boolean) => void) {
     return pubSub.sub(ConfigKey.AudioEnabled, sub);

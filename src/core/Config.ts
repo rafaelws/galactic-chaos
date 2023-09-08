@@ -1,5 +1,5 @@
 import { Store } from "./";
-import { pub } from "./events";
+import { events } from "./events";
 
 export enum ConfigInputType {
   KeyboardAndMouse = "KM",
@@ -13,7 +13,7 @@ export const ConfigKeys = [
   "BackgroundDensity",
 ] as const;
 
-type ConfigKeyString = (typeof ConfigKeys)[number];
+export type ConfigKeyString = (typeof ConfigKeys)[number];
 
 export enum ConfigKey {
   Input = "Input",
@@ -37,6 +37,8 @@ const defaults: ConfigMap = {
 } as const;
 
 export class Config {
+  // TODO retain an 'in-memory' copy, so it does not need
+  // to go for Storage every time
   public static all(): ConfigMap {
     return {
       ...defaults,
@@ -55,6 +57,6 @@ export class Config {
     config[configKey] = value;
 
     Store.set(storageKey, config);
-    pub(configKey, value); // FIXME
+    events.config.pub(configKey, value);
   }
 }
