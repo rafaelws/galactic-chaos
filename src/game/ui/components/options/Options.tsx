@@ -104,7 +104,7 @@ export function Options() {
   return (
     <div id="options">
       <div class="field" classList={{ active: activeIx() === 0 }}>
-        <span>Audio</span>
+        <span>Enable Audio</span>
         <Toggle active={audioEnabled()} />
       </div>
       <div class="field" classList={{ active: activeIx() === 1 }}>

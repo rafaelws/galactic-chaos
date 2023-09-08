@@ -1,19 +1,31 @@
 # TODO 
 
-## misc
-
-- [ ] fix menu/options animations/transition (using ref and js)
-- [ ] rethink audio assets loading
+## Assets
+- [ ] rethink asset loading to save bandwidth
+- [ ] audio
   - [ ] do not preload (only load on request)
   - [ ] fix overlapping audio problem
-- [ ] simplify image asset loading (use svg atlas?)
+- [ ] image
+  - [ ] fix mouse icon @ controls: paint white everything except for the left button
+  - [ ] use inline svg for controls
+  - [ ] align control icons with kbd
+  - [ ] use svg for game assets (consider using an atlas/"spritesheet")
+
+## misc
+
 - [ ] add a song and "level cleared" message to the game end
-- [ ] check build sizes and optimize if necessary (code and assets)
-- [ ] beziers: verify if it is possible to better distribute points
+- [ ] check build sizes and optimize if necessary (code, save bandwidth)
+- [ ] release
+  - [ ] blog / website
+  - [ ] game post (solidjs music player)
+  - [ ] roadmap
+  - [ ] playground post
+  - [ ] gameplay video
+  - [ ] playground video
+  - [ ] publish 
 - [x] switch q/e actions on menus  (q for quit)
 - [x] communicate player of controls @ menus (use `<kbd>`)
 - [x] rewrite game ui with solidjs
-- [ ] blog post (release) + publish
 
 # NEXT
 
@@ -28,7 +40,8 @@
 ## Fixes/Improvements
  - [ ] handle screen resize on game objects (affects overall dimensions and movement) (use debounce)
  - [ ] remove colors from source code if possible
- 
+ - [ ] {?} fix menu/options animations/transition (they are not fading-out)
+ - [ ] {?} beziers: verify if it is possible to better distribute points
 ---
 
 # TODO
