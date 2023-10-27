@@ -1,11 +1,10 @@
 # TODO 
 
 ## Assets
-- [ ] rethink asset loading to save bandwidth
-- [ ] audio
+- [ ] audio loading
   - [ ] do not preload (only load on request)
   - [ ] fix overlapping audio problem
-- [ ] image
+- [ ] image loading
   - [ ] fix mouse icon @ controls: paint white everything except for the left button
   - [ ] use inline svg for controls
   - [ ] align control icons with kbd
