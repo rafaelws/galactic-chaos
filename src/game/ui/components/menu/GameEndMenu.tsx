@@ -6,12 +6,10 @@ export function GameEndMenu() {
       <p class="main-text">thanks for playing</p>
       <div class="hint giga-hint">
         <p class="line">
-          <kbd>e</kbd> or{" "}
-          <img class="control-image" src="/img/controls/start.png" /> to restart
+          <kbd>e</kbd> or <span class="ctrl">start</span> to restart
         </p>
         <p class="line">
-          <kbd>q</kbd> or{" "}
-          <img class="control-image" src="/img/controls/select.png" /> to quit
+          <kbd>q</kbd> or <span class="ctrl">select</span> to quit
         </p>
       </div>
     </Menu>

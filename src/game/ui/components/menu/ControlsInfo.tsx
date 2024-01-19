@@ -45,7 +45,7 @@ export function ControlsInfo() {
               <kbd>e</kbd>
             </td>
             <td>
-              <img class="control-image" src="/img/controls/start.png" />
+              <span class="ctrl">start</span>
             </td>
           </tr>
         </tbody>
