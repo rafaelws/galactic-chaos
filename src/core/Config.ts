@@ -30,7 +30,7 @@ const storageKey = "configuration" as const;
 
 const defaults: ConfigMap = {
   Input: ConfigInputType.KeyboardAndMouse,
-  BackgroundDensity: 1000,
+  BackgroundDensity: 800,
   AudioEnabled: false,
   // On AudioManager, multiply this value by 0.1
   AudioGain: 8,

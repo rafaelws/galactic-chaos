@@ -35,8 +35,8 @@ export function Options() {
   const densitySlider: SliderParams = {
     value: backgroundDensity(),
     min: 0,
-    step: 200,
-    max: 2000,
+    step: 100,
+    max: 1400,
   };
   const densityCtrl = SliderCtrl(densitySlider);
 
