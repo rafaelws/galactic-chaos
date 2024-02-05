@@ -49,13 +49,20 @@ Next, the [LevelManager](../src/game/LevelManager.ts) handles level loading, gam
 
 A `Level` is simply an async function that returns an array of [GameObjects](../src/core/objects/shared/GameObject.ts).
 
-HTML contents for the game can be [found here](../index.html).
-
 ## Input
 
 The game supports input from both keyboard/mouse and [gamepad](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API). To consolidate the behavior regardless of the input source, a [common interface (InputHandler)](../src/core/controls/Input.ts) was created.
 
-The menus support simultaneous input from both keyboard/mouse and gamepad sources. While on the pause menu, the player can **swap** between input sources. For example, if the player is using keyboard/mouse and connects a gamepad, they can press the Start button to resume the game, and from that point on, the game will respond to the gamepad input (and vice versa).
+However, it's important to note that there are two main caveats:
+
+1. The transition between gamepad and keyboard/mouse is not seamless. Moreover, one must first pause the game to make the switch.
+2. The gameplay with the controller (gamepad) is not yet satisfactory.
+
+How to switch inputs:
+1. Switch from keyboard/mouse to gamepad: Pause using the keyboard, then resume using the gamepad.
+2. Switch from gamepad to keyboard/mouse: Pause using the gamepad, then resume using the keyboard/mouse.
+
+Additionally, the menus seamlessly respond to both inputs.
 
 ## Audio
 
