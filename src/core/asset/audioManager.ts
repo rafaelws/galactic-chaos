@@ -14,6 +14,7 @@ function AudioManager() {
   const ctx: AudioContext = new AudioContext();
   const gainNode: GainNode = ctx.createGain();
 
+  const requests: AudioPlayRequest[] = [];
   let lastEvent: AudioPlayRequest | null = null;
   let currentTrack: AudioBufferSourceNode | null = null;
   let currentTrackPlayDate = 0;
@@ -56,6 +57,7 @@ function AudioManager() {
   }
 
   async function play(ev: AudioPlayRequest) {
+    requests.push(ev);
     const { assetPath, loop } = ev;
 
     if (lastEvent?.assetPath !== assetPath) {
@@ -69,15 +71,20 @@ function AudioManager() {
     lastEvent = currentEvent;
 
     setEnabled(enabled);
+
+    if (requests.pop() && requests.length > 0) play(requests.pop()!);
   }
 
   async function pause(assetPath = assets.audio.menu.pause, loop = true) {
+    requests.push({ assetPath, loop });
     currentTrackTimePast += (Date.now() - currentTrackPlayDate) * 0.001;
 
     await prepareTrack({ assetPath, loop });
     currentTrack?.start();
 
     setEnabled(enabled);
+
+    if (requests.pop() && requests.length > 0) play(requests.pop()!);
   }
 
   async function resume() {
@@ -101,5 +108,7 @@ function AudioManager() {
     }
   }
 
+  // play: (ev: AudioPlayRequest) =>
+  //   navigator.locks.request("audioManager", async () => await play(ev)),
   return { play, pause, resume };
 }
