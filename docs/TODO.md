@@ -1,9 +1,9 @@
 # TODO 
 
 ## Assets
-- [ ] audio loading
-  - [ ] do not preload (only load on request)
-  - [ ] {bug} fix overlapping audio problem
+- [x] audio loading
+  - [x] do not preload (only load on demand)
+  - [x] {bug} fix overlapping audio problem
 - [ ] image loading
   - [ ] use inline svg for controls
   - [ ] use svg for game assets (consider using an atlas/"spritesheet")

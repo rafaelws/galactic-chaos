@@ -3,7 +3,7 @@ import { createSignal, JSX, onCleanup, onMount, Show } from "solid-js";
 import { Dynamic } from "solid-js/web";
 
 import { UnsubFn } from "@/core";
-import { assets, audioManager, preloadAudio } from "@/core/asset";
+import { assets, audioManager } from "@/core/asset";
 import { hide, show } from "@/core/dom";
 import { events } from "@/core/events";
 import { Destroyable } from "@/core/meta";
@@ -36,6 +36,7 @@ const menuMap: Record<MenuName, () => JSX.Element> = {
 
 export function Main() {
   let pauseInput: Destroyable | null = null;
+  let audioRef!: HTMLAudioElement;
   const [isOptionsOpen, setOptionsOpen] = createSignal(false);
   const [isPauseMenuOpen, setPauseMenuOpen] = createSignal(false);
 
@@ -60,16 +61,9 @@ export function Main() {
     hookPause();
   }
 
-  async function mainMenu() {
+  function mainMenu() {
     show("#gh-link");
-    await Promise.all(
-      preloadAudio(
-        assets.audio.menu.main,
-        assets.audio.menu.pause,
-        assets.audio.menu.gameOver
-      )
-    );
-    await audioManager.play({ assetPath: assets.audio.menu.main });
+    events.audio.play({ track: assets.audio.menu.main });
     readInput([
       {
         action: "START",
@@ -87,12 +81,9 @@ export function Main() {
     setMenu("main");
   }
 
-  async function gameOver() {
+  function gameOver() {
     clear();
-    await audioManager.play({
-      assetPath: assets.audio.menu.gameOver,
-      loop: true,
-    });
+    events.audio.play({ track: assets.audio.menu.gameOver, loop: true });
     readInput([
       { action: "START", fn: debounce(start, debounceTime) },
       { action: "SELECT", fn: debounce(quit, debounceTime) },
@@ -120,11 +111,11 @@ export function Main() {
     }, 500);
   }
 
-  async function pause(paused: boolean) {
+  function pause(paused: boolean) {
     if (!paused) return;
 
     pauseInput?.destroy();
-    await audioManager.pause();
+    events.audio.pause();
 
     setPauseMenuOpen(true);
     setOptionsOpen(true);
@@ -133,11 +124,11 @@ export function Main() {
       { action: "SELECT", fn: quit },
       {
         action: "START",
-        fn: async () => {
+        fn: () => {
           setOptionsOpen(false);
           setPauseMenuOpen(false);
           events.game.pause(false);
-          await audioManager.resume();
+          events.audio.resume();
           hookPause();
         },
       },
@@ -158,6 +149,7 @@ export function Main() {
       events.game.onOver(gameOver),
       events.game.onEnd(gameEnd),
       events.game.onLoading(loading),
+      ...audioManager(audioRef),
     ];
     mainMenu();
   });
@@ -169,6 +161,7 @@ export function Main() {
 
   return (
     <>
+      <audio ref={audioRef!} preload="none" style="display: none" />
       <Show when={isOptionsOpen()}>
         <Options />
         <ControlsInfo />

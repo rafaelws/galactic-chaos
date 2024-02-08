@@ -13,6 +13,8 @@ import { firstBoss, firstLevel } from "./levels";
 type LevelFn = () => Promise<GameObject[]>;
 
 export class LevelManager implements Destroyable {
+  private levelTime = 0;
+
   private _loading = false;
   private finalLevelIx = -1;
   private currentLevelIx = -1;
@@ -34,7 +36,11 @@ export class LevelManager implements Destroyable {
         this.objectsToSpawn.push(gameObject);
       }),
       events.game.onPlayerHp((ev) => {
-        if (ev.hp <= 0) events.game.over();
+        if (ev.hp <= 0) {
+          events.game.over();
+          this.levelTime = 0;
+          events.game.levelTime(this.levelTime);
+        }
       }),
       events.game.onBossHp((ev) => {
         if (ev.hp <= 0) this.nextLevel();
@@ -53,6 +59,9 @@ export class LevelManager implements Destroyable {
   }
 
   private nextLevel() {
+    this.levelTime = 0;
+    events.game.levelTime(this.levelTime);
+
     if (++this.currentLevelIx >= this.finalLevelIx) {
       return events.game.end();
     }
@@ -123,7 +132,8 @@ export class LevelManager implements Destroyable {
       worldBoundaries,
       player: { x: 0, y: 0, radius: 0 },
     };
-
+    this.levelTime += delta;
+    events.game.levelTime(this.levelTime);
     this.player.controlState = controlState;
     this.player.update(state);
 

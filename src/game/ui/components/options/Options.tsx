@@ -28,7 +28,7 @@ export function Options() {
     value: audioGain(),
     min: 0,
     step: 1,
-    max: 12,
+    max: 10,
   };
   const gainCtrl = SliderCtrl(gainSlider);
 
@@ -54,6 +54,8 @@ export function Options() {
     });
   };
 
+  // FIXME values are changing too fast (20ms);
+  // TODO check value before changing or debounce
   const changeValue = (operation: "+" | "-") => {
     // eslint-disable-next-line
     let val: any = undefined;

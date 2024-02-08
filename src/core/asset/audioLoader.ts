@@ -17,7 +17,7 @@ async function getBuffer(filePath: string) {
 //   return new Audio(url);
 // }
 
-async function loadAudioToCache(filePath: string) {
+export async function loadAudio(filePath: string) {
   const exists = audioCache[filePath];
   if (exists) return exists;
 
@@ -26,6 +26,6 @@ async function loadAudioToCache(filePath: string) {
   return audioCache[filePath];
 }
 
-export function preloadAudio(...filePaths: string[]) {
-  return filePaths.map(loadAudioToCache);
-}
+// export function preloadAudio(...filePaths: string[]) {
+//   return filePaths.map(loadAudio);
+// }

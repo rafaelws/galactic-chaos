@@ -1,10 +1,5 @@
-import {
-  assets,
-  audioManager,
-  getImage,
-  preloadAudio,
-  preloadImages,
-} from "@/core/asset";
+import { assets, getImage, preloadAudio, preloadImages } from "@/core/asset";
+import { events } from "@/core/events";
 import { p } from "@/core/meta";
 import { Boss, GameObject, healItem, Ship } from "@/core/objects";
 import { linear, quadraticBezier } from "@/core/objects/shared";
@@ -21,7 +16,7 @@ export async function firstBoss(): Promise<GameObject[]> {
     ...preloadImages(...ships, ...assets.common.img, ...assets.img.rock.brown),
     ...preloadAudio(theme),
   ]);
-  await audioManager.play({ assetPath: theme });
+  events.audio.play({ track: theme });
 
   const boss = new Boss({
     spawnTimeout: 16.99 * 1000,

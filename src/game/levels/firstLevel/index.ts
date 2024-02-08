@@ -1,10 +1,5 @@
-import {
-  assets,
-  audioManager,
-  getImage,
-  preloadAudio,
-  preloadImages,
-} from "@/core/asset";
+import { assets, getImage, preloadAudio, preloadImages } from "@/core/asset";
+import { events } from "@/core/events";
 import { p } from "@/core/meta";
 import { GameObject, healItem, Rock } from "@/core/objects";
 import { linear } from "@/core/objects/shared";
@@ -27,7 +22,7 @@ export async function firstLevel(): Promise<GameObject[]> {
     ...preloadImages(...assets.common.img, ...rocks, ...ships),
     ...preloadAudio(theme),
   ]);
-  await audioManager.play({ assetPath: theme });
+  events.audio.play({ track: theme });
 
   return [
     ...firstWave(rocks),

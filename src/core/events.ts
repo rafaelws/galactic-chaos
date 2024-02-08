@@ -7,6 +7,38 @@ const pubSub = new PubSub();
 
 type EmptyFn = () => void;
 
+enum AudioEvent {
+  Play = "AudioEventPlay",
+  Pause = "AudioEventPause",
+  Resume = "AudioEventResume",
+}
+
+export type AudioRequest = {
+  track: string;
+  loop?: boolean;
+};
+
+const audio = {
+  play(request: AudioRequest) {
+    return pubSub.pub(AudioEvent.Play, request);
+  },
+  onPlay(sub: (request: AudioRequest) => void) {
+    return pubSub.sub(AudioEvent.Play, sub);
+  },
+  pause() {
+    return pubSub.pub(AudioEvent.Pause);
+  },
+  onPause(sub: EmptyFn) {
+    return pubSub.sub(AudioEvent.Pause, sub);
+  },
+  resume() {
+    return pubSub.pub(AudioEvent.Resume);
+  },
+  onResume(sub: EmptyFn) {
+    return pubSub.sub(AudioEvent.Resume, sub);
+  },
+};
+
 export interface HpEvent {
   maxHp: number;
   hp: number;
@@ -22,6 +54,7 @@ enum GameEvent {
   Quit = "Quit",
   GameOver = "GameOver",
   GameEnd = "GameEnd",
+  LevelTime = "LevelTime",
 }
 
 const game = {
@@ -80,6 +113,13 @@ const game = {
   onLoading(sub: (isLoading: boolean) => void) {
     return pubSub.sub(GameEvent.Loading, sub);
   },
+
+  levelTime(time: number) {
+    pubSub.pub(GameEvent.LevelTime, time);
+  },
+  onLevelTime(sub: (time: number) => void) {
+    return pubSub.sub(GameEvent.LevelTime, sub);
+  },
 };
 
 const config = {
@@ -104,4 +144,5 @@ const config = {
 export const events = {
   game,
   config,
+  audio,
 };
