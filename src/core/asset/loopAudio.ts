@@ -1,5 +1,6 @@
-import { Config, ConfigKey, loadAudio } from "..";
+import { Config, ConfigKey } from "..";
 import { events } from "../events";
+import { loadAudio } from ".";
 
 export function LoopAudio() {
   const ctx: AudioContext = new AudioContext();

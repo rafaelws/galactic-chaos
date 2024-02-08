@@ -51,6 +51,7 @@ export function Main() {
   }
 
   function quit() {
+    events.game.levelTime(0);
     clear();
     mainMenu();
   }

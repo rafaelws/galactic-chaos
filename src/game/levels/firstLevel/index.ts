@@ -1,4 +1,4 @@
-import { assets, getImage, preloadAudio, preloadImages } from "@/core/asset";
+import { assets, getImage, preloadImages } from "@/core/asset";
 import { events } from "@/core/events";
 import { p } from "@/core/meta";
 import { GameObject, healItem, Rock } from "@/core/objects";
@@ -18,10 +18,7 @@ export type FirstLevelShips = typeof ships;
 export async function firstLevel(): Promise<GameObject[]> {
   const { theme } = assets.audio.levels[0];
 
-  await Promise.all([
-    ...preloadImages(...assets.common.img, ...rocks, ...ships),
-    ...preloadAudio(theme),
-  ]);
+  await Promise.all(preloadImages(...assets.common.img, ...rocks, ...ships));
   events.audio.play({ track: theme });
 
   return [

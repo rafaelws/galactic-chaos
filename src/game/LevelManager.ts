@@ -36,11 +36,7 @@ export class LevelManager implements Destroyable {
         this.objectsToSpawn.push(gameObject);
       }),
       events.game.onPlayerHp((ev) => {
-        if (ev.hp <= 0) {
-          events.game.over();
-          this.levelTime = 0;
-          events.game.levelTime(this.levelTime);
-        }
+        if (ev.hp <= 0) events.game.over();
       }),
       events.game.onBossHp((ev) => {
         if (ev.hp <= 0) this.nextLevel();

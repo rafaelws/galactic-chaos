@@ -1,4 +1,4 @@
-import { assets, getImage, preloadAudio, preloadImages } from "@/core/asset";
+import { assets, getImage, preloadImages } from "@/core/asset";
 import { events } from "@/core/events";
 import { p } from "@/core/meta";
 import { Boss, GameObject, healItem, Ship } from "@/core/objects";
@@ -12,10 +12,9 @@ export async function firstBoss(): Promise<GameObject[]> {
   const ships = assets.img.ship.level1;
   const theme = assets.audio.levels[0].boss;
 
-  await Promise.all([
-    ...preloadImages(...ships, ...assets.common.img, ...assets.img.rock.brown),
-    ...preloadAudio(theme),
-  ]);
+  await Promise.all(
+    preloadImages(...ships, ...assets.common.img, ...assets.img.rock.brown)
+  );
   events.audio.play({ track: theme });
 
   const boss = new Boss({
