@@ -24,7 +24,6 @@ export function atan2(from: Point, to: Point) {
   return Math.atan2(from.x - to.x, from.y - to.y);
 }
 
-// TODO verify if Math.hypot can be optimized
 export function hasCollided(a: HitBox, b: HitBox) {
   // const hypot = Math.hypot(a.x - b.x, a.y - b.y);
   // return hypot < a.radius + b.radius;

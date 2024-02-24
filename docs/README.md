@@ -15,7 +15,7 @@ npm run dev # run the development server (vite)
 
 # to build and preview
 npm run build # build the project to `/dist` (vite)
-npm run preview # run the preview server (vite)
+npm run preview # run the build task along with vite's built-in preview task
 
 # to lint (eslint, tsc)
 npm run lint
