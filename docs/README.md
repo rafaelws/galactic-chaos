@@ -4,7 +4,7 @@
 
 A spaceship shooter game. 
 
-[Play here.](https://galactic-chaos.netlify.app)
+[Play here.](https://rafaelws.github.io/galactic-chaos/)
 
 # Getting started
 
@@ -129,7 +129,7 @@ An "on-screen-debug" feature was implemented. There are options to show hitboxes
 
 ## Playground
 
-To get a glimpse of how things work behind the scenes, [you can visit the playground here](https://galactic-chaos.netlify.app/playground).
+To get a glimpse of how things work behind the scenes, [you can visit the playground here](https://rafaelws.github.io/galactic-chaos/playground).
 
 !["playground"](./playground.gif "playground")
 
